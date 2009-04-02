@@ -69,7 +69,7 @@ public abstract class PeriodsTest extends TestCase{
 		periodsOperator.addPeriod(taskName);
 		periodsOperator.addPeriod(taskName);
 		int periodIndex = 1;
-		editPeriodOrCry("10:00 am", "2:00 pm", periodIndex, taskName, 4 * 60);
+		editPeriodOrCry("10:00 am", "2:00 PM", periodIndex, taskName, 4 * 60);
 	}
 	
 	public void testPeriodsRemoval(){

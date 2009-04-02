@@ -49,7 +49,7 @@ class TaskImpl implements TaskView {
 		this.notes = new ArrayList<NoteView>();
 	}
 
-	public void start() {
+	public synchronized void start() {
 		if (this._active) return;
 		this.activePeriod = this.periodsFactory.createPeriod(this.clock.getDate());
 		this.manager.addPeriod(this.activePeriod);
@@ -57,87 +57,87 @@ class TaskImpl implements TaskView {
 		this.changedAlert.fire();
 	}
 	
-	public void stop() {
+	public synchronized void stop() {
 		if (!this._active) return;
 		this.activePeriod.setStop(this.clock.getDate());
 		this._active  = false;
 		this.changedAlert.fire();
 	}
 
-	public boolean isActive() {
+	public synchronized boolean isActive() {
 		return this._active;
 	}
 
-	public PeriodManager periodManager() {
+	public synchronized PeriodManager periodManager() {
 		return this.manager;
 	}
 
-	public void setName(String newNameForTask) {
+	public synchronized void setName(String newNameForTask) {
 		this.name = newNameForTask;	
 		_nameSource.supply(newNameForTask);
 		this.changedAlert.fire();
 	}
 	
-	public void setBudgetInHours(Double newBudget) {
+	public synchronized void setBudgetInHours(Double newBudget) {
 		this.budget = newBudget;	
 		this.changedAlert.fire();
 	}
 
 
 	//refactor: make private
-	public List<Period> periods() {
+	public synchronized List<Period> periods() {
 		return this.periodManager().periods();
 	}
 
-	public Alert changedAlert() {
+	public synchronized Alert changedAlert() {
 		return this.changedAlert;
 	}
 
-	public String name() {
+	public synchronized String name() {
 		return this.name;
 	}
 	
 	@Override
-	public Signal<String> nameSignal() {
+	public synchronized Signal<String> nameSignal() {
 		return _nameSource;
 	}
 
-	public Double budgetInHours() {
+	public synchronized Double budgetInHours() {
 		return this.budget;
 	}
 
-	public Double budgetBallanceInHours() {
+	public synchronized Double budgetBallanceInHours() {
 		if (budgetInHours() == null) return 0.0;
 		return budgetInHours() - totalTimeInHours();
 	}
 	
 	@Override
-	public String toString() {
+	public synchronized String toString() {
 		if (this.name == null) return "null";
 		return this.name;
 	}
 
-	public Double totalTimeInHours() {
+	public synchronized Double totalTimeInHours() {
 		return ((double) periodManager().totalTime() / (double) DateUtils.MILLIS_PER_HOUR);
 	}
 
-	public void addPeriod(Period period) {
+	public synchronized void addPeriod(Period period) {
 		periodManager().addPeriod(period);		
 	}
 
-	public void removePeriod(Period period) {
+	public synchronized void removePeriod(Period period) {
 		periodManager().removePeriod(period);		
 	}
 
-	public void addPeriodsListener(PeriodsListener listener) {
+	public synchronized void addPeriodsListener(PeriodsListener listener) {
 		periodManager().addListener(listener);
 	}
 
-	public long totalTimeInMillis() {
+	public synchronized long totalTimeInMillis() {
 		return periodManager().totalTime();
 	}
 
-	public void addNote(NoteView note) {
+	public synchronized void addNote(NoteView note) {
 		notes.add(note);
 		
 		for (final NotesListener listener : notesListeners){
@@ -145,52 +145,49 @@ class TaskImpl implements TaskView {
 		}
 	}
 	
-	public void addNotesListener(NotesListener listener) {
+	public synchronized void addNotesListener(NotesListener listener) {
 		notesListeners.add(listener);		
 	}
 
-	public List<NoteView> notes() {
+	public synchronized List<NoteView> notes() {
 		return notes;
 	}
 
-	public void removeNotesListener(NotesListener listener) {
+	public synchronized void removeNotesListener(NotesListener listener) {
 		notesListeners.remove(listener);
 		
 	}
 
 	@Override
-	public void removePeriodListener(PeriodsListener listener) {
+	public synchronized void removePeriodListener(PeriodsListener listener) {
 		periodManager().removeListener(listener);
 		
 	}
 
 	@Override
-	public Period getPeriod(int index) {
+	public synchronized Period getPeriod(int index) {
 		return periodManager().period(index);
 	}
 
 	@Override
-	public Period lastPeriod() {
+	public synchronized Period lastPeriod() {
 		return periods().get(lastPeriodIndex());
 	}
 
 	@Override
-	public int lastPeriodIndex() {
+	public synchronized int lastPeriodIndex() {
 		return periods().size() - 1;
 	}
 
 	@Override
-	public Period periodAt(int i) {
+	public synchronized Period periodAt(int i) {
 		return periods().get(i);
 	}
 
 	@Override
-	public int periodsCount() {
+	public synchronized int periodsCount() {
 		return periods().size();
 	}
-
-	
-
 	
 
 }

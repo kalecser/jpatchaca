@@ -106,7 +106,10 @@ public class PeriodsTableModel extends AbstractTableModel {
 	}
 
 	private int rowToIndex(int row) {
-		return _task.periodsCount() - row - 1;
+		int periodsCount = _task.periodsCount();
+		if (periodsCount == 0)
+			throw new RuntimeException("No periods in task");
+		return periodsCount - row - 1;
 	}
 	
 	@Override
@@ -130,6 +133,10 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private void enqueueSetValueAt(final Object value, final int row,
 			final int column, final int rowToIndex) {
+		
+		if (rowToIndex == -1)
+			JOptionPane.showMessageDialog(null, "No row to edit");
+			
 		new Thread(){
 			@Override
 			public void run() {

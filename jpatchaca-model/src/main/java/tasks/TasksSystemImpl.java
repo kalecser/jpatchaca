@@ -238,6 +238,9 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	@Override
 	public synchronized void setPeriodStarting(final TaskView task, final int periodIndex, final Date startDate) {
+		if (periodIndex == -1)
+			throw new IllegalArgumentException("Index must be positive");
+		
 		final Period period = task.getPeriod(periodIndex);
 		editPeriod(task, periodIndex, period.createNewStarting(startDate));				
 	}

@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<artifactId>jpatchaca</artifactId>
+		<groupId>org.jpatchaca</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jpatchaca</groupId>
+	<artifactId>patchaca-webstart</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>JPatchaca Webstart</name>
+
+<dependencies>
+		<dependency>
+			<groupId>org.jpatchaca</groupId>
+			<artifactId>jpatchaca-system</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+</dependencies>
+
+
+	<url>http://10.42.11.135:3030/patchaca-unstable1/</url>
+
+	<organization>
+		<name>JPatchaca</name>
+		<url>http://jpatchaca.dev.java.net</url>
+	</organization>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo.webstart
+				</groupId>
+				<artifactId>webstart-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jnlp</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<jnlp>
+						<allPermissions>true</allPermissions>
+						<j2seVersion>1.6+</j2seVersion>
+						<mainClass>main.Main</mainClass>
+						<offlineAllowed>true</offlineAllowed>
+						<outputFile>jpatchaca.jnlp</outputFile>
+						<spec>6.0+</spec>
+					</jnlp>
+					<sign>
+						<keystore>../jpatchaca.keystore</keystore>
+						<storepass>jpatchaca</storepass>
+						<alias>jpatchaca</alias>
+
+						<dnameCn>jpatchaca</dnameCn>
+						<dnameOu>jpatchaca</dnameOu>
+						<dnameC>BR</dnameC>
+
+						<verify>true</verify>
+
+						<keystoreConfig>
+							<delete>true</delete>
+							<gen>true</gen>
+						</keystoreConfig>
+					</sign>
+					<verbose>true</verbose>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

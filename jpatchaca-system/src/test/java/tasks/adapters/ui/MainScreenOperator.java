@@ -202,6 +202,19 @@ public class MainScreenOperator {
 
 	public void editPeriod(int periodIndex, String startHH_mm_a) {
 		final JTableOperator periods = new JTableOperator(mainScreen);
+		
+		long timeout = 5000;
+		long currentTime = System.currentTimeMillis();
+		while (System.currentTimeMillis() - currentTime > timeout){
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+			if (periods.getRowCount()> periodIndex)
+				break;
+		}
+		
 		periods.setValueAt(getTimeInScreenInputFormat(startHH_mm_a), periodIndex, 1);
 		
 	}
