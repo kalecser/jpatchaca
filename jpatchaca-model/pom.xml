@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>jpatchaca</artifactId>
+		<groupId>org.jpatchaca</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jpatchaca</groupId>
+	<artifactId>jpatchaca-model</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>JPatchaca Model</name>
+	<repositories>
+		<repository>
+			<id>java-twitter-repository</id>
+			<url>http://java-twitter.googlecode.com/svn/repository/</url>
+			<name>java-twitter maven repository</name>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.jpatchaca</groupId>
+			<artifactId>commons-core</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<version>1.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.unto.twitter</groupId>
+			<artifactId>java-twitter</artifactId>
+			<version>0.9-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jpatchaca</groupId>
+			<artifactId>jpatchaca-test-operators</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

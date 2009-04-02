@@ -1,0 +1,20 @@
+<projectDescription>
+  <name>jpatchaca-ui</name>
+  <comment/>
+  <projects>
+    <project>commons-core</project>
+    <project>jpatchaca-model</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+    <buildCommand>
+      <name>net.sourceforge.metrics.builder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+    <nature>net.sourceforge.metrics.nature</nature>
+  </natures>
+</projectDescription>

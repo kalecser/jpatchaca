@@ -1,0 +1,20 @@
+0.52 
+periods list font now is monospaced
+
+0.53
+Bugfix: modal windows open in top left corner bug
+The periods date can now be edited on the grid
+Add period doesn't use a modal window anymore
+
+0.54
+Tray icon tooltip now shows selected task
+
+0.56
+It's possible to summarize periods by month
+
+0.57
+Performance improvements when starting/stopping tasks, summary and startup
+Bugfix: active task name was not being refreshed on stop task menu  
+
+0.58
+Typing keys in periods table now overwrite existing data instead of appending

@@ -1,0 +1,11 @@
+#Tue Apr 25 20:47:55 BRT 2006
+classes.dir= working/bin
+distr.dir=../JPatchacaSite/distr
+src.model=../JPatchacaModel/src
+jpatchaca.libsFolder=../CommonsCore/lib/
+jpatchaca.testLibsFolder=../CommonsCore/lib-tests/
+src.all=working/srcAll
+src.core=../CommonsCore/src
+src.system=../JPatchacaSystem/src
+src.ui=../JPatchacaUI/src
+patchaca.webstart.dir=webstart

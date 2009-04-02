@@ -1,0 +1,30 @@
+package events.persistence.tests;
+
+import java.io.IOException;
+
+import junit.framework.TestCase;
+import wheel.io.files.impl.DurableDirectory;
+import core.events.eventslist.EventTransaction;
+import events.persistence.SmartSerializerPersistenceManager;
+
+public class MigrateFromFileSerializedToSmartTest extends TestCase {
+
+	@SuppressWarnings("deprecation")
+	public void testMigration() throws IOException{
+		
+		final events.persistence.FileSerializedPersistenceManagerImpl persistence = new events.persistence.FileSerializedPersistenceManagerImpl();
+		persistence.reset();
+		
+		final EventTransaction transaction = new EventTransaction(100L,"test");
+		persistence.writeEvent(transaction);
+		
+		
+		final SmartSerializerPersistenceManager smartPersistence = new SmartSerializerPersistenceManager(new DurableDirectory("."));
+		smartPersistence.reset();
+		assertEquals(1, smartPersistence.getEventTransactions().size());
+		smartPersistence.reset();
+		
+		
+	}
+	
+}

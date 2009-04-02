@@ -1,0 +1,8 @@
+<classpath>
+  <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.3/commons-lang-2.3.jar"/>
+  <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.0.0/jmock-1.0.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/4.5/junit-4.5.jar"/>
+</classpath>
