@@ -41,6 +41,7 @@ import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.options.OptionsScreen;
 import ui.swing.options.OptionsScreenModelImpl;
+import ui.swing.presenter.Presenter;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tray.PatchacaTray;
 import ui.swing.tray.PatchacaTrayModelImpl;
@@ -129,6 +130,7 @@ public class Main {
 		container.addComponent(PatchacaTrayModelImpl.class);
 		container.addComponent(PatchacaTrayTasksFacadeMediator.class);
 		
+		container.addComponent(Presenter.class);
 		container.addComponent(MainScreen.class, MainScreenImpl.class);
 		container.addComponent(OptionsScreen.class);
 		container.addComponent(OptionsScreenModelImpl.class);
