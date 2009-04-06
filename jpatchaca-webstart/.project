@@ -1,0 +1,18 @@
+<projectDescription>
+  <name>patchaca-webstart</name>
+  <comment/>
+  <projects>
+    <project>commons-core</project>
+    <project>jpatchaca-model</project>
+    <project>jpatchaca-system</project>
+    <project>jpatchaca-ui</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
