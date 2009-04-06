@@ -1,32 +1,20 @@
 package ui.swing.mainScreen.tasks;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Dialog.ModalExclusionType;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.apache.commons.lang.StringUtils;
 import org.reactivebricks.commons.lang.Maybe;
 
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
+import ui.swing.presenter.OkCancelPane;
+import ui.swing.presenter.Presenter;
 import basic.Formatter;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
 
 
@@ -37,18 +25,20 @@ public class TaskScreen{
 	
 	private final Formatter formatter;
 	private final TaskScreenModel model;
+	private final Presenter presenter;
 	
 
-	public TaskScreen(Formatter formatter, TaskScreenModel model){			
+	public TaskScreen(Formatter formatter, TaskScreenModel model, Presenter presenter){			
 		this.model = model;
 		this.formatter = formatter;
+		this.presenter = presenter;
 	}
 	
 	private void show() {
 		new Thread(){
 			@Override
 			public void run() {
-				new TaskScreenDialog().internalShow(null, null);
+				internalShow(null, null);
 			}
 		}.start();
 		
@@ -58,7 +48,7 @@ public class TaskScreen{
 		new Thread() {
 			@Override
 			public void run() {
-				new TaskScreenDialog().internalShow(null, Maybe.wrap(time));
+				internalShow(null,Maybe.wrap(time));
 			}
 		}.start();
 	}
@@ -67,7 +57,7 @@ public class TaskScreen{
 		new Thread(){
 			@Override
 			public void run() {
-				new TaskScreenDialog().internalShow(maybeTaskView, null);
+				internalShow(maybeTaskView, null);
 			}
 		}.start();
 		
@@ -89,31 +79,59 @@ public class TaskScreen{
 		show();
 	}
 	
-	class TaskScreenDialog{
+	private void internalShow(Maybe<TaskView> task, Maybe<Long> start) {
+		presenter.showOkCancelDialog(new TaskScreenDialog(task, start), TITLE);
+	}
+
+	class TaskScreenDialog implements OkCancelPane{
+		private static final long serialVersionUID = 1L;
+		
 		private JTextField taskNameTextBox;
 		private JCheckBox budgetCheckBox;
 		private JTextField budgetHours;
-		private JButton cancelButton;
-		private JButton okButton;
 		private TaskView taskView;
 
-		public TaskScreenDialog(){
+		private final Maybe<TaskView> maybeTaskView;
+
+		private final Maybe<Long> time;
+
+		public TaskScreenDialog(Maybe<TaskView> maybeTaskView, Maybe<Long> time){
+			this.maybeTaskView = maybeTaskView;
+			this.time = time;
 			
 		}
 		
-		public void internalShow(Maybe<TaskView> maybeTaskView, Maybe<Long> time) {
-			JDialog dialog = createDialog(time);
+		private JTextField initializeBudgetHours() {
+			budgetHours = new JTextField(5);
+			return budgetHours;
+		}
+
+		private JPanel createDialog(Maybe<Long> time) {
+			
+			taskNameTextBox = new JTextField(20);
+			budgetCheckBox = new JCheckBox("Budget");		
+			initializeBudgetHours();
+			
+			final FormLayout layout = new FormLayout("pref, 3dlu, left:pref");
+			final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+			builder.append("Task name", taskNameTextBox);
+			builder.nextLine();		
+			builder.append(budgetCheckBox);				
+			builder.append(budgetHours);
+			
+			final JPanel fieldsPanel1 = builder.getPanel();
+			fieldsPanel1.setBorder(BorderFactory.createEmptyBorder(20,15,15,15));
+			return fieldsPanel1;
+			
+		}
+
+		@Override
+		public JPanel getPanel() {
+			JPanel dialog = createDialog(time);
 			
 			taskNameTextBox.requestFocus();			
-					
-			taskNameTextBox.requestFocus();
-			taskNameTextBox.selectAll();
-		
-			
-			
 			if (maybeTaskView == null){
-				dialog.setVisible(true);
-				return;
+				return dialog;
 			}
 			
 			taskView = maybeTaskView.unbox();
@@ -125,61 +143,25 @@ public class TaskScreen{
 				budgetCheckBox.setSelected(false);
 				budgetHours.setText("");
 			}
-						
-			dialog.setVisible(true);
+			
+			taskNameTextBox.selectAll();
+			
+			return dialog;
 		}
 		
-		private JPanel buildFieldsPanel() {
+		private Double getBudget() {
+			String budgetHoursText = budgetHours.getText();
+			if (StringUtils.isNumeric(budgetHoursText) && !budgetHoursText.isEmpty())
+				return Double.valueOf(budgetHoursText);
+			return null;
+		}			
+
+		@Override
+		public Runnable okAction() {
+			return new Runnable() {
 			
-			taskNameTextBox = new JTextField(20);
-			budgetCheckBox = createBudgetCheckbox();		
-			initializeBudgetHours();
-			
-			final FormLayout layout = new FormLayout("pref, 3dlu, left:pref");
-			final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-			builder.append("Task name", taskNameTextBox);
-			builder.nextLine();		
-			builder.append(budgetCheckBox);				
-			builder.append(budgetHours);
-			final JPanel fieldsPanel = builder.getPanel();
-			fieldsPanel.setBorder(BorderFactory.createEmptyBorder(20,15,15,15));
-
-			return fieldsPanel;
-		}
-
-		private void initializeCancelButton(final JDialog dialog) {
-			this.cancelButton = new JButton("Cancel");
-			this.cancelButton.addActionListener(new ActionListener() {		
-				public void actionPerformed(ActionEvent e) {
-					doCancel(dialog);
-				}		
-			});
-		}
-		
-		private void enableCancelOnEsc(final JDialog dialog) {
-			dialog.getRootPane().registerKeyboardAction(new ActionListener(){@Override
-			public void actionPerformed(ActionEvent e) {
-				doCancel(dialog);			
-			}}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-		}
-
-		private JPanel buildOkCancelBar(JDialog dialog, Maybe<Long> time) {
-			
-			initializeOkButton(dialog, time);
-			initializeCancelButton(dialog);
-			
-			final JPanel buttonBar = ButtonBarFactory.buildOKCancelBar(this.okButton, this.cancelButton);
-			buttonBar.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
-			return buttonBar;
-		}
-
-		
-
-		private void initializeOkButton(final JDialog dialog, final Maybe<Long> time) {
-			this.okButton = new JButton("Ok");
-			this.okButton.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					
+				@Override
+				public void run() {
 					TaskData data = new TaskData(taskNameTextBox.getText(), getBudget());
 					
 					if (taskView != null)
@@ -189,68 +171,8 @@ public class TaskScreen{
 					else
 						model.createTaskAndStart(data, time.unbox());
 					
-					dialog.setVisible(false);
-				}
-
-				private Double getBudget() {
-					String budgetHoursText = budgetHours.getText();
-					if (StringUtils.isNumeric(budgetHoursText) && !budgetHoursText.isEmpty())
-						return Double.valueOf(budgetHoursText);
-					return null;
 				}			
-			});
-			
-			dialog.getRootPane().setDefaultButton(okButton);
-			
-		}
-
-		private JTextField initializeBudgetHours() {
-			budgetHours = new JTextField(5);
-			budgetHours.setEnabled(false);
-			return budgetHours;
-		}
-
-		private JCheckBox createBudgetCheckbox() {
-			final JCheckBox budgetCheckBox = new JCheckBox("Budget");
-			budgetCheckBox.addChangeListener(new ChangeListener() {
-				public void stateChanged(ChangeEvent e) {
-					budgetCheckBox.setEnabled(budgetCheckBox.isSelected());				
-				}			
-			});
-			
-			return budgetCheckBox;
-		}
-
-		private void doCancel(JDialog dialog) {
-			dialog.setVisible(false);
-		}
-	
-		
-		private JDialog createDialog(Maybe<Long> time) {
-			
-			JDialog dialog = new JDialog();
-			final JPanel fieldsPanel = buildFieldsPanel();
-			final JPanel buttonBar = buildOkCancelBar(dialog, time);
-			
-			dialog.setLayout(new BorderLayout());
-			dialog.add(fieldsPanel, BorderLayout.CENTER);
-			dialog.add(buttonBar, BorderLayout.SOUTH);
-			
-			
-			dialog.setPreferredSize(new Dimension(380,170));
-			
-			
-			dialog.setResizable(false);
-			dialog.setTitle(TITLE);		
-			dialog.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
-			dialog.setModal(true);
-			
-			enableCancelOnEsc(dialog);
-			
-			dialog.pack();
-			
-			return dialog;
-			
+			};
 		}
 	}
 	

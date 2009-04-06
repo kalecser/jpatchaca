@@ -19,6 +19,7 @@ import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.TaskScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.options.OptionsScreen;
+import ui.swing.presenter.Presenter;
 import ui.swing.users.SwingTasksUser;
 import version.PatchacaVersion;
 import wheel.io.ui.JFrameBoundsKeeper;
@@ -37,7 +38,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	private final OptionsScreen optionsScreen;
 	private final TaskScreen taskScreen;
 
-	public MainScreenImpl( EventsSystem eventsSystem, TaskList taskList, PeriodsList periodsList, TopBar topBar, SummaryScreen tasksSummary, JFrameBoundsKeeper boundsKeeper, SwingTasksUser taskUser, TasksSystem tasksSystem, StartTaskDelegate startTaskDelegate, OptionsScreen optionsScreen, TaskScreen taskScreen){
+	public MainScreenImpl( EventsSystem eventsSystem, TaskList taskList, PeriodsList periodsList, TopBar topBar, SummaryScreen tasksSummary, JFrameBoundsKeeper boundsKeeper, SwingTasksUser taskUser, TasksSystem tasksSystem, StartTaskDelegate startTaskDelegate, OptionsScreen optionsScreen, TaskScreen taskScreen, Presenter presenter){
 		this.eventsSystem = eventsSystem;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
@@ -48,6 +49,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		this.startTaskDelegate = startTaskDelegate;
 		this.optionsScreen = optionsScreen;
 		this.taskScreen = taskScreen;
+		presenter.setMainScreen(this);
 		
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());	
 		
@@ -123,7 +125,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 
 			@Override
 			public void options() {
-				optionsScreen.show(MainScreenImpl.this.getWindow());				
+				optionsScreen.show();				
 			}
 		
 		});

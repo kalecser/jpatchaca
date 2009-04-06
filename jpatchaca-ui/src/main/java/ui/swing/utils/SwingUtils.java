@@ -7,6 +7,8 @@ public class SwingUtils {
 
 	
 	public static void makeLocationrelativeToParent(Window window, Window owner) {
+		if (owner == null)
+			return;
 		Point location = derivePoint(owner.getLocation(), 50, 50);
 		window.setLocation(location);
 	}

@@ -16,17 +16,35 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
+import ui.swing.utils.SwingUtils;
+
 public class Presenter {
 
 	public Set<WeakReference<Window>> openedWindows = new LinkedHashSet<WeakReference<Window>>();
+	private JFrame mainScreen;
 	
-	public void showMainScreen(JFrame mainScreen){
-		
+	public void setMainScreen(JFrame mainScreen){
+		this.mainScreen = mainScreen;
 	}
 	
-	public void showOkCancelDialog(final OkCancelPane pane, String title){
+	public JDialog showOkCancelDialog(final OkCancelPane pane, String title){
 		
-		final JDialog dialog = new JDialog();
+		final JDialog dialog = createOkCancelDialog(pane, title, mainScreen);
+		openedWindows.add(new WeakReference<Window>(dialog));
+		
+		new Thread(){
+			@Override
+			public void run() {
+				dialog.setVisible(true);
+			}
+		}.start();
+		
+		return dialog;
+	}
+
+	private static JDialog createOkCancelDialog(final OkCancelPane pane, String title, JFrame mainScreen) {
+		final JDialog dialog = new JDialog(mainScreen);
+		SwingUtils.makeLocationrelativeToParent(dialog, mainScreen);
 		dialog.setTitle(title);
 		
 		JPanel panel = pane.getPanel();
@@ -60,14 +78,7 @@ public class Presenter {
 			}}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
 		
 		dialog.pack();
-		
-		openedWindows.add(new WeakReference<Window>(dialog));
-		new Thread(){
-			@Override
-			public void run() {
-				dialog.setVisible(true);
-			}
-		}.start();
+		return dialog;
 	}
 
 	public void closeAllWindows() {
