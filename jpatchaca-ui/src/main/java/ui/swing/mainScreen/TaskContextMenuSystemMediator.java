@@ -9,6 +9,7 @@ import org.picocontainer.Startable;
 import tasks.TasksSystem;
 import tasks.delegates.StartTaskDelegate;
 import tasks.tasks.TaskView;
+import ui.swing.mainScreen.tasks.TaskScreen;
 import ui.swing.users.LabelsUser;
 import ui.swing.users.SwingTasksUser;
 import basic.Subscriber;
@@ -20,7 +21,8 @@ public class TaskContextMenuSystemMediator implements Startable{
 
 
 
-	public TaskContextMenuSystemMediator(final TaskContextMenu taskContextMenu, final LabelsSystem labelsSystem, final TasksSystem tasksSystem, final SwingTasksUser tasksUser, final LabelsUser labelsUser, final MainScreen mainScreen, final StartTaskDelegate startTaskDelegate) {
+
+	public TaskContextMenuSystemMediator(final TaskContextMenu taskContextMenu, final LabelsSystem labelsSystem, final TasksSystem tasksSystem, final SwingTasksUser tasksUser, final LabelsUser labelsUser, final MainScreen mainScreen, final StartTaskDelegate startTaskDelegate, final TaskScreen taskScreen) {
 		taskContextMenu.addNoteAlert().subscribe(new Subscriber() {
 			public void fire() {
 				try {
@@ -84,7 +86,7 @@ public class TaskContextMenuSystemMediator implements Startable{
 		taskContextMenu.editTaskAlert().subscribe(new Subscriber() {
 			public void fire() {
 				
-				tasksUser.editSelectedTask(mainScreen.owner());			
+				taskScreen.editSelectedTask();			
 				
 			}		
 		});

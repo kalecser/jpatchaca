@@ -2,12 +2,10 @@ package ui.swing.mainScreen.tasks;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Window;
+import java.awt.Dialog.ModalExclusionType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,8 +18,11 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.commons.lang.StringUtils;
+import org.reactivebricks.commons.lang.Maybe;
+
+import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
-import ui.swing.utils.SwingUtils;
 import basic.Formatter;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -29,194 +30,229 @@ import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
 
 
-public class TaskScreen extends JDialog{
+public class TaskScreen{
 
 	private static final long serialVersionUID = 1L;
 	public static final String TITLE = "Task edition";
 	
-	private JCheckBox budgetCheckBox;
-	private JTextField budgetHours;
-	private JButton okButton;
-	private JButton cancelButton;
-	private boolean okPressed;
-	private JTextField taskNameTextBox;
 	private final Formatter formatter;
+	private final TaskScreenModel model;
 	
 
-	public TaskScreen(Formatter formatter, Window window){
-		super(window);
-		
-		if (window == null)
-			throw new IllegalArgumentException();
-			
-		initialize();
-		okPressed(false);
+	public TaskScreen(Formatter formatter, TaskScreenModel model){			
+		this.model = model;
 		this.formatter = formatter;
 	}
 	
-	public void setVisible(boolean visible, TaskView taskView) {
+	private void show() {
+		new Thread(){
+			@Override
+			public void run() {
+				new TaskScreenDialog().internalShow(null, null);
+			}
+		}.start();
 		
-		if (visible) {
-			okPressed(false);
+	}
+	
+	private void show(final Long time) {
+		new Thread() {
+			@Override
+			public void run() {
+				new TaskScreenDialog().internalShow(null, Maybe.wrap(time));
+			}
+		}.start();
+	}
+	
+	private void show(final Maybe<TaskView> maybeTaskView) {
+		new Thread(){
+			@Override
+			public void run() {
+				new TaskScreenDialog().internalShow(maybeTaskView, null);
+			}
+		}.start();
+		
+	}
+
+	public void createTaskStarted(long time) {
+		show(time);
+	}	
+	
+	public void editSelectedTask() {
+		TaskView selectedTask = model.selectedTask();
+		if (selectedTask == null)
+			show((Maybe<TaskView>)null);
+		else
+			show(Maybe.wrap(selectedTask));
+	}
+
+	public void createTask() {
+		show();
+	}
+	
+	class TaskScreenDialog{
+		private JTextField taskNameTextBox;
+		private JCheckBox budgetCheckBox;
+		private JTextField budgetHours;
+		private JButton cancelButton;
+		private JButton okButton;
+		private TaskView taskView;
+
+		public TaskScreenDialog(){
+			
+		}
+		
+		public void internalShow(Maybe<TaskView> maybeTaskView, Maybe<Long> time) {
+			JDialog dialog = createDialog(time);
+			
 			taskNameTextBox.requestFocus();			
+					
+			taskNameTextBox.requestFocus();
+			taskNameTextBox.selectAll();
+		
+			
+			
+			if (maybeTaskView == null){
+				dialog.setVisible(true);
+				return;
+			}
+			
+			taskView = maybeTaskView.unbox();
+			taskNameTextBox.setText(taskView.name());
+			if (taskView.budgetInHours() != null) {
+				budgetCheckBox.setSelected(true);
+				budgetHours.setText(formatter.formatNumber(taskView.budgetInHours()));
+			} else {
+				budgetCheckBox.setSelected(false);
+				budgetHours.setText("");
+			}
+						
+			dialog.setVisible(true);
 		}
-				
-		this.taskNameTextBox.requestFocus();
-		taskNameTextBox.selectAll();
-	
 		
-		if (taskView == null){
-			super.setVisible(visible);
-			return;
+		private JPanel buildFieldsPanel() {
+			
+			taskNameTextBox = new JTextField(20);
+			budgetCheckBox = createBudgetCheckbox();		
+			initializeBudgetHours();
+			
+			final FormLayout layout = new FormLayout("pref, 3dlu, left:pref");
+			final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+			builder.append("Task name", taskNameTextBox);
+			builder.nextLine();		
+			builder.append(budgetCheckBox);				
+			builder.append(budgetHours);
+			final JPanel fieldsPanel = builder.getPanel();
+			fieldsPanel.setBorder(BorderFactory.createEmptyBorder(20,15,15,15));
+
+			return fieldsPanel;
+		}
+
+		private void initializeCancelButton(final JDialog dialog) {
+			this.cancelButton = new JButton("Cancel");
+			this.cancelButton.addActionListener(new ActionListener() {		
+				public void actionPerformed(ActionEvent e) {
+					doCancel(dialog);
+				}		
+			});
 		}
 		
-		this.taskNameTextBox.setText(taskView.name());
-		if (taskView.budgetInHours() != null) {
-			this.budgetCheckBox.setSelected(true);
-			this.budgetHours.setText(this.formatter.formatNumber(taskView.budgetInHours()));
-		} else {
-			this.budgetCheckBox.setSelected(false);
-			this.budgetHours.setText("");
-		}
-		
-		super.setVisible(visible);
-	}
-	
-	@Override
-	public void setVisible(boolean visible) {
-		if (visible)
-			throw new UnsupportedOperationException("Use setVisible(boolean visible, TaskData defaultData) instead.)");
-		
-		super.setVisible(visible);
-	}
-
-	private void initialize() {
-		
-		
-		final JPanel fieldsPanel = buildFieldsPanel();
-		final JPanel buttonBar = buildOkCancelBar();
-		
-		this.setLayout(new BorderLayout());
-		this.add(fieldsPanel, BorderLayout.CENTER);
-		this.add(buttonBar, BorderLayout.SOUTH);
-		
-		
-		this.setPreferredSize(new Dimension(380,170));
-		
-		SwingUtils.makeLocationrelativeToParent(this, getOwner());
-		
-		this.setResizable(false);
-		this.setTitle(TITLE);		
-		this.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
-		this.setModal(true);
-		
-		enableCancelOnEsc();
-		
-		this.pack();
-		
-	}
-
-
-	private void enableCancelOnEsc() {
-		this.getRootPane().registerKeyboardAction(new ActionListener(){@Override
-		public void actionPerformed(ActionEvent e) {
-			doCancel();			
-		}}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-	}
-
-	private JPanel buildOkCancelBar() {
-		
-		initializeOkButton();
-		initializeCancelButton();
-		
-		final JPanel buttonBar = ButtonBarFactory.buildOKCancelBar(this.okButton, this.cancelButton);
-		buttonBar.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
-		return buttonBar;
-	}
-
-	private JPanel buildFieldsPanel() {
-		
-		this.taskNameTextBox = new JTextField(20);
-		initializeBudgetCheckbox();		
-		initializeBudgetHours();
-		
-		final FormLayout layout = new FormLayout("pref, 3dlu, left:pref");
-		final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-		builder.append("Task name", this.taskNameTextBox);
-		builder.nextLine();		
-		builder.append(this.budgetCheckBox);				
-		builder.append(this.budgetHours);
-		final JPanel fieldsPanel = builder.getPanel();
-		fieldsPanel.setBorder(BorderFactory.createEmptyBorder(20,15,15,15));
-
-		return fieldsPanel;
-	}
-
-	private void initializeCancelButton() {
-		this.cancelButton = new JButton("Cancel");
-		this.cancelButton.addActionListener(new ActionListener() {		
+		private void enableCancelOnEsc(final JDialog dialog) {
+			dialog.getRootPane().registerKeyboardAction(new ActionListener(){@Override
 			public void actionPerformed(ActionEvent e) {
-				doCancel();
-			}		
-		});
-	}
-
-	private void initializeOkButton() {
-		this.okButton = new JButton("Ok");
-		this.okButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				okPressed(true);
-				setVisible(false);
-			}			
-		});
-		
-		getRootPane().setDefaultButton(okButton);
-		
-	}
-
-	private void initializeBudgetHours() {
-		this.budgetHours = new JTextField(5);
-		this.budgetHours.setEnabled(false);
-	}
-
-	private void initializeBudgetCheckbox() {
-		this.budgetCheckBox = new JCheckBox("Budget");
-		this.budgetCheckBox.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				TaskScreen.this.budgetHours.setEnabled(TaskScreen.this.budgetCheckBox.isSelected());				
-			}			
-		});
-	}
-	
-	public boolean okPressed() {
-		return this.okPressed;
-	}
-	
-	private void okPressed(boolean newValue) {
-		this.okPressed = newValue;
-	}
-
-	public String taskName() {
-		return this.taskNameTextBox.getText();
-	}
-
-	public Double taskBudget() {
-		if (this.budgetCheckBox.isSelected()) {
-			try {
-				return new DecimalFormat().parse(this.budgetHours.getText()).doubleValue();
-			} catch (final ParseException e) {}
+				doCancel(dialog);			
+			}}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
 		}
 
-		return null;
-	}
+		private JPanel buildOkCancelBar(JDialog dialog, Maybe<Long> time) {
+			
+			initializeOkButton(dialog, time);
+			initializeCancelButton(dialog);
+			
+			final JPanel buttonBar = ButtonBarFactory.buildOKCancelBar(this.okButton, this.cancelButton);
+			buttonBar.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+			return buttonBar;
+		}
 
-	private void doCancel() {
-		okPressed(false);
-		setVisible(false);
-	}
-	
+		
 
+		private void initializeOkButton(final JDialog dialog, final Maybe<Long> time) {
+			this.okButton = new JButton("Ok");
+			this.okButton.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					
+					TaskData data = new TaskData(taskNameTextBox.getText(), getBudget());
+					
+					if (taskView != null)
+						model.editTask(taskView, data);
+					else if (time == null)
+						model.createTask(data);
+					else
+						model.createTaskAndStart(data, time.unbox());
+					
+					dialog.setVisible(false);
+				}
+
+				private Double getBudget() {
+					String budgetHoursText = budgetHours.getText();
+					if (StringUtils.isNumeric(budgetHoursText) && !budgetHoursText.isEmpty())
+						return Double.valueOf(budgetHoursText);
+					return null;
+				}			
+			});
+			
+			dialog.getRootPane().setDefaultButton(okButton);
+			
+		}
+
+		private JTextField initializeBudgetHours() {
+			budgetHours = new JTextField(5);
+			budgetHours.setEnabled(false);
+			return budgetHours;
+		}
+
+		private JCheckBox createBudgetCheckbox() {
+			final JCheckBox budgetCheckBox = new JCheckBox("Budget");
+			budgetCheckBox.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					budgetCheckBox.setEnabled(budgetCheckBox.isSelected());				
+				}			
+			});
+			
+			return budgetCheckBox;
+		}
+
+		private void doCancel(JDialog dialog) {
+			dialog.setVisible(false);
+		}
 	
+		
+		private JDialog createDialog(Maybe<Long> time) {
+			
+			JDialog dialog = new JDialog();
+			final JPanel fieldsPanel = buildFieldsPanel();
+			final JPanel buttonBar = buildOkCancelBar(dialog, time);
+			
+			dialog.setLayout(new BorderLayout());
+			dialog.add(fieldsPanel, BorderLayout.CENTER);
+			dialog.add(buttonBar, BorderLayout.SOUTH);
+			
+			
+			dialog.setPreferredSize(new Dimension(380,170));
+			
+			
+			dialog.setResizable(false);
+			dialog.setTitle(TITLE);		
+			dialog.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
+			dialog.setModal(true);
+			
+			enableCancelOnEsc(dialog);
+			
+			dialog.pack();
+			
+			return dialog;
+			
+		}
+	}
 	
 	
 }

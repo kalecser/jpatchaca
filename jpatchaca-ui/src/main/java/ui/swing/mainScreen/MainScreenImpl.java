@@ -15,15 +15,13 @@ import org.reactivebricks.pulses.Receiver;
 
 import tasks.TasksSystem;
 import tasks.delegates.StartTaskDelegate;
-import tasks.tasks.TaskData;
-import tasks.tasks.TaskView;
 import ui.swing.mainScreen.periods.PeriodsList;
+import ui.swing.mainScreen.tasks.TaskScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.options.OptionsScreen;
 import ui.swing.users.SwingTasksUser;
 import version.PatchacaVersion;
 import wheel.io.ui.JFrameBoundsKeeper;
-import basic.UserOperationCancelledException;
 import events.EventsSystem;
 
 @SuppressWarnings("serial")
@@ -37,8 +35,9 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	private final TasksSystem tasksSystem;
 	private final StartTaskDelegate startTaskDelegate;
 	private final OptionsScreen optionsScreen;
+	private final TaskScreen taskScreen;
 
-	public MainScreenImpl( EventsSystem eventsSystem, TaskList taskList, PeriodsList periodsList, TopBar topBar, SummaryScreen tasksSummary, JFrameBoundsKeeper boundsKeeper, SwingTasksUser taskUser, TasksSystem tasksSystem, StartTaskDelegate startTaskDelegate, OptionsScreen optionsScreen){
+	public MainScreenImpl( EventsSystem eventsSystem, TaskList taskList, PeriodsList periodsList, TopBar topBar, SummaryScreen tasksSummary, JFrameBoundsKeeper boundsKeeper, SwingTasksUser taskUser, TasksSystem tasksSystem, StartTaskDelegate startTaskDelegate, OptionsScreen optionsScreen, TaskScreen taskScreen){
 		this.eventsSystem = eventsSystem;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
@@ -48,6 +47,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		this.tasksSystem = tasksSystem;
 		this.startTaskDelegate = startTaskDelegate;
 		this.optionsScreen = optionsScreen;
+		this.taskScreen = taskScreen;
 		
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());	
 		
@@ -112,22 +112,13 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		
 			@Override
 			public void editTask() {
-				TaskData newTaskData;
-				final TaskView selectedTask = taskList.selectedTask();
-				
-				try {
-					newTaskData = tasksUser.getNewTaskData(selectedTask, MainScreenImpl.this);
-				} catch (final UserOperationCancelledException e) {
-					return;
-				}
-				
-				tasksSystem.editTask(selectedTask, newTaskData);	
+				taskScreen.editSelectedTask();	
 		
 			}
 		
 			@Override
 			public void createTask() {
-				tasksUser.createTask(MainScreenImpl.this.getWindow());
+				taskScreen.createTask();
 			}
 
 			@Override

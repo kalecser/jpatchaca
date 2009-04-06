@@ -19,6 +19,7 @@
   <classpathentry kind="var" path="M2_REPO/com/jgoodies/forms/1.2.1/forms-1.2.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/collections/google-collections/0.9/google-collections-0.9.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/unto/twitter/java-twitter/0.9-SNAPSHOT/java-twitter-0.9-SNAPSHOT.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/netbeans/jemmy/2.2.7.5/jemmy-2.2.7.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.0.0/jmock-1.0.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/1.6/joda-time-1.6.jar"/>
   <classpathentry kind="src" path="/jpatchaca-model"/>

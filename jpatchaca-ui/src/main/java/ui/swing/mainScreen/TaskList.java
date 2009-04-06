@@ -6,12 +6,16 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.DropMode;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -22,14 +26,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Signal;
-import org.reactivebricks.pulses.Source;
 
 import statistics.ProjectVelocityCalculator;
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.dragAndDrop.TaskTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
+import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
 import wheel.io.files.Directory;
 import basic.Alert;
@@ -55,7 +58,6 @@ public class TaskList extends JPanel{
 	
 	private final TasksListData screenData;
 	private final SelectedTaskName _selectedTaskName;
-	private final Source<TaskView> _selectedTask = new Source<TaskView>(null);
 	private final TaskListMemory memory;
 	
 	Runnable fireChangeListeners = new Runnable() {
@@ -68,9 +70,11 @@ public class TaskList extends JPanel{
 	};
 	
 	final DeferredExecutor executor = new DeferredExecutor(200, fireChangeListeners);
-	public TaskList(final LabelsList labelsList, final ProjectVelocityCalculator projectVelocityCalculator, final Directory directory, final TasksSystem tasksSystem, final TaskContextMenu taskContextMenu){		
+	private final SelectedTaskSource selectedTask;
+	public TaskList(final LabelsList labelsList, final ProjectVelocityCalculator projectVelocityCalculator, final Directory directory, final TasksSystem tasksSystem, final TaskContextMenu taskContextMenu, final TaskListModel model, SelectedTaskSource selectedTask){		
 		
 		
+		this.selectedTask = selectedTask;
 		selectedTaskChangedAlert = new AlertImpl();
 		this.memory = new DeferredTaskListMemory(directory);
 		this.screenData = memory.retrieve();
@@ -100,6 +104,23 @@ public class TaskList extends JPanel{
 		split.setContinuousLayout(true);
 		
 		this.setLayout(new BorderLayout());
+		
+		JButton createTaskButton = new JButton("Create task");
+		createTaskButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.createTask();
+			}
+			
+		});
+		createTaskButton.setFocusable(false);
+		JPanel createTaskPannel = new JPanel();
+		createTaskPannel.setLayout(new BorderLayout());
+		createTaskPannel.add(createTaskButton, BorderLayout.WEST);
+		createTaskPannel.setBorder(BorderFactory.createEmptyBorder());
+		
+		this.add(createTaskPannel,BorderLayout.NORTH);
 		this.add(split,BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(180 ,0));				
 	}
@@ -279,18 +300,13 @@ public class TaskList extends JPanel{
 		}
 		
 		_selectedTaskName.taskChangedTo(Maybe.wrap(selectedTask()));
-		_selectedTask.supply(selectedTask());
+		selectedTask.supply(selectedTask());
 		
 	}
 
 	public SelectedTaskName selectedTaskName() {
 		return _selectedTaskName;
 	}
-
-	public Signal<TaskView> selectedTaskSignal() {
-		return _selectedTask;
-	}
-
 
 
 }
