@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 
-public class MockOkCancelPane implements OkCancelPane {
+public class MockOkCancelPane implements ActionPane {
 
 	protected AtomicBoolean okPressed = new AtomicBoolean(false);
 
@@ -17,7 +17,7 @@ public class MockOkCancelPane implements OkCancelPane {
 	}
 
 	@Override
-	public Runnable okAction() {
+	public Runnable action() {
 		return new Runnable() {
 			@Override
 			public void run() {

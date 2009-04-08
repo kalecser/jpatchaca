@@ -35,7 +35,7 @@ import ui.swing.mainScreen.TopBar;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
 import ui.swing.mainScreen.tasks.TaskExclusionScreen;
-import ui.swing.mainScreen.tasks.TaskScreen;
+import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.TaskScreenModelImpl;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
@@ -144,7 +144,7 @@ public class Main {
 		container.addComponent(TopBar.class);
 		container.addComponent(PeriodsTableModel.class);
 		container.addComponent(PeriodsList.class);
-		container.addComponent(TaskScreen.class);
+		container.addComponent(TaskScreenController.class);
 		container.addComponent(TaskScreenModelImpl.class);
 		container.addComponent(TaskContextMenu.class);
 		container.addComponent(TaskContextMenuSystemMediator.class);

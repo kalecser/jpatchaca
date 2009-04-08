@@ -11,8 +11,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -30,7 +32,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 	
 	private static final DecimalFormat TIME_SPENT_FORMAT = new DecimalFormat("#0.00");
 	private static final FastDateFormat SHORT_DATE_FORMAT = FastDateFormat
-			.getDateInstance(FastDateFormat.SHORT);
+			.getDateInstance(FastDateFormat.SHORT , TimeZone.getDefault());
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,12 +45,12 @@ public class PeriodsTableModel extends AbstractTableModel {
 	private int[] editableColumns = new int[] { 0, 1, 2 };
 	private TaskView _task = null;
 
-	String shortDatePattern = SHORT_DATE_FORMAT.getPattern();
-	String weekDayPattern = "E";
-	private final FastDateFormat dateFormat = FastDateFormat
-			.getInstance(weekDayPattern + " " + shortDatePattern);
-	private final FastDateFormat timeFormat = FastDateFormat
-			.getTimeInstance(FastDateFormat.SHORT);
+	static String shortDatePattern = SHORT_DATE_FORMAT.getPattern();
+	static String weekDayPattern = "E";
+	private static final FastDateFormat dateFormat = FastDateFormat
+			.getInstance(weekDayPattern + " " + shortDatePattern, TimeZone.getDefault());
+	private static final FastDateFormat timeFormat = FastDateFormat
+			.getTimeInstance(FastDateFormat.SHORT, TimeZone.getDefault());
 
 	private PeriodsListener periodsListener;
 
@@ -76,13 +78,15 @@ public class PeriodsTableModel extends AbstractTableModel {
 	}
 
 	public synchronized Object getValueAt(int rowIndex, int columnIndex) {
+		
 		if (this._task == null)
 			return "";
 
 		final Period period = periodForRowIndex(rowIndex);
 		String endTime;
 		if (period.endTime() != null) {
-			endTime = timeFormat.format(period.endTime());
+			endTime = FastDateFormat
+			.getTimeInstance(FastDateFormat.SHORT, java.util.TimeZone.getDefault()).format(period.endTime());
 		} else {
 			endTime = "";
 		}
@@ -90,7 +94,8 @@ public class PeriodsTableModel extends AbstractTableModel {
 		if (columnIndex == 0)
 			return dateFormat.format(period.startTime());
 		if (columnIndex == 1)
-			return timeFormat.format(period.startTime());
+			return FastDateFormat
+			.getTimeInstance(FastDateFormat.SHORT, java.util.TimeZone.getDefault()).format(period.startTime());
 		if (columnIndex == 2)
 			return endTime;
 		if (columnIndex == 3)
@@ -133,13 +138,13 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private void enqueueSetValueAt(final Object value, final int row,
 			final int column, final int rowToIndex) {
-		
 		if (rowToIndex == -1)
 			JOptionPane.showMessageDialog(null, "No row to edit");
 			
 		new Thread(){
 			@Override
 			public void run() {
+				
 				if (column == 0){	
 					Maybe<Date> parseDate = parseDate(value);
 					if (parseDate != null)
@@ -167,9 +172,10 @@ public class PeriodsTableModel extends AbstractTableModel {
 		final String dateString = removeWeekDay(value.toString());
 		
 		try {
-			return Maybe.wrap(new SimpleDateFormat(shortDatePattern).parse(dateString));
+			return Maybe.wrap((Date)new SimpleDateFormat(shortDatePattern).parseObject(dateString));
 		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(null, "Invalid date " + value);
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Invalid date");
 			return null;
 		}
 	}
@@ -183,8 +189,10 @@ public class PeriodsTableModel extends AbstractTableModel {
 		try {
 			String insertedDateString = SHORT_DATE_FORMAT.format(periodForRowIndex(row).startTime())
 					+ " " + (String) value;
-			return Maybe.wrap((Date) new SimpleDateFormat(shortDatePattern + " "
-					+ timeFormat.getPattern()).parseObject(insertedDateString));
+			
+			SimpleDateFormat format = new SimpleDateFormat(shortDatePattern + " " + timeFormat.getPattern());
+			format.setTimeZone(TimeZone.getDefault());
+			return Maybe.wrap((Date) format.parse(insertedDateString));
 		} catch (final ParseException e) {
 			JOptionPane.showMessageDialog(null, "Invalid time " + value);
 			return null;
@@ -213,18 +221,34 @@ public class PeriodsTableModel extends AbstractTableModel {
 		return new PeriodsListener() {
 			private Map<Period, Subscriber> subscribers = new HashMap<Period, Subscriber>();
 
-			public void periodAdded(Period period) {
-				add(period);
+			public void periodAdded(final Period period) {
+				SwingUtilities.invokeLater(new Runnable() {				
+					@Override
+					public void run() {
+						add(period);
+					}
+				});
 			}
 
-			public void periodRemoved(Period period) {
-				remove(period);
+			public void periodRemoved(final Period period) {
+				SwingUtilities.invokeLater(new Runnable() {				
+					@Override
+					public void run() {
+						remove(period);
+					}
+				});
+
 			}
 			
 
-			private synchronized void remove(Period period) {
-				fireTableDataChanged();
-				removeSubscriber(period);
+			private synchronized void remove(final Period period) {
+				SwingUtilities.invokeLater(new Runnable() {				
+					@Override
+					public void run() {
+						fireTableDataChanged();
+						removeSubscriber(period);
+					}
+				});	
 								
 			}
 
@@ -235,18 +259,29 @@ public class PeriodsTableModel extends AbstractTableModel {
 			}
 
 			private synchronized void add(final Period period) {
+				
 				final int affectedRow = rowToIndex(_task.periods().size() - 1);
-				fireTableRowsInserted(affectedRow, affectedRow);
-
-				Subscriber subscriber = new Subscriber() {
+				final Subscriber subscriber = new Subscriber() {
 					@Override
 					public void fire() {
-						fireTableRowsUpdated(affectedRow, affectedRow);				
+					
+								SwingUtilities.invokeLater(new Runnable() {
+								
+									@Override
+									public void run() {
+										
+										fireTableRowsUpdated(affectedRow, affectedRow);
+									}
+								});
+								
+						
 					}
 				};
 				
 				period.subscribe(subscriber);
+				fireTableRowsInserted(affectedRow, affectedRow);
 				
+	
 				subscribers.put(period, subscriber);
 			
 			}

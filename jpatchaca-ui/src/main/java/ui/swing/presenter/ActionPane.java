@@ -2,9 +2,9 @@ package ui.swing.presenter;
 
 import javax.swing.JPanel;
 
-public interface OkCancelPane {
+public interface ActionPane {
 	
-	public Runnable okAction();
+	public Runnable action();
 	public JPanel getPanel();
 	
 	

@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.swing.JTable;
 
@@ -186,8 +187,16 @@ public class MainScreenOperator {
 	public void editPeriod(final int periodIndex, final String start_HH_mm_a, final String stop_HH_mm_a) {
 		final JTableOperator periods = new JTableOperator(mainScreen);
 		
-		periods.setValueAt(getTimeInScreenInputFormat(start_HH_mm_a), periodIndex, 1);
-		periods.setValueAt(getTimeInScreenInputFormat(stop_HH_mm_a), periodIndex, 2);
+		waitPeriodCreated(periodIndex);
+		
+		String startTimeText = getTimeInScreenInputFormat(start_HH_mm_a);
+		periods.setValueAt(startTimeText, periodIndex, 1);
+		periods.waitCell(startTimeText, periodIndex, 1);
+				
+		String stopTimeText = getTimeInScreenInputFormat(stop_HH_mm_a);
+		periods.setValueAt(stopTimeText, periodIndex, 2);
+		periods.waitCell(stopTimeText, periodIndex, 2);
+		
 		
 	}
 
@@ -201,8 +210,13 @@ public class MainScreenOperator {
 	}
 
 	public void editPeriod(int periodIndex, String startHH_mm_a) {
-		final JTableOperator periods = new JTableOperator(mainScreen);
 		
+		waitPeriodCreated(periodIndex);
+		periodsTableOperator.setValueAt(getTimeInScreenInputFormat(startHH_mm_a), periodIndex, 1);
+		
+	}
+
+	private void waitPeriodCreated(int periodIndex) {
 		long timeout = 5000;
 		long currentTime = System.currentTimeMillis();
 		while (System.currentTimeMillis() - currentTime > timeout){
@@ -211,18 +225,15 @@ public class MainScreenOperator {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-			if (periods.getRowCount()> periodIndex)
+			if (periodsTableOperator.getRowCount()> periodIndex)
 				break;
 		}
-		
-		periods.setValueAt(getTimeInScreenInputFormat(startHH_mm_a), periodIndex, 1);
-		
 	}
 
 	private String getTimeInScreenInputFormat(String startHH_mm_a) {
 		String pattern = "hh:mm a";
 		SimpleDateFormat hh_mm_aFormater = new SimpleDateFormat(pattern);
-		FastDateFormat screenFormater = FastDateFormat.getTimeInstance(FastDateFormat.SHORT);
+		FastDateFormat screenFormater = FastDateFormat.getTimeInstance(FastDateFormat.SHORT, TimeZone.getDefault());
 		try {
 			return screenFormater.format(hh_mm_aFormater.parse(startHH_mm_a));
 		} catch (ParseException e) {
@@ -267,8 +278,13 @@ public class MainScreenOperator {
 	}
 
 	public void addPeriod(String taskName) {
+		
 		selectTask(taskName);
+		int rowCount = periodsTableOperator.getRowCount();
 		new JButtonOperator(mainScreen, "add").doClick();
+		waitPeriodCreated(rowCount + 1);
+		
+		
 	}
 
 	public void editPeriodDay(String taskName, int i, String dateMM_DD_YYYY) {

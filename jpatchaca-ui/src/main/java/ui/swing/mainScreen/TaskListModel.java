@@ -1,13 +1,13 @@
 package ui.swing.mainScreen;
 
-import ui.swing.mainScreen.tasks.TaskScreen;
+import ui.swing.mainScreen.tasks.TaskScreenController;
 
 
 public class TaskListModel {
 
-	private final TaskScreen taskScreen;
+	private final TaskScreenController taskScreen;
 
-	public TaskListModel(TaskScreen taskScreen){
+	public TaskListModel(TaskScreenController taskScreen){
 		this.taskScreen = taskScreen;
 		
 	}

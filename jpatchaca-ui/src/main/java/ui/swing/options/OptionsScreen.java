@@ -7,14 +7,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import ui.swing.presenter.OkCancelPane;
+import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
 import wheel.swing.CheckboxSignalBinder;
 import wheel.swing.TextFieldBinder;
 
 public class OptionsScreen {
 
-	public class OptionsScreenOkCancelPane implements OkCancelPane {
+	public class OptionsScreenOkCancelPane implements ActionPane {
 
 		private JCheckBox twitterEnabled;
 		private JTextField username;
@@ -40,11 +40,14 @@ public class OptionsScreen {
 			password = new JTextField(30);
 			TextFieldBinder.bind(password, optionsScreenModel.password());
 			optionsPanel.add(password, "growx,span 3");
+			
+			twitterEnabled.requestFocus();
+			
 			return optionsPanel;
 		}
 
 		@Override
-		public Runnable okAction() {
+		public Runnable action() {
 			return new Runnable() {
 				@Override
 				public void run() {
@@ -69,9 +72,8 @@ public class OptionsScreen {
 	public synchronized void show() {
 
 		if (optionsScreen != null) {
-			optionsScreen.setVisible(true);
-			optionsScreen.toFront();
-			return;
+			optionsScreen.setVisible(false);
+			optionsScreen.dispose();
 		}
 
 		optionsScreen = presenter.showOkCancelDialog(

@@ -4,7 +4,7 @@ import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 
-import ui.swing.mainScreen.tasks.TaskScreen;
+import ui.swing.mainScreen.tasks.TaskScreenController;
 
 public class TaskScreenOperator {
 
@@ -12,7 +12,7 @@ public class TaskScreenOperator {
 	private final JDialogOperator frame;
 
 	public TaskScreenOperator(){
-		frame = new JDialogOperator(TaskScreen.TITLE);
+		frame = new JDialogOperator(TaskScreenController.TITLE);
 	}
 
 	public void setTaskName(String taskNewName) {

@@ -25,4 +25,10 @@ public class AlertImpl implements Alert {
 	public synchronized void unsubscribe(Subscriber subscriber) {
 		subscribers.remove(subscriber);
 	}
+	
+	@Override
+	public String toString() {
+	
+		return subscribers.toString();
+	}
 }

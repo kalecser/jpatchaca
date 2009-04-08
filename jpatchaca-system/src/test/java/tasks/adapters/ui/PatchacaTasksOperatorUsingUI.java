@@ -87,7 +87,7 @@ public final class PatchacaTasksOperatorUsingUI implements PatchacaTasksOperator
 	@Override
 	public void startNewTaskNow(String taskName) {
 		
-		patchacaTray.startNewTaskHalfAnHourAgo(taskName);
+		patchacaTray.startNewTaskNow(taskName);
 		
 		final TaskScreenOperator taskScreen = new TaskScreenOperator();
 		taskScreen.setTaskName(taskName);

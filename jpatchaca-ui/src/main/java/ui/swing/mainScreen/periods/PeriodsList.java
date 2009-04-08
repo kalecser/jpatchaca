@@ -181,7 +181,12 @@ public class PeriodsList extends SimpleInternalFrame implements TaskSelectionLis
 
 			@Override
 			public void periodAdded(final Period period) {
-				selectAndScrollToRow(0);				
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						selectAndScrollToRow(0);				
+					}
+				});
 			}
 
 			@Override

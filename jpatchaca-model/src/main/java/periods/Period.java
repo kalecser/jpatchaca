@@ -52,7 +52,9 @@ public class Period {
 		this.stop = stop;
 	}
 	
-	public void setStart(final Date start) {
+	public synchronized void setStart(final Date start) {
+		
+		System.out.println("-------------- Set start " + toString());
 		
 		this.start = start;
 		if (start == null)
@@ -65,6 +67,7 @@ public class Period {
 		this.day = extractDay(start);
 		this.month = extractMonth(start);
 		
+		System.out.println("notify " + changeAlert);
 		this.changeAlert.fire();
 	}
 	
@@ -85,7 +88,7 @@ public class Period {
 		this.changeAlert.fire();
 	}
 
-	public Date startTime() {
+	public synchronized  Date startTime() {
 		return this.start;
 	}
 
@@ -143,7 +146,7 @@ public class Period {
 	@Override
 	public String toString() {		
 		final String stopString = (this.stop == null?"":this.stop.toString());
-		return "Period: " + this.start.toString() + " - " + stopString;
+		return "Period: " + this.start + " - " + stopString + " " + super.toString();
 	}
 	
 	public Long totalTime() {

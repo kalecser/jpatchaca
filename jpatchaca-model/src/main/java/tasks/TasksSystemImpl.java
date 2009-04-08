@@ -35,7 +35,6 @@ import basic.IdProvider;
 import core.ObjectIdentity;
 import events.AddNoteToTaskEvent;
 import events.AddPeriodEvent;
-import events.CreateAndStartTask;
 import events.CreateTaskEvent3;
 import events.EditPeriodEvent2;
 import events.EditTaskEvent;
@@ -146,7 +145,9 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	@Override
 	public synchronized void createAndStartTaskIn(final TaskData newTaskData, final long in) {
 		final CreateTaskEvent3 createTaskEvent = produceCreateTaskEvent(newTaskData);
-		this.eventsSystem.writeEvent(new CreateAndStartTask(createTaskEvent, in));		
+		this.eventsSystem.writeEvent(createTaskEvent);
+		TaskView task = tasksHome.getTaskView(createTaskEvent.getObjectIdentity());
+		taskStarted(task, in);
 	}
 
 	public synchronized ObjectIdentity getIdOfTask(final TaskView task) {		
@@ -240,7 +241,6 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	public synchronized void setPeriodStarting(final TaskView task, final int periodIndex, final Date startDate) {
 		if (periodIndex == -1)
 			throw new IllegalArgumentException("Index must be positive");
-		
 		final Period period = task.getPeriod(periodIndex);
 		editPeriod(task, periodIndex, period.createNewStarting(startDate));				
 	}

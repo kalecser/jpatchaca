@@ -13,7 +13,7 @@ import tasks.tasks.TaskView;
 import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.mainScreen.TaskList;
-import ui.swing.mainScreen.tasks.TaskScreen;
+import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.users.SwingTasksUser;
 import basic.Subscriber;
@@ -32,7 +32,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private Maybe<Listener> listener;
 	private final WindowManager windowManager;
 	private final TaskList taskList;
-	private final TaskScreen taskScreen;
+	private final TaskScreenController taskScreen;
 
 	
 	public PatchacaTrayModelImpl(
@@ -40,7 +40,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final TaskList taskList, 
 			final TasksSystem tasksSystem,
 			final SwingTasksUser taskUser,
-			TaskScreen taskScreen,
+			TaskScreenController taskScreen,
 			final WindowManager windowManager){
 		
 		this.mainScreen = mainScreen;

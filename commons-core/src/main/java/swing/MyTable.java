@@ -39,8 +39,6 @@ public class MyTable extends JTable {
 			 
 			 try {
 				 
-				 for (final Method m : Component.class.getMethods())
-					 System.out.println(m);
 				 
 				final Method method = Component.class.getDeclaredMethod("processKeyEvent", KeyEvent.class);
 				method.setAccessible(true);

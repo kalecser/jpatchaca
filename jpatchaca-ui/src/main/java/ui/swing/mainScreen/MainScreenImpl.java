@@ -16,7 +16,7 @@ import org.reactivebricks.pulses.Receiver;
 import tasks.TasksSystem;
 import tasks.delegates.StartTaskDelegate;
 import ui.swing.mainScreen.periods.PeriodsList;
-import ui.swing.mainScreen.tasks.TaskScreen;
+import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.options.OptionsScreen;
 import ui.swing.presenter.Presenter;
@@ -36,9 +36,9 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	private final TasksSystem tasksSystem;
 	private final StartTaskDelegate startTaskDelegate;
 	private final OptionsScreen optionsScreen;
-	private final TaskScreen taskScreen;
+	private final TaskScreenController taskScreen;
 
-	public MainScreenImpl( EventsSystem eventsSystem, TaskList taskList, PeriodsList periodsList, TopBar topBar, SummaryScreen tasksSummary, JFrameBoundsKeeper boundsKeeper, SwingTasksUser taskUser, TasksSystem tasksSystem, StartTaskDelegate startTaskDelegate, OptionsScreen optionsScreen, TaskScreen taskScreen, Presenter presenter){
+	public MainScreenImpl( EventsSystem eventsSystem, TaskList taskList, PeriodsList periodsList, TopBar topBar, SummaryScreen tasksSummary, JFrameBoundsKeeper boundsKeeper, SwingTasksUser taskUser, TasksSystem tasksSystem, StartTaskDelegate startTaskDelegate, OptionsScreen optionsScreen, TaskScreenController taskScreen, Presenter presenter){
 		this.eventsSystem = eventsSystem;
 		this.taskList = taskList;
 		this.periodsList = periodsList;

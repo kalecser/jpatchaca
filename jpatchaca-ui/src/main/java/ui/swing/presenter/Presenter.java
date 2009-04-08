@@ -27,7 +27,7 @@ public class Presenter {
 		this.mainScreen = mainScreen;
 	}
 	
-	public JDialog showOkCancelDialog(final OkCancelPane pane, String title){
+	public JDialog showOkCancelDialog(final ActionPane pane, String title){
 		
 		final JDialog dialog = createOkCancelDialog(pane, title, mainScreen);
 		openedWindows.add(new WeakReference<Window>(dialog));
@@ -42,7 +42,7 @@ public class Presenter {
 		return dialog;
 	}
 
-	private static JDialog createOkCancelDialog(final OkCancelPane pane, String title, JFrame mainScreen) {
+	private static JDialog createOkCancelDialog(final ActionPane pane, String title, JFrame mainScreen) {
 		final JDialog dialog = new JDialog(mainScreen);
 		SwingUtils.makeLocationrelativeToParent(dialog, mainScreen);
 		dialog.setTitle(title);
@@ -59,7 +59,7 @@ public class Presenter {
 				new Runnable() {
 					@Override
 					public void run() {
-						pane.okAction().run();
+						pane.action().run();
 						dialog.setVisible(false);
 					}
 				},

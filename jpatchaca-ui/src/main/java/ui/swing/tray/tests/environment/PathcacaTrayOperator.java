@@ -141,5 +141,9 @@ public class PathcacaTrayOperator {
 		throw new NotImplementedException();
 	}
 
+	public void startNewTaskNow(String taskName) {
+		clickMenuByName("Start task.../New task/Now");
+	}
+
 
 }

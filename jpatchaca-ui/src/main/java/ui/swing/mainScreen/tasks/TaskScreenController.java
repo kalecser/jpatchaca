@@ -4,13 +4,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
 import org.reactivebricks.commons.lang.Maybe;
 
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
-import ui.swing.presenter.OkCancelPane;
+import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
 import basic.Formatter;
 
@@ -18,7 +19,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 
-public class TaskScreen{
+public class TaskScreenController{
 
 	private static final long serialVersionUID = 1L;
 	public static final String TITLE = "Task edition";
@@ -28,62 +29,38 @@ public class TaskScreen{
 	private final Presenter presenter;
 	
 
-	public TaskScreen(Formatter formatter, TaskScreenModel model, Presenter presenter){			
+	public TaskScreenController(Formatter formatter, TaskScreenModel model, Presenter presenter){			
 		this.model = model;
 		this.formatter = formatter;
 		this.presenter = presenter;
 	}
 	
-	private void show() {
-		new Thread(){
-			@Override
-			public void run() {
-				internalShow(null, null);
-			}
-		}.start();
-		
-	}
-	
-	private void show(final Long time) {
-		new Thread() {
-			@Override
-			public void run() {
-				internalShow(null,Maybe.wrap(time));
-			}
-		}.start();
-	}
-	
-	private void show(final Maybe<TaskView> maybeTaskView) {
-		new Thread(){
-			@Override
-			public void run() {
-				internalShow(maybeTaskView, null);
-			}
-		}.start();
-		
-	}
-
 	public void createTaskStarted(long time) {
-		show(time);
+		internalShow(null,Maybe.wrap(time));
 	}	
 	
 	public void editSelectedTask() {
 		TaskView selectedTask = model.selectedTask();
 		if (selectedTask == null)
-			show((Maybe<TaskView>)null);
+			internalShow(((Maybe<TaskView>)null), null);
 		else
-			show(Maybe.wrap(selectedTask));
+			internalShow(Maybe.wrap(selectedTask), null);
 	}
 
 	public void createTask() {
-		show();
+		internalShow(null, null);
 	}
 	
-	private void internalShow(Maybe<TaskView> task, Maybe<Long> start) {
-		presenter.showOkCancelDialog(new TaskScreenDialog(task, start), TITLE);
+	private void internalShow(final Maybe<TaskView> task, final Maybe<Long> start) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				presenter.showOkCancelDialog(new TaskScreenDialog(task, start), TITLE);		
+			}
+		});
 	}
 
-	class TaskScreenDialog implements OkCancelPane{
+	class TaskScreenDialog implements ActionPane{
 		private static final long serialVersionUID = 1L;
 		
 		private JTextField taskNameTextBox;
@@ -101,17 +78,11 @@ public class TaskScreen{
 			
 		}
 		
-		private JTextField initializeBudgetHours() {
-			budgetHours = new JTextField(5);
-			return budgetHours;
-		}
-
 		private JPanel createDialog(Maybe<Long> time) {
 			
 			taskNameTextBox = new JTextField(20);
-			budgetCheckBox = new JCheckBox("Budget");		
-			initializeBudgetHours();
-			
+			budgetCheckBox = new JCheckBox("Budget");
+			budgetHours = new JTextField(5);		
 			final FormLayout layout = new FormLayout("pref, 3dlu, left:pref");
 			final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 			builder.append("Task name", taskNameTextBox);
@@ -129,7 +100,8 @@ public class TaskScreen{
 		public JPanel getPanel() {
 			JPanel dialog = createDialog(time);
 			
-			taskNameTextBox.requestFocus();			
+			taskNameTextBox.requestFocus();	
+			
 			if (maybeTaskView == null){
 				return dialog;
 			}
@@ -157,7 +129,7 @@ public class TaskScreen{
 		}			
 
 		@Override
-		public Runnable okAction() {
+		public Runnable action() {
 			return new Runnable() {
 			
 				@Override
