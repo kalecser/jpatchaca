@@ -8,8 +8,16 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.UnhandledException;
 
 import wheel.lang.Threads;
 
@@ -52,9 +60,9 @@ public class PathcacaTrayOperator {
 		
 		
 		for (final java.awt.event.ActionListener listener : targetMenu.getActionListeners()){
-			new Thread(){ public void run() {
+			new Thread(new Runnable() { public void run() {
 				listener.actionPerformed(new ActionEvent(new Button(), 0,pathElements[pathElements.length - 1]));
-			};}.start();
+			}}).start();
 		}
 	}
 	
@@ -105,21 +113,63 @@ public class PathcacaTrayOperator {
 		throw new IllegalArgumentException("unable to find menuitem " + stopTaskMenuTemplate);
 		
 	}
-	
-	private MenuItem menuItemByLabel(MenuItem menu, String label) {
+
+	static final class FindMenuItemByLabelInSwingThread implements Callable<MenuItem> {
+
+		private final MenuItem m;
+		private final String label;
+
+		FindMenuItemByLabelInSwingThread(final MenuItem m, final String label) {
+			this.m = m;
+			this.label = label;
+		}
 		
-		long startTime = System.currentTimeMillis();
-		while ((System.currentTimeMillis() - startTime) < TIMEOUT){
-			PopupMenu popupMenu = ((PopupMenu)menu);
-			for (int i = 0; i < popupMenu.getItemCount(); i++) {
-				String menuLabel = popupMenu.getItem(i).getLabel();
-				if (menuLabel.equals(label)){
-					return popupMenu.getItem(i);
+		@Override
+		public MenuItem call() throws Exception {
+				PopupMenu popupMenu = ((PopupMenu)m);
+				for (int i = 0; i < popupMenu.getItemCount(); i++) {
+					final MenuItem item = popupMenu.getItem(i);
+					String menuLabel = item.getLabel();
+					if (menuLabel.equals(label)){
+						return item;
+					}
 				}
-			}
-		}		
+				return null;
+		}
 		
-		throw new IllegalArgumentException("unable to find menuitem " + label);
+	}
+	
+	private MenuItem menuItemByLabel(final MenuItem m, final String label) {
+		
+		class FindMenuItemByLabelRepeatedly  implements Callable<MenuItem> {
+
+			@Override
+			public MenuItem call() throws Exception {
+				while (!Thread.currentThread().isInterrupted()) {
+					final FutureTask<MenuItem> findOnce = new FutureTask<MenuItem>(new FindMenuItemByLabelInSwingThread(m, label));
+					SwingUtilities.invokeLater(findOnce);
+					final MenuItem menuItem = findOnce.get();
+					if (menuItem != null) return menuItem;
+				}
+				throw new InterruptedException();
+			}
+		}
+		
+		final FutureTask<MenuItem> findRepeatedly = new FutureTask<MenuItem>(new FindMenuItemByLabelRepeatedly());
+		final Thread t = new Thread(findRepeatedly);
+		t.start();
+		try {
+			return findRepeatedly.get(TIMEOUT, TimeUnit.MILLISECONDS);
+		} catch (TimeoutException e) {
+			throw new IllegalArgumentException("unable to find menuitem " + label, e);
+		} catch (InterruptedException e) {
+			throw new UnhandledException(e);
+		} catch (ExecutionException e) {
+			throw new UnhandledException(e);
+		}
+		finally {
+			t.interrupt();
+		}
 	}
 	
 	private String getSubMenuName(String name, int subMenuIndex) {
