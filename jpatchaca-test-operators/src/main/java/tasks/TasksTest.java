@@ -103,7 +103,7 @@ public abstract class TasksTest extends TestCase {
 		tasksOperator.assertActiveTask(taskNewName);
 	}
 	
-	public void testStartTaskHaflAnHourAgo(){
+	public void testStartTaskHalfAnHourAgo(){
 		final String taskName = "test";
 		
 		tasksOperator.createTask(taskName);
