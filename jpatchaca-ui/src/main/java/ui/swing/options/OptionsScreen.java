@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
+import ui.swing.presenter.UIAction;
 import wheel.swing.CheckboxSignalBinder;
 import wheel.swing.TextFieldBinder;
 
@@ -47,8 +48,8 @@ public class OptionsScreen {
 		}
 
 		@Override
-		public Runnable action() {
-			return new Runnable() {
+		public UIAction action() {
+			return new UIAction() {
 				@Override
 				public void run() {
 					optionsScreenModel.setConfig(twitterEnabled.isSelected(),
