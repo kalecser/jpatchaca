@@ -22,6 +22,7 @@
 	</build>
 	<modules>
 		<module>commons-core</module>
+		<module>commons-swing</module>
 		<module>jpatchaca-model</module>
 		<module>jpatchaca-ui</module>
 		<module>jpatchaca-system</module>
