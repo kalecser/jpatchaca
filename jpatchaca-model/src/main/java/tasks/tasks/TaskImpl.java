@@ -18,7 +18,7 @@ import basic.SystemClock;
 
 
 
-class TaskImpl implements TaskView {
+class TaskImpl implements Task {
 
 	private boolean _active;
 	private Period activePeriod;

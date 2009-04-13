@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
@@ -21,12 +19,10 @@ import basic.AlertImpl;
 import basic.BasicSystem;
 import basic.SystemClock;
 import core.ObjectIdentity;
+import events.persistence.MustBeCalledInsideATransaction;
 
 public class TasksHomeImpl implements TasksHome {
 
-	private final Map<ObjectIdentity, TaskImpl> tasksById;
-	private final Map<TaskImpl, ObjectIdentity> idsByTask;
-	private final List<TaskImpl> tasksList;
 	private final SystemClock clock;
 	private final PeriodsFactory periodsFactory;
 	private final AlertImpl taskListChangedAlert;
@@ -34,15 +30,14 @@ public class TasksHomeImpl implements TasksHome {
 	private final AlertImpl activeTaskChangedAlert;
 	private final List<TasksListener> tasksListeners;
 	private final Deque<TaskView> lastActiveTasks;
-	private TaskImpl activeTask;
+	private Task activeTask;
 	private final Source<String> activeTaskName;
+	private final Tasks tasks;
 
-	public TasksHomeImpl(final PeriodsFactory periodsFactory, final BasicSystem basicSystem) {
+	public TasksHomeImpl(final PeriodsFactory periodsFactory, final BasicSystem basicSystem, Tasks tasks) {
 		this.periodsFactory = periodsFactory;
+		this.tasks = tasks;
 		this.clock = basicSystem.systemClock();
-		this.tasksById = new LinkedHashMap<ObjectIdentity, TaskImpl>();
-		this.idsByTask = new LinkedHashMap<TaskImpl, ObjectIdentity>();
-		this.tasksList = new ArrayList<TaskImpl>();
 		this.tasksListeners = new ArrayList<TasksListener>();
 		this.taskListChangedAlert = new AlertImpl();
 		this.lastActiveTasksAlert = new AlertImpl();
@@ -54,11 +49,9 @@ public class TasksHomeImpl implements TasksHome {
 		
 	}
 
-	public void createTask(final ObjectIdentity taskId, final String name, final Double budget) {
-		final TaskImpl task = new TaskImpl(name, this.clock, budget, new PeriodManagerImpl(), this.periodsFactory);
-		this.tasksById.put(taskId, task);
-		this.idsByTask.put(task, taskId);
-		this.tasksList.add(task);
+	public void createTask(final ObjectIdentity taskId, final String name, final Double budget) throws MustBeCalledInsideATransaction {
+		final Task task = new TaskImpl(name, this.clock, budget, new PeriodManagerImpl(), this.periodsFactory);
+		tasks.add(taskId, task);
 		this.taskListChangedAlert.fire();
 		fireTaskCreated(task);
 		
@@ -66,7 +59,7 @@ public class TasksHomeImpl implements TasksHome {
 	}
 
 	
-	private void fireTaskCreated(final TaskImpl task) {
+	private void fireTaskCreated(final Task task) {
 		for (final TasksListener tasksListener : tasksListeners)
 			tasksListener.createdTask(task);
 		
@@ -78,24 +71,9 @@ public class TasksHomeImpl implements TasksHome {
 		
 	}
 
-	public TaskImpl getTask(final ObjectIdentity taskId) {
-		final TaskImpl task = this.tasksById.get(taskId);
-		if (task == null) throw new IllegalArgumentException("There is no task with taskId: " + taskId);
-		
-		return task;
-	}
-
-	
-	public ObjectIdentity getIdOfTask(final TaskView task) {
-		return this.idsByTask.get(task);
-	}
-
 	
 	public void remove(final TaskView task) {
-		final ObjectIdentity taskId = this.getIdOfTask(task);
-		this.tasksById.remove(taskId);
-		this.idsByTask.remove(task);
-		this.tasksList.remove(task);
+		tasks.remove(task);
 		this.taskListChangedAlert.fire();
 		fireTaskRemoved(task);
 		
@@ -104,24 +82,18 @@ public class TasksHomeImpl implements TasksHome {
 		
 	}
 
-	public List<TaskView> tasks() {
-		return Collections.unmodifiableList(new ArrayList<TaskView>(this.tasksList));
-	}
 
 	public Alert taskListChangedAlert() {
 		return this.taskListChangedAlert;
 	}
 
-	public TaskView getTaskView(final ObjectIdentity taskId) {
-		return getTask(taskId);
-	}
 
 	public void addPeriodToTask(final ObjectIdentity taskId, final Period period) {
-		getTask(taskId).addPeriod(period);
+		tasks.get(taskId).addPeriod(period);
 	}
 
 	public void editTask(final ObjectIdentity taskId, final String newName, final Double newBudget) {
-		final TaskImpl task = getTask(taskId);
+		final Task task = tasks.get(taskId);
 		task.setName(newName);
 		task.setBudgetInHours(newBudget);
 		
@@ -133,8 +105,8 @@ public class TasksHomeImpl implements TasksHome {
 	}
 
 	public void transferPeriod(final ObjectIdentity selectedTaskId, final int selectedPeriod, final ObjectIdentity targetTaskId) {
-		final TaskImpl selectedTask = getTask(selectedTaskId);
-		final TaskImpl targetTask = getTask(targetTaskId);
+		final Task selectedTask = tasks.get(selectedTaskId);
+		final Task targetTask = tasks.get(targetTaskId);
 		final Period period = selectedTask.periods().get(selectedPeriod);
 		
 		selectedTask.removePeriod(period);
@@ -146,7 +118,7 @@ public class TasksHomeImpl implements TasksHome {
 		if (activeTask != null)
 			activeTask.stop();
 
-		final TaskImpl task = getTask(taskId);
+		final Task task = tasks.get(taskId);
 		
 		task.start();
 		activeTask = task; 
@@ -158,7 +130,7 @@ public class TasksHomeImpl implements TasksHome {
 		
 	}
 
-	private void updateLastActiveTasks(final TaskImpl task) {
+	private void updateLastActiveTasks(final Task task) {
 		if (lastActiveTasks.contains(task))
 			lastActiveTasks.remove(task);
 		
@@ -167,8 +139,8 @@ public class TasksHomeImpl implements TasksHome {
 	}
 
 	public void stop(final ObjectIdentity taskId) {
-		getTask(taskId).stop();
-		activeTask = getTask(taskId); 
+		tasks.get(taskId).stop();
+		activeTask = tasks.get(taskId); 
 		activeTask = null;	
 		activeTaskChangedAlert.fire();
 		
@@ -192,11 +164,11 @@ public class TasksHomeImpl implements TasksHome {
 	}
 
 	public void removePeriodFromTask(final TaskView task, final Period period) {
-		((TaskImpl)task).removePeriod(period);		
+		((Task)task).removePeriod(period);		
 	}
 
 	public void addNoteToTask(final ObjectIdentity idOfTask, final NoteView note) {
-		final TaskImpl task = getTask(idOfTask);
+		final Task task = tasks.get(idOfTask);
 		task.addNote(note);
 	}
 

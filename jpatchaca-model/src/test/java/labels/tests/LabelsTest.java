@@ -3,29 +3,21 @@ package labels.tests;
 import java.util.List;
 
 import labels.LabelsSystem;
-import labels.LabelsSystemImpl;
+import main.TransientNonUIContainer;
 
 import org.jmock.MockObjectTestCase;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
-import periods.impl.PeriodsFactoryImpl;
 
 import tasks.TasksSystem;
-import tasks.TasksSystemImpl;
-import tasks.delegates.StartTaskDelegate;
-import tasks.persistence.StartTaskPersistence;
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
-import tasks.tasks.TasksHomeImpl;
-import wheel.io.files.impl.tranzient.TransientDirectory;
+import tasks.tasks.TasksView;
+import basic.NonEmptyString;
 import basic.Subscriber;
 import basic.mock.MockBasicSystem;
 import core.ObjectIdentity;
 import events.CreateTaskEvent;
 import events.DeprecatedEvent;
 import events.EventsSystem;
-import events.EventsSystemImpl;
 
 public class LabelsTest extends MockObjectTestCase {
 
@@ -33,31 +25,17 @@ public class LabelsTest extends MockObjectTestCase {
 	private TasksSystem tasksSystem;
 	private MockBasicSystem basicSystem;
 	private EventsSystem eventsSystem;
+	private TasksView tasks;
 	
 
 	@Override
 	protected void setUp() throws Exception {
 		
-		final MutablePicoContainer container = new PicoBuilder()
-			.withCaching()
-			.withHiddenImplementations()
-			.withLifecycle()
-		.build();
-		
-		container.addComponent(TransientDirectory.class);
-		container.addComponent(MockBasicSystem.class);
-		container.addComponent(EventsSystemImpl.class);
-		container.addComponent(TasksSystemImpl.class);
-		container.addComponent(TasksHomeImpl.class);
-		container.addComponent(StartTaskDelegate.class);
-		container.addComponent(StartTaskPersistence.class);
-		container.addComponent(LabelsSystemImpl.class);
-		container.addComponent(PeriodsFactoryImpl.class);
-		
-		container.start();
+		final TransientNonUIContainer container = new TransientNonUIContainer();
 		
 		labelsSystem = container.getComponent(LabelsSystem.class);
 		tasksSystem = container.getComponent(TasksSystem.class);
+		tasks = container.getComponent(TasksView.class);
 		basicSystem = container.getComponent(MockBasicSystem.class);
 		eventsSystem = container.getComponent(EventsSystem.class);
 	}
@@ -78,7 +56,7 @@ public class LabelsTest extends MockObjectTestCase {
 		
 		final ObjectIdentity taskId = new ObjectIdentity("1");
 		final TaskView task = createTask("task name", taskId.getId());
-		labelsSystem.setNewLabelToTask(tasksSystem.getTaskView(taskId), firstLabelName);
+		labelsSystem.setNewLabelToTask(tasks.get(taskId), firstLabelName);
 		assertEquals(task, labelsSystem.tasksInlabel(firstLabelName).get(0));
 		assertEquals(1, labelsSystem.tasksInlabel(firstLabelName).size());
 		assertEquals(1, labelsSystem.assignableLabels().size());
@@ -90,12 +68,12 @@ public class LabelsTest extends MockObjectTestCase {
 		
 		final TaskView taskTwo = createTask("task name", taskTwoId.getId());
 		assertEquals(firstLabelName, labelsSystem.assignableLabels().get(0));
-		labelsSystem.setLabelToTask(tasksSystem.getTaskView(taskTwoId), firstLabelName);
+		labelsSystem.setLabelToTask(tasks.get(taskTwoId), firstLabelName);
 		assertEquals(taskTwo, labelsSystem.tasksInlabel(firstLabelName).get(1));
 		assertEquals(2, labelsSystem.tasksInlabel(firstLabelName).size());
 		
 		final String secondLabelName = "test 2";
-		labelsSystem.setNewLabelToTask(tasksSystem.getTaskView(taskTwoId), secondLabelName);
+		labelsSystem.setNewLabelToTask(tasks.get(taskTwoId), secondLabelName);
 		final List<String> taskTwoLabels = labelsSystem.getLabelsFor(taskTwo);
 		assertEquals(firstLabelName, taskTwoLabels.get(0));
 		assertEquals(secondLabelName, taskTwoLabels.get(1));
@@ -107,7 +85,7 @@ public class LabelsTest extends MockObjectTestCase {
 		final ObjectIdentity taskId = new ObjectIdentity("1");
 		final TaskView task = createTask("task name", taskId.getId());
 		
-		labelsSystem.setNewLabelToTask(tasksSystem.getTaskView(taskId), labelName);
+		labelsSystem.setNewLabelToTask(tasks.get(taskId), labelName);
 		
 		labelsSystem.removeLabelFromTask(task, labelName);
 		assertEquals(0, labelsSystem.assignableLabels().size());
@@ -121,7 +99,7 @@ public class LabelsTest extends MockObjectTestCase {
 	
 	public void testRemovedTasksAreRemovedFromLabels(){
 		final TaskView task = createTask("task name", "1");
-		labelsSystem.setLabelToTask(tasksSystem.getTaskView(tasksSystem.getIdOfTask(task)), "label");
+		labelsSystem.setLabelToTask(task, "label");
 		
 		tasksSystem.removeTask(task);
 		
@@ -141,8 +119,8 @@ public class LabelsTest extends MockObjectTestCase {
 	
 	private TaskView createTask(String taskName, String taskId) {	
 		basicSystem.setNextId(taskId);
-		tasksSystem.createTask(new TaskData(taskName, 0.0));
-		return tasksSystem.getTaskView(new ObjectIdentity(taskId));
+		tasksSystem.createTask(new TaskData(new NonEmptyString(taskName), 0.0));
+		return tasks.get(new ObjectIdentity(taskId));
 	}	
 	
 }

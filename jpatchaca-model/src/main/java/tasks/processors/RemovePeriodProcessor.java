@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 import periodsInTasks.PeriodsInTasksHome;
 import tasks.tasks.TaskView;
-import tasks.tasks.TasksHome;
-import tasks.tasks.TasksHomeView;
+import tasks.tasks.Tasks;
 import events.Processor;
 import events.RemovePeriodEvent;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -13,16 +12,16 @@ import events.persistence.MustBeCalledInsideATransaction;
 public class RemovePeriodProcessor implements Processor<RemovePeriodEvent> {
 
 	private final PeriodsInTasksHome periodsInTaskHome;
-	private final TasksHomeView tasksHome;
+	private final Tasks tasks;
 
-	public RemovePeriodProcessor(final PeriodsInTasksHome periodsInTaskHome, final TasksHome tasksHome){
+	public RemovePeriodProcessor(final PeriodsInTasksHome periodsInTaskHome, Tasks tasks){
 		this.periodsInTaskHome = periodsInTaskHome;
-		this.tasksHome = tasksHome;		
+		this.tasks = tasks;		
 	}
 	
 	public void execute(final RemovePeriodEvent eventObj) throws MustBeCalledInsideATransaction {
 		
-		final TaskView taskView = tasksHome.getTaskView(eventObj.getTaskId());
+		final TaskView taskView = tasks.get(eventObj.getTaskId());
 		periodsInTaskHome.removePeriodFromTask(taskView, taskView.getPeriod(eventObj.getPeriodIndex()));
 	}
 

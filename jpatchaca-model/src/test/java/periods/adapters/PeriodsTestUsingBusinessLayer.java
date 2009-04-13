@@ -9,6 +9,7 @@ import tasks.PatchacaTasksOperator;
 import tasks.TasksSystem;
 import tasks.adapters.PatchacaTasksOperatorUsingBusinessLayer;
 import tasks.delegates.StartTaskDelegate;
+import tasks.tasks.TasksView;
 import basic.mock.MockHardwareClock;
 
 public class PeriodsTestUsingBusinessLayer extends PeriodsTest {
@@ -27,12 +28,13 @@ public class PeriodsTestUsingBusinessLayer extends PeriodsTest {
 
 		labelsSystem = container.getComponent(LabelsSystem.class);
 		tasksSystem = container.getComponent(TasksSystem.class);
+		TasksView tasks = container.getComponent(TasksView.class);
 		periodsSystem = container.getComponent(PeriodsInTasksSystem.class);
 		
 		StartTaskDelegate startTaskDelegate = container.getComponent(StartTaskDelegate.class);
 		
 		tasksOperator = new PatchacaTasksOperatorUsingBusinessLayer(
-				labelsSystem, mockHardwareClock, tasksSystem, startTaskDelegate);
+				labelsSystem, mockHardwareClock, tasksSystem, startTaskDelegate, tasks);
 		
 		super.setUp();
 	}

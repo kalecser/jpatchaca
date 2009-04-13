@@ -13,6 +13,7 @@ import periodsInTasks.processors.AddPeriodProcessor;
 import tasks.TasksSystem;
 import tasks.processors.RemovePeriodProcessor;
 import tasks.tasks.TaskView;
+import tasks.tasks.Tasks;
 import basic.BasicSystem;
 import core.ObjectIdentity;
 import events.AddPeriodEvent;
@@ -24,14 +25,16 @@ public class PeriodsInTasksSystemImpl implements PeriodsInTasksSystem, Startable
 	private final EventsSystem eventsSystem;
 	private final TasksSystem taskSystem;
 	private final PeriodsInTasksHomeImpl periodsInTasksHome;
+	private final Tasks tasks;
 
-	public PeriodsInTasksSystemImpl(final EventsSystem eventsSystem, final TasksSystem taskSystem, final BasicSystem basic, final PeriodsFactory periodsFactory){
+	public PeriodsInTasksSystemImpl(final EventsSystem eventsSystem, final TasksSystem taskSystem, final BasicSystem basic, final PeriodsFactory periodsFactory, Tasks tasks){
 		this.eventsSystem = eventsSystem;
 		this.taskSystem = taskSystem;
+		this.tasks = tasks;
 		
 		periodsInTasksHome = new PeriodsInTasksHomeImpl(taskSystem);
 		eventsSystem.addProcessor(new AddPeriodProcessor(periodsInTasksHome, periodsFactory));
-		eventsSystem.addProcessor(new RemovePeriodProcessor(periodsInTasksHome, taskSystem.tasksHome()));
+		eventsSystem.addProcessor(new RemovePeriodProcessor(periodsInTasksHome, tasks));
 		
 	}
 	
@@ -79,7 +82,7 @@ public class PeriodsInTasksSystemImpl implements PeriodsInTasksSystem, Startable
 	}
 
 	private ObjectIdentity idOfTask(final TaskView task) {
-		return taskSystem.getIdOfTask(task);
+		return tasks.idOf(task);
 	}
 
 	@Override

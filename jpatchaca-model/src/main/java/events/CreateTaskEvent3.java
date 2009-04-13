@@ -18,6 +18,7 @@ public class CreateTaskEvent3 implements Serializable{
 	public CreateTaskEvent3(final ObjectIdentity objectIdentity, final String taskName, final Double budget, final String labelName) {
 		Validate.notNull(objectIdentity);
 		Validate.notNull(taskName);
+		Validate.notEmpty(taskName);
 		
 		this.objectIdentity = objectIdentity;
 		this.taskName = taskName;

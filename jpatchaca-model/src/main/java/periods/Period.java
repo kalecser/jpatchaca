@@ -54,8 +54,6 @@ public class Period {
 	
 	public synchronized void setStart(final Date start) {
 		
-		System.out.println("-------------- Set start " + toString());
-		
 		this.start = start;
 		if (start == null)
 			return;
@@ -67,7 +65,6 @@ public class Period {
 		this.day = extractDay(start);
 		this.month = extractMonth(start);
 		
-		System.out.println("notify " + changeAlert);
 		this.changeAlert.fire();
 	}
 	

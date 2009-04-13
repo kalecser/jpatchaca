@@ -19,24 +19,24 @@ public class PeriodManagerImpl implements PeriodManager {
 		this.listeners = new ArrayList<PeriodsListener>();
 	}
 	
-	public void addPeriod(Period period) {
+	public synchronized void addPeriod(Period period) {
 		
 		this.periods.add(period);	
 		firePeriodAdded(period);
 	}
 
-	private void firePeriodAdded(Period period) {
+	private synchronized void firePeriodAdded(Period period) {
 		for (final PeriodsListener listener : this.listeners){
 			listener.periodAdded(period);
 		}
 		
 	}
 
-	public List<Period> periods() {
+	public synchronized List<Period> periods() {
 		return this.periods;
 	}
 
-	public void addListener(PeriodsListener listener) {
+	public synchronized void addListener(PeriodsListener listener) {
 		this.listeners.add(listener);
 		
 		for (final Period period : this.periods){
@@ -44,7 +44,7 @@ public class PeriodManagerImpl implements PeriodManager {
 		}
 	}
 
-	public Long totalTime() {
+	public synchronized  Long totalTime() {
 		Long totalTime = 0L;
 		
 		for(final Period period : this.periods()) {
@@ -54,24 +54,24 @@ public class PeriodManagerImpl implements PeriodManager {
 		return totalTime;
 	}
 
-	public void removePeriod(Period period) {
+	public synchronized void removePeriod(Period period) {
 		this.periods.remove(period);
 		firePeriodRemoved(period);
 	}
 
-	private void firePeriodRemoved(Period period) {
+	private synchronized void firePeriodRemoved(Period period) {
 		for (final PeriodsListener listener : this.listeners){
 			listener.periodRemoved(period);
 		}		
 	}
 
 	@Override
-	public void removeListener(PeriodsListener listener) {
+	public synchronized void removeListener(PeriodsListener listener) {
 		listeners.remove(listener);		
 	}
 
 	@Override
-	public Period period(int index) {
+	public synchronized Period period(int index) {
 		return periods.get(index);
 	}
 

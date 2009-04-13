@@ -3,7 +3,6 @@ package tasks;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import org.picocontainer.Startable;
 import org.reactivebricks.pulses.Signal;
@@ -28,6 +27,7 @@ import tasks.tasks.NotesHome;
 import tasks.tasks.NotesHomeImpl;
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
+import tasks.tasks.Tasks;
 import tasks.tasks.TasksHome;
 import basic.Alert;
 import basic.BasicSystem;
@@ -51,12 +51,14 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	private final TasksHome tasksHome;
 	private final EventsSystem eventsSystem;
 	private final StartTaskDelegate startTaskDelegate;
+	private final Tasks tasks;
 	
 
-	public TasksSystemImpl(final BasicSystem basicSystem, TasksHome tasksHome,  final EventsSystem eventsSystem, final PeriodsFactory periodsFactory, StartTaskDelegate startTaskDelegate){
+	public TasksSystemImpl(final BasicSystem basicSystem, TasksHome tasksHome,  final EventsSystem eventsSystem, final PeriodsFactory periodsFactory, StartTaskDelegate startTaskDelegate, Tasks tasks){
 		this.eventsSystem = eventsSystem;
 		this.tasksHome = tasksHome;
-		this.startTaskDelegate = startTaskDelegate;		
+		this.startTaskDelegate = startTaskDelegate;
+		this.tasks = tasks;		
 		this.provider = basicSystem.idProvider();
 		
 		final NotesHome notesHome = new NotesHomeImpl(basicSystem);
@@ -64,11 +66,11 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 		eventsSystem.addProcessor(new CreateTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new CreateTaskProcessor2(tasksHome));
 		eventsSystem.addProcessor(new CreateTaskProcessor3(tasksHome));
-		eventsSystem.addProcessor(new EditPeriodProcessor(tasksHome));
-		eventsSystem.addProcessor(new EditPeriodProcessor2(tasksHome));
+		eventsSystem.addProcessor(new EditPeriodProcessor(tasks));
+		eventsSystem.addProcessor(new EditPeriodProcessor2(tasksHome, tasks));
 		eventsSystem.addProcessor(new EditTaskProcessor(tasksHome));		
 		eventsSystem.addProcessor(new MovePeriodProcessor(tasksHome));
-		eventsSystem.addProcessor(new RemoveTaskProcessor(tasksHome));
+		eventsSystem.addProcessor(new RemoveTaskProcessor(tasks, tasksHome));
 		eventsSystem.addProcessor(new RenameTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new StartTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new StopTaskProcessor(tasksHome));
@@ -95,7 +97,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	public synchronized void addPeriod(final TaskView selectedTask, final Period period) {
 		
 		final AddPeriodEvent event = new AddPeriodEvent(
-				getIdOfTask(selectedTask), 
+				tasks.idOf(selectedTask), 
 				period.startTime(), 
 				period.endTime());
 		this.eventsSystem.writeEvent(event);
@@ -105,7 +107,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	public synchronized void editTask(final TaskView taskView, final TaskData taskData) {
 							
-		final ObjectIdentity idOfTask = getIdOfTask(taskView);
+		final ObjectIdentity idOfTask = tasks.idOf(taskView);
 		final EditTaskEvent event = new EditTaskEvent(idOfTask, taskData
 			.getTaskName(), taskData.getBudget());
 
@@ -116,7 +118,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	public synchronized void editPeriod(final TaskView selectedTask, final int periodIndex, final Period newPeriod) {		
 
 		final EditPeriodEvent2 event = new EditPeriodEvent2(
-				getIdOfTask(selectedTask),
+				tasks.idOf(selectedTask),
 				periodIndex,
 				newPeriod.startTime(),
 				newPeriod.endTime());
@@ -125,42 +127,32 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	}
 
 	public synchronized void removeTask(final TaskView task) {
-		final RemoveTaskEvent event = new RemoveTaskEvent(getIdOfTask(task));
+		final RemoveTaskEvent event = new RemoveTaskEvent(tasks.idOf(task));
 		this.eventsSystem.writeEvent(event);
 	}
 	
 	public synchronized void addNoteToTask(final TaskView task, final String text) {
-		this.eventsSystem.writeEvent(new AddNoteToTaskEvent(getIdOfTask(task), text));
+		this.eventsSystem.writeEvent(new AddNoteToTaskEvent(tasks.idOf(task), text));
 	}
 
 	public synchronized void movePeriod(final TaskView taskFrom, final TaskView taskTo, final int periodFrom) {
-		final MovePeriodEvent event = new MovePeriodEvent(getIdOfTask(taskFrom), periodFrom, getIdOfTask(taskTo));
+		final MovePeriodEvent event = new MovePeriodEvent(tasks.idOf(taskFrom), periodFrom, tasks.idOf(taskTo));
 		this.eventsSystem.writeEvent(event);		
 	}
 
 	public synchronized void stopTask(final TaskView task) {
-		this.eventsSystem.writeEvent(new StopTaskEvent(getIdOfTask(task)));
+		this.eventsSystem.writeEvent(new StopTaskEvent(tasks.idOf(task)));
 	}
 	
 	@Override
 	public synchronized void createAndStartTaskIn(final TaskData newTaskData, final long in) {
 		final CreateTaskEvent3 createTaskEvent = produceCreateTaskEvent(newTaskData);
 		this.eventsSystem.writeEvent(createTaskEvent);
-		TaskView task = tasksHome.getTaskView(createTaskEvent.getObjectIdentity());
+		TaskView task = tasks.get(createTaskEvent.getObjectIdentity());
 		taskStarted(task, in);
 	}
 
-	public synchronized ObjectIdentity getIdOfTask(final TaskView task) {		
-		return tasksHome.getIdOfTask(task);
-	}
-
-	public synchronized TaskView getTaskView(final ObjectIdentity taskId) {
-		return tasksHome.getTaskView(taskId);
-	}
-
-	public synchronized List<TaskView> tasks() {
-		return tasksHome.tasks();
-	}
+	
 
 	public synchronized TaskView activeTask() {
 		return tasksHome.activeTask();

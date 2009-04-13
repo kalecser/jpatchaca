@@ -4,6 +4,6 @@ package version;
 public class PatchacaVersion {
 
 	public static String getVersion(){
-		return "0.60";
+		return "0.80";
 	}
 }

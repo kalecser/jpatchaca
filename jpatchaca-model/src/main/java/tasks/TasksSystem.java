@@ -2,7 +2,6 @@ package tasks;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import org.reactivebricks.pulses.Signal;
 
@@ -40,11 +39,8 @@ public interface TasksSystem {
 	public void taskStarted(TaskView selectedTask, long millisAgo);
 	
 	
-	public List<TaskView> tasks();
 	public Collection<TaskView> lastActiveTasks();
 	
-	public ObjectIdentity getIdOfTask(TaskView activeTask);
-	public TaskView getTaskView(ObjectIdentity taskId);
 	public void addTasksListener(TasksListener tasksListener);
 	
 	public Alert activeTaskChangedAlert();

@@ -2,11 +2,10 @@ package tasks.persistence;
 
 import org.picocontainer.Startable;
 
-import tasks.TasksSystem;
 import tasks.delegates.StartTaskDelegate;
 import tasks.tasks.TaskView;
+import tasks.tasks.TasksView;
 import ui.swing.mainScreen.Delegate;
-
 import events.EventsSystem;
 import events.StartTaskEvent;
 
@@ -14,12 +13,12 @@ public class StartTaskPersistence implements Startable{
 
 	private final EventsSystem eventsSystem;
 	private final StartTaskDelegate startTaskDelegate;
-	private final TasksSystem tasksSystem;
+	private final TasksView tasks;
 
-	public StartTaskPersistence(EventsSystem eventsSystem, StartTaskDelegate startTaskDelegate, TasksSystem tasksSystem){
+	public StartTaskPersistence(EventsSystem eventsSystem, StartTaskDelegate startTaskDelegate, TasksView tasks){
 		this.eventsSystem = eventsSystem;
 		this.startTaskDelegate = startTaskDelegate;
-		this.tasksSystem = tasksSystem;		
+		this.tasks = tasks;		
 	}
 	
 	@Override
@@ -27,7 +26,7 @@ public class StartTaskPersistence implements Startable{
 		startTaskDelegate.addListener(new Delegate.Listener<TaskView>() {
 			@Override
 			public void execute(TaskView object) {
-				eventsSystem.writeEvent(new StartTaskEvent(tasksSystem.getIdOfTask(object)));				
+				eventsSystem.writeEvent(new StartTaskEvent(tasks.idOf(object)));				
 			}
 		});
 	}

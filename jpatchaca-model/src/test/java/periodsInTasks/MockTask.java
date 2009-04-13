@@ -7,112 +7,181 @@ import org.reactivebricks.pulses.Signal;
 import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
-import basic.Alert;
 import tasks.NotesListener;
 import tasks.tasks.NoteView;
-import tasks.tasks.TaskView;
+import basic.Alert;
 
-public class MockTask implements TaskView {
+public class MockTask implements tasks.tasks.Task{
 
-	
+	private final String name;
+
+	public MockTask(){
+		name = null;
+	}
+			
+	public MockTask(String string) {
+		this.name = string;
+	}
+
+	@Override
+	public void addNote(NoteView note) {
+		//  Auto-generated method stub
+		
+	}
+
 	@Override
 	public void addNotesListener(NotesListener listener) {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addPeriod(Period period) {
+		//  Auto-generated method stub
+		
 	}
 
 	@Override
 	public void addPeriodsListener(PeriodsListener listener) {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		
 	}
 
 	@Override
 	public Double budgetBallanceInHours() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Double budgetInHours() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Alert changedAlert() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Period getPeriod(int row) {
-		throw new RuntimeException("not implemented");
+	public Period getPeriod(int index) {
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public boolean isActive() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public Period lastPeriod() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public int lastPeriodIndex() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return 0;
 	}
 
 	@Override
 	public String name() {
-		throw new RuntimeException("not implemented");
+		return name;
 	}
 
 	@Override
 	public Signal<String> nameSignal() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public List<NoteView> notes() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Period periodAt(int i) {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public PeriodManager periodManager() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public List<Period> periods() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public int periodsCount() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return 0;
 	}
 
 	@Override
 	public void removeNotesListener(NotesListener listener) {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removePeriod(Period period) {
+		//  Auto-generated method stub
+		
 	}
 
 	@Override
 	public void removePeriodListener(PeriodsListener listener) {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBudgetInHours(Double newBudget) {
+		//  Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setName(String newNameForTask) {
+		//  Auto-generated method stub
+		
+	}
+
+	@Override
+	public void start() {
+		//  Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stop() {
+		//  Auto-generated method stub
+		
 	}
 
 	@Override
 	public Double totalTimeInHours() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public long totalTimeInMillis() {
-		throw new RuntimeException("not implemented");
+		//  Auto-generated method stub
+		return 0;
 	}
 
 }

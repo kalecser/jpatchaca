@@ -16,6 +16,7 @@ import org.picocontainer.Startable;
 import tasks.TasksListener;
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
+import tasks.tasks.TasksView;
 import basic.Alert;
 import events.EventsSystem;
 import events.RemoveTaskFromLabelEvent;
@@ -25,22 +26,22 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 
 	private final LabelsHomeView labelsHomeView;
 	private final EventsSystem eventsSystem;
-	private final TasksSystem tasksSystem;
+	private final TasksView tasks;
 	
 
 
-	public LabelsSystemImpl(final EventsSystem eventsSystem, final TasksSystem tasksSystem) {
+	public LabelsSystemImpl(final EventsSystem eventsSystem, final TasksSystem tasksSystem, TasksView tasks) {
 
+		this.tasks = tasks;
 		final LabelsHome labelsHome = new LabelsHomeImpl();
 		
 		this.eventsSystem = eventsSystem;
-		this.tasksSystem = tasksSystem;
 		this.labelsHomeView = labelsHome;
 		
-		eventsSystem.addProcessor(new SetLabelToTaskProcessor(tasksSystem, labelsHome));
-		eventsSystem.addProcessor(new RemoveTaskFromLabelProcessor(labelsHome, tasksSystem));
+		eventsSystem.addProcessor(new SetLabelToTaskProcessor(tasks, labelsHome));
+		eventsSystem.addProcessor(new RemoveTaskFromLabelProcessor(labelsHome, tasks));
 		eventsSystem.addProcessor(new SetSelectedLabelProcessor());
-		eventsSystem.addProcessor(new CreateTaskProcessor3(labelsHome, tasksSystem));
+		eventsSystem.addProcessor(new CreateTaskProcessor3(labelsHome, tasks));
 		
 		tasksSystem.addTasksListener(new TasksListener() {
 			public void createdTask(final TaskView task) {
@@ -61,7 +62,7 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	public void setNewLabelToTask(final TaskView task, final String newLabelName) {
 			Validate.notNull(task);
 			Validate.notNull(newLabelName);
-			final SetLabelToTaskEvent event = new SetLabelToTaskEvent(tasksSystem.getIdOfTask(task), 
+			final SetLabelToTaskEvent event = new SetLabelToTaskEvent(tasks.idOf(task), 
 					newLabelName);
 			this.eventsSystem.writeEvent(event);
 	}
@@ -69,13 +70,13 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	public void setLabelToTask(final TaskView task, final String labeltoAssignTo) {
 			Validate.notNull(task);
 			Validate.notNull(labeltoAssignTo);
-			final SetLabelToTaskEvent event = new SetLabelToTaskEvent(tasksSystem.getIdOfTask(task), 
+			final SetLabelToTaskEvent event = new SetLabelToTaskEvent(tasks.idOf(task), 
 					labeltoAssignTo);
 			this.eventsSystem.writeEvent(event);
 	}
 
 	public void removeLabelFromTask(final TaskView task, final String labelToAssignTo) {
-		final RemoveTaskFromLabelEvent event = new RemoveTaskFromLabelEvent(tasksSystem.getIdOfTask(task),
+		final RemoveTaskFromLabelEvent event = new RemoveTaskFromLabelEvent(tasks.idOf(task),
 				labelToAssignTo);
 		this.eventsSystem.writeEvent(event);		
 	}

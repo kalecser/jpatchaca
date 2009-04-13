@@ -10,6 +10,7 @@ import periodsInTasks.impl.PeriodsInTasksSystemImpl;
 import tasks.TasksSystemImpl;
 import tasks.delegates.StartTaskDelegate;
 import tasks.persistence.StartTaskPersistence;
+import tasks.tasks.Tasks;
 import tasks.tasks.TasksHomeImpl;
 import wheel.io.files.impl.tranzient.TransientDirectory;
 import basic.mock.MockBasicSystem;
@@ -35,6 +36,7 @@ public class TransientNonUIContainer {
 		container.addComponent(mockBasicSystem);
 		container.addComponent(EventsSystemImpl.class);
 		container.addComponent(PeriodsFactoryImpl.class);
+		container.addComponent(Tasks.class);
 		container.addComponent(TasksSystemImpl.class);
 		container.addComponent(TasksHomeImpl.class);
 		container.addComponent(StartTaskDelegate.class);

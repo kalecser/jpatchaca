@@ -1,17 +1,16 @@
 package tasks;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.reactivebricks.pulses.Signal;
 
 import periods.Period;
-import basic.Alert;
-import core.ObjectIdentity;
-import events.persistence.MustBeCalledInsideATransaction;
 import tasks.tasks.NoteView;
 import tasks.tasks.TaskView;
 import tasks.tasks.TasksHome;
+import basic.Alert;
+import core.ObjectIdentity;
+import events.persistence.MustBeCalledInsideATransaction;
 
 public class MockTasksHome implements TasksHome {
 
@@ -113,26 +112,9 @@ public class MockTasksHome implements TasksHome {
 
 	}
 
-	@Override
-	public ObjectIdentity getIdOfTask(TaskView task) {
-		
-		return new ObjectIdentity("42");
-	}
-
-	@Override
-	public TaskView getTaskView(ObjectIdentity taskId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public Alert taskListChangedAlert() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<TaskView> tasks() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,17 +3,17 @@ package labels.processors;
 import java.io.Serializable;
 
 import labels.labels.LabelsHome;
-import tasks.TasksSystem;
+import tasks.tasks.TasksView;
 import events.Processor;
 import events.SetLabelToTaskEvent;
 
 public class SetLabelToTaskProcessor implements Processor<SetLabelToTaskEvent> {
 
-	private final TasksSystem tasksSystem;
 	private final LabelsHome labelsHome;
+	private final TasksView tasks;
 
-	public SetLabelToTaskProcessor(TasksSystem tasksSystem, LabelsHome labelsHome) {
-		this.tasksSystem = tasksSystem;
+	public SetLabelToTaskProcessor(TasksView tasks, LabelsHome labelsHome) {
+		this.tasks = tasks;
 		this.labelsHome = labelsHome;
 	}
 
@@ -25,7 +25,7 @@ public class SetLabelToTaskProcessor implements Processor<SetLabelToTaskEvent> {
 		final String labelName = eventObj.labelName();
 		
 		this.labelsHome.setLabelToTask(
-				this.tasksSystem.getTaskView(eventObj.taskId()), 
+				this.tasks.get(eventObj.taskId()), 
 				labelName);
 	}
 }

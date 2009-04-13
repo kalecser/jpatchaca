@@ -3,26 +3,26 @@ package labels.processors;
 import java.io.Serializable;
 
 import labels.labels.LabelsHome;
-import tasks.TasksSystem;
+import tasks.tasks.TasksView;
 import events.Processor;
 import events.RemoveTaskFromLabelEvent;
 
 public class RemoveTaskFromLabelProcessor implements Processor<RemoveTaskFromLabelEvent> {
 
 	private final LabelsHome labelsHome;
-	private final TasksSystem tasksSystem;
+	private final TasksView tasks;
 	
 
 
-	public RemoveTaskFromLabelProcessor(LabelsHome labelsHome, TasksSystem tasksSystem) {
+	public RemoveTaskFromLabelProcessor(LabelsHome labelsHome, TasksView tasks) {
 		this.labelsHome = labelsHome;
-		this.tasksSystem = tasksSystem;
+		this.tasks = tasks;
 		
 	}
 
 	public void execute(RemoveTaskFromLabelEvent eventObj) {
 		this.labelsHome.removeTaskFromLabel(
-				this.tasksSystem.getTaskView(eventObj.getTaskId()),
+				this.tasks.get(eventObj.getTaskId()),
 				eventObj.getLabelName());
 	}
 

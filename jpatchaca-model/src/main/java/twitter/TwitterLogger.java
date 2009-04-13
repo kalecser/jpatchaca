@@ -35,14 +35,13 @@ public class TwitterLogger implements Startable {
 	}
 
 	private void enqueueTwitterUpdate(final TaskView task, final String username, final String password) {
-		System.out.println("Enqueuing twitter update for username " + twitterConfig.username().currentValue());
 		new Thread(){
 			@Override
 			public void run() {
 				Api api = Api.builder().username(username).password(password)
 				.build();
 				try{
-					api.updateStatus("Start: "+task.name()).build().post();
+					api.updateStatus(task.name()).build().post();
 				} catch (Exception ex){
 					ex.printStackTrace();
 				}

@@ -1,5 +1,7 @@
 package tasks.tasks;
 
+import basic.NonEmptyString;
+
 
 
 public class TaskData {
@@ -8,8 +10,8 @@ public class TaskData {
 	private final Double budget;
 	private final String label;
 
-	public TaskData(String taskName, Double budget) {
-		this.taskName = taskName;
+	public TaskData(NonEmptyString taskName, Double budget) {
+		this.taskName = taskName.unbox();
 		this.budget = budget;
 		this.label = null;
 	}

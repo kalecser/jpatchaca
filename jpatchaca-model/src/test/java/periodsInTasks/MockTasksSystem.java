@@ -2,7 +2,6 @@ package periodsInTasks;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import org.reactivebricks.pulses.Signal;
 
@@ -75,16 +74,6 @@ public class MockTasksSystem implements TasksSystem {
 	}
 
 	@Override
-	public ObjectIdentity getIdOfTask(final TaskView activeTask) {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public TaskView getTaskView(final ObjectIdentity taskId) {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
 	public Collection<TaskView> lastActiveTasks() {
 		throw new RuntimeException("not implemented");
 	}
@@ -141,11 +130,6 @@ public class MockTasksSystem implements TasksSystem {
 
 	@Override
 	public void taskStarted(final TaskView selectedTask, final long millisAgo) {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public List<TaskView> tasks() {
 		throw new RuntimeException("not implemented");
 	}
 
