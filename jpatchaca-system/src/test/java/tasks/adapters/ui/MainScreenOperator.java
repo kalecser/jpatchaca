@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import javax.swing.JList;
 import javax.swing.JTable;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,13 +34,15 @@ import org.netbeans.jemmy.util.RegExComparator;
 public class MainScreenOperator {
 
 	private final JFrameOperator mainScreen;
-	private JTableOperator periodsTableOperator;
+	private final JTableOperator periodsTableOperator;
+	private final JListOperator tasksListOperator;
 
 	public MainScreenOperator() {
 		final PopupMenu menu = getTrayIconMenu();
 		MainScreenOperator.clickRestoreWindow(menu);
 		mainScreen = new JFrameOperator();
 		periodsTableOperator = new JTableOperator(mainScreen);
+		tasksListOperator = new JListOperator(mainScreen, 1);
 	}
 
 	private static void clickRestoreWindow(PopupMenu menu) {
@@ -133,9 +136,7 @@ public class MainScreenOperator {
 	}
 
 	public void selectTask(String taskName) {
-		final JListOperator tasksListOperator = new JListOperator(mainScreen, 1);
 		tasksListOperator.waitState(new JListByItemTextFinder(taskName));
-		
 		tasksListOperator.selectItem(taskName);
 		
 		
@@ -147,7 +148,27 @@ public class MainScreenOperator {
 
 	public void createTask(String taskName) {
 		pushCreateTaskMenu();
-		new TaskScreenOperator().setTaskNameAndOk(taskName);		
+		new TaskScreenOperator().setTaskNameAndOk(taskName);	
+		waitTaskCreated(taskName);
+	}
+
+	private void waitTaskCreated(final String taskName) {
+		tasksListOperator.waitState(new ComponentChooser() {
+			@Override
+			public String getDescription() {
+				return "Waiting for item with text " + taskName;
+			}
+		
+			@Override
+			public boolean checkComponent(Component taskListComp) {
+				JList taskList = (JList) taskListComp;
+				for (int i = 0; i < taskList.getModel().getSize(); i++) {					
+					if (taskList.getModel().getElementAt(i).toString().equals(taskName))
+						return true;
+				}
+				return false;
+			}
+		});	
 	}
 
 	public void startTask(String taskName) {
@@ -217,17 +238,19 @@ public class MainScreenOperator {
 	}
 
 	private void waitPeriodCreated(int periodIndex) {
-		long timeout = 5000;
+		long timeout = 8000;
 		long currentTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - currentTime > timeout){
+		while (System.currentTimeMillis() - currentTime < timeout){
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
 			if (periodsTableOperator.getRowCount()> periodIndex)
-				break;
+				return;
 		}
+		
+		throw new RuntimeException("no period in row " + periodIndex);
 	}
 
 	private String getTimeInScreenInputFormat(String startHH_mm_a) {
@@ -282,7 +305,7 @@ public class MainScreenOperator {
 		selectTask(taskName);
 		int rowCount = periodsTableOperator.getRowCount();
 		new JButtonOperator(mainScreen, "add").doClick();
-		waitPeriodCreated(rowCount + 1);
+		waitPeriodCreated(rowCount);
 		
 		
 	}
@@ -291,7 +314,9 @@ public class MainScreenOperator {
 		selectTask(taskName);
 
 		int dayColumn = 0;
-		periodsTableOperator.setValueAt(getDateInScreenInputFormat(dateMM_DD_YYYY), i, dayColumn);
+		String dateInScreenInputFormat = getDateInScreenInputFormat(dateMM_DD_YYYY);
+		periodsTableOperator.setValueAt(dateInScreenInputFormat, i, dayColumn);
+		periodsTableOperator.waitCell(dateInScreenInputFormat, i, dayColumn);
 		
 	}
 

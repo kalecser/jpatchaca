@@ -15,8 +15,11 @@ import periodsInTasks.impl.PeriodsInTasksSystemImpl;
 import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizerImpl;
 import tasks.TasksSystemImpl;
+import tasks.delegates.StartTaskByNameDelegate;
 import tasks.delegates.StartTaskDelegate;
+import tasks.persistence.StartTaskByNamePersistence;
 import tasks.persistence.StartTaskPersistence;
+import tasks.tasks.Tasks;
 import tasks.tasks.TasksHomeImpl;
 import twitter.TwitterLogger;
 import twitter.TwitterOptions;
@@ -42,9 +45,13 @@ import ui.swing.options.OptionsScreen;
 import ui.swing.options.OptionsScreenModelImpl;
 import ui.swing.presenter.Presenter;
 import ui.swing.tasks.SelectedTaskSource;
+import ui.swing.tasks.StartTaskController;
+import ui.swing.tasks.StartTaskScreen;
+import ui.swing.tasks.StartTaskScreenModelImpl;
 import ui.swing.tray.PatchacaTray;
 import ui.swing.tray.PatchacaTrayModelImpl;
 import ui.swing.tray.PatchacaTrayTasksFacadeMediator;
+import ui.swing.tray.TrayIconStartTaskMessage;
 import ui.swing.users.SwingTasksUserImpl;
 import ui.swing.users.SwinglabelsUser;
 import ui.swing.utils.LookAndFeelSetter;
@@ -67,12 +74,20 @@ public class Main {
 
 	public static void main(final String[] args)
 			throws UnsupportedLookAndFeelException, IOException {
-		System.out.println(System.getProperty("java.class.path"));
-
-		System.setProperty("sun.awt.keepWorkingSetOnMinimize", "true");
-
+		
+		keepWorkingOnMinimize();
+		setLookAndFeel();
+		
 		final MutablePicoContainer container = createDurableSWINGContainer();
 		container.start();
+	}
+
+	private static void setLookAndFeel() {
+		new LookAndFeelSetter().start();
+	}
+
+	private static void keepWorkingOnMinimize() {
+		System.setProperty("sun.awt.keepWorkingSetOnMinimize", "true");
 	}
 
 	private static MutablePicoContainer createSwingContainer(
@@ -101,9 +116,12 @@ public class Main {
 		container.addComponent(DurableBasicSystem.class);
 		container.addComponent(PeriodsFactoryImpl.class);
 		container.addComponent(EventsSystemImpl.class);
+		container.addComponent(Tasks.class);
 		container.addComponent(TasksHomeImpl.class);
 		container.addComponent(TasksSystemImpl.class);
 		container.addComponent(StartTaskDelegate.class);
+		container.addComponent(StartTaskByNameDelegate.class);
+		container.addComponent(StartTaskByNamePersistence.class);
 		container.addComponent(TwitterOptions.class);
 		container.addComponent(TwitterLogger.class);
 		container.addComponent(SetTwitterConfigProcessor.class);
@@ -117,7 +135,6 @@ public class Main {
 	}
 
 	private static void registerSWINGStuff(final MutablePicoContainer container) {
-		container.addComponent(LookAndFeelSetter.class);
 		container.addComponent(DeferredDirectoryBoundPersistence.class);
 		container.addComponent(JFrameBoundsKeeperImpl.class);
 
@@ -138,6 +155,10 @@ public class Main {
 		container.addComponent(SelectedTaskSource.class);
 		container.addComponent(TaskList.class);
 		container.addComponent(TaskListModel.class);
+		container.addComponent(StartTaskScreenModelImpl.class);
+		container.addComponent(StartTaskScreen.class);
+		container.addComponent(StartTaskController.class);
+		container.addComponent(TrayIconStartTaskMessage.class);
 
 		container.addComponent(TaskListSystemMediator.class);
 		container.addComponent(SummaryScreen.class);
