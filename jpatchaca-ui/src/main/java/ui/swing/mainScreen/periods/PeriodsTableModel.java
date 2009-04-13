@@ -3,22 +3,18 @@
  */
 package ui.swing.mainScreen.periods;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang.time.FastDateFormat;
 import org.reactivebricks.commons.lang.Maybe;
 
 import periods.Period;
@@ -26,39 +22,29 @@ import periods.PeriodsListener;
 import periodsInTasks.PeriodsInTasksSystem;
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
+import basic.Formatter;
 import basic.Subscriber;
 
 public class PeriodsTableModel extends AbstractTableModel {
 	
-	private static final DecimalFormat TIME_SPENT_FORMAT = new DecimalFormat("#0.00");
-	private static final FastDateFormat SHORT_DATE_FORMAT = FastDateFormat
-			.getDateInstance(FastDateFormat.SHORT , TimeZone.getDefault());
 
 	private static final long serialVersionUID = 1L;
 
+	private static final String[] columnNames = new String[] { "Day", "Start", "End",
+			"Time" };
+	private static int[] editableColumns = new int[] { 0, 1, 2 };
+
 	private final TasksSystem tasksSystem;
 	private final PeriodsInTasksSystem periodsSystem;
-
-
-	private final String[] columnNames = new String[] { "Day", "Start", "End",
-			"Time" };
-	private int[] editableColumns = new int[] { 0, 1, 2 };
-	private TaskView _task = null;
-
-	static String shortDatePattern = SHORT_DATE_FORMAT.getPattern();
-	static String weekDayPattern = "E";
-	private static final FastDateFormat dateFormat = FastDateFormat
-			.getInstance(weekDayPattern + " " + shortDatePattern, TimeZone.getDefault());
-	private static final FastDateFormat timeFormat = FastDateFormat
-			.getTimeInstance(FastDateFormat.SHORT, TimeZone.getDefault());
-
 	private PeriodsListener periodsListener;
-
-
-
-	public PeriodsTableModel(TasksSystem tasksSystem, PeriodsInTasksSystem periodsSystem) {
+	private final Formatter formatter;
+	
+	private TaskView _task = null;
+	
+	public PeriodsTableModel(TasksSystem tasksSystem, PeriodsInTasksSystem periodsSystem, Formatter formatter) {
 		this.tasksSystem = tasksSystem;
 		this.periodsSystem = periodsSystem;
+		this.formatter = formatter;
 		
 		
 	}
@@ -74,7 +60,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 	}
 
 	public int getColumnCount() {
-		return this.columnNames.length;
+		return PeriodsTableModel.columnNames.length;
 	}
 
 	public synchronized Object getValueAt(int rowIndex, int columnIndex) {
@@ -83,26 +69,27 @@ public class PeriodsTableModel extends AbstractTableModel {
 			return "";
 
 		final Period period = periodForRowIndex(rowIndex);
-		String endTime;
-		if (period.endTime() != null) {
-			endTime = FastDateFormat
-			.getTimeInstance(FastDateFormat.SHORT, java.util.TimeZone.getDefault()).format(period.endTime());
-		} else {
-			endTime = "";
-		}
+
 
 		if (columnIndex == 0)
-			return dateFormat.format(period.startTime());
+			return formatter.formatShortDateWithWeekday(period.startTime());
 		if (columnIndex == 1)
-			return FastDateFormat
-			.getTimeInstance(FastDateFormat.SHORT, java.util.TimeZone.getDefault()).format(period.startTime());
+			return formatter.formatShortTime(period.startTime());
 		if (columnIndex == 2)
-			return endTime;
+			return formatEndTime(period);
 		if (columnIndex == 3)
-			return TIME_SPENT_FORMAT.format(period.getMiliseconds()
+			return formatter.formatTimeSpent(period.getMiliseconds()
 					/ DateUtils.MILLIS_PER_HOUR);
 
 		return "";
+	}
+
+	private String formatEndTime(final Period period) {
+		if (period.endTime() != null) {
+			return formatter.formatShortTime(period.endTime());
+		} else {
+			return "";
+		}
 	}
 
 	private Period periodForRowIndex(int rowIndex) {
@@ -119,7 +106,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		return this.columnNames[column];
+		return PeriodsTableModel.columnNames[column];
 	}
 
 	@Override
@@ -129,7 +116,9 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
-
+		
+		if (row == -1)
+ 			throw new RuntimeException("invalid row -1");
 		
 		final int rowToIndex = rowToIndex(row);
 		enqueueSetValueAt(value, row, column, rowToIndex);
@@ -172,7 +161,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 		final String dateString = removeWeekDay(value.toString());
 		
 		try {
-			return Maybe.wrap((Date)new SimpleDateFormat(shortDatePattern).parseObject(dateString));
+			return Maybe.wrap(formatter.parseShortDate(dateString));
 		} catch (ParseException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Invalid date");
@@ -187,12 +176,10 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private Maybe<Date> parseEditTime(final Object value, final int row) {
 		try {
-			String insertedDateString = SHORT_DATE_FORMAT.format(periodForRowIndex(row).startTime())
+			String insertedDateString = formatter.formatShortDate(periodForRowIndex(row).startTime())
 					+ " " + (String) value;
 			
-			SimpleDateFormat format = new SimpleDateFormat(shortDatePattern + " " + timeFormat.getPattern());
-			format.setTimeZone(TimeZone.getDefault());
-			return Maybe.wrap((Date) format.parse(insertedDateString));
+			return Maybe.wrap((Date) formatter.parseShortDateTime(insertedDateString));
 		} catch (final ParseException e) {
 			JOptionPane.showMessageDialog(null, "Invalid time " + value);
 			return null;

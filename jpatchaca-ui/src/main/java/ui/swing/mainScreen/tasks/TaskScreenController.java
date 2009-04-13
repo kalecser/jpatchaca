@@ -13,7 +13,10 @@ import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
+import ui.swing.presenter.UIAction;
+import ui.swing.presenter.ValidationException;
 import basic.Formatter;
+import basic.NonEmptyString;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -129,12 +132,17 @@ public class TaskScreenController{
 		}			
 
 		@Override
-		public Runnable action() {
-			return new Runnable() {
+		public UIAction action() {
+			return new UIAction() {
 			
 				@Override
-				public void run() {
-					TaskData data = new TaskData(taskNameTextBox.getText(), getBudget());
+				public void run() throws ValidationException {
+					
+					String taskName = taskNameTextBox.getText();
+					if (taskName.equals(""))
+						throw new ValidationException("Task name must not be empty");
+					
+					TaskData data = new TaskData(new NonEmptyString(taskName), getBudget());
 					
 					if (taskView != null)
 						model.editTask(taskView, data);

@@ -26,7 +26,7 @@ import org.picocontainer.Startable;
 
 import statistics.SummaryItem;
 import statistics.TaskSummarizer;
-import tasks.TasksSystem;
+import tasks.tasks.TasksView;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.utils.SimpleInternalFrame;
 
@@ -37,13 +37,13 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable{
 	private final TaskSummarizer summarizer;
 
 	private SummaryTableModel summaryModel;
-	private final TasksSystem tasksSystem;
 	private JRadioButton groupByMonthRadio;
+	private final TasksView tasks;
 
-	public SummaryScreen(TaskList list, TaskSummarizer summarizer, TasksSystem tasksSystem) {
+	public SummaryScreen(TaskList list, TaskSummarizer summarizer, TasksView tasks) {
 		super(SummaryScreen.panelTitle);
 		this.summarizer = summarizer;
-		this.tasksSystem = tasksSystem;
+		this.tasks = tasks;
 		initialize();
 	}
 	
@@ -156,11 +156,11 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable{
 	}
 
 	private void showSummaryPerDay() {
-		setItems(summarizer.summarizePerDay(tasksSystem.tasks()));		
+		setItems(summarizer.summarizePerDay(tasks.tasks()));		
 	}
 
 	private void showSummaryPerMonth() {
-		setItems(summarizer.summarizePerMonth(tasksSystem.tasks()));
+		setItems(summarizer.summarizePerMonth(tasks.tasks()));
 	}
 
 	@Override
