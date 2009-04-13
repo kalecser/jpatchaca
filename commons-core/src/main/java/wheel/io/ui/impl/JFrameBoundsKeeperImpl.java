@@ -52,7 +52,6 @@ public class JFrameBoundsKeeperImpl implements JFrameBoundsKeeper {
 		
 		final Rectangle storedBounds = _persistence.getStoredBounds(id);
 		if (storedBounds != null){
-			
 			//ugly!
 			final long currentTime = System.currentTimeMillis();		
 			final int timeoutWaitingForJFrameToStoreBounds = 3000;
@@ -72,11 +71,10 @@ public class JFrameBoundsKeeperImpl implements JFrameBoundsKeeper {
 		
 			@Override
 			public void componentResized(final ComponentEvent e) {
-				boundsChanged();
+				boundsChanged(e);
 			}
 
-			private void boundsChanged() {
-				
+			private void boundsChanged(final ComponentEvent e) {
 				final Rectangle bounds = frame.getBounds();
 				if (_persistence.getStoredBounds(id) == bounds)
 					return;
@@ -87,7 +85,7 @@ public class JFrameBoundsKeeperImpl implements JFrameBoundsKeeper {
 		
 			@Override
 			public void componentMoved(final ComponentEvent e) {
-				boundsChanged();
+				boundsChanged(e);
 			}
 		
 		});
