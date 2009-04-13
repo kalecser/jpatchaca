@@ -21,16 +21,22 @@ public class JAutoCompleteTextFieldModel {
 		if(string == null)
 			return new ArrayList<Object>();
 		
+		if (string.isEmpty())
+			return new ArrayList<Object>();
+		
 		Collator collator = Collator.getInstance();
 		collator.setStrength(Collator.PRIMARY);
 		
 		List<Object> possibilities = new ArrayList<Object>();
 		for (Object elementObj : elements) {
 			String element = elementObj.toString();
-			String startOfElement = element.substring(0, Math.min(string.length(), elementObj.toString().length()));
-			boolean startsWith = collator.compare(string, startOfElement) == 0;
-			if(startsWith){
-				possibilities.add(elementObj);
+			
+			for (int i = 0; i < element.length(); i+=1) {
+				String pieceOfElement = element.substring(i, Math.min(i + string.length(), elementObj.toString().length()));
+				boolean startsWith = collator.compare(string, pieceOfElement) == 0;
+				if(startsWith){
+					possibilities.add(elementObj);
+				}
 			}
 		}
 		return possibilities;

@@ -55,6 +55,11 @@ public abstract class JAutoCompleteAbstractTests {
 	}
 	
 	@Test
+	public void testEmpty(){
+		assertPossibilitiesFor("",new String[0]);
+	}
+	
+	@Test
 	public void testSpecialCharacters(){
 		assertPossibilitiesFor("Ta",new String[]{"tão", "taoo"});
 		assertPossibilitiesFor("tã",new String[]{"tão", "taoo"});

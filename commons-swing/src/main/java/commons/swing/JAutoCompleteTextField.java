@@ -2,6 +2,8 @@ package commons.swing;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -56,6 +58,13 @@ public class JAutoCompleteTextField extends JTextField{
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER){
+					
+					if (!window.isVisible())
+						return;
+					if (list.getSelectedValue() == null)
+						return;
+					
+					e.consume();					
 					selectValue();
 				}
 			}
@@ -78,8 +87,10 @@ public class JAutoCompleteTextField extends JTextField{
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
-					window.setVisible(false);
-					System.out.println("Escape pressed");
+					if (window.isVisible()){						
+						window.setVisible(false);
+						e.consume();
+					}
 				}
 				
 				
@@ -133,22 +144,24 @@ public class JAutoCompleteTextField extends JTextField{
 	}
 
 	private void autoCompleteWindowFollowAncestor() {
+		
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				adjustWindowToTextField();
+			}
+		});
+		
 		addAncestorListener(new AncestorListener(){
 
 			@Override
 			public void ancestorAdded(AncestorEvent event) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public void ancestorMoved(AncestorEvent event) {
-				Point p = new Point();
-				SwingUtilities.convertPointToScreen(p, JAutoCompleteTextField.this);
-				p.setLocation(p.getX(), p.getY()+JAutoCompleteTextField.this.getHeight());
-				window.setPreferredSize(new Dimension(JAutoCompleteTextField.this.getWidth(),window.getHeight()));
-				window.pack();
-				window.setLocation(p);
+				adjustWindowToTextField();
 			}
 
 			@Override
@@ -183,6 +196,15 @@ public class JAutoCompleteTextField extends JTextField{
 	public void dispose(){
 		window.setVisible(false);
 		window.dispose();
+	}
+
+	private void adjustWindowToTextField() {
+		Point p = new Point();
+		SwingUtilities.convertPointToScreen(p, JAutoCompleteTextField.this);
+		p.setLocation(p.getX(), p.getY()+JAutoCompleteTextField.this.getHeight());
+		window.setLocation(p);
+		window.setPreferredSize(new Dimension(JAutoCompleteTextField.this.getWidth(),window.getHeight()));
+		window.pack();
 	}
 
 	private static final long serialVersionUID = 1L;

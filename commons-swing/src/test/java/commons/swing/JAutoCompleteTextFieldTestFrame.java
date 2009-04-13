@@ -15,6 +15,7 @@ public class JAutoCompleteTextFieldTestFrame extends JFrame{
 	public JAutoCompleteTextFieldTestFrame(List<? extends Object> elements){
 		setLayout(new BorderLayout());
 		
+		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		JAutoCompleteTextFieldModel model = new JAutoCompleteTextFieldModel(elements);
