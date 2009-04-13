@@ -17,8 +17,8 @@ public class MockOkCancelPane implements ActionPane {
 	}
 
 	@Override
-	public Runnable action() {
-		return new Runnable() {
+	public UIAction action() {
+		return new UIAction() {
 			@Override
 			public void run() {
 				okPressed.set(true);
