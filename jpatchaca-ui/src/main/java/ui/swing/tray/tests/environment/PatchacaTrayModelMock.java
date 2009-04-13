@@ -12,7 +12,7 @@ import ui.swing.tray.PatchacaTrayModelImpl.Listener;
 
 public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
-	private Source<String> _activeTask = new Source<String>("");
+	private final Source<String> _activeTask = new Source<String>("");
 
 	@Override
 	public Signal<String> activeTaskName() {
@@ -20,7 +20,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public void createTaskStarted(long time) {
+	public void createTaskStarted(final long time) {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -54,7 +54,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public void setListener(Listener listener) {
+	public void setListener(final Listener listener) {
 	}
 
 	@Override
@@ -63,12 +63,12 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public void startTaskIn(TaskView task, long timeAgo) {
+	public void startTaskIn(final TaskView task, final long timeAgo) {
 		throw new RuntimeException("not implemented");
 	}
 
 	@Override
-	public void stopTaskIn(long time) {
+	public void stopTaskIn(final long time) {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -77,7 +77,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 		return new Source<String>(null);
 	}
 
-	public void setActiveTask(String string) {
+	public void setActiveTask(final String string) {
 		_activeTask.supply(string);
 	}
 
@@ -85,5 +85,9 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 		throw new RuntimeException("not implemented");
 	}
 
+	@Override
+	public void showStartTaskScreen() {
+		throw new RuntimeException("not implemented");
+	}
 
 }
