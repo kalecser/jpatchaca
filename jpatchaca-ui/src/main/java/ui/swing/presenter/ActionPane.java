@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 public interface ActionPane {
 	
-	public Runnable action();
+	public UIAction action();
 	public JPanel getPanel();
 	
 	
