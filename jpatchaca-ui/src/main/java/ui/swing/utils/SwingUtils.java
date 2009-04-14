@@ -4,10 +4,12 @@ import java.awt.Point;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import javax.swing.SwingUtilities;
 
-import sun.swing.SwingUtilities2;
+import org.apache.commons.lang.UnhandledException;
 
 public class SwingUtils {
 
@@ -26,10 +28,14 @@ public class SwingUtils {
 	}
 
 	public static <T> T getOrCry(final Callable<T> callable) {
+		final FutureTask<T> future = new FutureTask<T>(callable);
+		SwingUtilities.invokeLater(future);
 		try {
-			return SwingUtilities2.submit(callable).get();
-		} catch (final Exception e) {
-			throw new RuntimeException(e);
+			return future.get();
+		} catch (final InterruptedException e) {
+			throw new UnhandledException(e);
+		} catch (final ExecutionException e) {
+			throw new UnhandledException(e.getCause());
 		}
 	}
 
