@@ -11,12 +11,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import ui.swing.utils.UIEventsExecutor;
+
 @SuppressWarnings("serial")
 public final class TopBar extends JPanel {
-
-	public interface Executor extends java.util.concurrent.Executor {
-		// Empty specialization
-	}
 
 	public interface Listener {
 
@@ -42,24 +40,9 @@ public final class TopBar extends JPanel {
 	private JMenuItem optionsItem;
 
 	final Collection<Listener> listeners;
-	private final Executor executor;
+	private final UIEventsExecutor executor;
 
-	/**
-	 * @deprecated Original behavior lets exceptions happen in the Swing thread  :-(
-	 */
-	@Deprecated
-	public TopBar() {
-		this(new Executor() {
-
-			@Override
-			public void execute(final Runnable command) {
-				command.run();
-			}
-
-		});
-	}
-
-	public TopBar(final Executor executor) {
+	public TopBar(final UIEventsExecutor executor) {
 		this.executor = executor;
 
 		initialize();

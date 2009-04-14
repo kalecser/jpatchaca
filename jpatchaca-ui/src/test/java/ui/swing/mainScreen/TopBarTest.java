@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 
+import ui.swing.utils.UIEventsExecutor;
+
 public class TopBarTest {
 
 	@Test
@@ -27,7 +29,7 @@ public class TopBarTest {
 				throw new StartTaskException();
 			}
 		}
-		class ExpectExceptExec implements TopBar.Executor {
+		class ExpectExceptExec implements UIEventsExecutor {
 
 			StartTaskException happened;
 

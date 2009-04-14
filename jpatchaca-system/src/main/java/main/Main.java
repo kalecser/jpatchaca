@@ -55,6 +55,9 @@ import ui.swing.tray.TrayIconStartTaskMessage;
 import ui.swing.users.SwingTasksUserImpl;
 import ui.swing.users.SwinglabelsUser;
 import ui.swing.utils.LookAndFeelSetter;
+import ui.swing.utils.PatchacaUncaughtExceptionHandler;
+import ui.swing.utils.UIEventsExecutor;
+import ui.swing.utils.UIEventsExecutorImpl;
 import ui.swing.utils.Whiteboard;
 import wheel.io.files.impl.tranzient.TransientDirectory;
 import wheel.io.ui.impl.DeferredDirectoryBoundPersistence;
@@ -74,10 +77,10 @@ public class Main {
 
 	public static void main(final String[] args)
 			throws UnsupportedLookAndFeelException, IOException {
-		
+
 		keepWorkingOnMinimize();
 		setLookAndFeel();
-		
+
 		final MutablePicoContainer container = createDurableSWINGContainer();
 		container.start();
 	}
@@ -108,7 +111,9 @@ public class Main {
 					.withCaching()
 					.build();
 
-		container.addComponent(PathcacaDefaultExceptionHandler.class);
+		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a JOptionPane. 
+		container.addComponent(PatchacaUncaughtExceptionHandler.class,
+				PathcacaDefaultExceptionHandler.class);
 
 		container.addComponent(BrazilDaylightSavingTimezoneAdjuster.class);
 		container.addComponent(hardwareClock);
@@ -135,6 +140,8 @@ public class Main {
 	}
 
 	private static void registerSWINGStuff(final MutablePicoContainer container) {
+		container.addComponent(UIEventsExecutor.class,
+				UIEventsExecutorImpl.class);
 		container.addComponent(DeferredDirectoryBoundPersistence.class);
 		container.addComponent(JFrameBoundsKeeperImpl.class);
 
