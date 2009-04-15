@@ -44,7 +44,7 @@ public class StartTaskByNamePersistence implements Startable{
 			return;
 		}
 		
-		startTaskDelegate.starTask(task.unbox());
+		startTaskDelegate.startTask(task.unbox());
 	}
 
 	@Override

@@ -80,7 +80,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 
 	@Override
 	public void startTask(String taskName) {
-		startTaskDelegate.starTask(taskByName(taskName));
+		startTaskDelegate.startTask(taskByName(taskName));
 	}
 
 	@Override

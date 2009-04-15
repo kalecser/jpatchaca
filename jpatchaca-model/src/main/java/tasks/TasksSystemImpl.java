@@ -206,7 +206,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	@Override
 	public synchronized void taskStarted(final TaskView task, final long millisAgo) {
-		startTaskDelegate.starTask(task);
+		startTaskDelegate.startTask(task);
 		final Period lastPeriod = task.lastPeriod();
 		final Period alteredPeriod = lastPeriod.createNewStarting(new Date(lastPeriod.startTime().getTime() - millisAgo));
 		editPeriod(task, task.lastPeriodIndex(), alteredPeriod);
