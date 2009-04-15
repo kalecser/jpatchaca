@@ -63,7 +63,7 @@ public class StartTaskScreen implements ActionPane {
 	}
 
 	public static void main(final String[] args) {
-		final Presenter presenter = new Presenter();
+		final Presenter presenter = new Presenter(null);
 		final StartTaskScreen screen = new StartTaskScreen(
 				new MockStartTaskScreenModel());
 		presenter.showOkCancelDialog(screen, "Start Task");

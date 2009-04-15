@@ -1,19 +1,17 @@
 package ui.swing.mainScreen;
 
-import ui.swing.mainScreen.tasks.TaskScreenController;
-
+import ui.swing.tasks.StartTaskController;
 
 public class TaskListModel {
 
-	private final TaskScreenController taskScreen;
+	private final StartTaskController startTaskController;
 
-	public TaskListModel(TaskScreenController taskScreen){
-		this.taskScreen = taskScreen;
-		
+	public TaskListModel(final StartTaskController startTaskController) {
+		this.startTaskController = startTaskController;
 	}
-	
-	public void createTask() {
-		taskScreen.createTask();
+
+	public void startTask() {
+		startTaskController.show();
 	}
 
 }

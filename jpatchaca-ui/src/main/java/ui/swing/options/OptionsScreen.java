@@ -23,11 +23,10 @@ public class OptionsScreen {
 
 		@Override
 		public JPanel getPanel() {
-			JPanel optionsPanel = new JPanel();
+			final JPanel optionsPanel = new JPanel();
 			optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));
 
-			twitterEnabled = new JCheckBox(
-					"Twitter logging enabled");
+			twitterEnabled = new JCheckBox("Twitter logging enabled");
 			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
 					.twitterEnabled());
 			optionsPanel.add(twitterEnabled, "span 4");
@@ -41,9 +40,9 @@ public class OptionsScreen {
 			password = new JTextField(30);
 			TextFieldBinder.bind(password, optionsScreenModel.password());
 			optionsPanel.add(password, "growx,span 3");
-			
+
 			twitterEnabled.requestFocus();
-			
+
 			return optionsPanel;
 		}
 
@@ -65,7 +64,7 @@ public class OptionsScreen {
 	private final Presenter presenter;
 
 	public OptionsScreen(final OptionsScreenModel optionsScreenModel,
-			Presenter presenter) {
+			final Presenter presenter) {
 		this.optionsScreenModel = optionsScreenModel;
 		this.presenter = presenter;
 	}
@@ -82,8 +81,8 @@ public class OptionsScreen {
 
 	}
 
-	public static void main(String[] args) {
-		new OptionsScreen(new OptionsScreenMock(), new Presenter()).show();
+	public static void main(final String[] args) {
+		new OptionsScreen(new OptionsScreenMock(), new Presenter(null)).show();
 	}
 
 }

@@ -14,12 +14,12 @@ import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 
 import tasks.TasksSystem;
-import tasks.delegates.StartTaskDelegate;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.options.OptionsScreen;
 import ui.swing.presenter.Presenter;
+import ui.swing.tasks.StartTaskController;
 import ui.swing.users.SwingTasksUser;
 import version.PatchacaVersion;
 import wheel.io.ui.JFrameBoundsKeeper;
@@ -35,18 +35,19 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	private final TopBar topBar;
 	private final SwingTasksUser tasksUser;
 	private final TasksSystem tasksSystem;
-	private final StartTaskDelegate startTaskDelegate;
 	private final OptionsScreen optionsScreen;
 	private final TaskScreenController taskScreen;
+	private final StartTaskController startTaskController;
 
 	public MainScreenImpl(final EventsSystem eventsSystem,
 			final TaskList taskList, final PeriodsList periodsList,
 			final TopBar topBar, final SummaryScreen tasksSummary,
 			final JFrameBoundsKeeper boundsKeeper,
 			final SwingTasksUser taskUser, final TasksSystem tasksSystem,
-			final StartTaskDelegate startTaskDelegate,
+			final StartTaskController startTaskController,
 			final OptionsScreen optionsScreen,
 			final TaskScreenController taskScreen, final Presenter presenter) {
+
 		this.eventsSystem = eventsSystem;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
@@ -54,11 +55,13 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		this.tasksSummary = tasksSummary;
 		this.tasksUser = taskUser;
 		this.tasksSystem = tasksSystem;
-		this.startTaskDelegate = startTaskDelegate;
+		this.startTaskController = startTaskController;
 		this.optionsScreen = optionsScreen;
 		this.taskScreen = taskScreen;
 		presenter.setMainScreen(this);
+
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());
+
 	}
 
 	private void initialize() {
@@ -111,7 +114,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 
 			@Override
 			public void startTask() {
-				startTaskDelegate.execute(taskList.selectedTask());
+				startTaskController.show();
 			}
 
 			@Override

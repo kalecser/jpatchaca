@@ -14,65 +14,73 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import ui.swing.utils.SwingUtils;
+import ui.swing.utils.UIEventsExecutor;
 
 public class OkCancelDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
+	private final UIEventsExecutor executor;
 
-	public OkCancelDialog(final ActionPane pane, String title, JFrame mainScreen) {
+	public OkCancelDialog(final UIEventsExecutor executor,
+			final ActionPane pane, final String title, final JFrame mainScreen) {
 		super(mainScreen);
+		this.executor = executor;
 		SwingUtils.makeLocationrelativeToParent(this, mainScreen);
 		this.setTitle(title);
-		
-		JPanel panel = pane.getPanel();
-		if (panel == null)
+
+		final JPanel panel = pane.getPanel();
+		if (panel == null) {
 			throw new IllegalStateException("panel must not be null");
-		
+		}
+
 		panel.setBorder(BorderFactory.createEmptyBorder());
-		
+
 		this.setLayout(new BorderLayout());
 		this.add(pane.getPanel(), BorderLayout.CENTER);
-		this.add(new OkCancelPanel(
-				new Runnable() {
-					@Override
-					public void run() {
-						doAction(pane);
-					}
-				},
-				new Runnable() {
-					@Override
-					public void run() {
-						OkCancelDialog.this.setVisible(false);
-					}
-				}
-				), BorderLayout.SOUTH);
-		
-		
-		this.getRootPane().registerKeyboardAction(new ActionListener(){@Override
-			public void actionPerformed(ActionEvent e) {
-				OkCancelDialog.this.setVisible(false);
-			}}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-		
-		this.getRootPane().registerKeyboardAction(new ActionListener(){@Override
-			public void actionPerformed(ActionEvent e) {
+		this.add(new OkCancelPanel(new Runnable() {
+			@Override
+			public void run() {
 				doAction(pane);
-			}}, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
-		
+			}
+		}, new Runnable() {
+			@Override
+			public void run() {
+				OkCancelDialog.this.setVisible(false);
+			}
+		}), BorderLayout.SOUTH);
+
+		this.getRootPane().registerKeyboardAction(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				OkCancelDialog.this.setVisible(false);
+			}
+		}, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+		this.getRootPane().registerKeyboardAction(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				doAction(pane);
+			}
+		}, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+
 		this.pack();
 	}
 
 	private void doAction(final ActionPane pane) {
-		new Thread(){
+		executor.execute(new Runnable() {
 			@Override
 			public void run() {
 				internalDoAction(pane);
 			}
-		}.start();
+		});
+
 	}
 
 	private void internalDoAction(final ActionPane pane) {
 		try {
 			pane.action().run();
-		} catch (ValidationException e) {
+		} catch (final ValidationException e) {
 			JOptionPane.showMessageDialog(this, e.getUserMessage());
 			return;
 		}
