@@ -41,7 +41,7 @@ import basic.DeferredExecutor;
 import basic.Subscriber;
 
 @SuppressWarnings("serial")
-public class TaskList extends JPanel {
+public class TaskList extends JPanel implements SelectedTask {
 
 	private final TaskListListModel tasksListModel;
 	private final JList tasksList;
@@ -60,6 +60,7 @@ public class TaskList extends JPanel {
 	private final TaskListMemory memory;
 
 	Runnable fireChangeListeners = new Runnable() {
+
 		public void run() {
 			for (final TaskSelectionListener listener : listeners) {
 				listener.selectionChangedTo((TaskView) SelectedValueGetter
@@ -184,6 +185,7 @@ public class TaskList extends JPanel {
 
 		tasksList.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
+
 					public void valueChanged(final ListSelectionEvent e) {
 						selectedTaskChanged(tasksList);
 					}
@@ -223,8 +225,9 @@ public class TaskList extends JPanel {
 			@Override
 			public boolean canImport(final TransferSupport info) {
 				try {
-					final String data = (String) info.getTransferable()
-							.getTransferData(DataFlavor.stringFlavor);
+					final String data = (String) info
+							.getTransferable()
+								.getTransferData(DataFlavor.stringFlavor);
 					return data.startsWith("period -");
 				} catch (final Exception e) {
 				}
@@ -268,9 +271,9 @@ public class TaskList extends JPanel {
 
 	public void fireTaskChangeListeners() {
 		executor.execute();
-
 	}
 
+	@Override
 	public TaskView selectedTask() {
 		return (TaskView) this.tasksList.getSelectedValue();
 	}

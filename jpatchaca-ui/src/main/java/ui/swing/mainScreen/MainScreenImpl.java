@@ -13,61 +13,70 @@ import org.picocontainer.Startable;
 import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 
-import tasks.TasksSystem;
 import ui.swing.mainScreen.periods.PeriodsList;
-import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
-import ui.swing.options.OptionsScreen;
 import ui.swing.presenter.Presenter;
-import ui.swing.tasks.StartTaskController;
-import ui.swing.users.SwingTasksUser;
-import version.PatchacaVersion;
+import ui.swing.utils.UIEventsExecutor;
 import wheel.io.ui.JFrameBoundsKeeper;
-import events.EventsSystem;
 
 @SuppressWarnings("serial")
 public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 
+	final class TopBarListener implements TopBar.Listener {
+
+		@Override
+		public void stopTask() {
+			model.stopSelectedTask();
+		}
+
+		@Override
+		public void startTask() {
+			model.showStartTaskScreen();
+		}
+
+		@Override
+		public void removeTask() {
+			model.removeSelectedTask();
+		}
+
+		@Override
+		public void editTask() {
+			model.editSelectedTask();
+		}
+
+		@Override
+		public void createTask() {
+			model.showCreateTaskScreen();
+		}
+
+		@Override
+		public void options() {
+			model.showOptionsScreen();
+		}
+	}
+
+	final MainScreenModel model;
 	private final TaskList taskList;
 	private final PeriodsList periodsList;
 	private final SummaryScreen tasksSummary;
-	private final EventsSystem eventsSystem;
 	private final TopBar topBar;
-	private final SwingTasksUser tasksUser;
-	private final TasksSystem tasksSystem;
-	private final OptionsScreen optionsScreen;
-	private final TaskScreenController taskScreen;
-	private final StartTaskController startTaskController;
 
-	public MainScreenImpl(final EventsSystem eventsSystem,
-			final TaskList taskList, final PeriodsList periodsList,
-			final TopBar topBar, final SummaryScreen tasksSummary,
-			final JFrameBoundsKeeper boundsKeeper,
-			final SwingTasksUser taskUser, final TasksSystem tasksSystem,
-			final StartTaskController startTaskController,
-			final OptionsScreen optionsScreen,
-			final TaskScreenController taskScreen, final Presenter presenter) {
+	public MainScreenImpl(final MainScreenModel model,
+			final UIEventsExecutor executor, final TaskList taskList,
+			final PeriodsList periodsList, final SummaryScreen tasksSummary,
+			final JFrameBoundsKeeper boundsKeeper, final Presenter presenter) {
 
-		this.eventsSystem = eventsSystem;
+		this.model = model;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
-		this.topBar = topBar;
+		this.topBar = new TopBar(executor);
 		this.tasksSummary = tasksSummary;
-		this.tasksUser = taskUser;
-		this.tasksSystem = tasksSystem;
-		this.startTaskController = startTaskController;
-		this.optionsScreen = optionsScreen;
-		this.taskScreen = taskScreen;
+
 		presenter.setMainScreen(this);
-
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());
-
 	}
 
 	private void initialize() {
-
-		updateTitle("");
-
 		setBounds(150, 150, 500, 350);
 
 		bindTopBar();
@@ -77,72 +86,19 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		add(getCenterPane(), BorderLayout.CENTER);
 		pack();
 
-		tasksSystem.activeTaskNameSignal().addReceiver(new Receiver<String>() {
+		class TitleReceiver implements Receiver<String> {
 
 			@Override
 			public void receive(final Pulse<String> pulse) {
-				updateTitle(pulse.value());
+				setTitle(pulse.value());
 			}
-		});
 
-	}
-
-	private void updateTitle(final String activeTask) {
-		if (tasksSystem.activeTask() != null) {
-			setTitle(getTitleString(tasksSystem.activeTaskName()));
-		} else {
-			setTitle(getTitleString());
 		}
-	}
-
-	private String getTitleString() {
-		return "Patchaca tracker 2, version: " + PatchacaVersion.getVersion()
-				+ ", events: " + eventsSystem.getEventCount();
-	}
-
-	private String getTitleString(final String activeTaskName) {
-		return getTitleString() + ", Active task: " + activeTaskName;
+		model.titleSignal().addReceiver(new TitleReceiver());
 	}
 
 	private void bindTopBar() {
-		topBar.addListener(new TopBar.Listener() {
-
-			@Override
-			public void stopTask() {
-				tasksSystem.stopTask(taskList.selectedTask());
-			}
-
-			@Override
-			public void startTask() {
-				startTaskController.show();
-			}
-
-			@Override
-			public void removeTask() {
-				if (tasksUser.isTaskExclusionConfirmed()) {
-					tasksSystem.removeTask(taskList.selectedTask());
-				}
-
-			}
-
-			@Override
-			public void editTask() {
-				taskScreen.editSelectedTask();
-
-			}
-
-			@Override
-			public void createTask() {
-				taskScreen.createTask();
-			}
-
-			@Override
-			public void options() {
-				optionsScreen.show();
-			}
-
-		});
-
+		topBar.addListener(new TopBarListener());
 	}
 
 	private JSplitPane getCenterPane() {
@@ -154,7 +110,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 
 			@Override
 			public void stateChanged(final ChangeEvent e) {
-				tasksSummary.refrescate();
+				refrescateTasksSummary();
 			}
 		});
 
@@ -164,9 +120,6 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 				this.taskList, tabbedPane);
 		center.setContinuousLayout(true);
 		return center;
-	}
-
-	public void stop() {
 	}
 
 	@Override
@@ -182,6 +135,15 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	@Override
 	public void start() {
 		initialize();
+	}
+
+	@Override
+	public void stop() {
+		// Nothing special.
+	}
+
+	void refrescateTasksSummary() {
+		tasksSummary.refrescate();
 	}
 
 }

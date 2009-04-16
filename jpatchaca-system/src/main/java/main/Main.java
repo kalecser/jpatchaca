@@ -28,12 +28,13 @@ import ui.swing.mainScreen.LabelsList;
 import ui.swing.mainScreen.LabelsListSystemMediator;
 import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.MainScreenImpl;
+import ui.swing.mainScreen.MainScreenModel;
+import ui.swing.mainScreen.MainScreenModelImpl;
 import ui.swing.mainScreen.TaskContextMenu;
 import ui.swing.mainScreen.TaskContextMenuSystemMediator;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.TaskListModel;
 import ui.swing.mainScreen.TaskListSystemMediator;
-import ui.swing.mainScreen.TopBar;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
 import ui.swing.mainScreen.tasks.TaskExclusionScreen;
@@ -155,6 +156,8 @@ public class Main {
 		container.addComponent(PatchacaTrayTasksFacadeMediator.class);
 
 		container.addComponent(Presenter.class);
+		container
+				.addComponent(MainScreenModel.class, MainScreenModelImpl.class);
 		container.addComponent(MainScreen.class, MainScreenImpl.class);
 		container.addComponent(OptionsScreen.class);
 		container.addComponent(OptionsScreenModelImpl.class);
@@ -169,7 +172,6 @@ public class Main {
 
 		container.addComponent(TaskListSystemMediator.class);
 		container.addComponent(SummaryScreen.class);
-		container.addComponent(TopBar.class);
 		container.addComponent(PeriodsTableModel.class);
 		container.addComponent(PeriodsList.class);
 		container.addComponent(TaskScreenController.class);
