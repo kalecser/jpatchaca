@@ -16,5 +16,10 @@ public class NonEmptyString {
 	public String unbox() {
 		return string;
 	}
+	
+	@Override
+	public String toString() {
+		return string;
+	}
 
 }

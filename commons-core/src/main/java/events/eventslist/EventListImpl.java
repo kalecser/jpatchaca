@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import basic.BasicSystem;
 import basic.SystemClock;
@@ -24,7 +25,7 @@ public class EventListImpl implements EventList{
 	private final List<Processor<Serializable>> processors;
 	private final Queue<EventTransaction> transactionsQueue;
 	private final BasicSystem basicSystem;
-	
+	public final AtomicBoolean isDead = new AtomicBoolean(false);
 
 
 
@@ -42,15 +43,20 @@ public class EventListImpl implements EventList{
 		executeAndWrite();
 	}
 
-	private void executeAndWrite(){
+	private synchronized void executeAndWrite(){
 		EventTransaction transaction = null;
+		
+		if (isDead.get())
+			throw new IllegalStateException("Events system is dead");
 		
 		while ((transaction = transactionsQueue.poll()) != null){
 			try {
 				execute(transaction);
-			} catch (final MustBeCalledInsideATransaction e) {
-				//Inside a transaction, fair enough to swallow
+			} catch (Exception e){
+				isDead.set(true);
+				throw new RuntimeException(e);
 			}
+			
 			persistenceManager.writeEvent(transaction);
 		}
 		
@@ -82,11 +88,13 @@ public class EventListImpl implements EventList{
 		}
 		
 		for (final EventTransaction transaction : persistenceManager.getEventTransactions()){
-			try {
-				execute(transaction);
-			} catch (final MustBeCalledInsideATransaction e) {
-				//Inside a transaction, fair enough to swallow!
-			} 
+			
+				try {
+					execute(transaction);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			
 		
 		}
 	}

@@ -9,7 +9,6 @@ import wheel.io.files.Directory;
 import basic.BasicSystem;
 import basic.FormatterImpl;
 import basic.HardwareClock;
-import basic.IdProvider;
 import basic.SystemClock;
 import basic.SystemClockImpl;
 
@@ -24,7 +23,6 @@ public class DurableBasicSystem implements BasicSystem{
 			throw new IllegalArgumentException("hardwareClock must not be null");
 		
 		container = new PicoBuilder().withCaching().withHiddenImplementations().build();
-		container.addComponent(new DoubleIdProvider(directory.getPath()));
 		container.addComponent(hardwareClock);	
 		container .addComponent(SystemClockImpl.class);
 		container.addComponent(FormatterImpl.class);
@@ -37,10 +35,6 @@ public class DurableBasicSystem implements BasicSystem{
 
 	public SystemClock systemClock() {
 		return container.getComponent(SystemClock.class);
-	}
-
-	public IdProvider idProvider() {
-		return container.getComponent(IdProvider.class);
 	}
 	
 	public Date getHardwareTime() {
