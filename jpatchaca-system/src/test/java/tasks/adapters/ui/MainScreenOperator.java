@@ -45,14 +45,15 @@ public class MainScreenOperator {
 		tasksListOperator = new JListOperator(mainScreen, 1);
 	}
 
-	private static void clickRestoreWindow(PopupMenu menu) {
+	private static void clickRestoreWindow(final PopupMenu menu) {
 
 		final ActionListener[] actionListeners = menu
 				.getListeners(ActionListener.class);
 		final int foo = 42;
-		for (final ActionListener listener : actionListeners)
-			listener.actionPerformed(new ActionEvent(new Object(), foo,
-					"open"));
+		for (final ActionListener listener : actionListeners) {
+			listener
+					.actionPerformed(new ActionEvent(new Object(), foo, "open"));
+		}
 	}
 
 	private PopupMenu getTrayIconMenu() {
@@ -69,7 +70,7 @@ public class MainScreenOperator {
 		return new JListOperator(mainScreen);
 	}
 
-	public void selectLabel(int i) {
+	public void selectLabel(final int i) {
 		getLabelsListOperator().selectItem(i);
 	}
 
@@ -81,19 +82,18 @@ public class MainScreenOperator {
 		pushMenu("File/Create task");
 	}
 
-	private void pushMenu(String path) {
-		new JMenuBarOperator(mainScreen).pushMenuNoBlock(path,
-				"/");
+	private void pushMenu(final String path) {
+		new JMenuBarOperator(mainScreen).pushMenuNoBlock(path, "/");
 	}
 
-	public void selectLabel(String labelName) {
+	public void selectLabel(final String labelName) {
 		final JListOperator labelsListOperator = getLabelsListOperator();
 		labelsListOperator.waitState(new JListByItemTextFinder(labelName));
 		labelsListOperator.selectItem(labelName);
 
 	}
 
-	public boolean isTaskVisible(String taskName) {
+	public boolean isTaskVisible(final String taskName) {
 		return getTasksList().findItemIndex(taskName) > -1;
 	}
 
@@ -101,17 +101,17 @@ public class MainScreenOperator {
 		return new JListOperator(mainScreen, 1);
 	}
 
-	public void assignTaskToLabel(String taskName, String labelName) {
-		
+	public void assignTaskToLabel(final String taskName, final String labelName) {
+
 		getLabelsListOperator().selectItem(0);
-		
+
 		clickForPopupInTask(taskName);
 
 		final JPopupMenuOperator popup = new JPopupMenuOperator();
 
-		if (labelExists(labelName))
+		if (labelExists(labelName)) {
 			popup.pushMenuNoBlock("set label to.../" + labelName, "/");
-		else {
+		} else {
 			popup.pushMenuNoBlock("set label to.../new label", "/");
 
 			final JDialogOperator dialogOperator = new JDialogOperator();
@@ -121,34 +121,34 @@ public class MainScreenOperator {
 
 	}
 
-	private void clickForPopupInTask(String taskName) {
+	private void clickForPopupInTask(final String taskName) {
 
 		final JListOperator tasksList = getTasksList();
 		tasksList.selectItem(taskName);
 
-		int index = tasksList.getSelectedIndex();
-		Point indexToLocation = tasksList.indexToLocation(index);
-		tasksList.clickForPopup((int)indexToLocation.getX(), (int)indexToLocation.getY());
+		final int index = tasksList.getSelectedIndex();
+		final Point indexToLocation = tasksList.indexToLocation(index);
+		tasksList.clickForPopup((int) indexToLocation.getX(),
+				(int) indexToLocation.getY());
 	}
 
-	private boolean labelExists(String labelName) {
+	private boolean labelExists(final String labelName) {
 		return getLabelsListOperator().findItemIndex(labelName) > -1;
 	}
 
-	public void selectTask(String taskName) {
+	public void selectTask(final String taskName) {
 		tasksListOperator.waitState(new JListByItemTextFinder(taskName));
 		tasksListOperator.selectItem(taskName);
-		
-		
+
 	}
 
 	public void pushEditTaskMenu() {
 		pushMenu("File/Edit task");
 	}
 
-	public void createTask(String taskName) {
+	public void createTask(final String taskName) {
 		pushCreateTaskMenu();
-		new TaskScreenOperator().setTaskNameAndOk(taskName);	
+		new TaskScreenOperator().setTaskNameAndOk(taskName);
 		waitTaskCreated(taskName);
 	}
 
@@ -158,200 +158,212 @@ public class MainScreenOperator {
 			public String getDescription() {
 				return "Waiting for item with text " + taskName;
 			}
-		
+
 			@Override
-			public boolean checkComponent(Component taskListComp) {
-				JList taskList = (JList) taskListComp;
-				for (int i = 0; i < taskList.getModel().getSize(); i++) {					
-					if (taskList.getModel().getElementAt(i).toString().equals(taskName))
+			public boolean checkComponent(final Component taskListComp) {
+				final JList taskList = (JList) taskListComp;
+				for (int i = 0; i < taskList.getModel().getSize(); i++) {
+					if (taskList.getModel().getElementAt(i).toString().equals(
+							taskName)) {
 						return true;
+					}
 				}
 				return false;
 			}
-		});	
+		});
 	}
 
-	public void startTask(String taskName) {
+	public void startTask(final String taskName) {
 		clickForPopupInTask(taskName);
-		
+
 		final JPopupMenuOperator popup = new JPopupMenuOperator();
 		popup.pushMenu("start");
 	}
 
 	public String activeTaskName() {
-		
-		final FrameOperator.FrameByTitleFinder titleContainsActiveTask = new FrameOperator.FrameByTitleFinder(".*Active task: .*", new RegExComparator());
+
+		final FrameOperator.FrameByTitleFinder titleContainsActiveTask = new FrameOperator.FrameByTitleFinder(
+				".*Active task: .*", new RegExComparator());
 		getMainScreen().waitState(titleContainsActiveTask);
-		return StringUtils.substringAfter(getMainScreen().getTitle(), "Active task: ");
-		
+		return StringUtils.substringAfter(getMainScreen().getTitle(),
+				"Active task: ");
+
 	}
 
 	public void stopTask() {
 		clickForPopupInTask(activeTaskName());
-	
+
 		final JPopupMenuOperator popup = new JPopupMenuOperator();
-		
-	
+
 		popup.pushMenu("stop");
-	
+
 	}
 
 	public String getTimeSpentInMillis() {
 		final String notZeroNumber = ".*[1-9]?.*";
 		final int timeSpentColumn = 3;
-		periodsTableOperator.waitState(new JTableOperator.JTableByCellFinder(notZeroNumber, 0,timeSpentColumn,new RegExComparator()));
-		
+		periodsTableOperator.waitState(new JTableOperator.JTableByCellFinder(
+				notZeroNumber, 0, timeSpentColumn, new RegExComparator()));
+
 		return (String) periodsTableOperator.getValueAt(0, timeSpentColumn);
-		
+
 	}
 
-	public void editPeriod(final int periodIndex, final String start_HH_mm_a, final String stop_HH_mm_a) {
+	public void editPeriod(final int periodIndex, final String start_HH_mm_a,
+			final String stop_HH_mm_a) {
 		final JTableOperator periods = new JTableOperator(mainScreen);
-		
+
 		waitPeriodCreated(periodIndex);
-		
-		String startTimeText = getTimeInScreenInputFormat(start_HH_mm_a);
+
+		final String startTimeText = getTimeInScreenInputFormat(start_HH_mm_a);
 		periods.setValueAt(startTimeText, periodIndex, 1);
 		periods.waitCell(startTimeText, periodIndex, 1);
-				
-		String stopTimeText = getTimeInScreenInputFormat(stop_HH_mm_a);
+
+		final String stopTimeText = getTimeInScreenInputFormat(stop_HH_mm_a);
 		periods.setValueAt(stopTimeText, periodIndex, 2);
 		periods.waitCell(stopTimeText, periodIndex, 2);
-		
-		
+
 	}
 
-	public void waitTimeSpent(int periodIndex, long timeSpent) {
+	public void waitTimeSpent(final int periodIndex, final long timeSpent) {
 		final int timeSpentColumn = 3;
-		NumberFormat format = new DecimalFormat("#0.00");
-		
-		double timeSpentInHours = (double)timeSpent / 60;
-		periodsTableOperator.waitCell(format.format(timeSpentInHours), periodIndex, timeSpentColumn);
-		
+		final NumberFormat format = new DecimalFormat("#0.00");
+
+		final double timeSpentInHours = (double) timeSpent / 60;
+		periodsTableOperator.waitCell(format.format(timeSpentInHours),
+				periodIndex, timeSpentColumn);
+
 	}
 
-	public void editPeriod(int periodIndex, String startHH_mm_a) {
-		
+	public void editPeriod(final int periodIndex, final String startHH_mm_a) {
+
 		waitPeriodCreated(periodIndex);
-		periodsTableOperator.setValueAt(getTimeInScreenInputFormat(startHH_mm_a), periodIndex, 1);
-		
+		periodsTableOperator.setValueAt(
+				getTimeInScreenInputFormat(startHH_mm_a), periodIndex, 1);
+
 	}
 
-	private void waitPeriodCreated(int periodIndex) {
-		long timeout = 8000;
-		long currentTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - currentTime < timeout){
+	private void waitPeriodCreated(final int periodIndex) {
+		final long timeout = 8000;
+		final long currentTime = System.currentTimeMillis();
+		while (System.currentTimeMillis() - currentTime < timeout) {
 			try {
 				Thread.sleep(200);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-			if (periodsTableOperator.getRowCount()> periodIndex)
+			if (periodsTableOperator.getRowCount() > periodIndex) {
 				return;
+			}
 		}
-		
+
 		throw new RuntimeException("no period in row " + periodIndex);
 	}
 
-	private String getTimeInScreenInputFormat(String startHH_mm_a) {
-		String pattern = "hh:mm a";
-		SimpleDateFormat hh_mm_aFormater = new SimpleDateFormat(pattern);
-		FastDateFormat screenFormater = FastDateFormat.getTimeInstance(FastDateFormat.SHORT, TimeZone.getDefault());
+	private String getTimeInScreenInputFormat(final String startHH_mm_a) {
+		final String pattern = "hh:mm a";
+		final SimpleDateFormat hh_mm_aFormater = new SimpleDateFormat(pattern);
+		final FastDateFormat screenFormater = FastDateFormat.getTimeInstance(
+				FastDateFormat.SHORT, TimeZone.getDefault());
 		try {
 			return screenFormater.format(hh_mm_aFormater.parse(startHH_mm_a));
-		} catch (ParseException e) {
-			throw new RuntimeException("The date " + startHH_mm_a + " is not parseable by " + pattern);
+		} catch (final ParseException e) {
+			throw new RuntimeException("The date " + startHH_mm_a
+					+ " is not parseable by " + pattern);
 		}
 	}
 
-	public void assertActiveTask(String taskName) {
-		
-		String regex = ".*Active task: " + taskName;
-		if (taskName == null)
-			regex = "^((?!Active task).)*$";
+	public void assertActiveTask(final String taskName) {
 
-		final FrameOperator.FrameByTitleFinder titleContainsActiveTask = new FrameOperator.FrameByTitleFinder(regex, new RegExComparator());
+		String regex = ".*Active task: " + taskName;
+		if (taskName == null) {
+			regex = "^((?!Active task).)*$";
+		}
+
+		final FrameOperator.FrameByTitleFinder titleContainsActiveTask = new FrameOperator.FrameByTitleFinder(
+				regex, new RegExComparator());
 		getMainScreen().waitState(titleContainsActiveTask);
 
-		
 	}
 
-	public void assertPeriodsCount(String taskName, final int count) {
+	public void assertPeriodsCount(final String taskName, final int count) {
 		selectTask(taskName);
 		periodsTableOperator.waitState(new ComponentChooser() {
-		
+
 			@Override
 			public String getDescription() {
 				return "Waiting for row count to reach " + count;
 			}
-		
+
 			@Override
-			public boolean checkComponent(Component comp) {
-				
-				return (((JTable)comp).getRowCount() == 0);
+			public boolean checkComponent(final Component comp) {
+
+				return (((JTable) comp).getRowCount() == 0);
 			}
 		});
-		
+
 	}
 
-	public void removePeriod(String taskName, int i) {
+	public void removePeriod(final String taskName, final int i) {
 		selectTask(taskName);
 		periodsTableOperator.selectCell(i, 0);
 		new JButtonOperator(mainScreen, "remove").doClick();
 	}
 
-	public void addPeriod(String taskName) {
-		
+	public void addPeriod(final String taskName) {
+
 		selectTask(taskName);
-		int rowCount = periodsTableOperator.getRowCount();
+		final int rowCount = periodsTableOperator.getRowCount();
 		new JButtonOperator(mainScreen, "add").doClick();
 		waitPeriodCreated(rowCount);
-		
-		
+
 	}
 
-	public void editPeriodDay(String taskName, int i, String dateMM_DD_YYYY) {
+	public void editPeriodDay(final String taskName, final int i,
+			final String dateMM_DD_YYYY) {
 		selectTask(taskName);
 
-		int dayColumn = 0;
-		String dateInScreenInputFormat = getDateInScreenInputFormat(dateMM_DD_YYYY);
+		final int dayColumn = 0;
+		final String dateInScreenInputFormat = getDateInScreenInputFormat(dateMM_DD_YYYY);
 		periodsTableOperator.setValueAt(dateInScreenInputFormat, i, dayColumn);
 		periodsTableOperator.waitCell(dateInScreenInputFormat, i, dayColumn);
-		
+
 	}
 
-	private String getDateInScreenInputFormat(String dateMM_DD_YYYY) {
+	private String getDateInScreenInputFormat(final String dateMM_DD_YYYY) {
 		return getDateString(dateMM_DD_YYYY, "MM_dd_yyyy", FastDateFormat
-				.getDateInstance(FastDateFormat.SHORT).getPattern() );
-	}
-	
-	private String getDateInScreenOutputFormat(String dateMM_DD_YYYY) {
-		return getDateString(dateMM_DD_YYYY, "MM_dd_yyyy", "E " + FastDateFormat
 				.getDateInstance(FastDateFormat.SHORT).getPattern());
 	}
 
-	private String getDateString(String dateMM_DD_YYYY, String inputPattern, String outputPattern) {
-		Date date  = null;
+	private String getDateInScreenOutputFormat(final String dateMM_DD_YYYY) {
+		return getDateString(dateMM_DD_YYYY, "MM_dd_yyyy", "E "
+				+ FastDateFormat.getDateInstance(FastDateFormat.SHORT)
+						.getPattern());
+	}
+
+	private String getDateString(final String dateMM_DD_YYYY,
+			final String inputPattern, final String outputPattern) {
+		Date date = null;
 		try {
 			date = new SimpleDateFormat(inputPattern).parse(dateMM_DD_YYYY);
-		} catch (ParseException e) {
-			throw new RuntimeException("The date " + dateMM_DD_YYYY + " could not be parsed using " + inputPattern);
+		} catch (final ParseException e) {
+			throw new RuntimeException("The date " + dateMM_DD_YYYY
+					+ " could not be parsed using " + inputPattern);
 		}
-		String dateString = new SimpleDateFormat(outputPattern).format(date);
+		final String dateString = new SimpleDateFormat(outputPattern)
+				.format(date);
 		return dateString;
 	}
 
-	public void assertPeriodDay(String taskName, int i, String dateMM_DD_YYYY) {
-		int dayColumn = 0;
-		periodsTableOperator.waitCell(getDateInScreenOutputFormat(dateMM_DD_YYYY), i, dayColumn);		
+	public void assertPeriodDay(final String taskName, final int i,
+			final String dateMM_DD_YYYY) {
+		final int dayColumn = 0;
+		periodsTableOperator.waitCell(
+				getDateInScreenOutputFormat(dateMM_DD_YYYY), i, dayColumn);
 	}
 
 	public void pushOptionsMenu() {
-		pushMenu("File/Options");		
+		pushMenu("File/Options");
 	}
-
-
-
-	
 
 }

@@ -15,8 +15,10 @@ import periodsInTasks.impl.PeriodsInTasksSystemImpl;
 import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizerImpl;
 import tasks.TasksSystemImpl;
+import tasks.delegates.CreateTaskDelegate;
 import tasks.delegates.StartTaskByNameDelegate;
 import tasks.delegates.StartTaskDelegate;
+import tasks.persistence.CreateTaskPersistence;
 import tasks.persistence.StartTaskByNamePersistence;
 import tasks.persistence.StartTaskPersistence;
 import tasks.tasks.Tasks;
@@ -67,6 +69,7 @@ import basic.DeferredExecutor;
 import basic.FormatterImpl;
 import basic.HardwareClock;
 import basic.PatchacaDirectory;
+import basic.durable.DoubleIdProvider;
 import basic.durable.DurableBasicSystem;
 import basic.durable.HardwareClockImpl;
 import basic.mock.MockHardwareClock;
@@ -107,17 +110,17 @@ public class Main {
 	private static MutablePicoContainer createNonUIContainer(
 			final HardwareClock hardwareClock) {
 		final MutablePicoContainer container = new PicoBuilder()
-				.withConstructorInjection()
-					.withLifecycle()
-					.withCaching()
-					.build();
+				.withConstructorInjection().withLifecycle().withCaching()
+				.build();
 
-		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a JOptionPane. 
+		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a
+		// JOptionPane.
 		container.addComponent(PatchacaUncaughtExceptionHandler.class,
 				PathcacaDefaultExceptionHandler.class);
 
 		container.addComponent(BrazilDaylightSavingTimezoneAdjuster.class);
 		container.addComponent(hardwareClock);
+		container.addComponent(DoubleIdProvider.class);
 		container.addComponent(PatchacaDirectory.class);
 		container.addComponent(DurableBasicSystem.class);
 		container.addComponent(PeriodsFactoryImpl.class);
@@ -126,7 +129,9 @@ public class Main {
 		container.addComponent(TasksHomeImpl.class);
 		container.addComponent(TasksSystemImpl.class);
 		container.addComponent(StartTaskDelegate.class);
+		container.addComponent(CreateTaskDelegate.class);
 		container.addComponent(StartTaskByNameDelegate.class);
+		container.addComponent(CreateTaskPersistence.class);
 		container.addComponent(StartTaskByNamePersistence.class);
 		container.addComponent(TwitterOptions.class);
 		container.addComponent(TwitterLogger.class);
