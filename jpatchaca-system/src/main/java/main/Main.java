@@ -110,8 +110,10 @@ public class Main {
 	private static MutablePicoContainer createNonUIContainer(
 			final HardwareClock hardwareClock) {
 		final MutablePicoContainer container = new PicoBuilder()
-				.withConstructorInjection().withLifecycle().withCaching()
-				.build();
+				.withConstructorInjection()
+					.withLifecycle()
+					.withCaching()
+					.build();
 
 		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a
 		// JOptionPane.
@@ -164,6 +166,8 @@ public class Main {
 		container
 				.addComponent(MainScreenModel.class, MainScreenModelImpl.class);
 		container.addComponent(MainScreen.class, MainScreenImpl.class);
+		container.addComponent(MainScreenSetup.class);
+
 		container.addComponent(OptionsScreen.class);
 		container.addComponent(OptionsScreenModelImpl.class);
 		container.addComponent(SwinglabelsUser.class);

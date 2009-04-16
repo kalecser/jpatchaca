@@ -15,7 +15,6 @@ import org.reactivebricks.pulses.Receiver;
 
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
-import ui.swing.presenter.Presenter;
 import ui.swing.utils.UIEventsExecutor;
 import wheel.io.ui.JFrameBoundsKeeper;
 
@@ -64,7 +63,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	public MainScreenImpl(final MainScreenModel model,
 			final UIEventsExecutor executor, final TaskList taskList,
 			final PeriodsList periodsList, final SummaryScreen tasksSummary,
-			final JFrameBoundsKeeper boundsKeeper, final Presenter presenter) {
+			final JFrameBoundsKeeper boundsKeeper) {
 
 		this.model = model;
 		this.taskList = taskList;
@@ -72,7 +71,6 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		this.topBar = new TopBar(executor);
 		this.tasksSummary = tasksSummary;
 
-		presenter.setMainScreen(this);
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());
 	}
 
