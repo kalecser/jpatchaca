@@ -3,6 +3,8 @@ package tasks.tasks.tests;
 import org.junit.Assert;
 import org.junit.Test;
 
+import basic.NonEmptyString;
+
 import periodsInTasks.MockTask;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -18,7 +20,7 @@ public class TasksTest {
 		tasks.add(oid, task);
 		
 		Assert.assertTrue(task == tasks.get(oid));
-		Assert.assertTrue(task == tasks.byName("test task").unbox());
+		Assert.assertTrue(task == tasks.byName(new NonEmptyString("test task")).unbox());
 		Assert.assertTrue(oid == tasks.idOf(task));
 		Assert.assertEquals(task.name(), tasks.taskNames().get(0));
 	}

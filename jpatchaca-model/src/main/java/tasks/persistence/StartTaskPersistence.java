@@ -1,7 +1,11 @@
 package tasks.persistence;
 
 import org.picocontainer.Startable;
+import org.reactivebricks.commons.lang.Maybe;
 
+import basic.NonEmptyString;
+
+import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
 import tasks.tasks.TaskView;
 import tasks.tasks.TasksView;
@@ -23,10 +27,16 @@ public class StartTaskPersistence implements Startable{
 	
 	@Override
 	public void start() {
-		startTaskDelegate.addListener(new Delegate.Listener<TaskView>() {
+		startTaskDelegate.addListener(new Delegate.Listener<StartTaskData>() {
 			@Override
-			public void execute(TaskView object) {
-				eventsSystem.writeEvent(new StartTaskEvent(tasks.idOf(object)));				
+			public void execute(StartTaskData object) {
+				NonEmptyString taskName = object.taskName();
+				Maybe<TaskView> byName = tasks.byName(taskName);
+				if (byName == null)
+					throw new IllegalStateException("Task " + taskName + " does not exist");
+				
+				eventsSystem.writeEvent(new StartTaskEvent(tasks.idOf(byName.unbox())));
+				
 			}
 		});
 	}

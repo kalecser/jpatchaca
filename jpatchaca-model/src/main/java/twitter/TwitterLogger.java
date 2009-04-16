@@ -4,8 +4,10 @@ import net.unto.twitter.Api;
 
 import org.picocontainer.Startable;
 
+import basic.NonEmptyString;
+
+import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
-import tasks.tasks.TaskView;
 import ui.swing.mainScreen.Delegate;
 
 public class TwitterLogger implements Startable {
@@ -20,11 +22,11 @@ public class TwitterLogger implements Startable {
 
 	@Override
 	public void start() {		
-		startTaskDelegate.addListener(new Delegate.Listener<TaskView>(){
+		startTaskDelegate.addListener(new Delegate.Listener<StartTaskData>(){
 			@Override
-			public void execute(final TaskView task) {
+			public void execute(final StartTaskData task) {
 				if (twitterConfig.isTwitterLoggingEnabled().currentValue())
-					enqueueTwitterUpdate(task, twitterConfig.username().currentValue(), twitterConfig.password().currentValue());
+					enqueueTwitterUpdate(task.taskName(), twitterConfig.username().currentValue(), twitterConfig.password().currentValue());
 			}
 		});
 	}
@@ -34,14 +36,14 @@ public class TwitterLogger implements Startable {
 
 	}
 
-	private void enqueueTwitterUpdate(final TaskView task, final String username, final String password) {
+	private void enqueueTwitterUpdate(final NonEmptyString str, final String username, final String password) {
 		new Thread(){
 			@Override
 			public void run() {
 				Api api = Api.builder().username(username).password(password)
 				.build();
 				try{
-					api.updateStatus(task.name()).build().post();
+					api.updateStatus(str.unbox()).build().post();
 				} catch (Exception ex){
 					ex.printStackTrace();
 				}

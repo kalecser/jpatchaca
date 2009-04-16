@@ -8,12 +8,13 @@ import main.TransientNonUIContainer;
 import org.jmock.MockObjectTestCase;
 
 import tasks.TasksSystem;
+import tasks.delegates.CreateTaskDelegate;
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;
 import basic.Subscriber;
-import basic.mock.MockBasicSystem;
+import basic.mock.MockIdProvider;
 import core.ObjectIdentity;
 import events.CreateTaskEvent;
 import events.DeprecatedEvent;
@@ -23,9 +24,10 @@ public class LabelsTest extends MockObjectTestCase {
 
 	private LabelsSystem labelsSystem;
 	private TasksSystem tasksSystem;
-	private MockBasicSystem basicSystem;
 	private EventsSystem eventsSystem;
 	private TasksView tasks;
+	private CreateTaskDelegate createTaskDelegate;
+	private MockIdProvider mockidProvider;
 	
 
 	@Override
@@ -35,8 +37,9 @@ public class LabelsTest extends MockObjectTestCase {
 		
 		labelsSystem = container.getComponent(LabelsSystem.class);
 		tasksSystem = container.getComponent(TasksSystem.class);
+		createTaskDelegate = container.getComponent(CreateTaskDelegate.class);
 		tasks = container.getComponent(TasksView.class);
-		basicSystem = container.getComponent(MockBasicSystem.class);
+		mockidProvider = container.getComponent(MockIdProvider.class);
 		eventsSystem = container.getComponent(EventsSystem.class);
 	}
 	
@@ -118,8 +121,8 @@ public class LabelsTest extends MockObjectTestCase {
 	
 	
 	private TaskView createTask(String taskName, String taskId) {	
-		basicSystem.setNextId(taskId);
-		tasksSystem.createTask(new TaskData(new NonEmptyString(taskName), 0.0));
+		mockidProvider.setNextId(taskId);
+		createTaskDelegate.createTask(new TaskData(new NonEmptyString(taskName), 0.0));
 		return tasks.get(new ObjectIdentity(taskId));
 	}	
 	

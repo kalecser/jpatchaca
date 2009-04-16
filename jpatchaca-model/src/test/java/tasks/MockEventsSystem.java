@@ -38,4 +38,10 @@ public class MockEventsSystem implements EventsSystem {
 
 	}
 
+	@Override
+	public void consume(Serializable event) {
+		
+		
+	}
+
 }

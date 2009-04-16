@@ -59,11 +59,6 @@ public class MockTasksSystem implements TasksSystem {
 	}
 
 	@Override
-	public void createTask(final TaskData data) {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
 	public void editPeriod(final TaskView task, final int periodIndex, final Period newPeriod) {
 		throw new RuntimeException("not implemented");
 	}

@@ -15,7 +15,6 @@ import events.persistence.MustBeCalledInsideATransaction;
 
 public interface TasksSystem {
 	
-	public void createTask(TaskData data);
 	public void createAndStartTaskIn(TaskData newTaskData, long in);
 	public void editTask(TaskView task, TaskData taskData);
 	public void removeTask(TaskView task);	

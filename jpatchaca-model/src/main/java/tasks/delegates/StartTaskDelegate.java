@@ -1,12 +1,11 @@
 package tasks.delegates;
 
-import tasks.tasks.TaskView;
 import ui.swing.mainScreen.Delegate;
 
-public class StartTaskDelegate extends Delegate<TaskView>{
+public class StartTaskDelegate extends Delegate<StartTaskData> {
 
-	public void startTask(TaskView task){
-		super.execute(task);
+	public void starTask(final StartTaskData startTaskData) {
+		super.execute(startTaskData);
 	}
-	
+
 }
