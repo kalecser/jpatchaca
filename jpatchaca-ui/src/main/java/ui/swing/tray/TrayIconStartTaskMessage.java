@@ -2,10 +2,11 @@ package ui.swing.tray;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.picocontainer.Startable;
 
+import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
-import tasks.tasks.TaskView;
 import ui.swing.mainScreen.Delegate;
 
 public class TrayIconStartTaskMessage implements Startable {
@@ -22,15 +23,21 @@ public class TrayIconStartTaskMessage implements Startable {
 
 	@Override
 	public void start() {
-		startTask.addListener(new Delegate.Listener<TaskView>() {
+		startTask.addListener(new Delegate.Listener<StartTaskData>() {
 			@Override
-			public void execute(final TaskView object) {
+			public void execute(final StartTaskData object) {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
+						final Integer millisecondsAgo = object
+								.millisecondsAgo();
 						tray
-								.statusMessage("Task " + object.name()
-										+ " started");
+								.statusMessage("Task "
+										+ object.taskName()
+										+ " started "
+										+ ((millisecondsAgo == 0) ? "now "
+												: (millisecondsAgo
+														/ DateUtils.MILLIS_PER_MINUTE + " minutes ago")));
 					}
 				});
 			}

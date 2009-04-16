@@ -1,29 +1,34 @@
 package ui.swing.mainScreen.tasks;
 
 import tasks.TasksSystem;
+import tasks.delegates.CreateTaskDelegate;
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
 import ui.swing.tasks.SelectedTaskSource;
 
-public class TaskScreenModelImpl implements TaskScreenModel{
+public class TaskScreenModelImpl implements TaskScreenModel {
 
 	private final TasksSystem taskSystem;
 	private final SelectedTaskSource selectedTask;
+	private final CreateTaskDelegate createTaskDelegate;
 
-	public TaskScreenModelImpl(TasksSystem taskSystem, SelectedTaskSource selectedTask){
+	public TaskScreenModelImpl(final TasksSystem taskSystem,
+			final SelectedTaskSource selectedTask,
+			final CreateTaskDelegate createTaskDelegate) {
 		this.taskSystem = taskSystem;
 		this.selectedTask = selectedTask;
-	}
-	
-	@Override
-	public void createTask(TaskData data) {
-		taskSystem.createTask(data);
+		this.createTaskDelegate = createTaskDelegate;
 	}
 
 	@Override
-	public void createTaskAndStart(TaskData data, Long unbox) {
+	public void createTask(final TaskData data) {
+		createTaskDelegate.createTask(data);
+	}
+
+	@Override
+	public void createTaskAndStart(final TaskData data, final Long unbox) {
 		taskSystem.createAndStartTaskIn(data, unbox);
-		
+
 	}
 
 	@Override
@@ -32,9 +37,9 @@ public class TaskScreenModelImpl implements TaskScreenModel{
 	}
 
 	@Override
-	public void editTask(TaskView taskView, TaskData data) {
+	public void editTask(final TaskView taskView, final TaskData data) {
 		taskSystem.editTask(taskView, data);
-		
+
 	}
 
 }
