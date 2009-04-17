@@ -6,16 +6,10 @@
 	<name>JPatchaca</name>
 	<version>1.0-SNAPSHOT</version>
 
-	<reporting>
-		<plugins>
-			 <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>javancss-maven-plugin</artifactId>
-				<version>2.0-beta-2</version>
-			  </plugin>
 
-		</plugins>
-	</reporting>
+			 
+
+		 
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -27,17 +21,6 @@
 						<target>1.6</target>
 					</configuration>
 				</plugin>
- <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>index</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -60,6 +43,11 @@
 			<artifactId>findbugs-maven-plugin</artifactId>
 			<version>2.0</version>
 		      </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javancss-maven-plugin</artifactId>
+				<version>2.0-beta-2</version>
+			  </plugin>
 		</plugins>
 	</build>
 	<modules>
