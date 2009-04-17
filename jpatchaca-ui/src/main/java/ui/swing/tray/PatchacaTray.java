@@ -34,9 +34,9 @@ import basic.AlertImpl;
 public class PatchacaTray implements Startable {
 
 	private static final String PATCHACA_TIMER = "Patchaca timer";
-	private static final String TRAY_ICON_ACTIVE_PATH = "clock2.gif";
+	private static final String TRAY_ICON_ACTIVE_PATH = "jpon.png";
 	private static final Image ACTIVE_ICON = iconImage(TRAY_ICON_ACTIVE_PATH);
-	private static final String TRAY_ICON_INACTIVE_PATH = "clock.gif";
+	private static final String TRAY_ICON_INACTIVE_PATH = "jpoff.png";
 	private static final Image INACTIVE_ICON = iconImage(TRAY_ICON_INACTIVE_PATH);
 
 	static final String START_TASK_SPECIAL = "Start task...";

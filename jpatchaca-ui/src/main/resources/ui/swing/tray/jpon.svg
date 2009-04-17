@@ -17,7 +17,7 @@
    version="1.0"
    sodipodi:docname="jpon.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="C:\Documents and Settings\lcsantos\Desktop\JPatchaca\jpon.png"
+   inkscape:export-filename="C:\JPatchaca\jpatchaca-ui\src\main\resources\ui\swing\tray\jpon.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -126,7 +126,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="16"
-     inkscape:cx="2.098594"
+     inkscape:cx="-7.338906"
      inkscape:cy="2.9740084"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -152,16 +152,9 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:url(#linearGradient3175);fill-opacity:1;stroke:url(#linearGradient3193);stroke-width:0.75514245;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.54502366"
-       id="rect2397"
-       width="15.244858"
-       height="15.244858"
-       x="0.37757123"
-       y="0.37757099" />
     <g
        id="g3177"
-       transform="matrix(1.1128204,0,0,1.1128204,-1.1143882,-0.8361191)">
+       transform="matrix(1.2769233,0,0,1.2769233,-2.5250963,-2.2057024)">
       <path
          transform="matrix(2.4595674e-2,0,0,2.4397647e-2,15.45378,-3.698902)"
          d="M -79.999985,478.07648 A 214.28572,214.28572 0 1 1 -508.57143,478.07648 A 214.28572,214.28572 0 1 1 -79.999985,478.07648 z"
