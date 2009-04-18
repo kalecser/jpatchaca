@@ -36,6 +36,7 @@ import ui.swing.mainScreen.TaskContextMenu;
 import ui.swing.mainScreen.TaskContextMenuSystemMediator;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.TaskListModel;
+import ui.swing.mainScreen.TaskListModelImpl;
 import ui.swing.mainScreen.TaskListSystemMediator;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
@@ -173,7 +174,7 @@ public class Main {
 		container.addComponent(SwinglabelsUser.class);
 		container.addComponent(SelectedTaskSource.class);
 		container.addComponent(TaskList.class);
-		container.addComponent(TaskListModel.class);
+		container.addComponent(TaskListModel.class, TaskListModelImpl.class);
 		container.addComponent(StartTaskScreenModelImpl.class);
 		container.addComponent(StartTaskScreen.class);
 		container.addComponent(StartTaskController.class);

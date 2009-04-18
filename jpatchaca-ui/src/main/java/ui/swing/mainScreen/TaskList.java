@@ -21,6 +21,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -41,7 +42,7 @@ import basic.DeferredExecutor;
 import basic.Subscriber;
 
 @SuppressWarnings("serial")
-public class TaskList extends JPanel implements SelectedTask {
+public class TaskList extends JPanel {
 
 	private final TaskListListModel tasksListModel;
 	private final JList tasksList;
@@ -49,7 +50,6 @@ public class TaskList extends JPanel implements SelectedTask {
 	private final LabelsList labelsList;
 	private final AlertImpl selectedLabelChanged;
 	private final AlertImpl movePeriodAlert;
-	private final ProjectVelocityCalculator projectVelocityCalculator;
 
 	private TaskView dropTargetTask;
 	private final TaskContextMenu taskContextMenu;
@@ -74,10 +74,10 @@ public class TaskList extends JPanel implements SelectedTask {
 			fireChangeListeners);
 	private final SelectedTaskSource selectedTask;
 
-	public TaskList(final LabelsList labelsList,
-			final ProjectVelocityCalculator projectVelocityCalculator,
-			final Directory directory, final TasksSystem tasksSystem,
-			final TaskContextMenu taskContextMenu, final TaskListModel model,
+	public TaskList(final TaskListModel model,
+			final LabelsList labelsList,
+			final ProjectVelocityCalculator projectVelocityCalculator, final Directory directory,
+			final TasksSystem tasksSystem, final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask) {
 
 		this.selectedTask = selectedTask;
@@ -89,7 +89,6 @@ public class TaskList extends JPanel implements SelectedTask {
 		_selectedTaskName = new SelectedTaskName();
 
 		this.labelsList = labelsList;
-		this.projectVelocityCalculator = projectVelocityCalculator;
 		bindToLabelsList();
 		bindToTasksSystem(tasksSystem);
 
@@ -98,7 +97,9 @@ public class TaskList extends JPanel implements SelectedTask {
 		this.listeners = new ArrayList<TaskSelectionListener>();
 		this.tasksListModel = new TaskListListModel();
 
-		this.tasksList = getTasksList(this.tasksListModel);
+		this.tasksList = newJList(this.tasksListModel,
+				projectVelocityCalculator);
+
 		final JScrollPane scrolledLabelsList = new JScrollPane(labelsList);
 		final JScrollPane scrolledTasksList = new JScrollPane(this.tasksList);
 		scrolledLabelsList.setMinimumSize(new Dimension(0, 110));
@@ -179,17 +180,37 @@ public class TaskList extends JPanel implements SelectedTask {
 		return (String) this.labelsList.getSelectedValue();
 	}
 
-	private JList getTasksList(final TaskListListModel listModel) {
+	class SelectedTaskChangedListSelectionListener implements
+			ListSelectionListener {
+
+		@Override
+		public void valueChanged(final ListSelectionEvent e) {
+			selectedTaskChanged(e.getFirstIndex());
+		}
+
+		private void selectedTaskChanged(final int selectedIndex) {
+			fireTaskChangeListeners();
+
+			if (selectedIndex > -1) {
+				screenData.setSelectedTask(selectedIndex);
+				memory.mind(screenData);
+			}
+
+			_selectedTaskName.taskChangedTo(Maybe.wrap(selectedTask()));
+			selectedTask.supply(selectedTask());
+
+		}
+	}
+
+	private JList newJList(final TaskListListModel listModel,
+			final ProjectVelocityCalculator projectVelocityCalculator) {
 		final JList tasksList = new TasksJList(listModel,
 				projectVelocityCalculator);
 
-		tasksList.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
+		final ListSelectionModel selectionModel = tasksList.getSelectionModel();
 
-					public void valueChanged(final ListSelectionEvent e) {
-						selectedTaskChanged(tasksList);
-					}
-				});
+		selectionModel
+				.addListSelectionListener(new SelectedTaskChangedListSelectionListener());
 
 		tasksList.setCellRenderer(new TaskListCellRenderer());
 
@@ -201,8 +222,7 @@ public class TaskList extends JPanel implements SelectedTask {
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					final int index = tasksList.locationToIndex(e.getPoint());
 
-					tasksList.getSelectionModel().setSelectionInterval(index,
-							index);
+					selectionModel.setSelectionInterval(index, index);
 					TaskList.this.taskContextMenu.show(tasksList, e.getX(), e
 							.getY(), selectedTask());
 				}
@@ -269,11 +289,10 @@ public class TaskList extends JPanel implements SelectedTask {
 		fireTaskChangeListeners();
 	}
 
-	public void fireTaskChangeListeners() {
+	private void fireTaskChangeListeners() {
 		executor.execute();
 	}
 
-	@Override
 	public TaskView selectedTask() {
 		return (TaskView) this.tasksList.getSelectedValue();
 	}
@@ -300,20 +319,6 @@ public class TaskList extends JPanel implements SelectedTask {
 
 	public Alert selectedTaskChangedAlert() {
 		return selectedTaskChangedAlert;
-
-	}
-
-	private void selectedTaskChanged(final JList tasksList) {
-		fireTaskChangeListeners();
-
-		final int selectedIndex = tasksList.getSelectedIndex();
-		if (selectedIndex > -1) {
-			screenData.setSelectedTask(selectedIndex);
-			memory.mind(screenData);
-		}
-
-		_selectedTaskName.taskChangedTo(Maybe.wrap(selectedTask()));
-		selectedTask.supply(selectedTask());
 
 	}
 

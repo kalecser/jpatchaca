@@ -11,6 +11,7 @@ import org.reactivebricks.pulses.Source;
 import tasks.TasksSystem;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.options.OptionsScreen;
+import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
 import ui.swing.users.SwingTasksUser;
 import version.PatchacaVersion;
@@ -18,7 +19,7 @@ import events.EventsSystem;
 
 public class MainScreenModelImpl implements MainScreenModel {
 
-	private final SelectedTask selectedTask;
+	private final SelectedTaskSource selectedTask;
 	private final EventsSystem eventsSystem;
 	private final SwingTasksUser tasksUser;
 	private final TasksSystem tasksSystem;
@@ -29,7 +30,7 @@ public class MainScreenModelImpl implements MainScreenModel {
 
 	private final Source<String> title;
 
-	public MainScreenModelImpl(final SelectedTask selectedTask,
+	public MainScreenModelImpl(final SelectedTaskSource selectedTask,
 			final EventsSystem eventsSystem, final SwingTasksUser taskUser,
 			final TasksSystem tasksSystem,
 			final StartTaskController startTaskController,
@@ -63,13 +64,13 @@ public class MainScreenModelImpl implements MainScreenModel {
 	@Override
 	public void removeSelectedTask() {
 		if (tasksUser.isTaskExclusionConfirmed()) {
-			tasksSystem.removeTask(selectedTask.selectedTask());
+			tasksSystem.removeTask(selectedTask.currentValue());
 		}
 	}
 
 	@Override
 	public void stopSelectedTask() {
-		tasksSystem.stopTask(selectedTask.selectedTask());
+		tasksSystem.stopTask(selectedTask.currentValue());
 	}
 
 	@Override
