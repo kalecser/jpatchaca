@@ -26,8 +26,6 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.reactivebricks.commons.lang.Maybe;
-
 import statistics.ProjectVelocityCalculator;
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
@@ -56,7 +54,6 @@ public class TaskList extends JPanel {
 	private final AlertImpl selectedTaskChangedAlert;
 
 	private final TasksListData screenData;
-	private final SelectedTaskName _selectedTaskName;
 	private final TaskListMemory memory;
 
 	Runnable fireChangeListeners = new Runnable() {
@@ -74,10 +71,10 @@ public class TaskList extends JPanel {
 			fireChangeListeners);
 	private final SelectedTaskSource selectedTask;
 
-	public TaskList(final TaskListModel model,
-			final LabelsList labelsList,
-			final ProjectVelocityCalculator projectVelocityCalculator, final Directory directory,
-			final TasksSystem tasksSystem, final TaskContextMenu taskContextMenu,
+	public TaskList(final TaskListModel model, final LabelsList labelsList,
+			final ProjectVelocityCalculator projectVelocityCalculator,
+			final Directory directory, final TasksSystem tasksSystem,
+			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask) {
 
 		this.selectedTask = selectedTask;
@@ -85,8 +82,6 @@ public class TaskList extends JPanel {
 		this.memory = new DeferredTaskListMemory(directory);
 		this.screenData = memory.retrieve();
 		this.taskContextMenu = taskContextMenu;
-
-		_selectedTaskName = new SelectedTaskName();
 
 		this.labelsList = labelsList;
 		bindToLabelsList();
@@ -196,7 +191,6 @@ public class TaskList extends JPanel {
 				memory.mind(screenData);
 			}
 
-			_selectedTaskName.taskChangedTo(Maybe.wrap(selectedTask()));
 			selectedTask.supply(selectedTask());
 
 		}
@@ -319,11 +313,6 @@ public class TaskList extends JPanel {
 
 	public Alert selectedTaskChangedAlert() {
 		return selectedTaskChangedAlert;
-
-	}
-
-	public SelectedTaskName selectedTaskName() {
-		return _selectedTaskName;
 	}
 
 }

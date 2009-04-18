@@ -7,12 +7,12 @@ import javax.swing.SwingUtilities;
 
 import org.reactivebricks.commons.lang.Maybe;
 import org.reactivebricks.pulses.Signal;
+import org.reactivebricks.pulses.Source;
 
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.SelectedTaskName;
-import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.tasks.StartTaskController;
@@ -22,6 +22,7 @@ import basic.Subscriber;
 public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	public interface Listener {
+
 		void lastActiveTasksChanged();
 	}
 
@@ -30,20 +31,21 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private final SwingTasksUser taskUser;
 	private Maybe<Listener> listener;
 	private final WindowManager windowManager;
-	private final TaskList taskList;
 	private final TaskScreenController taskScreen;
 	private final StartTaskController startTaskController;
+	private final SelectedTaskName selectedTaskName;
 
 	public PatchacaTrayModelImpl(final MainScreen mainScreen,
-			final TaskList taskList, final TasksSystem tasksSystem,
+			final TasksSystem tasksSystem,
+			final SelectedTaskName selectedTaskName,
 			final SwingTasksUser taskUser,
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
 			final StartTaskController startTaskController) {
 
 		this.mainScreen = mainScreen;
-		this.taskList = taskList;
 		this.tasksSystem = tasksSystem;
+		this.selectedTaskName = selectedTaskName;
 		this.taskUser = taskUser;
 		this.taskScreen = taskScreen;
 		this.windowManager = windowManager;
@@ -58,12 +60,13 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 * 
 	 * @see ui.swing.tray.PatchacaTrayModel#selectedTaskName()
 	 */
-	public SelectedTaskName selectedTaskName() {
-		return taskList.selectedTaskName();
+	public Source<String> selectedTaskName() {
+		return this.selectedTaskName;
 	}
 
 	private void bindToTasksSystem(final TasksSystem tasksSystem) {
 		tasksSystem.lastActiveTasksAlert().subscribe(new Subscriber() {
+
 			public void fire() {
 				if (listener != null) {
 					listener.unbox().lastActiveTasksChanged();
@@ -80,6 +83,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 */
 	public void destroyMainScreen() {
 		SwingUtilities.invokeLater(new Runnable() {
+
 			@Override
 			public void run() {
 				mainScreen.hide();
@@ -97,6 +101,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	public void showMainScreen() {
 
 		SwingUtilities.invokeLater(new Runnable() {
+
 			@Override
 			public void run() {
 
@@ -118,6 +123,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	public void stopTaskIn(final long time) {
 
 		new Thread() {
+
 			@Override
 			public void run() {
 
@@ -149,6 +155,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 */
 	public void startTaskIn(final TaskView task, final long timeAgo) {
 		new Thread() {
+
 			@Override
 			public void run() {
 				tasksSystem.taskStarted(task, timeAgo);

@@ -1,45 +1,79 @@
 package ui.swing.mainScreen;
 
-import org.reactivebricks.commons.lang.Maybe;
+import org.picocontainer.Startable;
 import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
+import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
 
 import tasks.tasks.TaskView;
+import ui.swing.tasks.SelectedTaskSource;
 
-public class SelectedTaskName extends Source<String> {
+public class SelectedTaskName extends Source<String> implements Startable {
 
-	private Maybe<TaskView> selectedTask;
-	private Receiver<String> _taskNameReceiver;
+	private final SelectedTaskSource selectedTaskSource;
+	private final Receiver<String> taskNameReceiver;
+	private final Receiver<TaskView> taskReceiver;
+	private TaskView previous;
 
-	public SelectedTaskName() {
+	public SelectedTaskName(final SelectedTaskSource selectedTaskSource) {
 		super("");
-				
-		_taskNameReceiver = new Receiver<String>() {
-			@Override
-			public void receive(Pulse<String> pulse) {
-				supply(pulse.value());
-			}
-		};
-		
-		
+		this.selectedTaskSource = selectedTaskSource;
+		this.taskReceiver = new TaskReceiver();
+		this.taskNameReceiver = new TaskNameReceiver();
 	}
 
-	public void taskChangedTo(Maybe<TaskView> selectedTask) {
-		
-		if (this.selectedTask != null){
-			this.selectedTask.unbox().nameSignal().removeReceiver(_taskNameReceiver);
+	@Override
+	public void start() {
+		selectedTaskSource.addReceiver(this.taskReceiver);
+	}
+
+	@Override
+	public void stop() {
+		selectedTaskSource.removeReceiver(this.taskReceiver);
+	}
+
+	final class TaskReceiver implements Receiver<TaskView> {
+
+		@Override
+		public void receive(final Pulse<TaskView> pulse) {
+			taskChangedTo(pulse.value());
 		}
-		
-		if (selectedTask != null){
-			selectedTask.unbox().nameSignal().addReceiver(_taskNameReceiver);
-		} else {
+
+	}
+
+	final class TaskNameReceiver implements Receiver<String> {
+
+		@Override
+		public void receive(final Pulse<String> pulse) {
+			supply(pulse.value());
+		}
+	}
+
+	void taskChangedTo(final TaskView next) {
+		if (next == previous) {
+			return;
+		}
+		detachFromPrevious();
+		attachToNext(next);
+		this.previous = next;
+	}
+
+	private void attachToNext(final TaskView next) {
+		if (next == null) {
 			supply("");
+			return;
 		}
-		
-		this.selectedTask = selectedTask;
-		
+		final Signal<String> nextNameSignal = next.nameSignal();
+		nextNameSignal.addReceiver(this.taskNameReceiver);
 	}
 
+	private void detachFromPrevious() {
+		if (this.previous == null) {
+			return;
+		}
+		final Signal<String> previousNameSignal = this.previous.nameSignal();
+		previousNameSignal.removeReceiver(this.taskNameReceiver);
+	}
 
 }

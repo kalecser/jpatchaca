@@ -3,14 +3,14 @@ package ui.swing.tray;
 import java.util.Collection;
 
 import org.reactivebricks.pulses.Signal;
+import org.reactivebricks.pulses.Source;
 
 import tasks.tasks.TaskView;
-import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.tray.PatchacaTrayModelImpl.Listener;
 
 public interface PatchacaTrayModel {
 
-	public abstract SelectedTaskName selectedTaskName();
+	public abstract Source<String> selectedTaskName();
 
 	public abstract void destroyMainScreen();
 

@@ -6,13 +6,18 @@ import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
 
 import tasks.tasks.TaskView;
-import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.tray.PatchacaTrayModel;
 import ui.swing.tray.PatchacaTrayModelImpl.Listener;
 
 public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
-	private final Source<String> _activeTask = new Source<String>("");
+	private final Source<String> _activeTask;
+	private final Source<String> selectedTaskName;
+
+	public PatchacaTrayModelMock() {
+		_activeTask = new Source<String>("");
+		this.selectedTaskName = new Source<String>("");
+	}
 
 	@Override
 	public Signal<String> activeTaskName() {
@@ -26,6 +31,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
 	@Override
 	public void destroyMainScreen() {
+		// Nothing special
 	}
 
 	@Override
@@ -44,8 +50,8 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public SelectedTaskName selectedTaskName() {
-		return new SelectedTaskName();
+	public Source<String> selectedTaskName() {
+		return this.selectedTaskName;
 	}
 
 	@Override
@@ -55,6 +61,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
 	@Override
 	public void setListener(final Listener listener) {
+		// Nothing special
 	}
 
 	@Override
