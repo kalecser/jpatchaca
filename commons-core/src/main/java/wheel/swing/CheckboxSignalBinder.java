@@ -11,7 +11,7 @@ import org.reactive.Signal;
 
 public class CheckboxSignalBinder {
 
-	public static WeakHashMap<JCheckBox, Receiver<Boolean>> bindings = new WeakHashMap<JCheckBox, Receiver<Boolean>>();
+	public final static WeakHashMap<JCheckBox, Receiver<Boolean>> bindings = new WeakHashMap<JCheckBox, Receiver<Boolean>>();
 	
 	public static void bind(JCheckBox checkbox,
 			Signal<Boolean> signal) {
