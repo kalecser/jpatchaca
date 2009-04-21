@@ -14,32 +14,33 @@ import tasks.NotesListener;
 import tasks.tasks.NoteView;
 import tasks.tasks.TaskView;
 import basic.Alert;
+import basic.NonEmptyString;
 
 public class FakeTask implements TaskView {
 
 	List<Period> periods = new ArrayList<Period>();
 	private final String name;
-	
-	public FakeTask(String name) {
+
+	public FakeTask(final String name) {
 		this.name = name;
 	}
 
-	public FakeTask withWorkHoursDay(Date date, double hours) {
-		long endTime = (long) (date.getTime() + (hours * DateUtils.MILLIS_PER_HOUR));
+	public FakeTask withWorkHoursDay(final Date date, final double hours) {
+		final long endTime = (long) (date.getTime() + (hours * DateUtils.MILLIS_PER_HOUR));
 		periods.add(new Period(date, new Date(endTime)));
 		return this;
 	}
 
 	@Override
-	public void addNotesListener(NotesListener listener) {
+	public void addNotesListener(final NotesListener listener) {
 		throw new RuntimeException("Not expected");
-		
+
 	}
 
 	@Override
-	public void addPeriodsListener(PeriodsListener listener) {
+	public void addPeriodsListener(final PeriodsListener listener) {
 		throw new RuntimeException("Not expected");
-		
+
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class FakeTask implements TaskView {
 	}
 
 	@Override
-	public Period getPeriod(int row) {
+	public Period getPeriod(final int row) {
 		throw new RuntimeException("Not expected");
 	}
 
@@ -78,6 +79,14 @@ public class FakeTask implements TaskView {
 	}
 
 	@Override
+	public NonEmptyString nonEmptyName() {
+		if (name == null || name.equals("")) {
+			return new NonEmptyString("Empty name");
+		}
+		return new NonEmptyString(name);
+	}
+
+	@Override
 	public String name() {
 		return name;
 	}
@@ -93,7 +102,7 @@ public class FakeTask implements TaskView {
 	}
 
 	@Override
-	public Period periodAt(int i) {
+	public Period periodAt(final int i) {
 		throw new RuntimeException("Not expected");
 	}
 
@@ -113,15 +122,15 @@ public class FakeTask implements TaskView {
 	}
 
 	@Override
-	public void removeNotesListener(NotesListener listener) {
+	public void removeNotesListener(final NotesListener listener) {
 		throw new RuntimeException("Not expected");
-		
+
 	}
 
 	@Override
-	public void removePeriodListener(PeriodsListener listener) {
+	public void removePeriodListener(final PeriodsListener listener) {
 		throw new RuntimeException("Not expected");
-		
+
 	}
 
 	@Override
@@ -133,6 +142,5 @@ public class FakeTask implements TaskView {
 	public long totalTimeInMillis() {
 		throw new RuntimeException("Not expected");
 	}
-	
 
 }

@@ -1,18 +1,16 @@
 package tasks;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 
 import org.picocontainer.Startable;
-import org.reactivebricks.pulses.Signal;
+import org.reactivebricks.commons.lang.Maybe;
 
 import periods.Period;
 import periods.PeriodsFactory;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
 import tasks.processors.AddNoteToTaskProcessor;
-import tasks.processors.CreateAndStartTaskProcessor;
 import tasks.processors.CreateTaskProcessor;
 import tasks.processors.CreateTaskProcessor2;
 import tasks.processors.CreateTaskProcessor3;
@@ -22,18 +20,18 @@ import tasks.processors.EditTaskProcessor;
 import tasks.processors.MovePeriodProcessor;
 import tasks.processors.RemoveTaskProcessor;
 import tasks.processors.RenameTaskProcessor;
-import tasks.processors.StartTaskProcessor;
 import tasks.processors.StopTaskProcessor;
 import tasks.tasks.NotesHome;
 import tasks.tasks.NotesHomeImpl;
+import tasks.tasks.Task;
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
 import tasks.tasks.Tasks;
 import tasks.tasks.TasksHome;
 import basic.Alert;
-import basic.BasicSystem;
 import basic.IdProvider;
 import basic.NonEmptyString;
+import basic.SystemClock;
 import core.ObjectIdentity;
 import events.AddNoteToTaskEvent;
 import events.AddPeriodEvent;
@@ -53,19 +51,22 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	private final EventsSystem eventsSystem;
 	private final StartTaskDelegate startTaskDelegate;
 	private final Tasks tasks;
+	private final ActiveTask activeTask;
 
-	public TasksSystemImpl(final BasicSystem basicSystem,
-			final TasksHome tasksHome, final EventsSystem eventsSystem,
+	public TasksSystemImpl(final TasksHome tasksHome,
+			final EventsSystem eventsSystem,
 			final PeriodsFactory periodsFactory,
 			final StartTaskDelegate startTaskDelegate, final Tasks tasks,
-			final IdProvider provider) {
+			final IdProvider provider, final SystemClock clock,
+			final ActiveTask activeTask) {
 		this.eventsSystem = eventsSystem;
 		this.tasksHome = tasksHome;
 		this.startTaskDelegate = startTaskDelegate;
 		this.tasks = tasks;
 		this.provider = provider;
+		this.activeTask = activeTask;
 
-		final NotesHome notesHome = new NotesHomeImpl(basicSystem);
+		final NotesHome notesHome = new NotesHomeImpl(clock);
 
 		eventsSystem.addProcessor(new CreateTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new CreateTaskProcessor2(tasksHome));
@@ -76,9 +77,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 		eventsSystem.addProcessor(new MovePeriodProcessor(tasksHome));
 		eventsSystem.addProcessor(new RemoveTaskProcessor(tasks, tasksHome));
 		eventsSystem.addProcessor(new RenameTaskProcessor(tasksHome));
-		eventsSystem.addProcessor(new StartTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new StopTaskProcessor(tasksHome));
-		eventsSystem.addProcessor(new CreateAndStartTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new AddNoteToTaskProcessor(tasksHome,
 				notesHome));
 
@@ -152,14 +151,6 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 		taskStarted(task, in);
 	}
 
-	public synchronized TaskView activeTask() {
-		return tasksHome.activeTask();
-	}
-
-	public synchronized Alert activeTaskChangedAlert() {
-		return tasksHome.activeTaskChanged();
-	}
-
 	public synchronized void addTasksListener(final TasksListener tasksListener) {
 		tasksHome.addTasksListener(tasksListener);
 	}
@@ -181,18 +172,14 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	}
 
 	@Override
-	public synchronized String activeTaskName() {
+	public synchronized void stopIn(final long millisAhead) {
+		final Maybe<Task> currentActiveTask = activeTask.currentValue();
 
-		if (activeTask() == null) {
-			return null;
+		if (currentActiveTask == null) {
+			throw new IllegalStateException("ActiveTask must not be null");
 		}
 
-		return activeTask().name();
-	}
-
-	@Override
-	public synchronized void stopIn(final long millisAhead) {
-		final TaskView task = activeTask();
+		final TaskView task = currentActiveTask.unbox();
 
 		if (task == null) {
 			throw new IllegalStateException();
@@ -220,16 +207,6 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 		final Period alteredPeriod = lastPeriod.createNewStarting(new Date(
 				lastPeriod.startTime().getTime() - millisAgo));
 		editPeriod(task, task.lastPeriodIndex(), alteredPeriod);
-	}
-
-	@Override
-	public synchronized Collection<TaskView> lastActiveTasks() {
-		return tasksHome.lastActiveTasks();
-	}
-
-	@Override
-	public synchronized Alert lastActiveTasksAlert() {
-		return tasksHome.lastActiveTasksAlert();
 	}
 
 	@Override
@@ -269,11 +246,6 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	}
 
 	@Override
-	public synchronized Signal<String> activeTaskNameSignal() {
-		return tasksHome.activeTaskName();
-	}
-
-	@Override
 	public void setPeriod(final TaskView task, final int i,
 			final Date adjustedStartTime, final Date adjustedEndTime) {
 		final Period period = task.getPeriod(i);
@@ -297,6 +269,12 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	@Override
 	public TasksHome tasksHome() {
 		return tasksHome;
+	}
+
+	@Override
+	public void stopTask() {
+		this.stopIn(0);
+
 	}
 
 }

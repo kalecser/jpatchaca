@@ -1,17 +1,17 @@
 package tasks.tasks;
 
-import basic.BasicSystem;
+import basic.SystemClock;
 
 public class NotesHomeImpl implements NotesHome {
 
-	private final BasicSystem basicSystem;
+	private final SystemClock clock;
 
-	public NotesHomeImpl(BasicSystem basicSystem) {
-		this.basicSystem = basicSystem;
+	public NotesHomeImpl(final SystemClock clock) {
+		this.clock = clock;
 	}
 
-	public NoteView createNote(String text) {
-		return new NoteImpl(basicSystem.getHardwareTime(), text);
+	public NoteView createNote(final String text) {
+		return new NoteImpl(clock.getDate(), text);
 	}
 
 }

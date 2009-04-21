@@ -28,8 +28,6 @@ public interface Task extends TaskView {
 
 	public abstract Alert changedAlert();
 
-	public abstract String name();
-
 	public abstract Signal<String> nameSignal();
 
 	public abstract Double budgetInHours();
@@ -67,5 +65,7 @@ public interface Task extends TaskView {
 	public abstract Period periodAt(int i);
 
 	public abstract int periodsCount();
+
+	public abstract void start(long millisecondsAgo);
 
 }

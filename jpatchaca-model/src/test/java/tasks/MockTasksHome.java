@@ -1,9 +1,5 @@
 package tasks;
 
-import java.util.Collection;
-
-import org.reactivebricks.pulses.Signal;
-
 import periods.Period;
 import tasks.tasks.NoteView;
 import tasks.tasks.TaskView;
@@ -15,103 +11,68 @@ import events.persistence.MustBeCalledInsideATransaction;
 public class MockTasksHome implements TasksHome {
 
 	@Override
-	public TaskView activeTask() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Alert activeTaskChanged() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Signal<String> activeTaskName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void addNoteToTask(ObjectIdentity idOfTask, NoteView note)
+	public void addNoteToTask(final ObjectIdentity idOfTask, final NoteView note)
 			throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void addPeriodToTask(ObjectIdentity taskId, Period period)
+	public void addPeriodToTask(final ObjectIdentity taskId, final Period period)
 			throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void addTasksListener(TasksListener tasksListener) {
+	public void addTasksListener(final TasksListener tasksListener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void createTask(ObjectIdentity identity, String taskName,
-			Double budget) throws MustBeCalledInsideATransaction {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void editTask(ObjectIdentity identity, String newName,
-			Double newBudget) throws MustBeCalledInsideATransaction {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Collection<TaskView> lastActiveTasks() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Alert lastActiveTasksAlert() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void remove(TaskView task) throws MustBeCalledInsideATransaction {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removePeriodFromTask(TaskView task, Period period)
+	public void createTask(final ObjectIdentity identity,
+			final String taskName, final Double budget)
 			throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void start(ObjectIdentity taskId)
+	public void editTask(final ObjectIdentity identity, final String newName,
+			final Double newBudget) throws MustBeCalledInsideATransaction {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void remove(final TaskView task)
 			throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void stop(ObjectIdentity taskId)
+	public void removePeriodFromTask(final TaskView task, final Period period)
 			throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void transferPeriod(ObjectIdentity selectedTask, int selectedPeriod,
-			ObjectIdentity targetTask) throws MustBeCalledInsideATransaction {
+	public void stop(final ObjectIdentity taskId)
+			throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
+	public void transferPeriod(final ObjectIdentity selectedTask,
+			final int selectedPeriod, final ObjectIdentity targetTask)
+			throws MustBeCalledInsideATransaction {
+		// TODO Auto-generated method stub
+
+	}
 
 	@Override
 	public Alert taskListChangedAlert() {

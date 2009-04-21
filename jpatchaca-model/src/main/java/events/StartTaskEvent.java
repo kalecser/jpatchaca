@@ -6,14 +6,12 @@ import org.apache.commons.lang.Validate;
 
 import core.ObjectIdentity;
 
-
-
-
 public class StartTaskEvent implements Serializable {
 
 	private final ObjectIdentity taskId;
 	private static final long serialVersionUID = 1L;
 
+	@Deprecated
 	public StartTaskEvent(final ObjectIdentity taskId) {
 		Validate.notNull(taskId);
 		this.taskId = taskId;
@@ -23,5 +21,4 @@ public class StartTaskEvent implements Serializable {
 		return this.taskId;
 	}
 
-	
 }

@@ -2,21 +2,16 @@ package tasks.tasks;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
-
-import org.reactivebricks.pulses.Signal;
-import org.reactivebricks.pulses.Source;
 
 import periods.Period;
 import periods.PeriodsFactory;
 import periods.impl.PeriodManagerImpl;
+import tasks.ActiveTask;
 import tasks.TasksListener;
 import basic.Alert;
 import basic.AlertImpl;
-import basic.BasicSystem;
 import basic.SystemClock;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -27,25 +22,22 @@ public class TasksHomeImpl implements TasksHome {
 	private final PeriodsFactory periodsFactory;
 	private final AlertImpl taskListChangedAlert;
 	private final AlertImpl lastActiveTasksAlert;
-	private final AlertImpl activeTaskChangedAlert;
 	private final List<TasksListener> tasksListeners;
 	private final Deque<TaskView> lastActiveTasks;
-	private Task activeTask;
-	private final Source<String> activeTaskName;
 	private final Tasks tasks;
+	private final ActiveTask activeTask;
 
 	public TasksHomeImpl(final PeriodsFactory periodsFactory,
-			final BasicSystem basicSystem, final Tasks tasks) {
+			final Tasks tasks, final SystemClock clock,
+			final ActiveTask activeTask) {
 		this.periodsFactory = periodsFactory;
 		this.tasks = tasks;
-		this.clock = basicSystem.systemClock();
+		this.clock = clock;
+		this.activeTask = activeTask;
 		this.tasksListeners = new ArrayList<TasksListener>();
 		this.taskListChangedAlert = new AlertImpl();
 		this.lastActiveTasksAlert = new AlertImpl();
-		this.activeTaskChangedAlert = new AlertImpl();
 		this.lastActiveTasks = new ArrayDeque<TaskView>();
-
-		this.activeTaskName = new Source<String>("");
 
 	}
 
@@ -57,7 +49,6 @@ public class TasksHomeImpl implements TasksHome {
 		this.taskListChangedAlert.fire();
 		fireTaskCreated(task);
 
-		updateLastActiveTasks(task);
 	}
 
 	private void fireTaskCreated(final Task task) {
@@ -98,11 +89,6 @@ public class TasksHomeImpl implements TasksHome {
 		task.setName(newName);
 		task.setBudgetInHours(newBudget);
 
-		updateLastActiveTasks(task);
-		if (activeTask == task) {
-			updateActiveTaskName();
-		}
-
 	}
 
 	public void transferPeriod(final ObjectIdentity selectedTaskId,
@@ -114,54 +100,6 @@ public class TasksHomeImpl implements TasksHome {
 		selectedTask.removePeriod(period);
 		targetTask.addPeriod(period);
 
-	}
-
-	public void start(final ObjectIdentity taskId) {
-		if (activeTask != null) {
-			activeTask.stop();
-		}
-
-		final Task task = tasks.get(taskId);
-
-		task.start();
-		activeTask = task;
-
-		updateLastActiveTasks(task);
-		activeTaskChangedAlert.fire();
-
-		updateActiveTaskName();
-
-	}
-
-	private void updateLastActiveTasks(final Task task) {
-		if (lastActiveTasks.contains(task)) {
-			lastActiveTasks.remove(task);
-		}
-
-		lastActiveTasks.push(task);
-		lastActiveTasksAlert.fire();
-	}
-
-	public void stop(final ObjectIdentity taskId) {
-		tasks.get(taskId).stop();
-		activeTask = tasks.get(taskId);
-		activeTask = null;
-		activeTaskChangedAlert.fire();
-
-		updateActiveTaskName();
-	}
-
-	private void updateActiveTaskName() {
-		if (activeTask == null) {
-			activeTaskName.supply("");
-		} else {
-			activeTaskName.supply(activeTask.name());
-		}
-
-	}
-
-	public TaskView activeTask() {
-		return activeTask;
 	}
 
 	public void addTasksListener(final TasksListener tasksListener) {
@@ -178,23 +116,12 @@ public class TasksHomeImpl implements TasksHome {
 	}
 
 	@Override
-	public Collection<TaskView> lastActiveTasks() {
-		return Collections.unmodifiableCollection(lastActiveTasks);
-	}
+	public void stop(final ObjectIdentity taskId)
+			throws MustBeCalledInsideATransaction {
 
-	@Override
-	public Alert lastActiveTasksAlert() {
-		return lastActiveTasksAlert;
-	}
+		tasks.get(taskId).stop();
+		activeTask.supply(null);
 
-	@Override
-	public Alert activeTaskChanged() {
-		return activeTaskChangedAlert;
-	}
-
-	@Override
-	public Signal<String> activeTaskName() {
-		return activeTaskName;
 	}
 
 }

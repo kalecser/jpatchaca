@@ -17,28 +17,27 @@ public class EditPeriodProcessor2 implements Processor<EditPeriodEvent2> {
 	private final TasksHome tasksHome;
 	private final TasksView tasks;
 
-
-	public EditPeriodProcessor2(TasksHome tasksHome, TasksView tasks) {
+	public EditPeriodProcessor2(final TasksHome tasksHome, final TasksView tasks) {
 		this.tasks = tasks;
 		this.tasksHome = tasksHome;
 	}
 
-
-	public void execute(EditPeriodEvent2 event) throws MustBeCalledInsideATransaction {
-		ObjectIdentity taskId = event.getTaskId();
+	public void execute(final EditPeriodEvent2 event)
+			throws MustBeCalledInsideATransaction {
+		final ObjectIdentity taskId = event.getTaskId();
 		final TaskView task = this.tasks.get(taskId);
 		final Period period = task.periods().get(event.getSelectedPeriod());
-		
-		Date newStopTime = event.getStop();
-		if (period.endTime() == null && newStopTime != null)
+
+		final Date newStopTime = event.getStop();
+		if (period.endTime() == null && newStopTime != null) {
 			tasksHome.stop(taskId);
-		
+		}
+
 		period.setStart(event.getStart());
 		period.setStop(event.getStop());
-		
+
 	}
 
-	
 	public Class<? extends Serializable> eventType() {
 		return EditPeriodEvent2.class;
 	}

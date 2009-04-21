@@ -27,6 +27,15 @@ public class Tasks implements TasksView {
 
 	public synchronized void add(final ObjectIdentity taskId, final Task task)
 			throws MustBeCalledInsideATransaction {
+
+		for (final Task ctask : tasksList) {
+			if (ctask.name().equals(task.name())) {
+				task.setName(task.name() + "_new");
+				add(taskId, task);
+				return;
+			}
+		}
+
 		this.tasksById.put(taskId, task);
 		this.idsByTask.put(task, taskId);
 		this.tasksList.add(task);
@@ -63,8 +72,8 @@ public class Tasks implements TasksView {
 		return names;
 	}
 
-	public synchronized Maybe<TaskView> byName(final NonEmptyString string) {
-		for (final TaskView task : tasksList) {
+	public synchronized Maybe<Task> byName(final NonEmptyString string) {
+		for (final Task task : tasksList) {
 			if (task.name().equals(string.unbox())) {
 				return Maybe.wrap(task);
 			}

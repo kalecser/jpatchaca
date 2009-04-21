@@ -1,6 +1,7 @@
 package tasks.tasks;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -14,9 +15,8 @@ import periods.PeriodsListener;
 import tasks.NotesListener;
 import basic.Alert;
 import basic.AlertImpl;
+import basic.NonEmptyString;
 import basic.SystemClock;
-
-
 
 class TaskImpl implements Task {
 
@@ -28,39 +28,37 @@ class TaskImpl implements Task {
 	private final PeriodManager manager;
 	private String name;
 	private Double budget;
-	
+
 	private final List<NotesListener> notesListeners;
 	private final List<NoteView> notes;
-	private Source<String> _nameSource;
-	
-	
-	public TaskImpl(String name, SystemClock clock, Double budget, PeriodManager manager, PeriodsFactory periodsFactory) {
+	private final Source<String> _nameSource;
+
+	public TaskImpl(final String name, final SystemClock clock,
+			final Double budget, final PeriodManager manager,
+			final PeriodsFactory periodsFactory) {
 		this.name = name;
 		this.clock = clock;
 		this.budget = budget;
 		this.manager = manager;
 		this.periodsFactory = periodsFactory;
 		this.changedAlert = new AlertImpl();
-		
-		
-		_nameSource = new Source<String>((name == null? "": name));
-		
+
+		_nameSource = new Source<String>((name == null ? "" : name));
+
 		this.notesListeners = new ArrayList<NotesListener>();
 		this.notes = new ArrayList<NoteView>();
 	}
 
 	public synchronized void start() {
-		if (this._active) return;
-		this.activePeriod = this.periodsFactory.createPeriod(this.clock.getDate());
-		this.manager.addPeriod(this.activePeriod);
-		this._active  = true;
-		this.changedAlert.fire();
+		start(0);
 	}
-	
+
 	public synchronized void stop() {
-		if (!this._active) return;
+		if (!this._active) {
+			return;
+		}
 		this.activePeriod.setStop(this.clock.getDate());
-		this._active  = false;
+		this._active = false;
 		this.changedAlert.fire();
 	}
 
@@ -72,19 +70,18 @@ class TaskImpl implements Task {
 		return this.manager;
 	}
 
-	public synchronized void setName(String newNameForTask) {
-		this.name = newNameForTask;	
+	public synchronized void setName(final String newNameForTask) {
+		this.name = newNameForTask;
 		_nameSource.supply(newNameForTask);
 		this.changedAlert.fire();
 	}
-	
-	public synchronized void setBudgetInHours(Double newBudget) {
-		this.budget = newBudget;	
+
+	public synchronized void setBudgetInHours(final Double newBudget) {
+		this.budget = newBudget;
 		this.changedAlert.fire();
 	}
 
-
-	//refactor: make private
+	// refactor: make private
 	public synchronized List<Period> periods() {
 		return this.periodManager().periods();
 	}
@@ -93,10 +90,20 @@ class TaskImpl implements Task {
 		return this.changedAlert;
 	}
 
-	public synchronized String name() {
-		return this.name;
+	public synchronized NonEmptyString nonEmptyName() {
+
+		if (name == null) {
+			return new NonEmptyString("empty name");
+		}
+
+		return new NonEmptyString(this.name);
 	}
-	
+
+	@Override
+	public String name() {
+		return name;
+	}
+
 	@Override
 	public synchronized Signal<String> nameSignal() {
 		return _nameSource;
@@ -107,13 +114,17 @@ class TaskImpl implements Task {
 	}
 
 	public synchronized Double budgetBallanceInHours() {
-		if (budgetInHours() == null) return 0.0;
+		if (budgetInHours() == null) {
+			return 0.0;
+		}
 		return budgetInHours() - totalTimeInHours();
 	}
-	
+
 	@Override
 	public synchronized String toString() {
-		if (this.name == null) return "null";
+		if (this.name == null) {
+			return "null";
+		}
 		return this.name;
 	}
 
@@ -121,15 +132,15 @@ class TaskImpl implements Task {
 		return ((double) periodManager().totalTime() / (double) DateUtils.MILLIS_PER_HOUR);
 	}
 
-	public synchronized void addPeriod(Period period) {
-		periodManager().addPeriod(period);		
+	public synchronized void addPeriod(final Period period) {
+		periodManager().addPeriod(period);
 	}
 
-	public synchronized void removePeriod(Period period) {
-		periodManager().removePeriod(period);		
+	public synchronized void removePeriod(final Period period) {
+		periodManager().removePeriod(period);
 	}
 
-	public synchronized void addPeriodsListener(PeriodsListener listener) {
+	public synchronized void addPeriodsListener(final PeriodsListener listener) {
 		periodManager().addListener(listener);
 	}
 
@@ -137,35 +148,35 @@ class TaskImpl implements Task {
 		return periodManager().totalTime();
 	}
 
-	public synchronized void addNote(NoteView note) {
+	public synchronized void addNote(final NoteView note) {
 		notes.add(note);
-		
-		for (final NotesListener listener : notesListeners){
+
+		for (final NotesListener listener : notesListeners) {
 			listener.noteAdded(note);
 		}
 	}
-	
-	public synchronized void addNotesListener(NotesListener listener) {
-		notesListeners.add(listener);		
+
+	public synchronized void addNotesListener(final NotesListener listener) {
+		notesListeners.add(listener);
 	}
 
 	public synchronized List<NoteView> notes() {
 		return notes;
 	}
 
-	public synchronized void removeNotesListener(NotesListener listener) {
+	public synchronized void removeNotesListener(final NotesListener listener) {
 		notesListeners.remove(listener);
-		
+
 	}
 
 	@Override
-	public synchronized void removePeriodListener(PeriodsListener listener) {
+	public synchronized void removePeriodListener(final PeriodsListener listener) {
 		periodManager().removeListener(listener);
-		
+
 	}
 
 	@Override
-	public synchronized Period getPeriod(int index) {
+	public synchronized Period getPeriod(final int index) {
 		return periodManager().period(index);
 	}
 
@@ -180,7 +191,7 @@ class TaskImpl implements Task {
 	}
 
 	@Override
-	public synchronized Period periodAt(int i) {
+	public synchronized Period periodAt(final int i) {
 		return periods().get(i);
 	}
 
@@ -188,6 +199,18 @@ class TaskImpl implements Task {
 	public synchronized int periodsCount() {
 		return periods().size();
 	}
-	
+
+	@Override
+	public void start(final long millisecondsAgo) {
+		if (this._active) {
+			return;
+		}
+		this.activePeriod = this.periodsFactory.createPeriod(new Date(
+				this.clock.getDate().getTime() - millisecondsAgo));
+		this.manager.addPeriod(this.activePeriod);
+		this._active = true;
+		this.changedAlert.fire();
+
+	}
 
 }

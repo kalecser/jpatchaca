@@ -2,21 +2,28 @@ package tasks.processors;
 
 import java.io.Serializable;
 
-import tasks.tasks.TasksHome;
+import tasks.tasks.TaskView;
+import tasks.tasks.TasksView;
 import events.Processor;
 import events.StartTaskEvent;
+import events.StartTaskEvent2;
 import events.persistence.MustBeCalledInsideATransaction;
 
 public class StartTaskProcessor implements Processor<StartTaskEvent> {
 
-	private final TasksHome home;
+	private final StartTaskProcessor2 startTaskProcessor;
+	private final TasksView tasks;
 
-	public StartTaskProcessor(TasksHome home) {
-		this.home = home;
+	public StartTaskProcessor(final StartTaskProcessor2 startTaskProcessor,
+			final TasksView tasks) {
+		this.startTaskProcessor = startTaskProcessor;
+		this.tasks = tasks;
 	}
 
-	public void execute(StartTaskEvent event) throws MustBeCalledInsideATransaction {	
-		this.home.start(event.getTaskId());
+	public void execute(final StartTaskEvent event)
+			throws MustBeCalledInsideATransaction {
+		final TaskView task = tasks.get(event.getTaskId());
+		startTaskProcessor.execute(new StartTaskEvent2(task.nonEmptyName(), 0));
 	}
 
 	public Class<? extends Serializable> eventType() {

@@ -1,9 +1,6 @@
 package periodsInTasks;
 
-import java.util.Collection;
 import java.util.Date;
-
-import org.reactivebricks.pulses.Signal;
 
 import periods.Period;
 import tasks.TasksListener;
@@ -18,26 +15,6 @@ import events.persistence.MustBeCalledInsideATransaction;
 public class MockTasksSystem implements TasksSystem {
 
 	@Override
-	public TaskView activeTask() {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public Alert activeTaskChangedAlert() {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public String activeTaskName() {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public Signal<String> activeTaskNameSignal() {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
 	public void addNoteToTask(final TaskView task, final String text) {
 		throw new RuntimeException("not implemented");
 	}
@@ -45,7 +22,7 @@ public class MockTasksSystem implements TasksSystem {
 	@Override
 	public void addPeriodToTask(final ObjectIdentity taskId, final Period period)
 			throws MustBeCalledInsideATransaction {
-		
+
 	}
 
 	@Override
@@ -59,7 +36,8 @@ public class MockTasksSystem implements TasksSystem {
 	}
 
 	@Override
-	public void editPeriod(final TaskView task, final int periodIndex, final Period newPeriod) {
+	public void editPeriod(final TaskView task, final int periodIndex,
+			final Period newPeriod) {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -69,17 +47,8 @@ public class MockTasksSystem implements TasksSystem {
 	}
 
 	@Override
-	public Collection<TaskView> lastActiveTasks() {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public Alert lastActiveTasksAlert() {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public void movePeriod(final TaskView taskFrom, final TaskView taskTo, final int periodFrom) {
+	public void movePeriod(final TaskView taskFrom, final TaskView taskTo,
+			final int periodFrom) {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -94,27 +63,25 @@ public class MockTasksSystem implements TasksSystem {
 	}
 
 	@Override
-	public void setPeriod(final TaskView task, final int i, final Date startTime, final Date endTime) {
+	public void setPeriod(final TaskView task, final int i,
+			final Date startTime, final Date endTime) {
 		throw new RuntimeException("not implemented");
 	}
 
 	@Override
-	public void setPeriodEnding(final TaskView task, final int periodIndex, final Date endDate) {
+	public void setPeriodEnding(final TaskView task, final int periodIndex,
+			final Date endDate) {
 		throw new RuntimeException("not implemented");
 	}
 
 	@Override
-	public void setPeriodStarting(final TaskView task, final int periodIndex, final Date startDate) {
+	public void setPeriodStarting(final TaskView task, final int periodIndex,
+			final Date startDate) {
 		throw new RuntimeException("not implemented");
 	}
 
 	@Override
 	public void stopIn(final long millisAhead) {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public void stopTask(final TaskView task) {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -133,5 +100,10 @@ public class MockTasksSystem implements TasksSystem {
 		throw new RuntimeException("not implemented");
 	}
 
+	@Override
+	public void stopTask() {
+		// TODO Auto-generated method stub
+
+	}
 
 }

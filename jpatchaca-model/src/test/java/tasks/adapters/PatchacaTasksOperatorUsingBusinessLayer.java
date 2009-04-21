@@ -3,18 +3,19 @@
  */
 package tasks.adapters;
 
-import java.util.List;
-
 import junit.framework.Assert;
 import labels.LabelsSystem;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.reactivebricks.commons.lang.Maybe;
 
+import tasks.ActiveTask;
 import tasks.PatchacaTasksOperator;
 import tasks.TasksSystem;
 import tasks.delegates.CreateTaskDelegate;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
+import tasks.tasks.Task;
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
 import tasks.tasks.TasksView;
@@ -29,13 +30,15 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	private final StartTaskDelegate startTaskDelegate;
 	private final TasksView tasks;
 	private final CreateTaskDelegate createTaskDelegate;
+	private final ActiveTask activeTask;
 
 	public PatchacaTasksOperatorUsingBusinessLayer(
 			final LabelsSystem labelsSystem,
 			final MockHardwareClock mockHardwareClock,
 			final TasksSystem tasksSystem,
 			final StartTaskDelegate startTaskDelegate, final TasksView tasks,
-			final CreateTaskDelegate createTaskDelegate) {
+			final CreateTaskDelegate createTaskDelegate,
+			final ActiveTask activeTask) {
 		super();
 		this.labelsSystem = labelsSystem;
 		this.mockHardwareClock = mockHardwareClock;
@@ -44,6 +47,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 		this.startTaskDelegate = startTaskDelegate;
 		this.tasks = tasks;
 		this.createTaskDelegate = createTaskDelegate;
+		this.activeTask = activeTask;
 	}
 
 	@Override
@@ -103,7 +107,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 
 	@Override
 	public void stopTask() {
-		tasksSystem.stopTask(tasksSystem.activeTask());
+		tasksSystem.stopTask();
 	}
 
 	public TaskView taskByName(final String taskName) {
@@ -141,18 +145,15 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	}
 
 	@Override
-	public void assertLastActiveTasks(
-			final List<String> expectedLastActiveTasksNames) {
-		int index = 0;
-		for (final TaskView lastActiveTask : tasksSystem.lastActiveTasks()) {
-			Assert.assertEquals(expectedLastActiveTasksNames.get(index++),
-					lastActiveTask.name());
-		}
-	}
-
-	@Override
 	public void assertActiveTask(final String taskName) {
-		Assert.assertEquals(taskName, tasksSystem.activeTaskName());
+
+		final Maybe<Task> currentValue = activeTask.currentValue();
+		if (currentValue == null) {
+			Assert.assertTrue(taskName == null);
+			return;
+		}
+
+		Assert.assertEquals(taskName, currentValue.unbox().name());
 	}
 
 }

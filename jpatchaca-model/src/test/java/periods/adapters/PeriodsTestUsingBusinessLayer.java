@@ -5,6 +5,7 @@ import main.TransientNonUIContainer;
 import periods.PatchacaPeriodsOperator;
 import periods.PeriodsTest;
 import periodsInTasks.PeriodsInTasksSystem;
+import tasks.ActiveTask;
 import tasks.PatchacaTasksOperator;
 import tasks.TasksSystem;
 import tasks.adapters.PatchacaTasksOperatorUsingBusinessLayer;
@@ -29,15 +30,19 @@ public class PeriodsTestUsingBusinessLayer extends PeriodsTest {
 
 		labelsSystem = container.getComponent(LabelsSystem.class);
 		tasksSystem = container.getComponent(TasksSystem.class);
-		TasksView tasks = container.getComponent(TasksView.class);
+		final TasksView tasks = container.getComponent(TasksView.class);
 		periodsSystem = container.getComponent(PeriodsInTasksSystem.class);
-		CreateTaskDelegate createTaskDelegate = container.getComponent(CreateTaskDelegate.class);
-		
-		StartTaskDelegate startTaskDelegate = container.getComponent(StartTaskDelegate.class);
-		
+		final CreateTaskDelegate createTaskDelegate = container
+				.getComponent(CreateTaskDelegate.class);
+		final ActiveTask activeTask = container.getComponent(ActiveTask.class);
+
+		final StartTaskDelegate startTaskDelegate = container
+				.getComponent(StartTaskDelegate.class);
+
 		tasksOperator = new PatchacaTasksOperatorUsingBusinessLayer(
-				labelsSystem, mockHardwareClock, tasksSystem, startTaskDelegate, tasks, createTaskDelegate);
-		
+				labelsSystem, mockHardwareClock, tasksSystem,
+				startTaskDelegate, tasks, createTaskDelegate, activeTask);
+
 		super.setUp();
 	}
 
