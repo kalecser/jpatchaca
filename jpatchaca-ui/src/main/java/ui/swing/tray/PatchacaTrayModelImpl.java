@@ -1,7 +1,6 @@
 package ui.swing.tray;
 
 import java.awt.Frame;
-import java.util.Collection;
 
 import javax.swing.SwingUtilities;
 
@@ -9,6 +8,7 @@ import org.reactivebricks.commons.lang.Maybe;
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
 
+import tasks.ActiveTaskName;
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.MainScreen;
@@ -17,7 +17,6 @@ import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.tasks.StartTaskController;
 import ui.swing.users.SwingTasksUser;
-import basic.Subscriber;
 
 public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
@@ -34,6 +33,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private final TaskScreenController taskScreen;
 	private final StartTaskController startTaskController;
 	private final SelectedTaskName selectedTaskName;
+	private final ActiveTaskName activeTaskName;
 
 	public PatchacaTrayModelImpl(final MainScreen mainScreen,
 			final TasksSystem tasksSystem,
@@ -41,7 +41,8 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final SwingTasksUser taskUser,
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
-			final StartTaskController startTaskController) {
+			final StartTaskController startTaskController,
+			final ActiveTaskName activeTaskName) {
 
 		this.mainScreen = mainScreen;
 		this.tasksSystem = tasksSystem;
@@ -50,8 +51,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		this.taskScreen = taskScreen;
 		this.windowManager = windowManager;
 		this.startTaskController = startTaskController;
-
-		bindToTasksSystem(tasksSystem);
+		this.activeTaskName = activeTaskName;
 
 	}
 
@@ -62,18 +62,6 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 */
 	public Source<String> selectedTaskName() {
 		return this.selectedTaskName;
-	}
-
-	private void bindToTasksSystem(final TasksSystem tasksSystem) {
-		tasksSystem.lastActiveTasksAlert().subscribe(new Subscriber() {
-
-			public void fire() {
-				if (listener != null) {
-					listener.unbox().lastActiveTasksChanged();
-				}
-			}
-		});
-
 	}
 
 	/*
@@ -164,16 +152,12 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	}
 
-	public Collection<TaskView> lastActiveTasks() {
-		return tasksSystem.lastActiveTasks();
-	}
-
 	public void createTaskStarted(final long time) {
 		taskScreen.createTaskStarted(time);
 	}
 
-	public Signal<String> activeTaskName() {
-		return tasksSystem.activeTaskNameSignal();
+	public Signal<Maybe<String>> activeTaskName() {
+		return activeTaskName;
 
 	}
 
@@ -212,7 +196,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 * @see ui.swing.tray.PatchacaTrayModel#hasActiveTask()
 	 */
 	public boolean hasActiveTask() {
-		return tasksSystem.activeTask() != null;
+		return activeTaskName.currentValue() != null;
 	}
 
 	@Override

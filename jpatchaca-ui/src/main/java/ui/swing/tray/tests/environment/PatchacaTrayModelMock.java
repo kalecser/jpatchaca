@@ -1,7 +1,6 @@
 package ui.swing.tray.tests.environment;
 
-import java.util.Collection;
-
+import org.reactivebricks.commons.lang.Maybe;
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
 
@@ -11,16 +10,16 @@ import ui.swing.tray.PatchacaTrayModelImpl.Listener;
 
 public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
-	private final Source<String> _activeTask;
+	private final Source<Maybe<String>> _activeTask;
 	private final Source<String> selectedTaskName;
 
 	public PatchacaTrayModelMock() {
-		_activeTask = new Source<String>("");
+		_activeTask = new Source<Maybe<String>>(Maybe.wrap(""));
 		this.selectedTaskName = new Source<String>("");
 	}
 
 	@Override
-	public Signal<String> activeTaskName() {
+	public Signal<Maybe<String>> activeTaskName() {
 		return _activeTask;
 	}
 
@@ -36,11 +35,6 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
 	@Override
 	public boolean hasActiveTask() {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public Collection<TaskView> lastActiveTasks() {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -85,7 +79,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	public void setActiveTask(final String string) {
-		_activeTask.supply(string);
+		_activeTask.supply(Maybe.wrap(string));
 	}
 
 	public void assertTaskCreated() {

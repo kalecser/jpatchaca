@@ -32,7 +32,7 @@ import ui.swing.mainScreen.tasks.TaskSelectionListener;
 import ui.swing.utils.SimpleInternalFrame;
 import basic.Alert;
 import basic.AlertImpl;
-import basic.BasicSystem;
+import basic.HardwareClock;
 import basic.Subscriber;
 
 @SuppressWarnings("serial")
@@ -48,17 +48,19 @@ public class PeriodsList extends SimpleInternalFrame implements
 	private final PeriodsListener listScrollListener;
 	private TaskView _selectedTask;
 	private final PeriodsInTasksSystem periodsSystem;
-	private final BasicSystem basic;
 	protected final PeriodsListModel model;
+	private final HardwareClock machineClock;
 
 	public PeriodsList(final TaskList tasksList,
 			final PeriodsInTasksSystem periodsInTasks,
-			final PeriodsTableModel periodsTableModel, final BasicSystem basic) {
+			final PeriodsTableModel periodsTableModel,
+			final HardwareClock machineClock) {
+
 		super("Selected task's periods");
 		this.tasksList = tasksList;
 		this.periodsSystem = periodsInTasks;
 		this.periodsTableModel = periodsTableModel;
-		this.basic = basic;
+		this.machineClock = machineClock;
 		this.model = new PeriodsListModel(periodsSystem);
 
 		initialize();
@@ -68,7 +70,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 		tasksList.addTaskSelectionListener(this);
 
-		//bug: I don't like it!
+		// bug: I don't like it!
 		removePeriodAlert().subscribe(new Subscriber() {
 
 			public void fire() {
@@ -225,9 +227,9 @@ public class PeriodsList extends SimpleInternalFrame implements
 	}
 
 	public void setSelectedPeriodTesting(final int index) {
-		this.periodsTable
-				.getSelectionModel()
-					.setSelectionInterval(index, index);
+		this.periodsTable.getSelectionModel()
+				.setSelectionInterval(index, index);
+
 	}
 
 	public void clickOnAddPediodButton() {
@@ -255,10 +257,10 @@ public class PeriodsList extends SimpleInternalFrame implements
 			public void run() {
 				final TaskView selectedTask = tasksList.selectedTask();
 				new Thread() {
-
 					@Override
 					public void run() {
-						final Period newPeriod = new Period(basic.getTime());
+						final Period newPeriod = new Period(machineClock
+								.getTime());
 						periodsSystem.addPeriod(selectedTask, newPeriod);
 					}
 				}.start();

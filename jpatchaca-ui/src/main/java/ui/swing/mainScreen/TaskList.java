@@ -26,7 +26,13 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.reactivebricks.commons.lang.Maybe;
+import org.reactivebricks.pulses.Pulse;
+import org.reactivebricks.pulses.Receiver;
+
+import tasks.ActiveTask;
 import tasks.TasksSystem;
+import tasks.tasks.Task;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.dragAndDrop.TaskTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
@@ -36,10 +42,24 @@ import wheel.io.files.Directory;
 import basic.Alert;
 import basic.AlertImpl;
 import basic.DeferredExecutor;
-import basic.Subscriber;
 
 @SuppressWarnings("serial")
 public class TaskList extends JPanel {
+
+	public class ActiveTaskChanged implements Receiver<Maybe<Task>> {
+
+		@Override
+		public void receive(final Pulse<Maybe<Task>> pulse) {
+			final Maybe<Task> maybeActiveTask = pulse.value();
+
+			if (maybeActiveTask == null) {
+				return;
+			}
+
+			setSelectedTask(maybeActiveTask.unbox());
+
+		}
+	}
 
 	private final TaskListListModel tasksListModel;
 	private final JList tasksList;
@@ -69,21 +89,21 @@ public class TaskList extends JPanel {
 	final DeferredExecutor executor = new DeferredExecutor(200,
 			fireChangeListeners);
 	private final SelectedTaskSource selectedTask;
+	private final ActiveTask activeTaskSignal;
 
 	public TaskList(final TaskListModel model, final LabelsList labelsList,
 			final Directory directory, final TasksSystem tasksSystem,
 			final TaskContextMenu taskContextMenu,
-			final SelectedTaskSource selectedTask) {
+			final SelectedTaskSource selectedTask, final ActiveTask activeTask) {
 
 		this.selectedTask = selectedTask;
+		this.activeTaskSignal = activeTask;
 		selectedTaskChangedAlert = new AlertImpl();
 		this.memory = new DeferredTaskListMemory(directory);
 		this.screenData = memory.retrieve();
 		this.taskContextMenu = taskContextMenu;
 
 		this.labelsList = labelsList;
-		bindToLabelsList();
-		bindToTasksSystem(tasksSystem);
 
 		this.selectedLabelChanged = new AlertImpl();
 		movePeriodAlert = new AlertImpl();
@@ -122,17 +142,13 @@ public class TaskList extends JPanel {
 		this.add(createTaskPannel, BorderLayout.NORTH);
 		this.add(split, BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(180, 0));
+
+		bindToLabelsList();
+		bindToTasksSystem(tasksSystem);
 	}
 
 	private void bindToTasksSystem(final TasksSystem tasksSystem) {
-		tasksSystem.activeTaskChangedAlert().subscribe(new Subscriber() {
-
-			@Override
-			public void fire() {
-				setSelectedTask(tasksSystem.activeTask());
-			}
-
-		});
+		activeTaskSignal.addReceiver(new ActiveTaskChanged());
 	}
 
 	private void bindToLabelsList() {
@@ -235,9 +251,8 @@ public class TaskList extends JPanel {
 			@Override
 			public boolean canImport(final TransferSupport info) {
 				try {
-					final String data = (String) info
-							.getTransferable()
-								.getTransferData(DataFlavor.stringFlavor);
+					final String data = (String) info.getTransferable()
+							.getTransferData(DataFlavor.stringFlavor);
 					return data.startsWith("period -");
 				} catch (final Exception e) {
 				}

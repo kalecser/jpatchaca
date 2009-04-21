@@ -1,7 +1,6 @@
 package ui.swing.tray;
 
-import java.util.Collection;
-
+import org.reactivebricks.commons.lang.Maybe;
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
 
@@ -22,11 +21,9 @@ public interface PatchacaTrayModel {
 
 	public abstract void startTaskIn(final TaskView task, final long timeAgo);
 
-	public abstract Collection<TaskView> lastActiveTasks();
-
 	public abstract void createTaskStarted(final long time);
 
-	public abstract Signal<String> activeTaskName();
+	public abstract Signal<Maybe<String>> activeTaskName();
 
 	public abstract TaskView selectedTask();
 

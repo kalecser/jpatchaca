@@ -90,7 +90,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 				new Thread() {
 					@Override
 					public void run() {
-						tasksSystem.stopTask(tasksUser.getSelectedTask());
+						tasksSystem.stopTask();
 					}
 				}.start();
 			}

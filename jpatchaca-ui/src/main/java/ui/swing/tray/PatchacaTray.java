@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -21,6 +20,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.picocontainer.Startable;
+import org.reactivebricks.commons.lang.Maybe;
 import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 
@@ -52,12 +52,10 @@ public class PatchacaTray implements Startable {
 
 	private final AlertImpl stopTaskAlert;
 	private final PatchacaTrayModel model;
-	private final SpecialStartTaskSubMenu specialStartTaskMenu;
 
 	private final Whiteboard whiteboard;
 
 	private PopupMenu timerMenu;
-	private PopupMenu lastTasksMenu;
 	private TrayIcon trayIcon;
 
 	protected AtomicLong lastClicktime = new AtomicLong();
@@ -68,8 +66,6 @@ public class PatchacaTray implements Startable {
 		this.model = model;
 
 		this.whiteboard = whiteboard;
-
-		specialStartTaskMenu = new SpecialStartTaskSubMenu(model);
 		this.stopTaskAlert = new AlertImpl();
 
 	}
@@ -88,7 +84,6 @@ public class PatchacaTray implements Startable {
 		final PopupMenu timerMenu = createPopupMenu();
 
 		bindToModel();
-		bindStartTaskmenu();
 		bindTrayicon();
 
 		icon.setPopupMenu(timerMenu);
@@ -96,20 +91,6 @@ public class PatchacaTray implements Startable {
 	}
 
 	private void bindToModel() {
-		this.model.setListener(new PatchacaTrayModelImpl.Listener() {
-
-			@Override
-			public void lastActiveTasksChanged() {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						rebuildLastTasksMenu();
-					}
-				});
-			}
-
-		});
-
 		bindTooltip();
 	}
 
@@ -123,33 +104,22 @@ public class PatchacaTray implements Startable {
 
 	}
 
-	private void bindStartTaskmenu() {
-
-		model.selectedTaskName().addReceiver(new Receiver<String>() {
-			@Override
-			public void receive(final Pulse<String> pulse) {
-				updateStartStaskMenu(pulse.value());
-			}
-		});
-
-	}
-
 	protected void bindTrayicon() {
 		final MenuItem stopTaskItem = getMenuItemByText(STOP_TASK);
 		final MenuItem stopTaskSpecialItem = getMenuItemByText(STOP_TASK_SCPECIAL);
 
-		model.activeTaskName().addReceiver(new Receiver<String>() {
+		model.activeTaskName().addReceiver(new Receiver<Maybe<String>>() {
 			@Override
-			public void receive(final Pulse<String> pulse) {
-				if (pulse.value().equals("")) {
+			public void receive(final Pulse<Maybe<String>> pulse) {
+				if (pulse.value() == null) {
 					trayIcon.setImage(INACTIVE_ICON);
 					stopTaskItem.setLabel(STOP_TASK);
 					stopTaskItem.setEnabled(false);
 					stopTaskSpecialItem.setEnabled(false);
 				} else {
 					trayIcon.setImage(ACTIVE_ICON);
-					stopTaskItem.setLabel(STOP_TASK + " (" + pulse.value()
-							+ ")");
+					stopTaskItem.setLabel(STOP_TASK + " ("
+							+ pulse.value().unbox() + ")");
 					stopTaskItem.setEnabled(true);
 					stopTaskSpecialItem.setEnabled(true);
 				}
@@ -164,7 +134,6 @@ public class PatchacaTray implements Startable {
 				.selectedTaskName(), model).getMenu());
 		this.timerMenu.add(STOP_TASK);
 		this.timerMenu.addSeparator();
-		this.timerMenu.add(buildSpecialStartTaskMenu());
 		this.timerMenu.add(buildSpecialStopTaskMenu());
 		this.timerMenu.addSeparator();
 		this.timerMenu.add(OPEN);
@@ -201,15 +170,6 @@ public class PatchacaTray implements Startable {
 				});
 
 		return specialStopTaskMenu;
-	}
-
-	private PopupMenu buildSpecialStartTaskMenu() {
-		final PopupMenu lastTasksMenu = new PopupMenu(START_TASK_SPECIAL);
-
-		this.lastTasksMenu = lastTasksMenu;
-		rebuildLastTasksMenu();
-
-		return lastTasksMenu;
 	}
 
 	private TrayIcon createTrayIcon() throws SystemTrayNotSupported {
@@ -262,7 +222,7 @@ public class PatchacaTray implements Startable {
 
 	private static Image iconImage(final String resource) {
 		final URL iconURL = PatchacaTray.class.getResource(resource);
-		ImageIcon imageIcon = new ImageIcon(iconURL);
+		final ImageIcon imageIcon = new ImageIcon(iconURL);
 		final Image image = imageIcon.getImage();
 		return image;
 	}
@@ -309,32 +269,6 @@ public class PatchacaTray implements Startable {
 		return this.stopTaskAlert;
 	}
 
-	private void rebuildLastTasksMenu() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-
-				lastTasksMenu.removeAll();
-
-				final Collection<TaskView> lastStartedTasks = model
-						.lastActiveTasks();
-
-				int index = 0;
-				for (final TaskView task : lastStartedTasks) {
-					lastTasksMenu.add(specialStartTaskMenu.create(task));
-					if (++index == 12) {
-						break;
-					}
-				}
-
-				lastTasksMenu.addSeparator();
-				lastTasksMenu.add(createNewTaskMenu());
-
-			}
-		});
-
-	}
-
 	protected PopupMenu createNewTaskMenu() {
 		final IntervalMenu newTaskMenu = new IntervalMenu(NEW_TASK,
 				new IntervalMenu.IntervalSelectedListener() {
@@ -372,21 +306,6 @@ public class PatchacaTray implements Startable {
 		} finally {
 			isprocessingClick.set(false);
 		}
-	}
-
-	private void updateStartStaskMenu(final String selectedTaskName) {
-
-		final MenuItem startTaskSpecial = getMenuItemByText(START_TASK_SPECIAL);
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				if (selectedTaskName.equals("")) {
-					startTaskSpecial.setEnabled(false);
-				} else {
-					startTaskSpecial.setEnabled(true);
-				}
-			}
-		});
 	}
 
 	public void statusMessage(final String string) {

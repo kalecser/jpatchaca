@@ -2,20 +2,22 @@ package ui.swing.tasks;
 
 import java.util.List;
 
-import tasks.delegates.StartTaskByNameDelegate;
+import tasks.StartTaskDataParser;
+import tasks.delegates.StartTaskDelegate;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;
 
 public class StartTaskScreenModelImpl implements StartTaskScreenModel {
 
 	private final TasksView tasks;
-	private final StartTaskByNameDelegate startTaskDelegate;
+	private final StartTaskDelegate startTaskDelegate;
+	private final StartTaskDataParser parser;
 
-	public StartTaskScreenModelImpl(
-			final StartTaskByNameDelegate startTaskDelegate,
-			final TasksView tasks) {
+	public StartTaskScreenModelImpl(final StartTaskDelegate startTaskDelegate,
+			final TasksView tasks, final StartTaskDataParser parser) {
 		this.startTaskDelegate = startTaskDelegate;
 		this.tasks = tasks;
+		this.parser = parser;
 	}
 
 	@Override
@@ -28,7 +30,8 @@ public class StartTaskScreenModelImpl implements StartTaskScreenModel {
 			return;
 		}
 
-		startTaskDelegate.starTask(new NonEmptyString(taskName));
+		final NonEmptyString nonEmptyTaskName = new NonEmptyString(taskName);
+		startTaskDelegate.starTask(parser.parse(nonEmptyTaskName));
 	}
 
 	@Override
