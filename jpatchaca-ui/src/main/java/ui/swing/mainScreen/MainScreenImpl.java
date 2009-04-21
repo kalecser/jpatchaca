@@ -10,7 +10,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.picocontainer.Startable;
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 
 import ui.swing.mainScreen.periods.PeriodsList;
@@ -87,8 +86,8 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		class TitleReceiver implements Receiver<String> {
 
 			@Override
-			public void receive(final Pulse<String> pulse) {
-				setTitle(pulse.value());
+			public void receive(final String pulse) {
+				setTitle(pulse);
 			}
 
 		}

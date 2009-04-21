@@ -4,7 +4,6 @@ import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
@@ -15,7 +14,7 @@ public class StartTaskMenu {
 
 	static final String START_TASK = "Start task";
 
-	//bug, should depend on selectedtaskname only
+	// bug, should depend on selectedtaskname only
 	private final Signal<TaskView> selectedTaskSignal;
 	private final PatchacaTrayModel model;
 	private TaskView selectedTask;
@@ -46,8 +45,8 @@ public class StartTaskMenu {
 		selectedTaskSignal.addReceiver(new Receiver<TaskView>() {
 
 			@Override
-			public void receive(final Pulse<TaskView> pulse) {
-				selectedTask = pulse.value();
+			public void receive(final TaskView pulse) {
+				selectedTask = pulse;
 				if (selectedTask == null) {
 					menuItem.setLabel(START_TASK);
 					menuItem.setEnabled(false);
@@ -59,8 +58,8 @@ public class StartTaskMenu {
 		selectedTaskName.addReceiver(new Receiver<String>() {
 
 			@Override
-			public void receive(final Pulse<String> pulse) {
-				menuItem.setLabel(START_TASK + " " + pulse.value());
+			public void receive(final String pulse) {
+				menuItem.setLabel(START_TASK + " " + pulse);
 			}
 		});
 

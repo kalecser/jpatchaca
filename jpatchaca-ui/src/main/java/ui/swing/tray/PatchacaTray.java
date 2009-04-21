@@ -21,7 +21,6 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.lang.time.DateUtils;
 import org.picocontainer.Startable;
 import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 
 import tasks.tasks.TaskView;
@@ -97,8 +96,8 @@ public class PatchacaTray implements Startable {
 	private void bindTooltip() {
 
 		model.tooltip().addReceiver(new Receiver<String>() {
-			public void receive(final Pulse<String> pulse) {
-				trayIcon.setToolTip(pulse.value());
+			public void receive(final String pulse) {
+				trayIcon.setToolTip(pulse);
 			}
 		});
 
@@ -110,16 +109,16 @@ public class PatchacaTray implements Startable {
 
 		model.activeTaskName().addReceiver(new Receiver<Maybe<String>>() {
 			@Override
-			public void receive(final Pulse<Maybe<String>> pulse) {
-				if (pulse.value() == null) {
+			public void receive(final Maybe<String> pulse) {
+				if (pulse == null) {
 					trayIcon.setImage(INACTIVE_ICON);
 					stopTaskItem.setLabel(STOP_TASK);
 					stopTaskItem.setEnabled(false);
 					stopTaskSpecialItem.setEnabled(false);
 				} else {
 					trayIcon.setImage(ACTIVE_ICON);
-					stopTaskItem.setLabel(STOP_TASK + " ("
-							+ pulse.value().unbox() + ")");
+					stopTaskItem.setLabel(STOP_TASK + " (" + pulse.unbox()
+							+ ")");
 					stopTaskItem.setEnabled(true);
 					stopTaskSpecialItem.setEnabled(true);
 				}

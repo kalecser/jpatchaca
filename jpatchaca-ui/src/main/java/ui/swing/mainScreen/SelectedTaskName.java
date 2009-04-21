@@ -1,7 +1,6 @@
 package ui.swing.mainScreen;
 
 import org.picocontainer.Startable;
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
@@ -36,8 +35,8 @@ public class SelectedTaskName extends Source<String> implements Startable {
 	final class TaskReceiver implements Receiver<TaskView> {
 
 		@Override
-		public void receive(final Pulse<TaskView> pulse) {
-			taskChangedTo(pulse.value());
+		public void receive(final TaskView pulse) {
+			taskChangedTo(pulse);
 		}
 
 	}
@@ -45,8 +44,8 @@ public class SelectedTaskName extends Source<String> implements Startable {
 	final class TaskNameReceiver implements Receiver<String> {
 
 		@Override
-		public void receive(final Pulse<String> pulse) {
-			supply(pulse.value());
+		public void receive(final String pulse) {
+			supply(pulse);
 		}
 	}
 

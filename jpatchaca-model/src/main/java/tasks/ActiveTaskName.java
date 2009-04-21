@@ -1,7 +1,6 @@
 package tasks;
 
 import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
@@ -12,15 +11,14 @@ public class ActiveTaskName implements Signal<Maybe<String>> {
 
 	private final class ActiveTaskNameListener implements Receiver<String> {
 		@Override
-		public void receive(final Pulse<String> pulse) {
-			supply(pulse.value());
+		public void receive(final String pulse) {
+			supply(pulse);
 		}
 	}
 
 	private final Source<Maybe<String>> activeTaskName;
 
-	public Pulse<Maybe<String>> addReceiver(
-			final Receiver<Maybe<String>> receiver) {
+	public Maybe<String> addReceiver(final Receiver<Maybe<String>> receiver) {
 		return activeTaskName.addReceiver(receiver);
 	}
 
@@ -41,12 +39,12 @@ public class ActiveTaskName implements Signal<Maybe<String>> {
 			private Maybe<Task> activeTaskView = null;
 
 			@Override
-			public void receive(final Pulse<Maybe<Task>> pulse) {
+			public void receive(final Maybe<Task> pulse) {
 				if (activeTaskView != null) {
 					activeTaskView.unbox().nameSignal()
 							.removeReceiver(listener);
 				}
-				activeTaskView = pulse.value();
+				activeTaskView = pulse;
 
 				if (activeTaskView == null) {
 					supply(null);

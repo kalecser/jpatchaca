@@ -10,7 +10,7 @@ public class TaskTreeNode implements PeriodsTreeTableNode {
 	private final TaskSignal task;
 	private final Map<Integer, TaskYearNode> treeYearsNodesByIndex;
 
-	public TaskTreeNode(TaskSignal selectedTaskSignal) {
+	public TaskTreeNode(final TaskSignal selectedTaskSignal) {
 		this.task = selectedTaskSignal;
 		treeYearsNodesByIndex = new LinkedHashMap<Integer, TaskYearNode>();
 	}
@@ -22,15 +22,16 @@ public class TaskTreeNode implements PeriodsTreeTableNode {
 
 	@Override
 	public Integer childCount() {
-		return task.years().currentSize().value();
+		return task.years().currentSize();
 	}
 
 	@Override
-	public PeriodsTreeTableNode getChild(int index) {
-		int year = task.years().currentList().value().get(index);
-		if (treeYearsNodesByIndex.get(year) == null)
+	public PeriodsTreeTableNode getChild(final int index) {
+		final int year = task.years().currentList().get(index);
+		if (treeYearsNodesByIndex.get(year) == null) {
 			treeYearsNodesByIndex.put(year, new TaskYearNode(task.years()
-					.currentList().value().get(index)));
+					.currentList().get(index)));
+		}
 		return treeYearsNodesByIndex.get(year);
 	}
 
@@ -41,8 +42,7 @@ public class TaskTreeNode implements PeriodsTreeTableNode {
 
 	@Override
 	public void addTreeNodeChangeListener(final TreeNodeChangeListener listener) {
-		
-	}
 
+	}
 
 }

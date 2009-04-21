@@ -1,5 +1,7 @@
 package tasks.tasks.tests;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,6 +35,19 @@ public class TasksTest {
 		tasks.add(new ObjectIdentity("2"), new MockTask("test task"));
 
 		Assert.assertEquals("test task_new", tasks.taskNames().get(1));
+	}
+
+	@Test
+	public void testTaskName() throws MustBeCalledInsideATransaction {
+		final Tasks tasks = new Tasks();
+
+		final MockTask mockTask = new MockTask("test task");
+		tasks.add(new ObjectIdentity("1"), mockTask);
+
+		final List<String> names = tasks.taskNames();
+		mockTask.setName("test 1");
+		Assert.assertEquals("test 1", names.get(0));
+
 	}
 
 }

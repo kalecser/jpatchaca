@@ -5,7 +5,6 @@ import java.util.WeakHashMap;
 
 import javax.swing.JCheckBox;
 
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 import org.reactivebricks.pulses.Signal;
 
@@ -20,10 +19,10 @@ public class CheckboxSignalBinder {
 		final WeakReference<JCheckBox> weakCheckbox = new WeakReference<JCheckBox>(checkbox);
 		Receiver<Boolean> receiver = new Receiver<Boolean>() {	
 			@Override
-			public void receive(Pulse<Boolean> pulse) {
+			public void receive(Boolean pulse) {
 				JCheckBox mycheckbox = weakCheckbox.get();
 				if (mycheckbox != null)
-					mycheckbox.setSelected(pulse.value());
+					mycheckbox.setSelected(pulse);
 			}
 		};
 		

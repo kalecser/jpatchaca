@@ -1,6 +1,5 @@
 package org.reactivebricks.pulses.tests;
 
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 
 public class StringLoggingReceiver implements Receiver<String> {
@@ -13,8 +12,8 @@ public class StringLoggingReceiver implements Receiver<String> {
 
 	
 	@Override
-	public void receive(Pulse<String> pulse) {
-		log.append(pulse.value() + " at " + pulse.id());		
+	public void receive(String pulse) {
+		log.append(pulse);		
 	}
 
 	public void clear() {

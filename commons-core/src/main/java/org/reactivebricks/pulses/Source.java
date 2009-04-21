@@ -6,13 +6,13 @@ import java.util.List;
 import org.reactivebricks.commons.lang.Maybe;
 
 
-public class Source<T> implements Signal<T>, PulseListener {
+public class Source<T> implements Signal<T> {
 
 	private Maybe<? extends List<Receiver<T>>> receivers;
-	private Pulse<T> currentValue;
+	private T currentValue;
 	
 	public Source(T initialValue) {
-		currentValue = new Pulse<T>(-1, initialValue);
+		currentValue = initialValue;
 	}
 
 	private List<Receiver<T>> receivers(){
@@ -22,28 +22,19 @@ public class Source<T> implements Signal<T>, PulseListener {
 	}
 	
 	@Override
-	public synchronized Pulse<T> addReceiver(Receiver<T> receiver) {			
+	public synchronized T addReceiver(Receiver<T> receiver) {			
 		receivers().add(receiver);
 		receiver.receive(currentValue);
 		return currentValue;
 	}
 
 	public synchronized void supply(T value) {
-		Pulse<T> pulse = new Pulse<T>(1, value);
-		
+				
 		for (Receiver<T> receiver : receivers()){
-			receiver.receive(pulse);				
+			receiver.receive(value);				
 		}
 		
-		currentValue = pulse; 
-	}
-
-	//performance: execute pulse in threadpool?
-	@Override
-	public synchronized void pulse(int id) {
-		
-		 
-		
+		currentValue = value; 
 	}
 
 	@Override
@@ -80,7 +71,7 @@ public class Source<T> implements Signal<T>, PulseListener {
 
 	@Override
 	public T currentValue() {
-		return currentValue.value();
+		return currentValue;
 	}
 	
 	

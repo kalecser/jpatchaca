@@ -27,7 +27,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 
 import tasks.ActiveTask;
@@ -49,8 +48,8 @@ public class TaskList extends JPanel {
 	public class ActiveTaskChanged implements Receiver<Maybe<Task>> {
 
 		@Override
-		public void receive(final Pulse<Maybe<Task>> pulse) {
-			final Maybe<Task> maybeActiveTask = pulse.value();
+		public void receive(final Maybe<Task> pulse) {
+			final Maybe<Task> maybeActiveTask = pulse;
 
 			if (maybeActiveTask == null) {
 				return;

@@ -4,7 +4,6 @@
 package ui.swing.mainScreen;
 
 import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Pulse;
 import org.reactivebricks.pulses.Receiver;
 import org.reactivebricks.pulses.Signal;
 import org.reactivebricks.pulses.Source;
@@ -55,8 +54,8 @@ public class MainScreenModelImpl implements MainScreenModel {
 		this.activeTaskName.addReceiver(new Receiver<Maybe<String>>() {
 
 			@Override
-			public void receive(final Pulse<Maybe<String>> pulse) {
-				updateTitle(pulse.value());
+			public void receive(final Maybe<String> pulse) {
+				updateTitle(pulse);
 			}
 		});
 	}
