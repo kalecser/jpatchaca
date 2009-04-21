@@ -39,7 +39,8 @@ class TaskListListModel extends AbstractListModel {
 				final int oldSize = TaskListListModel.this.tasks.size();
 				TaskListListModel.this.tasks.clear();
 				TaskListListModel.this.tasks.addAll(tasks);
-				Collections.sort(tasks, new TasksByNameComparator());
+				Collections.sort(TaskListListModel.this.tasks,
+						new TasksByNameComparator());
 
 				final int newSize = TaskListListModel.this.tasks.size();
 				if (oldSize > newSize) {
