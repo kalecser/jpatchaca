@@ -26,7 +26,6 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import statistics.ProjectVelocityCalculator;
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.dragAndDrop.TaskTransferable;
@@ -72,7 +71,6 @@ public class TaskList extends JPanel {
 	private final SelectedTaskSource selectedTask;
 
 	public TaskList(final TaskListModel model, final LabelsList labelsList,
-			final ProjectVelocityCalculator projectVelocityCalculator,
 			final Directory directory, final TasksSystem tasksSystem,
 			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask) {
@@ -92,8 +90,7 @@ public class TaskList extends JPanel {
 		this.listeners = new ArrayList<TaskSelectionListener>();
 		this.tasksListModel = new TaskListListModel();
 
-		this.tasksList = newJList(this.tasksListModel,
-				projectVelocityCalculator);
+		this.tasksList = newJList(this.tasksListModel, model.getTooltips());
 
 		final JScrollPane scrolledLabelsList = new JScrollPane(labelsList);
 		final JScrollPane scrolledTasksList = new JScrollPane(this.tasksList);
@@ -197,9 +194,8 @@ public class TaskList extends JPanel {
 	}
 
 	private JList newJList(final TaskListListModel listModel,
-			final ProjectVelocityCalculator projectVelocityCalculator) {
-		final JList tasksList = new TasksJList(listModel,
-				projectVelocityCalculator);
+			final TooltipForTask tooltip) {
+		final JList tasksList = new TasksJList(listModel, tooltip);
 
 		final ListSelectionModel selectionModel = tasksList.getSelectionModel();
 

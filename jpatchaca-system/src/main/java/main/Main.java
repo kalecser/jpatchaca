@@ -12,7 +12,9 @@ import org.picocontainer.PicoBuilder;
 
 import periods.impl.PeriodsFactoryImpl;
 import periodsInTasks.impl.PeriodsInTasksSystemImpl;
+import statistics.ProjectVelocityCalculator;
 import statistics.ProjectVelocityCalculatorImpl;
+import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
 import tasks.TasksSystemImpl;
 import tasks.delegates.CreateTaskDelegate;
@@ -39,6 +41,8 @@ import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.TaskListModel;
 import ui.swing.mainScreen.TaskListModelImpl;
 import ui.swing.mainScreen.TaskListSystemMediator;
+import ui.swing.mainScreen.TooltipForTask;
+import ui.swing.mainScreen.TooltipForTaskImpl;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
 import ui.swing.mainScreen.tasks.TaskExclusionScreen;
@@ -197,9 +201,11 @@ public class Main {
 	}
 
 	private static void registerModelStuff(final MutablePicoContainer container2) {
-		container2.addComponent(ProjectVelocityCalculatorImpl.class);
-		container2.addComponent(TaskSummarizerImpl.class);
-		container2.addComponent(FormatterImpl.class);
+		container2.addComponent(ProjectVelocityCalculator.class,
+				ProjectVelocityCalculatorImpl.class);
+		container2.addComponent(TooltipForTask.class, TooltipForTaskImpl.class);
+		container2.addComponent(TaskSummarizer.class, TaskSummarizerImpl.class);
+		container2.addComponent(basic.Formatter.class, FormatterImpl.class);
 	}
 
 	public static MutablePicoContainer createDurableSWINGContainer() {
