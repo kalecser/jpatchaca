@@ -37,7 +37,6 @@ public class TasksTest {
 		Assert.assertEquals("test task_new", tasks.taskNames().get(1));
 	}
 
-	@Test
 	public void testTaskName() throws MustBeCalledInsideATransaction {
 		final Tasks tasks = new Tasks();
 

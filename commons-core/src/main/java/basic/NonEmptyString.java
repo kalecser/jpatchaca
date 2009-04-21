@@ -37,9 +37,6 @@ public class NonEmptyString {
 		if (obj == null)
 			return false;
 		
-		if (obj.getClass().equals(String.class))
-			return string.equals(obj);
-		
 		if (getClass() != obj.getClass())
 			return false;
 		NonEmptyString other = (NonEmptyString) obj;

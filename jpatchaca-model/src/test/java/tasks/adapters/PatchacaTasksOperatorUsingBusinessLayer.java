@@ -129,8 +129,8 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 
 	@Override
 	public void startTaskHalfAnHourAgo(final String taskName) {
-		tasksSystem.taskStarted(taskByName(taskName),
-				DateUtils.MILLIS_PER_HOUR / 2);
+		startTaskDelegate.starTask(new StartTaskData(new NonEmptyString(
+				taskName), (int) (DateUtils.MILLIS_PER_MINUTE * 30)));
 	}
 
 	@Override
