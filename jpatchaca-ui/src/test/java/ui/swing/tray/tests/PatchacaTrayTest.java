@@ -14,26 +14,27 @@ public class PatchacaTrayTest {
 	private PatchacaTray tray;
 
 	@Before
-	public void setup(){
+	public void setup() {
 		modelMock = new PatchacaTrayModelMock();
-		tray = new PatchacaTray(modelMock, null);
-		
-		tray.start();	
+		tray = new PatchacaTray(modelMock);
+
+		tray.start();
 	}
-	
+
 	@After
-	public void tearDown(){
-		if (tray != null)
+	public void tearDown() {
+		if (tray != null) {
 			tray.stop();
+		}
 	}
-	
+
 	@Test
-	public void testPatchacaTray(){
-	
+	public void testPatchacaTray() {
+
 		final PathcacaTrayOperator operator = new PathcacaTrayOperator();
 		modelMock.setActiveTask("test task");
-		operator.assertActiveTask("test task");		
-		
+		operator.assertActiveTask("test task");
+
 	}
-	
+
 }

@@ -25,7 +25,6 @@ import org.picocontainer.Startable;
 import org.reactive.Receiver;
 
 import tasks.tasks.TaskView;
-import ui.swing.utils.Whiteboard;
 import wheel.io.ui.impl.SystemTrayNotSupported;
 import wheel.lang.Threads;
 import basic.Alert;
@@ -53,19 +52,15 @@ public class PatchacaTray implements Startable {
 	private final AlertImpl stopTaskAlert;
 	private final PatchacaTrayModel model;
 
-	private final Whiteboard whiteboard;
-
 	private PopupMenu timerMenu;
 	private TrayIcon trayIcon;
 
 	protected AtomicLong lastClicktime = new AtomicLong();
 	protected AtomicBoolean isprocessingClick = new AtomicBoolean(false);
 
-	public PatchacaTray(final PatchacaTrayModel model,
-			final Whiteboard whiteboard) {
+	public PatchacaTray(final PatchacaTrayModel model) {
 		this.model = model;
 
-		this.whiteboard = whiteboard;
 		this.stopTaskAlert = new AlertImpl();
 
 	}
@@ -77,7 +72,6 @@ public class PatchacaTray implements Startable {
 			icon = createTrayIcon();
 		} catch (final SystemTrayNotSupported e) {
 			showMainScreen();
-			whiteboard.postMessage("System tray not supported.");
 			return;
 		}
 
