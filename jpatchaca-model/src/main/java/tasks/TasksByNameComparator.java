@@ -1,14 +1,22 @@
 package tasks;
 
+import java.text.Collator;
 import java.util.Comparator;
 
 import tasks.tasks.TaskView;
 
 public class TasksByNameComparator implements Comparator<TaskView> {
 
+	private final Collator collator;
+
+	public TasksByNameComparator() {
+		collator = Collator.getInstance();
+		collator.setStrength(Collator.PRIMARY);
+	}
+
 	@Override
-	public int compare(final TaskView o1, final TaskView o2) {
-		return o1.name().compareTo(o2.name());
+	public synchronized int compare(final TaskView o1, final TaskView o2) {
+		return collator.compare(o1.name(), o2.name());
 	}
 
 }
