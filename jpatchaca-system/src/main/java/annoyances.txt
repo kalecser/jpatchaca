@@ -1,2 +1,0 @@
-- I can't save my data in human readable way
-- I don't know how to do my backups!
