@@ -39,15 +39,6 @@ public class PathcacaTrayOperator {
 		return SystemTray.getSystemTray().getTrayIcons()[0];
 	}
 
-	public void startTaskHalfAnHourAgo(final String taskName) {
-		clickMenuByName("Start task.../" + taskName + "/30 minutes ago");
-
-	}
-
-	public void startNewTaskHalfAnHourAgo(final String taskName) {
-		clickMenuByName("Start task.../New task/30 minutes ago");
-	}
-
 	private void clickMenuByName(final String name) {
 
 		final String[] pathElements = name.split("/");
