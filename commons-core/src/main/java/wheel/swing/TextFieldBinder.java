@@ -11,7 +11,7 @@ import org.reactive.Signal;
 
 public class TextFieldBinder {
 
-	public static WeakHashMap<JTextField, Receiver<String>> bindings = new WeakHashMap<JTextField, Receiver<String>>();
+	public final static WeakHashMap<JTextField, Receiver<String>> bindings = new WeakHashMap<JTextField, Receiver<String>>();
 	
 	public static void bind(JTextField textField,
 			Signal<String> signal) {
