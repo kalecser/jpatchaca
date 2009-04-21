@@ -1,6 +1,6 @@
 package org.reactivebricks.pulses.tests;
 
-import org.reactivebricks.pulses.Receiver;
+import org.reactive.Receiver;
 
 public class StringLoggingReceiver implements Receiver<String> {
 

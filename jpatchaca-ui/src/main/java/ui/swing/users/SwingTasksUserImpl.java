@@ -2,7 +2,7 @@ package ui.swing.users;
 
 import javax.swing.JOptionPane;
 
-import org.reactivebricks.pulses.Signal;
+import org.reactive.Signal;
 
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;

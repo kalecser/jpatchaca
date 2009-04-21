@@ -9,8 +9,8 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
-import org.reactivebricks.pulses.Signal;
-import org.reactivebricks.pulses.Source;
+import org.reactive.Signal;
+import org.reactive.Source;
 
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;

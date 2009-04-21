@@ -1,6 +1,6 @@
 package ui.swing.users;
 
-import org.reactivebricks.pulses.Signal;
+import org.reactive.Signal;
 
 import tasks.tasks.TaskView;
 import basic.UserOperationCancelledException;

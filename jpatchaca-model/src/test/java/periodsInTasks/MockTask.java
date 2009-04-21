@@ -3,7 +3,7 @@ package periodsInTasks;
 import java.util.List;
 
 import org.junit.Assert;
-import org.reactivebricks.pulses.Signal;
+import org.reactive.Signal;
 
 import periods.Period;
 import periods.PeriodManager;

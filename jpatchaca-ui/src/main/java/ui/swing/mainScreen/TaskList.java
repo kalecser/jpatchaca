@@ -26,8 +26,9 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Receiver;
+import lang.Maybe;
+
+import org.reactive.Receiver;
 
 import tasks.ActiveTask;
 import tasks.TasksSystem;

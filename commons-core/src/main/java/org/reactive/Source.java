@@ -1,9 +1,10 @@
-package org.reactivebricks.pulses;
+package org.reactive;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.reactivebricks.commons.lang.Maybe;
+import lang.Maybe;
+
 
 
 public class Source<T> implements Signal<T> {

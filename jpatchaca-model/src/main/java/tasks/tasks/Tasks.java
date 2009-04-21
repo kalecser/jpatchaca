@@ -5,7 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.reactivebricks.commons.lang.Maybe;
+import lang.Maybe;
+
 
 import basic.NonEmptyString;
 import core.ObjectIdentity;

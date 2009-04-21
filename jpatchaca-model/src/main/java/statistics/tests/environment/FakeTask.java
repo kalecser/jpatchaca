@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.reactivebricks.pulses.Signal;
+import org.reactive.Signal;
 
 import periods.Period;
 import periods.PeriodManager;

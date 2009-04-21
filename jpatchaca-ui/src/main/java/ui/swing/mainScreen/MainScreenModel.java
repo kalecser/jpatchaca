@@ -3,7 +3,7 @@
  */
 package ui.swing.mainScreen;
 
-import org.reactivebricks.pulses.Signal;
+import org.reactive.Signal;
 
 public interface MainScreenModel {
 

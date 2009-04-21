@@ -14,8 +14,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
+import lang.Maybe;
+
 import org.apache.commons.lang.time.DateUtils;
-import org.reactivebricks.commons.lang.Maybe;
 
 import periods.Period;
 import periods.PeriodsListener;

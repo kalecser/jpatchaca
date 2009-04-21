@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.Validate;
-import org.reactivebricks.pulses.Signal;
-import org.reactivebricks.pulses.Source;
+import org.reactive.Signal;
+import org.reactive.Source;
 
 import basic.AlertImpl;
 import basic.Subscriber;

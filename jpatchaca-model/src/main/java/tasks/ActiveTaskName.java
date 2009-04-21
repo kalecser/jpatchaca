@@ -1,9 +1,10 @@
 package tasks;
 
-import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Receiver;
-import org.reactivebricks.pulses.Signal;
-import org.reactivebricks.pulses.Source;
+import lang.Maybe;
+
+import org.reactive.Receiver;
+import org.reactive.Signal;
+import org.reactive.Source;
 
 import tasks.tasks.Task;
 

@@ -2,7 +2,8 @@ package tasks.processors;
 
 import java.io.Serializable;
 
-import org.reactivebricks.commons.lang.Maybe;
+import lang.Maybe;
+
 
 import tasks.ActiveTask;
 import tasks.tasks.Task;

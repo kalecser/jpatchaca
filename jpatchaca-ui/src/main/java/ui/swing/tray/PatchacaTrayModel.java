@@ -1,8 +1,9 @@
 package ui.swing.tray;
 
-import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Signal;
-import org.reactivebricks.pulses.Source;
+import lang.Maybe;
+
+import org.reactive.Signal;
+import org.reactive.Source;
 
 import tasks.tasks.TaskView;
 import ui.swing.tray.PatchacaTrayModelImpl.Listener;

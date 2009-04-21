@@ -1,7 +1,7 @@
 package ui.swing.options;
 
-import org.reactivebricks.pulses.Signal;
-import org.reactivebricks.pulses.Source;
+import org.reactive.Signal;
+import org.reactive.Source;
 
 public class OptionsScreenMock implements OptionsScreenModel {
 	

@@ -2,7 +2,7 @@ package tasks.tasks;
 
 import java.util.List;
 
-import org.reactivebricks.pulses.Signal;
+import org.reactive.Signal;
 
 import periods.Period;
 import periods.PeriodManager;

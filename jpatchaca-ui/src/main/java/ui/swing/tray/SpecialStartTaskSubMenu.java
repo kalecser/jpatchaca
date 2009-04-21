@@ -3,7 +3,7 @@ package ui.swing.tray;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 
-import org.reactivebricks.pulses.Receiver;
+import org.reactive.Receiver;
 
 import tasks.tasks.TaskView;
 

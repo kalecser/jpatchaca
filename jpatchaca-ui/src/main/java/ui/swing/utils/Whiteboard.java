@@ -3,7 +3,8 @@ package ui.swing.utils;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.reactivebricks.commons.lang.Maybe;
+import lang.Maybe;
+
 
 public class Whiteboard {
 

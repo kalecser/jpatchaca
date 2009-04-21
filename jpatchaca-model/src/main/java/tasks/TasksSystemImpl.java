@@ -3,8 +3,9 @@ package tasks;
 import java.util.Calendar;
 import java.util.Date;
 
+import lang.Maybe;
+
 import org.picocontainer.Startable;
-import org.reactivebricks.commons.lang.Maybe;
 
 import periods.Period;
 import periods.PeriodsFactory;

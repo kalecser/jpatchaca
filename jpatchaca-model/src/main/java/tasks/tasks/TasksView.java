@@ -2,7 +2,8 @@ package tasks.tasks;
 
 import java.util.List;
 
-import org.reactivebricks.commons.lang.Maybe;
+import lang.Maybe;
+
 
 import basic.NonEmptyString;
 import core.ObjectIdentity;

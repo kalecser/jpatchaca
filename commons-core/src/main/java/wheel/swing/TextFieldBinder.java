@@ -5,8 +5,8 @@ import java.util.WeakHashMap;
 
 import javax.swing.JTextField;
 
-import org.reactivebricks.pulses.Receiver;
-import org.reactivebricks.pulses.Signal;
+import org.reactive.Receiver;
+import org.reactive.Signal;
 
 
 public class TextFieldBinder {

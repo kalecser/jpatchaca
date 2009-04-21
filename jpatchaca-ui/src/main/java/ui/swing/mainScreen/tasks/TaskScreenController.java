@@ -6,8 +6,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import lang.Maybe;
+
 import org.apache.commons.lang.StringUtils;
-import org.reactivebricks.commons.lang.Maybe;
 
 import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;

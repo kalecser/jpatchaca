@@ -1,6 +1,6 @@
 package ui.swing.tasks;
 
-import org.reactivebricks.pulses.Source;
+import org.reactive.Source;
 
 import tasks.tasks.TaskView;
 

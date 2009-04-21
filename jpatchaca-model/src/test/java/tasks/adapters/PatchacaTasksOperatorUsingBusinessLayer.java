@@ -5,9 +5,9 @@ package tasks.adapters;
 
 import junit.framework.Assert;
 import labels.LabelsSystem;
+import lang.Maybe;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.reactivebricks.commons.lang.Maybe;
 
 import tasks.ActiveTask;
 import tasks.PatchacaTasksOperator;

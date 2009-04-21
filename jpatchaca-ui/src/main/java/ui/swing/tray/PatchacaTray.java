@@ -18,10 +18,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
+import lang.Maybe;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.picocontainer.Startable;
-import org.reactivebricks.commons.lang.Maybe;
-import org.reactivebricks.pulses.Receiver;
+import org.reactive.Receiver;
 
 import tasks.tasks.TaskView;
 import ui.swing.utils.Whiteboard;

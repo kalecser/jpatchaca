@@ -10,7 +10,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.picocontainer.Startable;
-import org.reactivebricks.pulses.Receiver;
+import org.reactive.Receiver;
 
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
