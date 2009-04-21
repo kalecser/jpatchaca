@@ -366,4 +366,9 @@ public class MainScreenOperator {
 		pushMenu("File/Options");
 	}
 
+	public StartTaskScreenOperator openStartTaskScreen() {
+		new JButtonOperator(mainScreen, "Start task").push();
+		return new StartTaskScreenOperator();
+	}
+
 }

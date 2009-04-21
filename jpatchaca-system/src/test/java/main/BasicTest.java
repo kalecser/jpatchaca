@@ -3,7 +3,6 @@ package main;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import main.Main;
 
 import org.picocontainer.MutablePicoContainer;
 

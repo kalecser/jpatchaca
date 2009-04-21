@@ -16,13 +16,22 @@ import statistics.ProjectVelocityCalculator;
 import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
+import tasks.ActiveTask;
+import tasks.ActiveTaskName;
+import tasks.StartTaskDataParser;
 import tasks.TasksSystemImpl;
 import tasks.delegates.CreateTaskDelegate;
-import tasks.delegates.StartTaskByNameDelegate;
 import tasks.delegates.StartTaskDelegate;
+import tasks.persistence.CreateAndStartTaskRegister;
 import tasks.persistence.CreateTaskPersistence;
-import tasks.persistence.StartTaskByNamePersistence;
+import tasks.persistence.CreateTaskProcessorRegister;
 import tasks.persistence.StartTaskPersistence;
+import tasks.persistence.StartTaskProcessor2Register;
+import tasks.persistence.StartTaskProcessorRegister;
+import tasks.processors.CreateAndStartTaskProcessor;
+import tasks.processors.CreateTaskProcessor;
+import tasks.processors.StartTaskProcessor;
+import tasks.processors.StartTaskProcessor2;
 import tasks.tasks.Tasks;
 import tasks.tasks.TasksHomeImpl;
 import twitter.TwitterLogger;
@@ -75,11 +84,13 @@ import basic.DeferredExecutor;
 import basic.FormatterImpl;
 import basic.HardwareClock;
 import basic.PatchacaDirectory;
+import basic.SystemClockImpl;
 import basic.durable.DoubleIdProvider;
-import basic.durable.DurableBasicSystem;
 import basic.durable.HardwareClockImpl;
 import basic.mock.MockHardwareClock;
 import events.EventsSystemImpl;
+import events.eventslist.EventListImpl;
+import events.persistence.FileAppenderPersistence;
 
 public class Main {
 
@@ -116,10 +127,8 @@ public class Main {
 	private static MutablePicoContainer createNonUIContainer(
 			final HardwareClock hardwareClock) {
 		final MutablePicoContainer container = new PicoBuilder()
-				.withConstructorInjection()
-					.withLifecycle()
-					.withCaching()
-					.build();
+				.withConstructorInjection().withLifecycle().withCaching()
+				.build();
 
 		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a
 		// JOptionPane.
@@ -130,21 +139,34 @@ public class Main {
 		container.addComponent(hardwareClock);
 		container.addComponent(DoubleIdProvider.class);
 		container.addComponent(PatchacaDirectory.class);
-		container.addComponent(DurableBasicSystem.class);
+		container.addComponent(SystemClockImpl.class);
+
 		container.addComponent(PeriodsFactoryImpl.class);
+		container.addComponent(FileAppenderPersistence.class);
+		container.addComponent(EventListImpl.class);
 		container.addComponent(EventsSystemImpl.class);
+		container.addComponent(ActiveTask.class);
+		container.addComponent(ActiveTaskName.class);
+		container.addComponent(CreateAndStartTaskRegister.class);
+		container.addComponent(CreateAndStartTaskProcessor.class);
+		container.addComponent(CreateTaskProcessorRegister.class);
+		container.addComponent(CreateTaskProcessor.class);
+		container.addComponent(StartTaskProcessorRegister.class);
+		container.addComponent(StartTaskProcessor.class);
+		container.addComponent(StartTaskDataParser.class);
 		container.addComponent(Tasks.class);
 		container.addComponent(TasksHomeImpl.class);
 		container.addComponent(TasksSystemImpl.class);
 		container.addComponent(StartTaskDelegate.class);
 		container.addComponent(CreateTaskDelegate.class);
-		container.addComponent(StartTaskByNameDelegate.class);
+		container.addComponent(StartTaskProcessor2Register.class);
+		container.addComponent(StartTaskProcessor2.class);
+		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(CreateTaskPersistence.class);
-		container.addComponent(StartTaskByNamePersistence.class);
+
 		container.addComponent(TwitterOptions.class);
 		container.addComponent(TwitterLogger.class);
 		container.addComponent(SetTwitterConfigProcessor.class);
-		container.addComponent(StartTaskPersistence.class);
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystemImpl.class);
