@@ -3,7 +3,6 @@
  */
 package tasks;
 
-import java.util.List;
 
 public interface PatchacaTasksOperator{
 
@@ -23,10 +22,6 @@ public interface PatchacaTasksOperator{
 	void assertActiveTask(String taskName);
 
 	void assertTimeSpent(String taskName, int periodIndex, long timeSpentInMinutes);
-	void assertLastActiveTasks(List<String> expectedLastActiveTasksNames);
-
-
-
 
 
 	

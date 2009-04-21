@@ -1,10 +1,6 @@
 package tasks;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import junit.framework.TestCase;
-
 
 import org.apache.commons.lang.time.DateUtils;
 
@@ -45,31 +41,6 @@ public abstract class TasksTest extends TestCase {
 		assertTrue(tasksOperator.isTaskInLabel(taskNewName, labelName));
 		assertFalse(tasksOperator.isTaskInLabel(taskName, labelName));
 	}
-	
-	public void testStartLastActiveTasks(){
-		
-		String taskPrefix = "test";
-		java.util.List<String> taskNames = new ArrayList<String>();
-		
-		for (int i = 0; i<3; i++){
-			final String taskName = taskPrefix + i;
-			taskNames.add(taskName);
-			tasksOperator.createTask(taskName);
-		}
-		
-		tasksOperator.startTask(taskPrefix + 0);
-		tasksOperator.stopTask();
-		
-		String newTask0Name = "foo";
-		tasksOperator.ediTask(taskNames.get(1), newTask0Name);
-		
-		tasksOperator.assertLastActiveTasks(
-				Arrays.asList(
-						newTask0Name,
-						taskNames.get(0), 
-						taskNames.get(2) ));
-		
-	}
 
 
 	
@@ -106,23 +77,11 @@ public abstract class TasksTest extends TestCase {
 	public void testStartTaskHalfAnHourAgo(){
 		final String taskName = "test";
 		
-		tasksOperator.createTask(taskName);
 		tasksOperator
 			.startTaskHalfAnHourAgo(taskName);
 		tasksOperator.stopTask();
 		
 		int periodIndex = 0;
 		tasksOperator.assertTimeSpent(taskName, periodIndex, 30);
-	}
-	
-	public void testStartNewTaskNow(){
-		final String taskName = "test";
-		
-		tasksOperator
-			.startNewTaskNow(taskName);
-		tasksOperator.stopTask();
-		
-		int periodIndex = 0;
-		tasksOperator.assertTimeSpent(taskName, periodIndex, 0);
 	}
 }
