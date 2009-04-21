@@ -26,7 +26,7 @@ import org.reactive.Receiver;
 
 import tasks.tasks.TaskView;
 import ui.swing.utils.Whiteboard;
-import wheel.io.ui.impl.TrayIconImpl.SystemTrayNotSupported;
+import wheel.io.ui.impl.SystemTrayNotSupported;
 import wheel.lang.Threads;
 import basic.Alert;
 import basic.AlertImpl;

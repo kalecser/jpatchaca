@@ -201,7 +201,7 @@ class TaskImpl implements Task {
 	}
 
 	@Override
-	public void start(final long millisecondsAgo) {
+	public synchronized void start(final long millisecondsAgo) {
 		if (this._active) {
 			return;
 		}
