@@ -7,7 +7,9 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.integration.junit3.MockObjectTestCase;
 
-import basic.mock.MockBasicSystem;
+import basic.SystemClockImpl;
+import basic.mock.MockHardwareClock;
+
 import core.events.eventslist.EventTransaction;
 import events.PersistenceManager;
 import events.Processor;
@@ -20,12 +22,16 @@ public class EventListTest extends MockObjectTestCase {
 
 	private PersistenceManagerMock persistenceManager;
 
-	private MockBasicSystem basicSystemMock;
+	private MockHardwareClock mockHardwareClock;
+
+	private SystemClockImpl systemClock;
+
 
 	@Override
 	public void setUp() {
 
-		basicSystemMock = new MockBasicSystem();
+		mockHardwareClock = new MockHardwareClock();
+		systemClock = new SystemClockImpl();
 		persistenceManager = new PersistenceManagerMock();
 
 	}
@@ -37,7 +43,7 @@ public class EventListTest extends MockObjectTestCase {
 		persistenceManager.writeEvent(new EventTransaction(storedEventTime,
 				storedEvent));
 
-		list = new EventListImpl(persistenceManager, basicSystemMock);
+		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 
 		final Processor<String> mockProcessor = mock(Processor.class);
 		
@@ -47,7 +53,7 @@ public class EventListTest extends MockObjectTestCase {
 		}});
 	
 		list.addProcessors(new Processor[] { mockProcessor });
-		assertTrue(storedEventTime == basicSystemMock.systemClock().getTime());
+		assertTrue(storedEventTime == systemClock.getTime());
 
 		final String newEvent = "2";
 		final long newEventTime = 1000L;
@@ -55,7 +61,7 @@ public class EventListTest extends MockObjectTestCase {
 			one(mockProcessor).eventType(); will(returnValue(newEvent.getClass()));
 			one(mockProcessor).execute(newEvent);
 		}});
-		basicSystemMock.setHardwareClockTime(new Date(newEventTime));
+		mockHardwareClock.setTime(new Date(newEventTime));
 		
 		list.add(newEvent);
 		assertEquals(newEvent, persistenceManager.getEventTransactions().get(1)
@@ -63,7 +69,7 @@ public class EventListTest extends MockObjectTestCase {
 		assertEquals(newEventTime, (long)persistenceManager.getEventTransactions()
 				.get(1).getTime());
 		assertEquals(2, persistenceManager.getEventTransactions().size());
-		assertTrue(newEventTime == basicSystemMock.systemClock().getTime());
+		assertTrue(newEventTime == systemClock.getTime());
 
 	}
 
@@ -75,7 +81,7 @@ public class EventListTest extends MockObjectTestCase {
 		final Processor<String> stringProcessor = mock(Processor.class, "stringProcessor");
 		final Processor<Double>doubleProcessor = mock(Processor.class, "doubleProcessor");
 
-		list = new EventListImpl(persistenceManager, basicSystemMock);
+		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 		list.addProcessors(new Processor[] {
 				stringProcessor,
 				doubleProcessor});
@@ -93,13 +99,13 @@ public class EventListTest extends MockObjectTestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testPersistenceAfterProcessor() throws MustBeCalledInsideATransaction {
-		list = new EventListImpl(persistenceManager, basicSystemMock);
+		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 
 		
 		
 		final Processor<String> mockProcessor = mock(Processor.class);
 
-		list = new EventListImpl(persistenceManager, basicSystemMock);
+		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 		list.addProcessors(new Processor[] { mockProcessor });
 
 		checking(new Expectations() {{
@@ -122,7 +128,7 @@ public class EventListTest extends MockObjectTestCase {
 		final Processor<Boolean> processorMock = mock(Processor.class);
 		
 
-		list = new EventListImpl(persistenceManager, basicSystemMock);
+		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 		list.addProcessors(new Processor[] { processorMock});
 
 		checking(new Expectations() {{

@@ -4,33 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
-import wheel.io.files.Directory;
-import basic.BasicSystem;
 import events.eventslist.EventList;
-import events.eventslist.EventListImpl;
-import events.persistence.FileAppenderPersistence;
 
 public class EventsSystemImpl implements EventsSystem {
 
 	private boolean started;
-	private final MutablePicoContainer container;
 	private final EventList eventList;
 	private final List<Processor<?>> processors;
 	private final List<EventHook<?>> eventHooks;
 	
 
-	public EventsSystemImpl(BasicSystem basicSystem, Directory directory) {
-		container = new PicoBuilder().withCaching().withHiddenImplementations().build();
-		container.addComponent(directory);
-		container.addComponent(basicSystem);
-		container.addComponent(EventListImpl.class);
-		container.addComponent(FileAppenderPersistence.class);
-		container.start();
+	public EventsSystemImpl(EventList eventList) {
 		
-		eventList = container.getComponent(EventList.class);
+		this.eventList = eventList;
 		processors = new ArrayList<Processor<?>>();
 		eventHooks = new ArrayList<EventHook<?>>();
 	}

@@ -4,8 +4,9 @@ import java.io.Serializable;
 
 import org.jmock.integration.junit3.MockObjectTestCase;
 
-import wheel.io.files.impl.tranzient.TransientDirectory;
-import basic.mock.MockBasicSystem;
+import basic.SystemClockImpl;
+import basic.mock.MockHardwareClock;
+import core.events.eventslist.TransientEventList;
 import events.EventHook;
 import events.EventsSystem;
 import events.EventsSystemImpl;
@@ -16,11 +17,9 @@ public class EventsSystemTest extends MockObjectTestCase {
 		
 	
 	private EventsSystem eventsSystem;
-	private TransientDirectory transientDirectory;
 	@Override
 	protected void setUp() throws Exception {
-		transientDirectory = new TransientDirectory();
-		eventsSystem = new EventsSystemImpl(new MockBasicSystem(), transientDirectory);
+		eventsSystem = new EventsSystemImpl(new TransientEventList(new MockHardwareClock(), new SystemClockImpl()));
 		
 	}
 
@@ -46,7 +45,7 @@ public class EventsSystemTest extends MockObjectTestCase {
 			eventsSystem.start();
 			fail("must throw exception");
 		} catch (final RuntimeException ex){
-			assertEquals("You can't add the same processor twice", ex.getMessage());
+			assertTrue(ex.getMessage().startsWith("You can't add the same processor twice"));
 		}
 		
 	}

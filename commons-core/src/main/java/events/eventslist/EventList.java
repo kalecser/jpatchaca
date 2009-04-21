@@ -6,6 +6,6 @@ import events.Processor;
 
 public interface EventList  {
 	void add(Serializable elementAdded);
-	void addProcessors(Processor<?>[] processor);
+	void addProcessors(Processor<?>... processors);
 	int getEventCount();
 }

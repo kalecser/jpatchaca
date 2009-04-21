@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import basic.BasicSystem;
+import basic.HardwareClock;
 import basic.SystemClock;
 import core.events.eventslist.EventTransaction;
 import events.PersistenceManager;
@@ -21,24 +21,24 @@ public class EventListImpl implements EventList{
 
 	private static final long serialVersionUID = 1L;
 	private final PersistenceManager persistenceManager;
+	private final HardwareClock machineClock;
 	private final SystemClock clock;
 	private final List<Processor<Serializable>> processors;
 	private final Queue<EventTransaction> transactionsQueue;
-	private final BasicSystem basicSystem;
 	public final AtomicBoolean isDead = new AtomicBoolean(false);
 
 
 
-	public EventListImpl(final PersistenceManager persistenceManager,  final BasicSystem basicSystem) {
+	public EventListImpl(final PersistenceManager persistenceManager,  HardwareClock machineClock, SystemClock systemClock) {
 		this.persistenceManager = persistenceManager;
-		this.basicSystem = basicSystem;
-		this.clock = basicSystem.systemClock();
+		this.machineClock = machineClock;
+		clock = systemClock;
 		processors = new ArrayList<Processor<Serializable>>();
 		transactionsQueue = new LinkedList<EventTransaction>();
 	}
 
 	public synchronized void add(final Serializable elementAdded) {		
-		final EventTransaction transaction = new EventTransaction(basicSystem.getHardwareTime().getTime(), elementAdded);
+		final EventTransaction transaction = new EventTransaction(machineClock.getTime().getTime(), elementAdded);
 		transactionsQueue.add(transaction);
 		executeAndWrite();
 	}
@@ -79,11 +79,11 @@ public class EventListImpl implements EventList{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void addProcessors(final Processor[] processors) {
+	public void addProcessors(final Processor... processors) {
 		
 		for (final Processor processor : processors){
 			if (this.processors.contains(processor))
-				throw new RuntimeException("You can't add the same processor twice");
+				throw new RuntimeException("You can't add the same processor twice " + processor.getClass().getName());
 			this.processors.add(processor);
 		}
 		

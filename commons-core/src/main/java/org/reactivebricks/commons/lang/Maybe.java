@@ -23,5 +23,10 @@ public class Maybe<T> {
 		
 		return new Maybe<T>(object);
 	}
+	
+	@Override
+	public String toString() {
+		return "" + value;
+	}
 
 }
