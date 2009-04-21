@@ -61,7 +61,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
 	@Override
 	public void showMainScreen() {
-		throw new RuntimeException("not implemented");
+
 	}
 
 	@Override
