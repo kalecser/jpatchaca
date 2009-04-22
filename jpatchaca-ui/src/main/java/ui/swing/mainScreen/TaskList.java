@@ -31,7 +31,6 @@ import lang.Maybe;
 import org.reactive.Receiver;
 
 import tasks.ActiveTask;
-import tasks.TasksSystem;
 import tasks.tasks.Task;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.dragAndDrop.TaskTransferable;
@@ -91,8 +90,7 @@ public class TaskList extends JPanel {
 	private final ActiveTask activeTaskSignal;
 
 	public TaskList(final TaskListModel model, final LabelsList labelsList,
-			final Directory directory, final TasksSystem tasksSystem,
-			final TaskContextMenu taskContextMenu,
+			final Directory directory, final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask, final ActiveTask activeTask) {
 
 		this.selectedTask = selectedTask;
@@ -142,10 +140,10 @@ public class TaskList extends JPanel {
 		this.setMinimumSize(new Dimension(180, 0));
 
 		bindToLabelsList();
-		bindToTasksSystem(tasksSystem);
+		bindToActiveTaskSignal();
 	}
 
-	private void bindToTasksSystem(final TasksSystem tasksSystem) {
+	private void bindToActiveTaskSignal() {
 		activeTaskSignal.addReceiver(new ActiveTaskChanged());
 	}
 
