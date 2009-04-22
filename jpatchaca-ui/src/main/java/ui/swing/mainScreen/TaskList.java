@@ -70,7 +70,6 @@ public class TaskList extends JPanel {
 
 	private TaskView dropTargetTask;
 	private final TaskContextMenu taskContextMenu;
-	private final AlertImpl selectedTaskChangedAlert;
 
 	private final TasksListData screenData;
 	private final TaskListMemory memory;
@@ -98,7 +97,6 @@ public class TaskList extends JPanel {
 
 		this.selectedTask = selectedTask;
 		this.activeTaskSignal = activeTask;
-		selectedTaskChangedAlert = new AlertImpl();
 		this.memory = new DeferredTaskListMemory(directory);
 		this.screenData = memory.retrieve();
 		this.taskContextMenu = taskContextMenu;
@@ -156,8 +154,6 @@ public class TaskList extends JPanel {
 				new ListSelectionListener() {
 
 					public void valueChanged(final ListSelectionEvent e) {
-
-						selectedTaskChangedAlert.fire();
 
 						try {
 							TaskList.this.labelsList.setCursor(new Cursor(
@@ -251,8 +247,9 @@ public class TaskList extends JPanel {
 			@Override
 			public boolean canImport(final TransferSupport info) {
 				try {
-					final String data = (String) info.getTransferable()
-							.getTransferData(DataFlavor.stringFlavor);
+					final String data = (String) info
+							.getTransferable()
+								.getTransferData(DataFlavor.stringFlavor);
 					return data.startsWith("period -");
 				} catch (final Exception e) {
 				}
@@ -320,10 +317,6 @@ public class TaskList extends JPanel {
 
 	public void doDropPeriod() {
 		movePeriodAlert.fire();
-	}
-
-	public Alert selectedTaskChangedAlert() {
-		return selectedTaskChangedAlert;
 	}
 
 }
