@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
+import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
 import localization.BrazilDaylightSavingTimezoneAdjuster;
 
@@ -37,7 +38,11 @@ import tasks.tasks.TasksHomeImpl;
 import twitter.TwitterLogger;
 import twitter.TwitterOptions;
 import twitter.processors.SetTwitterConfigProcessor;
+import ui.swing.mainScreen.LabelTooltipProvider;
+import ui.swing.mainScreen.LabelTooltipProviderImpl;
 import ui.swing.mainScreen.LabelsList;
+import ui.swing.mainScreen.LabelsListModel;
+import ui.swing.mainScreen.LabelsListModelImpl;
 import ui.swing.mainScreen.LabelsListSystemMediator;
 import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.MainScreenImpl;
@@ -127,8 +132,10 @@ public class Main {
 	private static MutablePicoContainer createNonUIContainer(
 			final HardwareClock hardwareClock) {
 		final MutablePicoContainer container = new PicoBuilder()
-				.withConstructorInjection().withLifecycle().withCaching()
-				.build();
+				.withConstructorInjection()
+					.withLifecycle()
+					.withCaching()
+					.build();
 
 		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a
 		// JOptionPane.
@@ -169,7 +176,7 @@ public class Main {
 		container.addComponent(SetTwitterConfigProcessor.class);
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
-		container.addComponent(LabelsSystemImpl.class);
+		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);
 		registerModelStuff(container);
 
 		return container;
@@ -217,6 +224,8 @@ public class Main {
 		container.addComponent(TaskContextMenu.class);
 		container.addComponent(TaskContextMenuSystemMediator.class);
 		container.addComponent(LabelsList.class);
+		container
+				.addComponent(LabelsListModel.class, LabelsListModelImpl.class);
 		container.addComponent(LabelsListSystemMediator.class);
 		container.addComponent(TaskExclusionScreen.class);
 
@@ -226,6 +235,8 @@ public class Main {
 		container2.addComponent(ProjectVelocityCalculator.class,
 				ProjectVelocityCalculatorImpl.class);
 		container2.addComponent(TooltipForTask.class, TooltipForTaskImpl.class);
+		container2.addComponent(LabelTooltipProvider.class,
+				LabelTooltipProviderImpl.class);
 		container2.addComponent(TaskSummarizer.class, TaskSummarizerImpl.class);
 		container2.addComponent(basic.Formatter.class, FormatterImpl.class);
 	}

@@ -24,12 +24,17 @@ public class LabelsList extends JList {
 
 	private final AlertImpl assignTaskToLabelAlert;
 	private String dropToLabel;
-	private LabelTooltipProvider tipProvider;
+	private final LabelTooltipProvider tipProvider;
 
 	private int preferredIndex;
 
-	public LabelsList() {
+	private final LabelsListModel labelsModel;
+
+	public LabelsList(final LabelsListModel labelsModel) {
 		super();
+		this.labelsModel = labelsModel;
+		this.tipProvider = labelsModel.getTooltips();
+
 		this.model = new DefaultListModel();
 		this.assignTaskToLabelAlert = new AlertImpl();
 		setModel(this.model);
@@ -126,11 +131,6 @@ public class LabelsList extends JList {
 
 	public String selectedLabel() {
 		return (String) getSelectedValue();
-	}
-
-	public void setToolTipProvider(final LabelTooltipProvider tipProvider) {
-		this.tipProvider = tipProvider;
-
 	}
 
 	public void setPreferredIndex(final int preferredIndex) {

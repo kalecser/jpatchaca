@@ -1,5 +1,6 @@
 package main;
 
+import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
 
 import org.picocontainer.MutablePicoContainer;
@@ -31,13 +32,17 @@ import core.events.eventslist.TransientEventList;
 import events.EventsSystemImpl;
 
 public class TransientNonUIContainer {
+
 	private static final long serialVersionUID = 1L;
 
 	private final MutablePicoContainer container;
 
 	public TransientNonUIContainer() {
-		container = new PicoBuilder().withLifecycle().withCaching()
-				.withConsoleMonitor().build();
+		container = new PicoBuilder()
+				.withLifecycle()
+					.withCaching()
+					.withConsoleMonitor()
+					.build();
 
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
@@ -63,7 +68,7 @@ public class TransientNonUIContainer {
 		container.addComponent(StartTaskDelegate.class);
 		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(PeriodsInTasksSystemImpl.class);
-		container.addComponent(LabelsSystemImpl.class);
+		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);
 
 		container.start();
 	}
