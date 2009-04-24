@@ -218,7 +218,7 @@ public class TaskList extends JPanel {
 				memory.mind(screenData);
 			}
 
-			selectedTask.supply(selectedTask());
+			selectedTask.supply((TaskView) tasksList.getSelectedValue());
 
 		}
 	}
@@ -241,10 +241,11 @@ public class TaskList extends JPanel {
 
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					final int index = tasksList.locationToIndex(e.getPoint());
-
 					selectionModel.setSelectionInterval(index, index);
+					final TaskView currentSelected = (TaskView) tasksList
+							.getSelectedValue();
 					TaskList.this.taskContextMenu.show(tasksList, e.getX(), e
-							.getY(), selectedTask());
+							.getY(), currentSelected);
 				}
 			}
 
@@ -314,7 +315,7 @@ public class TaskList extends JPanel {
 	}
 
 	public TaskView selectedTask() {
-		return (TaskView) this.tasksList.getSelectedValue();
+		return selectedTask.currentValue();
 	}
 
 	public void setSelectedTask(final TaskView task) {
