@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -37,6 +38,7 @@ import ui.swing.mainScreen.dragAndDrop.TaskTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
+import ui.swing.utils.UIEventsExecutor;
 import wheel.io.files.Directory;
 import basic.Alert;
 import basic.AlertImpl;
@@ -88,11 +90,15 @@ public class TaskList extends JPanel {
 			fireChangeListeners);
 	private final SelectedTaskSource selectedTask;
 	private final ActiveTask activeTaskSignal;
+	private final UIEventsExecutor uiEventsExecutor;
 
-	public TaskList(final TaskListModel model, final LabelsList labelsList,
-			final Directory directory, final TaskContextMenu taskContextMenu,
+	public TaskList(final TaskListModel model,
+			final UIEventsExecutor uiEventsExecutor,
+			final LabelsList labelsList, final Directory directory,
+			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask, final ActiveTask activeTask) {
 
+		this.uiEventsExecutor = uiEventsExecutor;
 		this.selectedTask = selectedTask;
 		this.activeTaskSignal = activeTask;
 		this.memory = new DeferredTaskListMemory(directory);
@@ -124,7 +130,14 @@ public class TaskList extends JPanel {
 
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				model.startTask();
+				uiEventsExecutor.execute(new Runnable() {
+
+					@Override
+					public void run() {
+						model.startTask();
+					}
+
+				});
 			}
 
 		});
@@ -187,10 +200,17 @@ public class TaskList extends JPanel {
 
 		@Override
 		public void valueChanged(final ListSelectionEvent e) {
-			selectedTaskChanged(e.getFirstIndex());
+			uiEventsExecutor.execute(new Runnable() {
+
+				@Override
+				public void run() {
+					selectedTaskChanged(e.getFirstIndex());
+				}
+
+			});
 		}
 
-		private void selectedTaskChanged(final int selectedIndex) {
+		void selectedTaskChanged(final int selectedIndex) {
 			fireTaskChangeListeners();
 
 			if (selectedIndex > -1) {
@@ -298,7 +318,15 @@ public class TaskList extends JPanel {
 	}
 
 	public void setSelectedTask(final TaskView task) {
-		this.tasksList.setSelectedValue(task, true);
+		class SetSelectedValue implements Runnable {
+
+			@Override
+			public void run() {
+				tasksList.setSelectedValue(task, true);
+			}
+
+		}
+		SwingUtilities.invokeLater(new SetSelectedValue());
 	}
 
 	public final Alert movePeriodAlert() {
