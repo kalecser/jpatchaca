@@ -1,5 +1,7 @@
 package ui.swing.tray.tests;
 
+import java.awt.SystemTray;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,11 @@ public class PatchacaTrayTest {
 
 	@Before
 	public void setup() {
+
+		if (!SystemTray.isSupported()) {
+			return;
+		}
+
 		modelMock = new PatchacaTrayModelMock();
 		tray = new PatchacaTray(modelMock);
 
@@ -30,6 +37,10 @@ public class PatchacaTrayTest {
 
 	@Test
 	public void testPatchacaTray() {
+
+		if (!SystemTray.isSupported()) {
+			return;
+		}
 
 		final PathcacaTrayOperator operator = new PathcacaTrayOperator();
 		modelMock.setActiveTask("test task");

@@ -178,8 +178,8 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 * @see ui.swing.tray.PatchacaTrayModel#tooltip()
 	 */
 	public Signal<String> tooltip() {
-		return new PatchacaTrayTooltip(activeTaskName(), selectedTaskName())
-				.output();
+		return new PatchacaTrayTooltip(activeTaskName(), selectedTaskName(),
+				"foo").output();
 	}
 
 	/*
