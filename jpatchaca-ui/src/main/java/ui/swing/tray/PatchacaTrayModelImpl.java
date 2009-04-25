@@ -16,8 +16,8 @@ import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
+import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
-import ui.swing.users.SwingTasksUser;
 
 public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
@@ -28,7 +28,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	private final MainScreen mainScreen;
 	private final TasksSystem tasksSystem;
-	private final SwingTasksUser taskUser;
+	private final SelectedTaskSource selectedTask;
 	private Maybe<Listener> listener;
 	private final WindowManager windowManager;
 	private final TaskScreenController taskScreen;
@@ -39,7 +39,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	public PatchacaTrayModelImpl(final MainScreen mainScreen,
 			final TasksSystem tasksSystem,
 			final SelectedTaskName selectedTaskName,
-			final SwingTasksUser taskUser,
+			final SelectedTaskSource selectedTask,
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
 			final StartTaskController startTaskController,
@@ -48,7 +48,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		this.mainScreen = mainScreen;
 		this.tasksSystem = tasksSystem;
 		this.selectedTaskName = selectedTaskName;
-		this.taskUser = taskUser;
+		this.selectedTask = selectedTask;
 		this.taskScreen = taskScreen;
 		this.windowManager = windowManager;
 		this.startTaskController = startTaskController;
@@ -168,8 +168,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 * @see ui.swing.tray.PatchacaTrayModel#selectedTask()
 	 */
 	public TaskView selectedTask() {
-
-		return taskUser.selectedTask();
+		return selectedTask.currentValue();
 	}
 
 	/*
@@ -188,7 +187,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 * @see ui.swing.tray.PatchacaTrayModel#selectedTaskSignal()
 	 */
 	public Signal<TaskView> selectedTaskSignal() {
-		return taskUser.selectedTaskSignal();
+		return selectedTask;
 	}
 
 	/*

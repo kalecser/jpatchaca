@@ -62,6 +62,17 @@ public class TaskList extends JPanel {
 		}
 	}
 
+	class FireChangeListeners implements Runnable {
+
+		public void run() {
+			for (final TaskSelectionListener listener : listeners) {
+				listener.selectionChangedTo((TaskView) SelectedValueGetter
+						.getSelectedValueInSwingThread(tasksList));
+			}
+		}
+
+	}
+
 	private final TaskListListModel tasksListModel;
 	private final JList tasksList;
 	private final List<TaskSelectionListener> listeners;
@@ -75,19 +86,7 @@ public class TaskList extends JPanel {
 	private final TasksListData screenData;
 	private final TaskListMemory memory;
 
-	Runnable fireChangeListeners = new Runnable() {
-
-		public void run() {
-			for (final TaskSelectionListener listener : listeners) {
-				listener.selectionChangedTo((TaskView) SelectedValueGetter
-						.getSelectedValueInSwingThread(tasksList));
-			}
-		}
-
-	};
-
-	final DeferredExecutor executor = new DeferredExecutor(200,
-			fireChangeListeners);
+	private final DeferredExecutor executor;
 	private final SelectedTaskSource selectedTask;
 	private final ActiveTask activeTaskSignal;
 	private final UIEventsExecutor uiEventsExecutor;
@@ -97,6 +96,8 @@ public class TaskList extends JPanel {
 			final LabelsList labelsList, final Directory directory,
 			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask, final ActiveTask activeTask) {
+
+		this.executor = new DeferredExecutor(200, new FireChangeListeners());
 
 		this.uiEventsExecutor = uiEventsExecutor;
 		this.selectedTask = selectedTask;
@@ -312,10 +313,6 @@ public class TaskList extends JPanel {
 
 	private void fireTaskChangeListeners() {
 		executor.execute();
-	}
-
-	public TaskView selectedTask() {
-		return selectedTask.currentValue();
 	}
 
 	public void setSelectedTask(final TaskView task) {

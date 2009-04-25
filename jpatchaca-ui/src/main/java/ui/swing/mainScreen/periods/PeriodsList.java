@@ -29,6 +29,7 @@ import tasks.tasks.TaskView;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
+import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
 import basic.Alert;
 import basic.AlertImpl;
@@ -43,7 +44,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 	private JXTable periodsTable;
 	private JButton addPeriodButton;
 	private JButton removePeriodButton;
-	private final TaskList tasksList;
+	private final SelectedTaskSource selectedTaskSource;
 	private final PeriodsTableModel periodsTableModel;
 	private final PeriodsListener listScrollListener;
 	private TaskView _selectedTask;
@@ -52,12 +53,13 @@ public class PeriodsList extends SimpleInternalFrame implements
 	private final HardwareClock machineClock;
 
 	public PeriodsList(final TaskList tasksList,
+			final SelectedTaskSource selectedTaskSource,
 			final PeriodsInTasksSystem periodsInTasks,
 			final PeriodsTableModel periodsTableModel,
 			final HardwareClock machineClock) {
 
 		super("Selected task's periods");
-		this.tasksList = tasksList;
+		this.selectedTaskSource = selectedTaskSource;
 		this.periodsSystem = periodsInTasks;
 		this.periodsTableModel = periodsTableModel;
 		this.machineClock = machineClock;
@@ -74,7 +76,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 		removePeriodAlert().subscribe(new Subscriber() {
 
 			public void fire() {
-				model.removePeriod(tasksList.selectedTask(),
+				model.removePeriod(selectedTaskSource.currentValue(),
 						selectedPeriodIndex());
 			}
 		});
@@ -227,8 +229,9 @@ public class PeriodsList extends SimpleInternalFrame implements
 	}
 
 	public void setSelectedPeriodTesting(final int index) {
-		this.periodsTable.getSelectionModel()
-				.setSelectionInterval(index, index);
+		this.periodsTable
+				.getSelectionModel()
+					.setSelectionInterval(index, index);
 
 	}
 
@@ -255,8 +258,9 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 			@Override
 			public void run() {
-				final TaskView selectedTask = tasksList.selectedTask();
+				final TaskView selectedTask = selectedTaskSource.currentValue();
 				new Thread() {
+
 					@Override
 					public void run() {
 						final Period newPeriod = new Period(machineClock
@@ -269,7 +273,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 	}
 
 	public int selectedPeriodIndex() {
-		final TaskView selectedTask = tasksList.selectedTask();
+		final TaskView selectedTask = selectedTaskSource.currentValue();
 		return selectedTask.periods().indexOf(selectedPeriod());
 	}
 
