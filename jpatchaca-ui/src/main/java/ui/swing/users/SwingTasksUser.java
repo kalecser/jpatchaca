@@ -5,8 +5,6 @@ import basic.UserOperationCancelledException;
 
 public interface SwingTasksUser {
 
-	TaskView getSelectedTask();
-
 	boolean isTaskExclusionConfirmed();
 
 	boolean isPeriodExclusionConfirmed();

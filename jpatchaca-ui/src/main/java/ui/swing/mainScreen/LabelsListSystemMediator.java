@@ -4,20 +4,20 @@ import labels.LabelsSystem;
 
 import org.picocontainer.Startable;
 
+import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.users.LabelsUser;
-import ui.swing.users.SwingTasksUser;
 import basic.Subscriber;
 
 public class LabelsListSystemMediator implements Startable {
 
 	public LabelsListSystemMediator(final LabelsSystem labelsSystem,
-			final LabelsList list, final SwingTasksUser tasksUser,
+			final LabelsList list, final SelectedTaskSource selectedTask,
 			final LabelsUser labelsUser) {
 
 		list.assignTaskToLabelAlert().subscribe(new Subscriber() {
 
 			public void fire() {
-				labelsSystem.setLabelToTask(tasksUser.getSelectedTask(),
+				labelsSystem.setLabelToTask(selectedTask.currentValue(),
 						labelsUser.getLabelToAssignTaskTo());
 			}
 		});

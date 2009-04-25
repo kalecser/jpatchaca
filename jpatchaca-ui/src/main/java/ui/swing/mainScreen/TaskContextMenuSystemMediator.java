@@ -11,6 +11,7 @@ import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.tasks.TaskScreenController;
+import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.users.LabelsUser;
 import ui.swing.users.SwingTasksUser;
 import basic.NonEmptyString;
@@ -21,15 +22,17 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 	public TaskContextMenuSystemMediator(final TaskContextMenu taskContextMenu,
 			final LabelsSystem labelsSystem, final TasksSystem tasksSystem,
+			final SelectedTaskSource selectedTaskSource,
 			final SwingTasksUser tasksUser, final LabelsUser labelsUser,
-			final MainScreen mainScreen,
 			final StartTaskDelegate startTaskDelegate,
 			final TaskScreenController taskScreen) {
 		taskContextMenu.addNoteAlert().subscribe(new Subscriber() {
+
 			public void fire() {
 				try {
-					tasksSystem.addNoteToTask(tasksUser.getSelectedTask(),
-							tasksUser.getTextForNote());
+					tasksSystem.addNoteToTask(
+							selectedTaskSource.currentValue(), tasksUser
+									.getTextForNote());
 				} catch (final UserOperationCancelledException e) {
 					// cancelled
 				}
@@ -37,36 +40,41 @@ public class TaskContextMenuSystemMediator implements Startable {
 		});
 
 		taskContextMenu.createLabelAlert().subscribe(new Subscriber() {
+
 			public void fire() {
 				try {
-					labelsSystem.setNewLabelToTask(tasksUser.getSelectedTask(),
-							labelsUser.getNewLabelName(null));
+					labelsSystem.setNewLabelToTask(selectedTaskSource
+							.currentValue(), labelsUser.getNewLabelName(null));
 				} catch (final UserOperationCancelledException e) {
 				}
 			}
 		});
 
 		taskContextMenu.assignToLabelAlert().subscribe(new Subscriber() {
+
 			public void fire() {
-				labelsSystem.setLabelToTask(tasksUser.getSelectedTask(),
+				labelsSystem.setLabelToTask(selectedTaskSource.currentValue(),
 						labelsUser.getLabelToAssignTaskTo());
 			}
 		});
 
 		taskContextMenu.removeFromLabelAlert().subscribe(new Subscriber() {
+
 			public void fire() {
-				labelsSystem.removeLabelFromTask(tasksUser.getSelectedTask(),
-						labelsUser.selectedLabel());
+				labelsSystem.removeLabelFromTask(selectedTaskSource
+						.currentValue(), labelsUser.selectedLabel());
 			}
 		});
 
 		taskContextMenu.startCurrentTaskAlert().subscribe(new Subscriber() {
+
 			public void fire() {
 				new Thread() {
+
 					@Override
 					public void run() {
-						final TaskView selectedTask = tasksUser
-								.getSelectedTask();
+						final TaskView selectedTask = selectedTaskSource
+								.currentValue();
 
 						if (selectedTask == null) {
 							return;
@@ -86,8 +94,10 @@ public class TaskContextMenuSystemMediator implements Startable {
 		});
 
 		taskContextMenu.stopCurrentTaskAlert().subscribe(new Subscriber() {
+
 			public void fire() {
 				new Thread() {
+
 					@Override
 					public void run() {
 						tasksSystem.stopTask();
@@ -97,14 +107,16 @@ public class TaskContextMenuSystemMediator implements Startable {
 		});
 
 		taskContextMenu.removeTaskAlert().subscribe(new Subscriber() {
+
 			public void fire() {
 				if (tasksUser.isTaskExclusionConfirmed()) {
-					tasksSystem.removeTask(tasksUser.getSelectedTask());
+					tasksSystem.removeTask(selectedTaskSource.currentValue());
 				}
 			}
 		});
 
 		taskContextMenu.editTaskAlert().subscribe(new Subscriber() {
+
 			public void fire() {
 
 				taskScreen.editSelectedTask();

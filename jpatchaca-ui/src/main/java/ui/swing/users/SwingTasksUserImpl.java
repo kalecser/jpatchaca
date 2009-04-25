@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 import tasks.tasks.TaskView;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.tasks.TaskExclusionScreen;
-import ui.swing.tasks.SelectedTaskSource;
 import basic.UserOperationCancelledException;
 
 public class SwingTasksUserImpl implements SwingTasksUser {
@@ -14,20 +13,12 @@ public class SwingTasksUserImpl implements SwingTasksUser {
 
 	private final TaskExclusionScreen exclusionScreen;
 
-	private final SelectedTaskSource selectedTask;
-
 	//bug: remove all references to tasklist from here!
 
 	public SwingTasksUserImpl(final TaskList list,
-			final TaskExclusionScreen exclusionScreen,
-			final SelectedTaskSource selectedTask) {
+			final TaskExclusionScreen exclusionScreen) {
 		this.tasksList = list;
 		this.exclusionScreen = exclusionScreen;
-		this.selectedTask = selectedTask;
-	}
-
-	public TaskView getSelectedTask() {
-		return this.selectedTask.currentValue();
 	}
 
 	public boolean isTaskExclusionConfirmed() {
