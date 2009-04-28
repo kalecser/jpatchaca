@@ -46,7 +46,7 @@ public class TasksHomeTest extends MockObjectTestCase {
 
 		tasksListenerMocker.expects(once()).method("createdTask");
 		subscriberMocker.expects(once()).method("fire");
-		home.createTask(oid, taskName, budget);
+		home.createTask(oid, new MockTaskName(taskName), budget);
 
 		assertEquals(1, tasks.tasks().size());
 		assertNotNull(tasks.get(oid));
@@ -56,7 +56,7 @@ public class TasksHomeTest extends MockObjectTestCase {
 
 	public void testRemoveTask() throws MustBeCalledInsideATransaction {
 
-		home.createTask(oid, taskName, budget);
+		home.createTask(oid, new MockTaskName(taskName), budget);
 
 		home.taskListChangedAlert().subscribe(
 				(Subscriber) subscriberMocker.proxy());

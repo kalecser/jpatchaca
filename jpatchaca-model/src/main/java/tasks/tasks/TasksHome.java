@@ -2,17 +2,18 @@ package tasks.tasks;
 
 import periods.Period;
 import tasks.TasksListener;
+import tasks.tasks.taskName.TaskName;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 
 public interface TasksHome extends TasksHomeView {
 
-	void createTask(ObjectIdentity identity, String taskName, Double budget)
+	void createTask(ObjectIdentity identity, TaskName taskName, Double budget)
 			throws MustBeCalledInsideATransaction;
 
 	void remove(TaskView task) throws MustBeCalledInsideATransaction;
 
-	void editTask(ObjectIdentity identity, String newName, Double newBudget)
+	void editTask(ObjectIdentity identity, TaskName newName, Double newBudget)
 			throws MustBeCalledInsideATransaction;
 
 	// refactor consider moving these methods to periods system

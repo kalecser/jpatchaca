@@ -261,7 +261,6 @@ public class SwingEventExecutionChecker {
 	public List<String> check(Class<?> class1) {
 
 		List<String> errors = new ArrayList<String>();
-
 		
 		internalDetect(class1, errors, 0);
 		
@@ -302,7 +301,7 @@ public class SwingEventExecutionChecker {
 		if (superclass == null)
 			return false;
 		
-		if (superclass.getName().startsWith(JAVA_AWT) || clazz.getSuperclass().getName().startsWith(JAVAX_SWING))
+		if (superclass.getName().startsWith(JAVA_AWT) || superclass.getName().startsWith(JAVAX_SWING))
 			return true;
 		
 		return false;

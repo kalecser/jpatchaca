@@ -27,16 +27,6 @@ public class TasksTest {
 		Assert.assertEquals(task.name(), tasks.taskNames().get(0));
 	}
 
-	@Test
-	public void testTaskAdditionWithRepeatedName()
-			throws MustBeCalledInsideATransaction {
-		final Tasks tasks = new Tasks();
-		tasks.add(new ObjectIdentity("1"), new MockTask("test task"));
-		tasks.add(new ObjectIdentity("2"), new MockTask("test task"));
-
-		Assert.assertEquals("test task_new", tasks.taskNames().get(1));
-	}
-
 	public void testTaskName() throws MustBeCalledInsideATransaction {
 		final Tasks tasks = new Tasks();
 
@@ -44,7 +34,7 @@ public class TasksTest {
 		tasks.add(new ObjectIdentity("1"), mockTask);
 
 		final List<String> names = tasks.taskNames();
-		mockTask.setName("test 1");
+		mockTask.setName(new MockTaskName("test 1"));
 		Assert.assertEquals("test 1", names.get(0));
 
 	}

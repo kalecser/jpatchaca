@@ -30,8 +30,11 @@ public class SwingEventExecutionCheckerTest {
 
 			@Override
 			public void focusGained(FocusEvent e) {
+			
 				SwingEventExecutionCheckerTest.this.testMethod();
 				SwingEventExecutionCheckerTest.this.testPrivateMethod();
+				
+				
 			}
 		});
 	}

@@ -13,7 +13,7 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
-public class SwingManipulationDetector {
+public class SwingManipulationChecker {
 
 	public final class SwingInvocationClassVisitor implements ClassVisitor {
 

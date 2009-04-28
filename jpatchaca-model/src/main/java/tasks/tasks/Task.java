@@ -8,6 +8,7 @@ import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
 import tasks.NotesListener;
+import tasks.tasks.taskName.TaskName;
 import basic.Alert;
 
 public interface Task extends TaskView {
@@ -20,7 +21,7 @@ public interface Task extends TaskView {
 
 	public abstract PeriodManager periodManager();
 
-	public abstract void setName(String newNameForTask);
+	public abstract void setName(TaskName newNameForTask);
 
 	public abstract void setBudgetInHours(Double newBudget);
 

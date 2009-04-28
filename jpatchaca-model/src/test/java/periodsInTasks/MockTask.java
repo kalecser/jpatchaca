@@ -10,6 +10,7 @@ import periods.PeriodManager;
 import periods.PeriodsListener;
 import tasks.NotesListener;
 import tasks.tasks.NoteView;
+import tasks.tasks.taskName.TaskName;
 import basic.Alert;
 import basic.NonEmptyString;
 
@@ -164,8 +165,8 @@ public class MockTask implements tasks.tasks.Task {
 	}
 
 	@Override
-	public void setName(final String newNameForTask) {
-		name = newNameForTask;
+	public void setName(final TaskName newNameForTask) {
+		name = newNameForTask.unbox();
 
 	}
 

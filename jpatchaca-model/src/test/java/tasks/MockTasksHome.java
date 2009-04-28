@@ -4,6 +4,7 @@ import periods.Period;
 import tasks.tasks.NoteView;
 import tasks.tasks.TaskView;
 import tasks.tasks.TasksHome;
+import tasks.tasks.taskName.TaskName;
 import basic.Alert;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -32,14 +33,14 @@ public class MockTasksHome implements TasksHome {
 
 	@Override
 	public void createTask(final ObjectIdentity identity,
-			final String taskName, final Double budget)
+			final TaskName taskName, final Double budget)
 			throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void editTask(final ObjectIdentity identity, final String newName,
+	public void editTask(final ObjectIdentity identity, final TaskName newName,
 			final Double newBudget) throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 

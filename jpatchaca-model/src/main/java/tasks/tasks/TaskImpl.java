@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.time.DateUtils;
 import org.reactive.Signal;
 import org.reactive.Source;
@@ -13,6 +14,7 @@ import periods.PeriodManager;
 import periods.PeriodsFactory;
 import periods.PeriodsListener;
 import tasks.NotesListener;
+import tasks.tasks.taskName.TaskName;
 import basic.Alert;
 import basic.AlertImpl;
 import basic.NonEmptyString;
@@ -33,17 +35,20 @@ class TaskImpl implements Task {
 	private final List<NoteView> notes;
 	private final Source<String> _nameSource;
 
-	public TaskImpl(final String name, final SystemClock clock,
+	public TaskImpl(final TaskName name, final SystemClock clock,
 			final Double budget, final PeriodManager manager,
 			final PeriodsFactory periodsFactory) {
-		this.name = name;
+
+		Validate.notNull(name, "name");
+
+		this.name = name.unbox();
 		this.clock = clock;
 		this.budget = budget;
 		this.manager = manager;
 		this.periodsFactory = periodsFactory;
 		this.changedAlert = new AlertImpl();
 
-		_nameSource = new Source<String>((name == null ? "" : name));
+		_nameSource = new Source<String>(name.unbox());
 
 		this.notesListeners = new ArrayList<NotesListener>();
 		this.notes = new ArrayList<NoteView>();
@@ -70,9 +75,11 @@ class TaskImpl implements Task {
 		return this.manager;
 	}
 
-	public synchronized void setName(final String newNameForTask) {
-		this.name = newNameForTask;
-		_nameSource.supply(newNameForTask);
+	public synchronized void setName(final TaskName newNameForTask) {
+		Validate.notNull(newNameForTask);
+
+		this.name = newNameForTask.unbox();
+		_nameSource.supply(newNameForTask.unbox());
 		this.changedAlert.fire();
 	}
 

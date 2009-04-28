@@ -10,6 +10,7 @@ import periods.PeriodsFactory;
 import periods.impl.PeriodManagerImpl;
 import tasks.ActiveTask;
 import tasks.TasksListener;
+import tasks.tasks.taskName.TaskName;
 import basic.Alert;
 import basic.AlertImpl;
 import basic.SystemClock;
@@ -41,7 +42,7 @@ public class TasksHomeImpl implements TasksHome {
 
 	}
 
-	public void createTask(final ObjectIdentity taskId, final String name,
+	public void createTask(final ObjectIdentity taskId, final TaskName name,
 			final Double budget) throws MustBeCalledInsideATransaction {
 		final Task task = new TaskImpl(name, this.clock, budget,
 				new PeriodManagerImpl(), this.periodsFactory);
@@ -83,7 +84,7 @@ public class TasksHomeImpl implements TasksHome {
 		tasks.get(taskId).addPeriod(period);
 	}
 
-	public void editTask(final ObjectIdentity taskId, final String newName,
+	public void editTask(final ObjectIdentity taskId, final TaskName newName,
 			final Double newBudget) {
 		final Task task = tasks.get(taskId);
 		task.setName(newName);

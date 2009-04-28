@@ -13,7 +13,6 @@ import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
 import tasks.processors.AddNoteToTaskProcessor;
 import tasks.processors.CreateTaskProcessor;
-import tasks.processors.CreateTaskProcessor2;
 import tasks.processors.CreateTaskProcessor3;
 import tasks.processors.EditPeriodProcessor;
 import tasks.processors.EditPeriodProcessor2;
@@ -29,6 +28,7 @@ import tasks.tasks.TaskData;
 import tasks.tasks.TaskView;
 import tasks.tasks.Tasks;
 import tasks.tasks.TasksHome;
+import tasks.tasks.taskName.TaskNameFactory;
 import basic.Alert;
 import basic.IdProvider;
 import basic.NonEmptyString;
@@ -59,7 +59,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 			final PeriodsFactory periodsFactory,
 			final StartTaskDelegate startTaskDelegate, final Tasks tasks,
 			final IdProvider provider, final SystemClock clock,
-			final ActiveTask activeTask) {
+			final ActiveTask activeTask, final TaskNameFactory taskNameFactory) {
 		this.eventsSystem = eventsSystem;
 		this.tasksHome = tasksHome;
 		this.startTaskDelegate = startTaskDelegate;
@@ -69,15 +69,18 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 		final NotesHome notesHome = new NotesHomeImpl(clock);
 
-		eventsSystem.addProcessor(new CreateTaskProcessor(tasksHome));
-		eventsSystem.addProcessor(new CreateTaskProcessor2(tasksHome));
-		eventsSystem.addProcessor(new CreateTaskProcessor3(tasksHome));
+		eventsSystem.addProcessor(new CreateTaskProcessor(tasksHome,
+				taskNameFactory));
+		eventsSystem.addProcessor(new CreateTaskProcessor3(tasksHome,
+				taskNameFactory));
 		eventsSystem.addProcessor(new EditPeriodProcessor(tasks));
 		eventsSystem.addProcessor(new EditPeriodProcessor2(tasksHome, tasks));
-		eventsSystem.addProcessor(new EditTaskProcessor(tasksHome));
+		eventsSystem.addProcessor(new EditTaskProcessor(tasksHome,
+				taskNameFactory));
 		eventsSystem.addProcessor(new MovePeriodProcessor(tasksHome));
 		eventsSystem.addProcessor(new RemoveTaskProcessor(tasks, tasksHome));
-		eventsSystem.addProcessor(new RenameTaskProcessor(tasksHome));
+		eventsSystem.addProcessor(new RenameTaskProcessor(tasksHome,
+				taskNameFactory));
 		eventsSystem.addProcessor(new StopTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new AddNoteToTaskProcessor(tasksHome,
 				notesHome));

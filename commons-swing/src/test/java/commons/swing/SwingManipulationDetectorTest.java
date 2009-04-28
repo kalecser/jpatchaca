@@ -23,7 +23,7 @@ public final class SwingManipulationDetectorTest {
 
 	@Test
 	public void testSwingManipulationDetector() {
-		SwingManipulationDetector detector = new SwingManipulationDetector();
+		SwingManipulationChecker detector = new SwingManipulationChecker();
 		List<String> detected = detector
 				.detect(SwingManipulationDetectorTest.class);
 

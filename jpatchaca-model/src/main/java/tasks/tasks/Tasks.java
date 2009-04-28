@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import lang.Maybe;
-
-
 import basic.NonEmptyString;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -28,15 +26,6 @@ public class Tasks implements TasksView {
 
 	public synchronized void add(final ObjectIdentity taskId, final Task task)
 			throws MustBeCalledInsideATransaction {
-
-		for (final Task ctask : tasksList) {
-			if (ctask.name().equals(task.name())) {
-				task.setName(task.name() + "_new");
-				add(taskId, task);
-				return;
-			}
-		}
-
 		this.tasksById.put(taskId, task);
 		this.idsByTask.put(task, taskId);
 		this.tasksList.add(task);
