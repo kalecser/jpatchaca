@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import lang.Maybe;
+import tasks.taskName.TaskNames;
 import basic.NonEmptyString;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 
-public class Tasks implements TasksView {
+public class Tasks implements TasksView, TaskNames {
 
 	private final Map<ObjectIdentity, Task> tasksById;
 	private final Map<Task, ObjectIdentity> idsByTask;
@@ -70,6 +71,17 @@ public class Tasks implements TasksView {
 		}
 
 		return null;
+	}
+
+	@Override
+	public synchronized boolean containsName(final String name) {
+		for (final TaskView task : tasksList) {
+			if (task.name().equals(name)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

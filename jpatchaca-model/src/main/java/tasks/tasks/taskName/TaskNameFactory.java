@@ -1,13 +1,15 @@
 package tasks.tasks.taskName;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import tasks.taskName.TaskNames;
 import basic.NonEmptyString;
 
 public class TaskNameFactory {
 
-	public Set<String> names = new LinkedHashSet<String>();
+	private final TaskNames names;
+
+	public TaskNameFactory(final TaskNames names) {
+		this.names = names;
+	}
 
 	public synchronized TaskName createTaskname(final String taskName) {
 
@@ -19,11 +21,10 @@ public class TaskNameFactory {
 			return createTaskname("empty_named_task");
 		}
 
-		if (names.contains(taskName)) {
+		if (names.containsName(taskName)) {
 			return createTaskname(taskName + "_new");
 		}
 
-		names.add(taskName);
 		return new TaskName(new NonEmptyString(taskName));
 	}
 
