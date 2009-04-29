@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import tasks.tasks.TaskView;
 import tasks.tasks.TasksView;
+import basic.NonEmptyString;
 import events.Processor;
 import events.StartTaskEvent;
 import events.StartTaskEvent2;
@@ -23,7 +24,8 @@ public class StartTaskProcessor implements Processor<StartTaskEvent> {
 	public void execute(final StartTaskEvent event)
 			throws MustBeCalledInsideATransaction {
 		final TaskView task = tasks.get(event.getTaskId());
-		startTaskProcessor.execute(new StartTaskEvent2(task.nonEmptyName(), 0));
+		startTaskProcessor.execute(new StartTaskEvent2(new NonEmptyString(task
+				.name()), 0));
 	}
 
 	public Class<? extends Serializable> eventType() {

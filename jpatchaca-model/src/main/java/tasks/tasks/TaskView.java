@@ -10,7 +10,6 @@ import periods.PeriodsListener;
 import tasks.NotesListener;
 import tasks.tasks.taskName.TaskName;
 import basic.Alert;
-import basic.NonEmptyString;
 
 public interface TaskView {
 
@@ -56,7 +55,5 @@ public interface TaskView {
 	void addNotesListener(NotesListener listener);
 
 	void removeNotesListener(NotesListener listener);
-
-	NonEmptyString nonEmptyName();
 
 }

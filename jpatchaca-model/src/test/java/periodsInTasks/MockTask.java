@@ -12,7 +12,6 @@ import tasks.NotesListener;
 import tasks.tasks.NoteView;
 import tasks.tasks.taskName.TaskName;
 import basic.Alert;
-import basic.NonEmptyString;
 
 public class MockTask implements tasks.tasks.Task {
 
@@ -92,11 +91,6 @@ public class MockTask implements tasks.tasks.Task {
 	public int lastPeriodIndex() {
 		// Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	public NonEmptyString nonEmptyName() {
-		return new NonEmptyString(name);
 	}
 
 	@Override

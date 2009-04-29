@@ -15,7 +15,6 @@ import tasks.tasks.NoteView;
 import tasks.tasks.TaskView;
 import tasks.tasks.taskName.TaskName;
 import basic.Alert;
-import basic.NonEmptyString;
 
 public class FakeTask implements TaskView {
 
@@ -77,14 +76,6 @@ public class FakeTask implements TaskView {
 	@Override
 	public int lastPeriodIndex() {
 		throw new RuntimeException("Not expected");
-	}
-
-	@Override
-	public NonEmptyString nonEmptyName() {
-		if (name == null || name.equals("")) {
-			return new NonEmptyString("Empty name");
-		}
-		return new NonEmptyString(name);
 	}
 
 	@Override

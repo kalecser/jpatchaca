@@ -17,6 +17,10 @@ public class TaskName {
 		return taskName.unbox();
 	}
 
+	public NonEmptyString toNonEmptyString() {
+		return taskName;
+	}
+
 	@Override
 	public String toString() {
 		return taskName.toString();
