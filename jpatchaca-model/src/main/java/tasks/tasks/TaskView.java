@@ -8,6 +8,7 @@ import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
 import tasks.NotesListener;
+import tasks.tasks.taskName.TaskName;
 import basic.Alert;
 import basic.NonEmptyString;
 
@@ -15,7 +16,7 @@ public interface TaskView {
 
 	String name();
 
-	Signal<String> nameSignal();
+	Signal<TaskName> nameSignal();
 
 	boolean isActive();
 

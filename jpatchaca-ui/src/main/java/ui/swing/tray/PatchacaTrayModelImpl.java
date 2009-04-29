@@ -12,12 +12,14 @@ import org.reactive.Source;
 import tasks.ActiveTaskName;
 import tasks.TasksSystem;
 import tasks.tasks.TaskView;
+import tasks.tasks.taskName.TaskName;
 import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
+import ui.swing.utils.UIEventsExecutor;
 
 public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
@@ -35,6 +37,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private final StartTaskController startTaskController;
 	private final SelectedTaskName selectedTaskName;
 	private final ActiveTaskName activeTaskName;
+	private final UIEventsExecutor executor;
 
 	public PatchacaTrayModelImpl(final MainScreen mainScreen,
 			final TasksSystem tasksSystem,
@@ -43,7 +46,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
 			final StartTaskController startTaskController,
-			final ActiveTaskName activeTaskName) {
+			final ActiveTaskName activeTaskName, final UIEventsExecutor executor) {
 
 		this.mainScreen = mainScreen;
 		this.tasksSystem = tasksSystem;
@@ -53,6 +56,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		this.windowManager = windowManager;
 		this.startTaskController = startTaskController;
 		this.activeTaskName = activeTaskName;
+		this.executor = executor;
 
 	}
 
@@ -61,7 +65,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 * 
 	 * @see ui.swing.tray.PatchacaTrayModel#selectedTaskName()
 	 */
-	public Source<String> selectedTaskName() {
+	public Source<Maybe<TaskName>> selectedTaskName() {
 		return this.selectedTaskName;
 	}
 
@@ -142,7 +146,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	 * @see ui.swing.tray.PatchacaTrayModel#startTaskIn(tasks.tasks.TaskView,
 	 * long)
 	 */
-	public void startTaskIn(final TaskView task, final long timeAgo) {
+	public void startTask(final TaskView task, final long timeAgo) {
 		new Thread() {
 
 			@Override
@@ -157,7 +161,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		taskScreen.createTaskStarted(time);
 	}
 
-	public Signal<Maybe<String>> activeTaskName() {
+	public Signal<Maybe<TaskName>> activeTaskName() {
 		return activeTaskName;
 
 	}

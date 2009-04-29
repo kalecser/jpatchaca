@@ -25,6 +25,7 @@ import org.picocontainer.Startable;
 import org.reactive.Receiver;
 
 import tasks.tasks.TaskView;
+import tasks.tasks.taskName.TaskName;
 import wheel.io.ui.impl.SystemTrayNotSupported;
 import wheel.lang.Threads;
 import basic.Alert;
@@ -102,18 +103,18 @@ public class PatchacaTray implements Startable {
 		final MenuItem stopTaskItem = getMenuItemByText(STOP_TASK);
 		final MenuItem stopTaskSpecialItem = getMenuItemByText(STOP_TASK_SCPECIAL);
 
-		model.activeTaskName().addReceiver(new Receiver<Maybe<String>>() {
+		model.activeTaskName().addReceiver(new Receiver<Maybe<TaskName>>() {
 			@Override
-			public void receive(final Maybe<String> pulse) {
-				if (pulse == null) {
+			public void receive(final Maybe<TaskName> taskName) {
+				if (taskName == null) {
 					trayIcon.setImage(INACTIVE_ICON);
 					stopTaskItem.setLabel(STOP_TASK);
 					stopTaskItem.setEnabled(false);
 					stopTaskSpecialItem.setEnabled(false);
 				} else {
 					trayIcon.setImage(ACTIVE_ICON);
-					stopTaskItem.setLabel(STOP_TASK + " (" + pulse.unbox()
-							+ ")");
+					stopTaskItem.setLabel(STOP_TASK + " ("
+							+ taskName.unbox().unbox() + ")");
 					stopTaskItem.setEnabled(true);
 					stopTaskSpecialItem.setEnabled(true);
 				}
@@ -293,7 +294,7 @@ public class PatchacaTray implements Startable {
 
 			final TaskView selectedTask = model.selectedTask();
 			if (selectedTask != null) {
-				model.startTaskIn(selectedTask, 0);
+				model.startTask(selectedTask, 0);
 				trayIcon.setImage(ACTIVE_ICON);
 			}
 

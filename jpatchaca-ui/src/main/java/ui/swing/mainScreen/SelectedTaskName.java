@@ -1,22 +1,26 @@
 package ui.swing.mainScreen;
 
+import lang.Maybe;
+
 import org.picocontainer.Startable;
 import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
 
 import tasks.tasks.TaskView;
+import tasks.tasks.taskName.TaskName;
 import ui.swing.tasks.SelectedTaskSource;
 
-public class SelectedTaskName extends Source<String> implements Startable {
+public class SelectedTaskName extends Source<Maybe<TaskName>> implements
+		Startable {
 
 	private final SelectedTaskSource selectedTaskSource;
-	private final Receiver<String> taskNameReceiver;
+	private final Receiver<TaskName> taskNameReceiver;
 	private final Receiver<TaskView> taskReceiver;
 	private TaskView previous;
 
 	public SelectedTaskName(final SelectedTaskSource selectedTaskSource) {
-		super("");
+		super(null);
 		this.selectedTaskSource = selectedTaskSource;
 		this.taskReceiver = new TaskReceiver();
 		this.taskNameReceiver = new TaskNameReceiver();
@@ -41,11 +45,11 @@ public class SelectedTaskName extends Source<String> implements Startable {
 
 	}
 
-	final class TaskNameReceiver implements Receiver<String> {
+	final class TaskNameReceiver implements Receiver<TaskName> {
 
 		@Override
-		public void receive(final String pulse) {
-			supply(pulse);
+		public void receive(final TaskName pulse) {
+			supply(Maybe.wrap(pulse));
 		}
 	}
 
@@ -60,10 +64,10 @@ public class SelectedTaskName extends Source<String> implements Startable {
 
 	private void attachToNext(final TaskView next) {
 		if (next == null) {
-			supply("");
+			supply(null);
 			return;
 		}
-		final Signal<String> nextNameSignal = next.nameSignal();
+		final Signal<TaskName> nextNameSignal = next.nameSignal();
 		nextNameSignal.addReceiver(this.taskNameReceiver);
 	}
 
@@ -71,7 +75,7 @@ public class SelectedTaskName extends Source<String> implements Startable {
 		if (this.previous == null) {
 			return;
 		}
-		final Signal<String> previousNameSignal = this.previous.nameSignal();
+		final Signal<TaskName> previousNameSignal = this.previous.nameSignal();
 		previousNameSignal.removeReceiver(this.taskNameReceiver);
 	}
 

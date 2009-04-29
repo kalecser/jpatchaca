@@ -6,6 +6,7 @@ import java.awt.PopupMenu;
 import org.reactive.Receiver;
 
 import tasks.tasks.TaskView;
+import tasks.tasks.taskName.TaskName;
 
 public class SpecialStartTaskSubMenu {
 
@@ -25,7 +26,7 @@ public class SpecialStartTaskSubMenu {
 				new IntervalMenu.IntervalSelectedListener() {
 					@Override
 					public void intervalClicked(final long millis) {
-						model.startTaskIn(task, millis);
+						model.startTask(task, millis);
 					}
 				}, true);
 
@@ -34,11 +35,11 @@ public class SpecialStartTaskSubMenu {
 	}
 
 	private void bindToTask(final TaskView task, final PopupMenu taskSpecialMenu) {
-		task.nameSignal().addReceiver(new Receiver<String>() {
+		task.nameSignal().addReceiver(new Receiver<TaskName>() {
 
 			@Override
-			public void receive(final String pulse) {
-				taskSpecialMenu.setLabel(pulse);
+			public void receive(final TaskName taskName) {
+				taskSpecialMenu.setLabel(taskName.unbox());
 			}
 		});
 	}

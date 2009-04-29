@@ -11,6 +11,7 @@ import org.reactive.Source;
 
 import tasks.ActiveTaskName;
 import tasks.TasksSystem;
+import tasks.tasks.taskName.TaskName;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.options.OptionsScreen;
 import ui.swing.tasks.SelectedTaskSource;
@@ -52,11 +53,11 @@ public class MainScreenModelImpl implements MainScreenModel {
 
 		this.title = new Source<String>("");
 
-		this.activeTaskName.addReceiver(new Receiver<Maybe<String>>() {
+		this.activeTaskName.addReceiver(new Receiver<Maybe<TaskName>>() {
 
 			@Override
-			public void receive(final Maybe<String> pulse) {
-				updateTitle(pulse);
+			public void receive(final Maybe<TaskName> taskName) {
+				updateTitle(taskName);
 			}
 		});
 	}
@@ -98,9 +99,9 @@ public class MainScreenModelImpl implements MainScreenModel {
 		optionsScreen.show();
 	}
 
-	void updateTitle(final Maybe<String> taskName) {
+	void updateTitle(final Maybe<TaskName> taskName) {
 		if (taskName != null) {
-			setTitle(getTitleString(taskName.unbox()));
+			setTitle(getTitleString(taskName.unbox().unbox()));
 		} else {
 			setTitle(getTitleString());
 		}

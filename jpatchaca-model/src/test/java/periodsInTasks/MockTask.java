@@ -105,7 +105,7 @@ public class MockTask implements tasks.tasks.Task {
 	}
 
 	@Override
-	public Signal<String> nameSignal() {
+	public Signal<TaskName> nameSignal() {
 		// Auto-generated method stub
 		return null;
 	}

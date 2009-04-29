@@ -7,32 +7,33 @@ import org.reactive.Signal;
 import org.reactive.Source;
 
 import tasks.tasks.Task;
+import tasks.tasks.taskName.TaskName;
 
-public class ActiveTaskName implements Signal<Maybe<String>> {
+public class ActiveTaskName implements Signal<Maybe<TaskName>> {
 
-	private final class ActiveTaskNameListener implements Receiver<String> {
+	private final class ActiveTaskNameListener implements Receiver<TaskName> {
 		@Override
-		public void receive(final String pulse) {
+		public void receive(final TaskName pulse) {
 			supply(pulse);
 		}
 	}
 
-	private final Source<Maybe<String>> activeTaskName;
+	private final Source<Maybe<TaskName>> activeTaskName;
 
-	public Maybe<String> addReceiver(final Receiver<Maybe<String>> receiver) {
+	public Maybe<TaskName> addReceiver(final Receiver<Maybe<TaskName>> receiver) {
 		return activeTaskName.addReceiver(receiver);
 	}
 
-	public Maybe<String> currentValue() {
+	public Maybe<TaskName> currentValue() {
 		return activeTaskName.currentValue();
 	}
 
-	public void removeReceiver(final Receiver<Maybe<String>> receiver) {
+	public void removeReceiver(final Receiver<Maybe<TaskName>> receiver) {
 		activeTaskName.removeReceiver(receiver);
 	}
 
 	public ActiveTaskName(final ActiveTask activeTask) {
-		activeTaskName = new Source<Maybe<String>>(null);
+		activeTaskName = new Source<Maybe<TaskName>>(null);
 
 		final ActiveTaskNameListener listener = new ActiveTaskNameListener();
 
@@ -59,12 +60,12 @@ public class ActiveTaskName implements Signal<Maybe<String>> {
 		});
 	}
 
-	public void supply(final String value) {
-		if (value == null) {
+	public void supply(final TaskName taskName) {
+		if (taskName == null) {
 			activeTaskName.supply(null);
 			return;
 		}
-		activeTaskName.supply(Maybe.wrap(value));
+		activeTaskName.supply(Maybe.wrap(taskName));
 	}
 
 }

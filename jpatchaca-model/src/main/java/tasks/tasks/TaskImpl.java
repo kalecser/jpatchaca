@@ -33,7 +33,7 @@ class TaskImpl implements Task {
 
 	private final List<NotesListener> notesListeners;
 	private final List<NoteView> notes;
-	private final Source<String> _nameSource;
+	private final Source<TaskName> _nameSource;
 
 	public TaskImpl(final TaskName name, final SystemClock clock,
 			final Double budget, final PeriodManager manager,
@@ -48,7 +48,7 @@ class TaskImpl implements Task {
 		this.periodsFactory = periodsFactory;
 		this.changedAlert = new AlertImpl();
 
-		_nameSource = new Source<String>(name.unbox());
+		_nameSource = new Source<TaskName>(name);
 
 		this.notesListeners = new ArrayList<NotesListener>();
 		this.notes = new ArrayList<NoteView>();
@@ -79,7 +79,7 @@ class TaskImpl implements Task {
 		Validate.notNull(newNameForTask);
 
 		this.name = newNameForTask.unbox();
-		_nameSource.supply(newNameForTask.unbox());
+		_nameSource.supply(newNameForTask);
 		this.changedAlert.fire();
 	}
 
@@ -112,7 +112,7 @@ class TaskImpl implements Task {
 	}
 
 	@Override
-	public synchronized Signal<String> nameSignal() {
+	public synchronized Signal<TaskName> nameSignal() {
 		return _nameSource;
 	}
 

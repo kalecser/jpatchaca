@@ -17,4 +17,9 @@ public class TaskName {
 		return taskName.unbox();
 	}
 
+	@Override
+	public String toString() {
+		return taskName.toString();
+	}
+
 }

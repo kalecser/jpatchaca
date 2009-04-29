@@ -6,21 +6,22 @@ import org.reactive.Signal;
 import org.reactive.Source;
 
 import tasks.tasks.TaskView;
+import tasks.tasks.taskName.TaskName;
 import ui.swing.tray.PatchacaTrayModel;
 import ui.swing.tray.PatchacaTrayModelImpl.Listener;
 
 public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
-	private final Source<Maybe<String>> _activeTask;
-	private final Source<String> selectedTaskName;
+	private final Source<Maybe<TaskName>> _activeTask;
+	private final Source<Maybe<TaskName>> selectedTaskName;
 
 	public PatchacaTrayModelMock() {
-		_activeTask = new Source<Maybe<String>>(Maybe.wrap(""));
-		this.selectedTaskName = new Source<String>("");
+		_activeTask = new Source<Maybe<TaskName>>(null);
+		this.selectedTaskName = new Source<Maybe<TaskName>>(null);
 	}
 
 	@Override
-	public Signal<Maybe<String>> activeTaskName() {
+	public Signal<Maybe<TaskName>> activeTaskName() {
 		return _activeTask;
 	}
 
@@ -45,7 +46,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public Source<String> selectedTaskName() {
+	public Source<Maybe<TaskName>> selectedTaskName() {
 		return this.selectedTaskName;
 	}
 
@@ -65,7 +66,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public void startTaskIn(final TaskView task, final long timeAgo) {
+	public void startTask(final TaskView task, final long timeAgo) {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -79,8 +80,8 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 		return new Source<String>(null);
 	}
 
-	public void setActiveTask(final String string) {
-		_activeTask.supply(Maybe.wrap(string));
+	public void setActiveTask(final TaskName taskName) {
+		_activeTask.supply(Maybe.wrap(taskName));
 	}
 
 	public void assertTaskCreated() {

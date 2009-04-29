@@ -13,6 +13,7 @@ import periods.PeriodsListener;
 import tasks.NotesListener;
 import tasks.tasks.NoteView;
 import tasks.tasks.TaskView;
+import tasks.tasks.taskName.TaskName;
 import basic.Alert;
 import basic.NonEmptyString;
 
@@ -92,7 +93,7 @@ public class FakeTask implements TaskView {
 	}
 
 	@Override
-	public Signal<String> nameSignal() {
+	public Signal<TaskName> nameSignal() {
 		throw new RuntimeException("Not expected");
 	}
 

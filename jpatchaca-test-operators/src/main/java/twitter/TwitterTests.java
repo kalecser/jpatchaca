@@ -11,13 +11,6 @@ public abstract class TwitterTests {
 	protected abstract PatchacaTasksOperator getTasksOperator();
 	
 	@Test
-	public void testSendTwitterPost(){
-		getTwitterOperator().enableTwitterLogging("foo", "bar");
-		getTasksOperator().createTask("foo");
-		getTasksOperator().startTask("foo");
-	}
-	
-	@Test
 	public void testTwitterConfig(){
 		Assert.assertEquals("", getTwitterOperator().twitterUserName());
 		Assert.assertEquals("", getTwitterOperator().twitterPassword());

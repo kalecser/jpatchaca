@@ -6,36 +6,44 @@ import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
 
+import tasks.tasks.taskName.TaskName;
+
 public class PatchacaTrayTooltip {
 
 	private String currentSelectedTask;
 	private String currentActiveTask;
 	private final Source<String> tooltip;
 
-	public PatchacaTrayTooltip(final Signal<Maybe<String>> activeTaskName,
-			final Signal<String> selectedTaskName) {
+	public PatchacaTrayTooltip(final Signal<Maybe<TaskName>> activeTaskName,
+			final Signal<Maybe<TaskName>> selectedTaskName) {
 
 		tooltip = new Source<String>("");
 
-		activeTaskName.addReceiver(new Receiver<Maybe<String>>() {
+		activeTaskName.addReceiver(new Receiver<Maybe<TaskName>>() {
 
 			@Override
-			public void receive(final Maybe<String> pulse) {
+			public void receive(final Maybe<TaskName> taskName) {
 				synchronized (PatchacaTrayTooltip.this) {
-					final Maybe<String> value = pulse;
-					currentActiveTask = (value == null ? "" : pulse.unbox());
+					currentActiveTask = (taskName == null ? "" : taskName
+							.unbox().unbox());
 					updateToolTip();
 				}
 
 			}
 		});
 
-		selectedTaskName.addReceiver(new Receiver<String>() {
+		selectedTaskName.addReceiver(new Receiver<Maybe<TaskName>>() {
 
 			@Override
-			public void receive(final String pulse) {
+			public void receive(final Maybe<TaskName> taskName) {
 				synchronized (PatchacaTrayTooltip.this) {
-					currentSelectedTask = pulse;
+
+					if (taskName != null) {
+						currentSelectedTask = taskName.unbox().unbox();
+					} else {
+						currentSelectedTask = "";
+					}
+
 					updateToolTip();
 				}
 			}

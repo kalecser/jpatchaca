@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import tasks.tasks.tests.MockTaskName;
 import ui.swing.tray.PatchacaTray;
 import ui.swing.tray.tests.environment.PatchacaTrayModelMock;
 import ui.swing.tray.tests.environment.PathcacaTrayOperator;
@@ -43,7 +44,7 @@ public class PatchacaTrayTest {
 		}
 
 		final PathcacaTrayOperator operator = new PathcacaTrayOperator();
-		modelMock.setActiveTask("test task");
+		modelMock.setActiveTask(new MockTaskName("test task"));
 		operator.assertActiveTask("test task");
 
 	}
