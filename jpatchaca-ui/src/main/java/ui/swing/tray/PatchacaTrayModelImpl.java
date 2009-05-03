@@ -19,7 +19,6 @@ import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
-import ui.swing.utils.UIEventsExecutor;
 
 public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
@@ -37,7 +36,6 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private final StartTaskController startTaskController;
 	private final SelectedTaskName selectedTaskName;
 	private final ActiveTaskName activeTaskName;
-	private final UIEventsExecutor executor;
 
 	public PatchacaTrayModelImpl(final MainScreen mainScreen,
 			final TasksSystem tasksSystem,
@@ -46,7 +44,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
 			final StartTaskController startTaskController,
-			final ActiveTaskName activeTaskName, final UIEventsExecutor executor) {
+			final ActiveTaskName activeTaskName) {
 
 		this.mainScreen = mainScreen;
 		this.tasksSystem = tasksSystem;
@@ -56,7 +54,6 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		this.windowManager = windowManager;
 		this.startTaskController = startTaskController;
 		this.activeTaskName = activeTaskName;
-		this.executor = executor;
 
 	}
 
@@ -101,6 +98,11 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 				windowManager.setMainWindow(mainScreen.getWindow());
 				mainScreen.setVisible(true);
 				mainScreen.toFront();
+
+				if (mainScreen.getExtendedState() == Frame.MAXIMIZED_BOTH) {
+					return;
+				}
+
 				final int state = Frame.NORMAL;
 				mainScreen.setExtendedState(state);
 

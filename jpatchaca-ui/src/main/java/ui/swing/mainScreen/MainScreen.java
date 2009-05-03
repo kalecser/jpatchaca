@@ -5,12 +5,15 @@ import java.awt.Window;
 
 public interface MainScreen {
 
-	//TODO too generic methods, nothing to do with MainScreen, ExtendedStated, WTF?
+	// TODO too generic methods, nothing to do with MainScreen, ExtendedStated,
+	// WTF?
 	void setVisible(boolean b);
 
 	void toFront();
 
 	void setExtendedState(int state);
+
+	int getExtendedState();
 
 	void add(Component topBar, Object ext);
 
