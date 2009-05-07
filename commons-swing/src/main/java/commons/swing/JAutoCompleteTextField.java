@@ -1,7 +1,10 @@
 package commons.swing;
 
+import java.awt.AWTEvent;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
@@ -40,7 +43,28 @@ public class JAutoCompleteTextField extends JTextField{
 		sendArrowsEventsToList();
 		enterSelectsValue();
 		doubleClickSelectsValue();
+		hideWindowOnMouseClickOutsideItsArea();
 		
+	}
+
+	private void hideWindowOnMouseClickOutsideItsArea() {
+		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+		
+			@Override
+			public void eventDispatched(AWTEvent event) {
+				if (!(event instanceof MouseEvent))
+					return;
+					
+				MouseEvent mouseEvent = (MouseEvent) event;
+				
+				if (mouseEvent.getClickCount() == 0)
+					return;
+				
+				if (!window.getBounds().contains(mouseEvent.getLocationOnScreen()))
+					window.setVisible(false);
+		
+			}
+		}, AWTEvent.MOUSE_EVENT_MASK);
 	}
 
 	private void doubleClickSelectsValue() {
