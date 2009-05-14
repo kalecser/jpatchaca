@@ -62,12 +62,12 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	public MainScreenImpl(final MainScreenModel model,
 			final UIEventsExecutor executor, final TaskList taskList,
 			final PeriodsList periodsList, final SummaryScreen tasksSummary,
-			final JFrameBoundsKeeper boundsKeeper) {
+			final JFrameBoundsKeeper boundsKeeper, final TopBarModel topBarModel) {
 
 		this.model = model;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
-		this.topBar = new TopBar(executor);
+		this.topBar = new TopBar(executor, topBarModel);
 		this.tasksSummary = tasksSummary;
 
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());

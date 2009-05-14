@@ -43,7 +43,7 @@ public class TopBarTest {
 			}
 		}
 		final ExpectExceptExec exexex = new ExpectExceptExec();
-		final TopBar bar = new TopBar(exexex);
+		final TopBar bar = new TopBar(exexex, null);
 		bar.addListener(new Listener());
 		final JFrame frame = new JFrame();
 		frame.add(bar);

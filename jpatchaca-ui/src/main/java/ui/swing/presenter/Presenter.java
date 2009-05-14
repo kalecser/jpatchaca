@@ -15,6 +15,7 @@ public class Presenter {
 	public Set<WeakReference<Window>> openedWindows = new LinkedHashSet<WeakReference<Window>>();
 	private final UIEventsExecutor executor;
 	private JFrame mainScreen;
+	private JDialog dialog;
 
 	public Presenter(final UIEventsExecutor executor) {
 		this.executor = executor;
@@ -26,8 +27,7 @@ public class Presenter {
 
 	public JDialog showOkCancelDialog(final ActionPane pane, final String title) {
 
-		final JDialog dialog = new OkCancelDialog(executor, pane, title,
-				mainScreen);
+		dialog = new OkCancelDialog(executor, pane, title, mainScreen);
 		return showDialog(dialog);
 	}
 

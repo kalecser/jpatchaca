@@ -15,6 +15,7 @@ public class Tasks implements TasksView, TaskNames {
 
 	private final Map<ObjectIdentity, Task> tasksById;
 	private final Map<Task, ObjectIdentity> idsByTask;
+	private final Map<Task, TaskNameUpdater> taskNameUpdaterByTask;
 	private final List<Task> tasksList;
 	private final List<String> names;
 
@@ -22,6 +23,7 @@ public class Tasks implements TasksView, TaskNames {
 		this.tasksById = new LinkedHashMap<ObjectIdentity, Task>();
 		this.idsByTask = new LinkedHashMap<Task, ObjectIdentity>();
 		this.tasksList = new ArrayList<Task>();
+		taskNameUpdaterByTask = new LinkedHashMap<Task, TaskNameUpdater>();
 		this.names = new ArrayList<String>();
 	}
 
@@ -30,7 +32,7 @@ public class Tasks implements TasksView, TaskNames {
 		this.tasksById.put(taskId, task);
 		this.idsByTask.put(task, taskId);
 		this.tasksList.add(task);
-		this.names.add(task.name());
+		taskNameUpdaterByTask.put(task, new TaskNameUpdater(task, names));
 	}
 
 	public synchronized Task get(final ObjectIdentity oid) {
@@ -52,6 +54,8 @@ public class Tasks implements TasksView, TaskNames {
 		this.idsByTask.remove(task);
 		this.tasksList.remove(task);
 		this.names.remove(task.name());
+		taskNameUpdaterByTask.get(task).release();
+		taskNameUpdaterByTask.remove(task);
 
 	}
 

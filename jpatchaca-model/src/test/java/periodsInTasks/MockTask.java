@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.reactive.Signal;
+import org.reactive.Source;
 
 import periods.Period;
 import periods.PeriodManager;
@@ -11,6 +12,7 @@ import periods.PeriodsListener;
 import tasks.NotesListener;
 import tasks.tasks.NoteView;
 import tasks.tasks.taskName.TaskName;
+import tasks.tasks.tests.MockTaskName;
 import basic.Alert;
 
 public class MockTask implements tasks.tasks.Task {
@@ -18,13 +20,16 @@ public class MockTask implements tasks.tasks.Task {
 	private String name;
 	private Long startedMillisecondsAgo = null;
 	private boolean stopped;
+	private final Source<TaskName> nameSignal;
 
 	public MockTask() {
-		name = null;
+		this("empty");
 	}
 
 	public MockTask(final String string) {
 		this.name = string;
+		nameSignal = new Source<TaskName>(null);
+		nameSignal.supply(new MockTaskName(string));
 	}
 
 	@Override
@@ -100,8 +105,7 @@ public class MockTask implements tasks.tasks.Task {
 
 	@Override
 	public Signal<TaskName> nameSignal() {
-		// Auto-generated method stub
-		return null;
+		return nameSignal;
 	}
 
 	@Override
@@ -161,6 +165,7 @@ public class MockTask implements tasks.tasks.Task {
 	@Override
 	public void setName(final TaskName newNameForTask) {
 		name = newNameForTask.unbox();
+		nameSignal.supply(newNameForTask);
 
 	}
 

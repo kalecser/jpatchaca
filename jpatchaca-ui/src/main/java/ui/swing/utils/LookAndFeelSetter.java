@@ -12,6 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.lang.SystemUtils;
 import org.picocontainer.Startable;
 
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
 public class LookAndFeelSetter implements Startable {
@@ -23,7 +24,7 @@ public class LookAndFeelSetter implements Startable {
 			return;
 		}
 
-		setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		setLookAndFeel(PlasticXPLookAndFeel.class.getName());
 
 	}
 

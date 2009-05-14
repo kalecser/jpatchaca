@@ -7,26 +7,28 @@ import org.netbeans.jemmy.operators.JTextFieldOperator;
 
 public class OptionsScreenOperator {
 
-	private JCheckBoxOperator twitterEnabledBox;
-	private JTextFieldOperator userNameField;
-	private JTextFieldOperator passwordField;
-	private JButtonOperator okButton;
+	private final JCheckBoxOperator twitterEnabledBox;
+	private final JTextFieldOperator userNameField;
+	private final JTextFieldOperator passwordField;
+	private final JButtonOperator okButton;
+	private final JDialogOperator dialog;
 
-	public OptionsScreenOperator(){
-		JDialogOperator dialog = new JDialogOperator("Options");
+	public OptionsScreenOperator() {
+		dialog = new JDialogOperator("Options");
 		twitterEnabledBox = new JCheckBoxOperator(dialog);
 		userNameField = new JTextFieldOperator(dialog, 0);
 		passwordField = new JTextFieldOperator(dialog, 1);
 		okButton = new JButtonOperator(dialog, "ok");
 	}
-	
-	public void fillAndPressOk(boolean twitterEnabled, String usern, String pass) {
-		
+
+	public void fillAndPressOk(final boolean twitterEnabled,
+			final String usern, final String pass) {
+
 		twitterEnabledBox.setSelected(true);
 		userNameField.setText(usern);
 		passwordField.setText(pass);
 		okButton.push();
-		
+
 	}
 
 	public Boolean twitterEnabled() {
@@ -39,6 +41,11 @@ public class OptionsScreenOperator {
 
 	public String twitterUserName() {
 		return userNameField.getText();
+	}
+
+	public void release() {
+		dialog.setVisible(false);
+		dialog.dispose();
 	}
 
 }

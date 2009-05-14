@@ -41,6 +41,9 @@ import tasks.tasks.taskName.TaskNameFactory;
 import twitter.TwitterLogger;
 import twitter.TwitterOptions;
 import twitter.processors.SetTwitterConfigProcessor;
+import ui.swing.events.EventsListPane;
+import ui.swing.events.EventsListPaneModel;
+import ui.swing.events.EventsListPanePresenter;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
 import ui.swing.mainScreen.LabelsList;
@@ -60,6 +63,7 @@ import ui.swing.mainScreen.TaskListModelImpl;
 import ui.swing.mainScreen.TaskListSystemMediator;
 import ui.swing.mainScreen.TooltipForTask;
 import ui.swing.mainScreen.TooltipForTaskImpl;
+import ui.swing.mainScreen.TopBarModel;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
 import ui.swing.mainScreen.tasks.TaskExclusionScreen;
@@ -135,10 +139,8 @@ public class Main {
 	private static MutablePicoContainer createNonUIContainer(
 			final HardwareClock hardwareClock) {
 		final MutablePicoContainer container = new PicoBuilder()
-				.withConstructorInjection()
-					.withLifecycle()
-					.withCaching()
-					.build();
+				.withConstructorInjection().withLifecycle().withCaching()
+				.build();
 
 		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a
 		// JOptionPane.
@@ -203,7 +205,13 @@ public class Main {
 		container.addComponent(PatchacaTrayModelImpl.class);
 		container.addComponent(PatchacaTrayTasksFacadeMediator.class);
 
+		container.addComponent(EventsListPaneModel.class);
+		container.addComponent(EventsListPane.class);
+		container.addComponent(EventsListPanePresenter.class);
+
 		container.addComponent(Presenter.class);
+
+		container.addComponent(TopBarModel.class);
 		container
 				.addComponent(MainScreenModel.class, MainScreenModelImpl.class);
 		container.addComponent(MainScreen.class, MainScreenImpl.class);

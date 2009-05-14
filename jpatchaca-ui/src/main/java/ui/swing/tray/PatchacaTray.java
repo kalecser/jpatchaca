@@ -39,7 +39,6 @@ public class PatchacaTray implements Startable {
 	private static final String TRAY_ICON_INACTIVE_PATH = "jpoff.png";
 	private static final Image INACTIVE_ICON = iconImage(TRAY_ICON_INACTIVE_PATH);
 
-	static final String START_TASK_SPECIAL = "Start task...";
 	static final String STOP_TASK_SCPECIAL = "Stop task...";
 
 	static final String OPEN = "open";
@@ -131,6 +130,7 @@ public class PatchacaTray implements Startable {
 		this.timerMenu.addSeparator();
 		this.timerMenu.add(buildSpecialStopTaskMenu());
 		this.timerMenu.addSeparator();
+
 		this.timerMenu.add(OPEN);
 		this.timerMenu.add(EXIT);
 

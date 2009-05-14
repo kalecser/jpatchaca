@@ -41,9 +41,11 @@ public final class TopBar extends JPanel {
 
 	final Collection<Listener> listeners;
 	private final UIEventsExecutor executor;
+	private final TopBarModel model;
 
-	public TopBar(final UIEventsExecutor executor) {
+	public TopBar(final UIEventsExecutor executor, final TopBarModel model) {
 		this.executor = executor;
+		this.model = model;
 
 		initialize();
 
@@ -216,6 +218,7 @@ public final class TopBar extends JPanel {
 		this.editTaskItem = new JMenuItem("Edit task");
 		this.removeTaskItem = new JMenuItem("Remove task");
 		this.optionsItem = new JMenuItem("Options");
+
 		this.exitItem = new JMenuItem("Exit");
 
 		menu.add(this.createTaskItem);
@@ -226,9 +229,22 @@ public final class TopBar extends JPanel {
 		menu.addSeparator();
 		menu.add(this.optionsItem);
 		menu.addSeparator();
+		menu.add(eventsListMenuItem());
+		menu.addSeparator();
 		menu.add(this.exitItem);
 
 		return menu;
+	}
+
+	private JMenuItem eventsListMenuItem() {
+		final JMenuItem eventsListItem = new JMenuItem("Events list");
+		eventsListItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				model.openEventsList();
+			}
+		});
+		return eventsListItem;
 	}
 
 	public void addListener(final Listener listener) {

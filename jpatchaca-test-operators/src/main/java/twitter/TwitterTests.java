@@ -15,6 +15,7 @@ public abstract class TwitterTests {
 		Assert.assertEquals("", getTwitterOperator().twitterUserName());
 		Assert.assertEquals("", getTwitterOperator().twitterPassword());
 		Assert.assertEquals(false, getTwitterOperator().twitterEnabled());
+		
 		getTwitterOperator().enableTwitterLogging("foo", "bar");
 		Assert.assertEquals("foo", getTwitterOperator().twitterUserName());
 		Assert.assertEquals("bar", getTwitterOperator().twitterPassword());
