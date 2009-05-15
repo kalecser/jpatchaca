@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.Validate;
+
 import basic.HardwareClock;
 import basic.SystemClock;
 import core.events.eventslist.EventTransaction;
@@ -26,10 +28,20 @@ public class EventListImpl implements EventList{
 	private final List<Processor<Serializable>> processors;
 	private final Queue<EventTransaction> transactionsQueue;
 	public final AtomicBoolean isDead = new AtomicBoolean(false);
+	private final Censor censor;
 
 
 
 	public EventListImpl(final PersistenceManager persistenceManager,  HardwareClock machineClock, SystemClock systemClock) {
+		this(persistenceManager, machineClock, systemClock, new AcceptAllCensor());
+	}
+
+	public EventListImpl(PersistenceManager persistenceManager,
+			HardwareClock machineClock, SystemClock systemClock,
+			Censor censor) {
+		this.censor = censor;
+		Validate.notNull(censor);
+		
 		this.persistenceManager = persistenceManager;
 		this.machineClock = machineClock;
 		clock = systemClock;
@@ -63,6 +75,10 @@ public class EventListImpl implements EventList{
 	}
 
 	private void execute(final EventTransaction transaction) throws MustBeCalledInsideATransaction {
+		
+		if (!censor.accept(transaction))
+			return;
+		
 		clock.setTime(transaction.getTime());
 		
 		boolean executed = false;
@@ -87,13 +103,12 @@ public class EventListImpl implements EventList{
 			this.processors.add(processor);
 		}
 		
-		for (final EventTransaction transaction : persistenceManager.getEventTransactions()){
-			
-				try {
-					execute(transaction);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		for (final EventTransaction transaction : persistenceManager.getEventTransactions()){			
+			try {
+				execute(transaction);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 		
 		}

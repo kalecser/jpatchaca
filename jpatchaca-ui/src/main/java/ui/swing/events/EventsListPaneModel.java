@@ -19,10 +19,11 @@ public class EventsListPaneModel {
 
 	public synchronized String getEventsAsString() {
 		final StringBuilder builder = new StringBuilder();
+		int i = 0;
 		for (final EventTransaction transaction : persistence
 				.getEventTransactions()) {
 			final Date date = new Date(transaction.getTime());
-			builder.append(formater.formatShortDate(date) + " "
+			builder.append(i++ + " " + formater.formatShortDate(date) + " "
 					+ formater.formatShortTime(date) + " - "
 					+ transaction.getEvent().getClass().getSimpleName() + "\n");
 		}

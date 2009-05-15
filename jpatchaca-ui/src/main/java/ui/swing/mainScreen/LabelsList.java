@@ -28,11 +28,9 @@ public class LabelsList extends JList {
 
 	private int preferredIndex;
 
-	private final LabelsListModel labelsModel;
-
 	public LabelsList(final LabelsListModel labelsModel) {
 		super();
-		this.labelsModel = labelsModel;
+
 		this.tipProvider = labelsModel.getTooltips();
 
 		this.model = new DefaultListModel();
@@ -61,9 +59,8 @@ public class LabelsList extends JList {
 			public boolean canImport(final TransferSupport info) {
 
 				try {
-					final String transferData = (String) info
-							.getTransferable()
-								.getTransferData(DataFlavor.stringFlavor);
+					final String transferData = (String) info.getTransferable()
+							.getTransferData(DataFlavor.stringFlavor);
 					final boolean isTaskDrop = transferData
 							.startsWith("task - ");
 

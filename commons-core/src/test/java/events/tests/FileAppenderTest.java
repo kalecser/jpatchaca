@@ -16,10 +16,10 @@ public final class FileAppenderTest extends TestCase {
 		Directory directory = new TransientDirectory();
 		FileAppenderPersistence filePersistence = new FileAppenderPersistence(directory);
 		
-		assertEquals(0, filePersistence.getEventTransactions().size());
+		assertEquals(0, filePersistence.getEventsFormFile().size());
 		
 		filePersistence.writeEvent(fortyTwo);
-		assertEquals(fortyTwo, filePersistence.getEventTransactions().get(0));
+		assertEquals(fortyTwo, filePersistence.getEventsFormFile().get(0));
 		
 		filePersistence.writeEvent(fortyThree);
 		assertEquals(fortyTwo, 

@@ -142,6 +142,11 @@ public class EventListTest extends MockObjectTestCase {
 		}// expected
 
 	}
+	
+	public void testCensor(){
+		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock, new RejectAllCensor());
+		list.add("foo");
+	}
 
 	static class PersistenceManagerMock implements PersistenceManager {
 		private final List<EventTransaction> eventsWritten = new ArrayList<EventTransaction>();

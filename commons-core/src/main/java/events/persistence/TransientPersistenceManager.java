@@ -8,14 +8,17 @@ import events.PersistenceManager;
 
 public class TransientPersistenceManager implements PersistenceManager {
 
+	private ArrayList<EventTransaction> transactions;
+
 	@Override
-	public List<EventTransaction> getEventTransactions() {
-		return new ArrayList<EventTransaction>();
+	public synchronized List<EventTransaction> getEventTransactions() {
+		transactions = new ArrayList<EventTransaction>();
+		return transactions;
 	}
 
 	@Override
-	public void writeEvent(EventTransaction event) {
-
+	public synchronized void writeEvent(EventTransaction event) {
+		transactions.add(event);
 	}
 
 }

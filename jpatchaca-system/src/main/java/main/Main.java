@@ -101,6 +101,7 @@ import basic.durable.DoubleIdProvider;
 import basic.durable.HardwareClockImpl;
 import basic.mock.MockHardwareClock;
 import events.EventsSystemImpl;
+import events.eventslist.CensorFromFile;
 import events.eventslist.EventListImpl;
 import events.persistence.FileAppenderPersistence;
 
@@ -155,6 +156,7 @@ public class Main {
 
 		container.addComponent(PeriodsFactoryImpl.class);
 		container.addComponent(FileAppenderPersistence.class);
+		container.addComponent(CensorFromFile.class);
 		container.addComponent(EventListImpl.class);
 		container.addComponent(EventsSystemImpl.class);
 		container.addComponent(ActiveTask.class);

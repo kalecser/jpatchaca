@@ -19,6 +19,7 @@ public class FileAppenderPersistence implements PersistenceManager {
 
 	private final Directory directory;
 	private final String fileName = "timer.dat";
+	private List<EventTransaction> eventsFormFile = null;
 
 	public FileAppenderPersistence(final Directory directory) {
 		this.directory = directory;
@@ -27,6 +28,14 @@ public class FileAppenderPersistence implements PersistenceManager {
 	@Override
 	public List<EventTransaction> getEventTransactions() {
 
+		if (eventsFormFile == null)
+			eventsFormFile = getEventsFormFile();
+		
+		return eventsFormFile;
+			
+	}
+
+	public List<EventTransaction> getEventsFormFile() {
 		boolean dataFileStillDoesNotExist = !directory.fileExists(fileName);
 		if (dataFileStillDoesNotExist)
 			return new ArrayList<EventTransaction>();
@@ -38,7 +47,6 @@ public class FileAppenderPersistence implements PersistenceManager {
 		}  finally {
 			closeOrCry(in);
 		}
-			
 	}
 
 	private List<EventTransaction> readEvents(InputStream in) {

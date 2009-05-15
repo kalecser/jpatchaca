@@ -36,7 +36,12 @@
 			<version>2.2.7.5</version>
 			<scope>test</scope>
 		</dependency>
-				<dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-transaction</groupId>
 			<artifactId>commons-transaction</artifactId>
 			<version>1.2</version>

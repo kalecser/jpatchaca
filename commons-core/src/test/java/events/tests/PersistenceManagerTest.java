@@ -19,13 +19,13 @@ public final class PersistenceManagerTest extends TestCase {
 		assertEquals(0, filePersistence.getEventTransactions().size());
 		
 		filePersistence.writeEvent(fortyTwo);
-		assertEquals(fortyTwo, filePersistence.getEventTransactions().get(0));
+		assertEquals(fortyTwo, filePersistence.getEventsFormFile().get(0));
 		
 		filePersistence.writeEvent(fortyThree);
 		assertEquals(fortyTwo, 
-				filePersistence.getEventTransactions().get(0));
+				filePersistence.getEventsFormFile().get(0));
 		assertEquals(fortyThree, 
-				filePersistence.getEventTransactions().get(1));
+				filePersistence.getEventsFormFile().get(1));
 	}
 	
 }
