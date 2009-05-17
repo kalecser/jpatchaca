@@ -13,7 +13,7 @@ import statistics.SummaryItemImpl;
 import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
 import statistics.tests.environment.FakeTask;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 
 public class TaskSummarizerTest extends MockObjectTestCase {

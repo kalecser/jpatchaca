@@ -10,8 +10,8 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.SwingUtilities;
 
+import tasks.TaskView;
 import tasks.TasksByNameComparator;
-import tasks.tasks.TaskView;
 
 class TaskListListModel extends AbstractListModel {
 	private static final long serialVersionUID = 1L;

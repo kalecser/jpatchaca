@@ -1,6 +1,5 @@
-package tasks.tasks.taskName;
+package tasks.taskName;
 
-import tasks.taskName.TaskNames;
 import basic.NonEmptyString;
 
 public class TaskNameFactory {

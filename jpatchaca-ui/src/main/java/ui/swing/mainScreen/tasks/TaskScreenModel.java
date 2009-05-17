@@ -1,7 +1,7 @@
 package ui.swing.mainScreen.tasks;
 
-import tasks.tasks.TaskData;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
+import tasks.home.TaskData;
 
 public interface TaskScreenModel {
 

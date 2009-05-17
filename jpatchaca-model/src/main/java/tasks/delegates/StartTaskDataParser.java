@@ -1,11 +1,10 @@
-package tasks;
+package tasks.delegates;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.time.DateUtils;
 
-import tasks.delegates.StartTaskData;
 import basic.NonEmptyString;
 
 public class StartTaskDataParser {

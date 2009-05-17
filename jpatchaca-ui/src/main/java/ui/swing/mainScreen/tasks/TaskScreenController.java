@@ -10,8 +10,8 @@ import lang.Maybe;
 
 import org.apache.commons.lang.StringUtils;
 
-import tasks.tasks.TaskData;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
+import tasks.home.TaskData;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
 import ui.swing.presenter.UIAction;

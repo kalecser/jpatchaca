@@ -1,4 +1,4 @@
-package tasks;
+package tasks.taskName;
 
 import lang.Maybe;
 
@@ -6,8 +6,8 @@ import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
 
-import tasks.tasks.Task;
-import tasks.tasks.taskName.TaskName;
+import tasks.ActiveTask;
+import tasks.Task;
 
 public class ActiveTaskName implements Signal<Maybe<TaskName>> {
 

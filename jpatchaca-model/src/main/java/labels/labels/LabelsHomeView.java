@@ -2,7 +2,7 @@ package labels.labels;
 
 import java.util.List;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import basic.Alert;
 
 

@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 
 import periods.Period;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public class TaskSummarizerImpl implements TaskSummarizer {
 

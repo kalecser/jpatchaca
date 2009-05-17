@@ -7,7 +7,7 @@ import java.util.List;
 
 import labels.LabelsSystem;
 import statistics.ProjectVelocityCalculator;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import basic.Formatter;
 
 public class LabelTooltipProviderImpl implements LabelTooltipProvider {

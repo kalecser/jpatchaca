@@ -32,8 +32,8 @@ import lang.Maybe;
 import org.reactive.Receiver;
 
 import tasks.ActiveTask;
-import tasks.tasks.Task;
-import tasks.tasks.TaskView;
+import tasks.Task;
+import tasks.TaskView;
 import ui.swing.mainScreen.dragAndDrop.TaskTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
 import ui.swing.tasks.SelectedTaskSource;

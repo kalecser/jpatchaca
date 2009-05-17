@@ -3,7 +3,6 @@ package tasks;
 import java.text.Collator;
 import java.util.Comparator;
 
-import tasks.tasks.TaskView;
 
 public class TasksByNameComparator implements Comparator<TaskView> {
 

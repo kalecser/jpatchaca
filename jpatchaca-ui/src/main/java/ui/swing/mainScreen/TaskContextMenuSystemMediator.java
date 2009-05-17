@@ -6,10 +6,10 @@ import labels.LabelsSystem;
 
 import org.picocontainer.Startable;
 
+import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
-import tasks.tasks.TaskView;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.users.LabelsUser;

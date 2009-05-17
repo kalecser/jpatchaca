@@ -3,7 +3,7 @@ package periodsInTasks;
 import java.util.Date;
 
 import periods.Period;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public interface PeriodsInTasksSystem {
 

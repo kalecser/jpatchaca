@@ -1,4 +1,4 @@
-package tasks.tasks;
+package tasks.home;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -9,8 +9,12 @@ import periods.Period;
 import periods.PeriodsFactory;
 import periods.impl.PeriodManagerImpl;
 import tasks.ActiveTask;
+import tasks.Task;
+import tasks.TaskView;
 import tasks.TasksListener;
-import tasks.tasks.taskName.TaskName;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
+import tasks.tasks.Tasks;
 import basic.Alert;
 import basic.AlertImpl;
 import basic.SystemClock;

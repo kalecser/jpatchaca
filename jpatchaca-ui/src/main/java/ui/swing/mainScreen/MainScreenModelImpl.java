@@ -9,9 +9,9 @@ import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
 
-import tasks.ActiveTaskName;
 import tasks.TasksSystem;
-import tasks.tasks.taskName.TaskName;
+import tasks.taskName.ActiveTaskName;
+import tasks.taskName.TaskName;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.options.OptionsScreen;
 import ui.swing.tasks.SelectedTaskSource;

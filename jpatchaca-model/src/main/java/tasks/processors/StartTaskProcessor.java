@@ -2,7 +2,7 @@ package tasks.processors;
 
 import java.io.Serializable;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;
 import events.Processor;

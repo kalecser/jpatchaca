@@ -2,7 +2,7 @@ package tasks.processors;
 
 import java.io.Serializable;
 
-import tasks.tasks.TasksHome;
+import tasks.home.TasksHome;
 import events.MovePeriodEvent;
 import events.Processor;
 import events.persistence.MustBeCalledInsideATransaction;

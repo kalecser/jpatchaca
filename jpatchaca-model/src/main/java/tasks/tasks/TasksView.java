@@ -2,6 +2,8 @@ package tasks.tasks;
 
 import java.util.List;
 
+import tasks.TaskView;
+
 import lang.Maybe;
 
 

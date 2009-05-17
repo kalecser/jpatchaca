@@ -1,4 +1,4 @@
-package tasks.tasks;
+package tasks.notes;
 
 import java.util.Date;
 

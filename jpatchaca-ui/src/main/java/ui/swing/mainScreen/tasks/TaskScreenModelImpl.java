@@ -1,9 +1,9 @@
 package ui.swing.mainScreen.tasks;
 
+import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.delegates.CreateTaskDelegate;
-import tasks.tasks.TaskData;
-import tasks.tasks.TaskView;
+import tasks.home.TaskData;
 import ui.swing.tasks.SelectedTaskSource;
 
 public class TaskScreenModelImpl implements TaskScreenModel {

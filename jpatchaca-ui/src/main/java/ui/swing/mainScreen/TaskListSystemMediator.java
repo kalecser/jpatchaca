@@ -4,9 +4,9 @@ import labels.LabelsSystem;
 
 import org.picocontainer.Startable;
 
+import tasks.TaskView;
 import tasks.TasksListener;
 import tasks.TasksSystem;
-import tasks.tasks.TaskView;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.users.SwingTasksUser;

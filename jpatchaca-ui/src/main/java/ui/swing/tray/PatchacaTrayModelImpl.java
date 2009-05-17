@@ -9,10 +9,10 @@ import lang.Maybe;
 import org.reactive.Signal;
 import org.reactive.Source;
 
-import tasks.ActiveTaskName;
+import tasks.TaskView;
 import tasks.TasksSystem;
-import tasks.tasks.TaskView;
-import tasks.tasks.taskName.TaskName;
+import tasks.taskName.ActiveTaskName;
+import tasks.taskName.TaskName;
 import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.mainScreen.tasks.TaskScreenController;

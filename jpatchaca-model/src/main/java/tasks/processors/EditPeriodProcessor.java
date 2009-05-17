@@ -3,7 +3,7 @@ package tasks.processors;
 import java.io.Serializable;
 
 import periods.Period;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import tasks.tasks.TasksView;
 import core.ObjectIdentity;
 import events.EditPeriodEvent;

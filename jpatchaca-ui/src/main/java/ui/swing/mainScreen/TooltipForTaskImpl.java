@@ -7,8 +7,8 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
 import statistics.ProjectVelocityCalculator;
-import tasks.tasks.NoteView;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
+import tasks.notes.NoteView;
 import basic.Formatter;
 
 public final class TooltipForTaskImpl implements TooltipForTask {

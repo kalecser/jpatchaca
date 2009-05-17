@@ -9,7 +9,7 @@ import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 class TaskListCellRenderer extends DefaultListCellRenderer{
 	private static final long serialVersionUID = 1L;

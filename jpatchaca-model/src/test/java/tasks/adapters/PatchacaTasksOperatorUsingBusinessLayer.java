@@ -11,13 +11,13 @@ import org.apache.commons.lang.time.DateUtils;
 
 import tasks.ActiveTask;
 import tasks.PatchacaTasksOperator;
+import tasks.Task;
+import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.delegates.CreateTaskDelegate;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
-import tasks.tasks.Task;
-import tasks.tasks.TaskData;
-import tasks.tasks.TaskView;
+import tasks.home.TaskData;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;
 import basic.mock.MockHardwareClock;

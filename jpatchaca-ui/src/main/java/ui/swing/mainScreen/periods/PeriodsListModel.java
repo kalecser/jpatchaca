@@ -1,7 +1,7 @@
 package ui.swing.mainScreen.periods;
 
 import periodsInTasks.PeriodsInTasksSystem;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public class PeriodsListModel {
 

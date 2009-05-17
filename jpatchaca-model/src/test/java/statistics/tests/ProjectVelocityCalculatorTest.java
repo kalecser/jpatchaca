@@ -8,7 +8,7 @@ import org.jmock.MockObjectTestCase;
 
 import statistics.ProjectVelocityCalculator;
 import statistics.ProjectVelocityCalculatorImpl;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 
 public class ProjectVelocityCalculatorTest extends MockObjectTestCase {

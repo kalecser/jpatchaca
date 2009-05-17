@@ -2,7 +2,7 @@ package statistics;
 
 import java.util.List;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public interface ProjectVelocityCalculator {
 

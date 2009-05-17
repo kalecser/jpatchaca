@@ -1,4 +1,4 @@
-package tasks.tasks.taskName;
+package tasks.taskName;
 
 import org.apache.commons.lang.Validate;
 

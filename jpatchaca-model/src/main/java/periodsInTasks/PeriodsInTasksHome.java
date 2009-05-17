@@ -3,7 +3,7 @@ package periodsInTasks;
 import java.util.List;
 
 import periods.Period;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 

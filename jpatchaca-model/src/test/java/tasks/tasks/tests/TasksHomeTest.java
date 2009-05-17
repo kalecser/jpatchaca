@@ -5,8 +5,8 @@ import org.jmock.MockObjectTestCase;
 
 import tasks.ActiveTask;
 import tasks.TasksListener;
+import tasks.home.TasksHomeImpl;
 import tasks.tasks.Tasks;
-import tasks.tasks.TasksHomeImpl;
 import basic.Subscriber;
 import basic.SystemClockImpl;
 import core.ObjectIdentity;

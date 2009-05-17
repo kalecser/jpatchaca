@@ -2,9 +2,9 @@ package tasks.processors;
 
 import java.io.Serializable;
 
-import tasks.tasks.NoteView;
-import tasks.tasks.NotesHome;
-import tasks.tasks.TasksHome;
+import tasks.home.TasksHome;
+import tasks.notes.NoteView;
+import tasks.notes.NotesHome;
 import events.AddNoteToTaskEvent;
 import events.Processor;
 import events.persistence.MustBeCalledInsideATransaction;

@@ -5,7 +5,7 @@ import labels.labels.LabelsHomeImpl;
 
 import org.jmock.MockObjectTestCase;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public class LabelsHomeTest extends MockObjectTestCase {
 

@@ -1,4 +1,4 @@
-package tasks.tasks;
+package tasks.home;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +14,9 @@ import periods.PeriodManager;
 import periods.PeriodsFactory;
 import periods.PeriodsListener;
 import tasks.NotesListener;
-import tasks.tasks.taskName.TaskName;
+import tasks.Task;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
 import basic.Alert;
 import basic.AlertImpl;
 import basic.NonEmptyString;

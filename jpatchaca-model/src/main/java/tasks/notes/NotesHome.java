@@ -1,4 +1,4 @@
-package tasks.tasks;
+package tasks.notes;
 
 import events.persistence.MustBeCalledInsideATransaction;
 

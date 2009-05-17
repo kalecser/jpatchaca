@@ -1,6 +1,6 @@
 package labels.labels;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public interface LabelsHome extends LabelsHomeView {	
 	void setLabelToTask(TaskView mockTask, String labelName);

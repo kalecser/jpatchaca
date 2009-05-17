@@ -3,7 +3,6 @@ package tasks.taskName;
 import org.junit.Assert;
 import org.junit.Test;
 
-import tasks.tasks.taskName.TaskNameFactory;
 
 public class TaskNameFactoryTest {
 

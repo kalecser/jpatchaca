@@ -2,7 +2,7 @@ package ui.swing.users;
 
 import javax.swing.JOptionPane;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.tasks.TaskExclusionScreen;
 import basic.UserOperationCancelledException;

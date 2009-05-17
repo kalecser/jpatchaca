@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tasks.delegates.CreateTaskDelegate;
-import tasks.tasks.TaskData;
+import tasks.home.TaskData;
 import basic.IdProvider;
 import basic.NonEmptyString;
 import basic.mock.MockIdProvider;

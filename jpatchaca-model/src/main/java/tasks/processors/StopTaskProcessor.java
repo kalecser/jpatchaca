@@ -2,7 +2,7 @@ package tasks.processors;
 
 import java.io.Serializable;
 
-import tasks.tasks.TasksHome;
+import tasks.home.TasksHome;
 import events.Processor;
 import events.StopTaskEvent;
 import events.persistence.MustBeCalledInsideATransaction;

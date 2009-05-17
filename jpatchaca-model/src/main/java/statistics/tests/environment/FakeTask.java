@@ -11,9 +11,9 @@ import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
 import tasks.NotesListener;
-import tasks.tasks.NoteView;
-import tasks.tasks.TaskView;
-import tasks.tasks.taskName.TaskName;
+import tasks.TaskView;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
 import basic.Alert;
 
 public class FakeTask implements TaskView {

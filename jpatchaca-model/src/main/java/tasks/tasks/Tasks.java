@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import lang.Maybe;
+import tasks.Task;
+import tasks.TaskView;
 import tasks.taskName.TaskNames;
 import basic.NonEmptyString;
 import core.ObjectIdentity;

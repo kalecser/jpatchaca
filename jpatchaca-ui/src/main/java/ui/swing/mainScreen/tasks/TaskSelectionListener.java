@@ -3,7 +3,7 @@
  */
 package ui.swing.mainScreen.tasks;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public interface TaskSelectionListener {
 

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import basic.Alert;
 import basic.AlertImpl;
 

@@ -1,6 +1,6 @@
 package ui.swing.users;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import basic.UserOperationCancelledException;
 
 public interface SwingTasksUser {

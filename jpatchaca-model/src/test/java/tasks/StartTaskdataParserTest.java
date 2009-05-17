@@ -4,8 +4,8 @@ import org.apache.commons.lang.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import tasks.StartTaskDataParser;
 import tasks.delegates.StartTaskData;
+import tasks.delegates.StartTaskDataParser;
 import basic.NonEmptyString;
 
 public class StartTaskdataParserTest {

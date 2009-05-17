@@ -5,8 +5,8 @@ import java.awt.PopupMenu;
 
 import org.reactive.Receiver;
 
-import tasks.tasks.TaskView;
-import tasks.tasks.taskName.TaskName;
+import tasks.TaskView;
+import tasks.taskName.TaskName;
 
 public class SpecialStartTaskSubMenu {
 

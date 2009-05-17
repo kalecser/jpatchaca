@@ -2,7 +2,7 @@ package ui.swing.mainScreen;
 
 import java.util.List;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 public interface TaskContextMenuModel {
 

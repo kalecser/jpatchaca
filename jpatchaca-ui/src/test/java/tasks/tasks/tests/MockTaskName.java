@@ -2,7 +2,7 @@ package tasks.tasks.tests;
 
 
 
-import tasks.tasks.taskName.TaskName;
+import tasks.taskName.TaskName;
 import basic.NonEmptyString;
 
 public class MockTaskName extends TaskName {

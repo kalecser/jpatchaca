@@ -9,8 +9,8 @@ import lang.Maybe;
 import org.reactive.Receiver;
 import org.reactive.Signal;
 
-import tasks.tasks.TaskView;
-import tasks.tasks.taskName.TaskName;
+import tasks.TaskView;
+import tasks.taskName.TaskName;
 
 public class StartTaskMenu {
 

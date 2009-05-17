@@ -5,7 +5,8 @@ import java.util.List;
 import org.reactive.Receiver;
 import org.reactive.Signal;
 
-import tasks.tasks.taskName.TaskName;
+import tasks.Task;
+import tasks.taskName.TaskName;
 
 class TaskNameUpdater {
 

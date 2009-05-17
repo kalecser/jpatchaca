@@ -1,4 +1,4 @@
-package tasks.tasks;
+package tasks.home;
 
 import basic.NonEmptyString;
 

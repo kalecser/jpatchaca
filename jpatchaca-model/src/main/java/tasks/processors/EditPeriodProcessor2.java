@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import periods.Period;
-import tasks.tasks.TaskView;
-import tasks.tasks.TasksHome;
+import tasks.TaskView;
+import tasks.home.TasksHome;
 import tasks.tasks.TasksView;
 import core.ObjectIdentity;
 import events.EditPeriodEvent2;

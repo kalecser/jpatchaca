@@ -24,8 +24,8 @@ import org.apache.commons.lang.time.DateUtils;
 import org.picocontainer.Startable;
 import org.reactive.Receiver;
 
-import tasks.tasks.TaskView;
-import tasks.tasks.taskName.TaskName;
+import tasks.TaskView;
+import tasks.taskName.TaskName;
 import wheel.io.ui.impl.SystemTrayNotSupported;
 import wheel.lang.Threads;
 import basic.Alert;

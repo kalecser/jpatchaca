@@ -1,7 +1,7 @@
 package tasks.persistence;
 
 import tasks.delegates.CreateTaskDelegate;
-import tasks.tasks.TaskData;
+import tasks.home.TaskData;
 
 public class MockCreateTaskDelegate extends CreateTaskDelegate {
 

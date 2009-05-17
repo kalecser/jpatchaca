@@ -11,9 +11,9 @@ import junit.framework.Assert;
 import periods.PatchacaPeriodsOperator;
 import periods.Period;
 import periodsInTasks.PeriodsInTasksSystem;
+import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.adapters.PatchacaTasksOperatorUsingBusinessLayer;
-import tasks.tasks.TaskView;
 
 public final class PatchacaPeriodsOperatorUsingBusinessLayer implements
 		PatchacaPeriodsOperator {

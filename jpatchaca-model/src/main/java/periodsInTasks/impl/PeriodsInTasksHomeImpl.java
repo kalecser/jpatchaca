@@ -7,8 +7,8 @@ import java.util.List;
 import periods.Period;
 import periodsInTasks.MonthYear;
 import periodsInTasks.PeriodsInTasksHome;
+import tasks.TaskView;
 import tasks.TasksSystem;
-import tasks.tasks.TaskView;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 

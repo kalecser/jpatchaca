@@ -1,4 +1,4 @@
-package tasks.tasks;
+package tasks;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.reactive.Signal;
 import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
-import tasks.NotesListener;
-import tasks.tasks.taskName.TaskName;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
 import basic.Alert;
 
 public interface TaskView {

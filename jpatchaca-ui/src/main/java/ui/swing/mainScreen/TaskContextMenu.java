@@ -10,7 +10,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import basic.Alert;
 import basic.AlertImpl;
 

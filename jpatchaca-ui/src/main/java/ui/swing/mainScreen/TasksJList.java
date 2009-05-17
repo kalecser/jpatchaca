@@ -9,7 +9,7 @@ import javax.swing.JList;
 import javax.swing.ListModel;
 
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 class TasksJList extends JList {
 

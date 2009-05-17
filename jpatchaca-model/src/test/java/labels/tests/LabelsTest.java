@@ -7,10 +7,10 @@ import main.TransientNonUIContainer;
 
 import org.jmock.MockObjectTestCase;
 
+import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.delegates.CreateTaskDelegate;
-import tasks.tasks.TaskData;
-import tasks.tasks.TaskView;
+import tasks.home.TaskData;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;
 import basic.Subscriber;

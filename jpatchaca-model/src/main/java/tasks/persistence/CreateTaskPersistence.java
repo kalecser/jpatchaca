@@ -5,7 +5,7 @@ import org.picocontainer.Startable;
 import basic.IdProvider;
 
 import tasks.delegates.CreateTaskDelegate;
-import tasks.tasks.TaskData;
+import tasks.home.TaskData;
 import ui.swing.mainScreen.Delegate;
 import events.CreateTaskEvent3;
 import events.EventsConsumer;

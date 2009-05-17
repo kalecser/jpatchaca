@@ -2,7 +2,7 @@ package ui.swing.tasks;
 
 import java.util.List;
 
-import tasks.StartTaskDataParser;
+import tasks.delegates.StartTaskDataParser;
 import tasks.delegates.StartTaskDelegate;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;

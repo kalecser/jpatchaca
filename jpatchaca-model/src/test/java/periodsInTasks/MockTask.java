@@ -10,12 +10,12 @@ import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
 import tasks.NotesListener;
-import tasks.tasks.NoteView;
-import tasks.tasks.taskName.TaskName;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
 import tasks.tasks.tests.MockTaskName;
 import basic.Alert;
 
-public class MockTask implements tasks.tasks.Task {
+public class MockTask implements tasks.Task {
 
 	private String name;
 	private Long startedMillisecondsAgo = null;

@@ -6,7 +6,7 @@ import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
 
-import tasks.tasks.taskName.TaskName;
+import tasks.taskName.TaskName;
 
 public class PatchacaTrayTooltip {
 

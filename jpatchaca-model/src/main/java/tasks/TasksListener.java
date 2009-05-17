@@ -1,6 +1,5 @@
 package tasks;
 
-import tasks.tasks.TaskView;
 
 public interface TasksListener {
 

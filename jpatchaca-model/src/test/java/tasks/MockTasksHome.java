@@ -1,10 +1,9 @@
 package tasks;
 
 import periods.Period;
-import tasks.tasks.NoteView;
-import tasks.tasks.TaskView;
-import tasks.tasks.TasksHome;
-import tasks.tasks.taskName.TaskName;
+import tasks.home.TasksHome;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
 import basic.Alert;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;

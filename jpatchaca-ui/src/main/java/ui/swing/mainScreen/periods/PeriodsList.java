@@ -25,7 +25,7 @@ import periods.Period;
 import periods.PeriodsListener;
 import periodsInTasks.PeriodsInTasksSystem;
 import swing.JXTableImproved;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;

@@ -1,6 +1,6 @@
 package tasks;
 
-import tasks.tasks.NoteView;
+import tasks.notes.NoteView;
 
 public interface NotesListener {
 

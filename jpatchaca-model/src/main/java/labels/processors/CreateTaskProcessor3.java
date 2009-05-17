@@ -3,7 +3,7 @@ package labels.processors;
 import java.io.Serializable;
 
 import labels.labels.LabelsHome;
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 import tasks.tasks.TasksView;
 import events.CreateTaskEvent3;
 import events.Processor;

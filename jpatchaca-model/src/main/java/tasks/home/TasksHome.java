@@ -1,12 +1,15 @@
-package tasks.tasks;
+package tasks.home;
 
 import periods.Period;
+import tasks.TaskView;
 import tasks.TasksListener;
-import tasks.tasks.taskName.TaskName;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
+import basic.Alert;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 
-public interface TasksHome extends TasksHomeView {
+public interface TasksHome {
 
 	void createTask(ObjectIdentity identity, TaskName taskName, Double budget)
 			throws MustBeCalledInsideATransaction;
@@ -32,5 +35,7 @@ public interface TasksHome extends TasksHomeView {
 	void stop(ObjectIdentity taskId) throws MustBeCalledInsideATransaction;
 
 	void addTasksListener(TasksListener tasksListener);
+
+	Alert taskListChangedAlert();
 
 }

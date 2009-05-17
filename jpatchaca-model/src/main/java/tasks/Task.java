@@ -1,9 +1,9 @@
-package tasks.tasks;
+package tasks;
 
 import periods.Period;
 import periods.PeriodsListener;
-import tasks.NotesListener;
-import tasks.tasks.taskName.TaskName;
+import tasks.notes.NoteView;
+import tasks.taskName.TaskName;
 
 public interface Task extends TaskView {
 

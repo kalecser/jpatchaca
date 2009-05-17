@@ -3,7 +3,7 @@ package statistics;
 import java.util.ArrayList;
 import java.util.List;
 
-import tasks.tasks.TaskView;
+import tasks.TaskView;
 
 
 public class ProjectVelocityCalculatorImpl implements ProjectVelocityCalculator {

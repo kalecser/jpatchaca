@@ -6,7 +6,7 @@ import lang.Maybe;
 
 
 import tasks.ActiveTask;
-import tasks.tasks.Task;
+import tasks.Task;
 import tasks.tasks.Tasks;
 import events.Processor;
 import events.StartTaskEvent2;

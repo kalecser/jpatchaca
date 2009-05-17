@@ -13,9 +13,9 @@ import labels.processors.SetSelectedLabelProcessor;
 import org.apache.commons.lang.Validate;
 import org.picocontainer.Startable;
 
+import tasks.TaskView;
 import tasks.TasksListener;
 import tasks.TasksSystem;
-import tasks.tasks.TaskView;
 import tasks.tasks.TasksView;
 import basic.Alert;
 import events.EventsSystem;

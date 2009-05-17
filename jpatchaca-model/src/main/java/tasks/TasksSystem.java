@@ -3,9 +3,8 @@ package tasks;
 import java.util.Date;
 
 import periods.Period;
-import tasks.tasks.TaskData;
-import tasks.tasks.TaskView;
-import tasks.tasks.TasksHome;
+import tasks.home.TaskData;
+import tasks.home.TasksHome;
 import basic.Alert;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;

@@ -1,9 +1,9 @@
 package tasks.processors;
 
-import tasks.tasks.TasksHome;
+import tasks.home.TasksHome;
+import tasks.taskName.TaskName;
+import tasks.taskName.TaskNameFactory;
 import tasks.tasks.TasksView;
-import tasks.tasks.taskName.TaskName;
-import tasks.tasks.taskName.TaskNameFactory;
 import basic.NonEmptyString;
 import core.ObjectIdentity;
 import events.CreateAndStartTask;

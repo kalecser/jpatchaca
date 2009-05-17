@@ -7,8 +7,8 @@ import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
 
-import tasks.tasks.TaskView;
-import tasks.tasks.taskName.TaskName;
+import tasks.TaskView;
+import tasks.taskName.TaskName;
 import ui.swing.tasks.SelectedTaskSource;
 
 public class SelectedTaskName extends Source<Maybe<TaskName>> implements
