@@ -5,7 +5,7 @@ import lang.Maybe;
 import org.reactive.Signal;
 import org.reactive.Source;
 
-public class ListSource<T> implements ListSignal2<T> {
+public class ListSource<T> implements ListSignal<T> {
 
 	
 	private Source<Integer> sizeSource = new Source<Integer>(0); 

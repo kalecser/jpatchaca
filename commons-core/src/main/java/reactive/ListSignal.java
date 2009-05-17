@@ -4,7 +4,7 @@ import lang.Maybe;
 
 import org.reactive.Signal;
 
-public interface ListSignal2<T> {
+public interface ListSignal<T> {
 
 	public Signal<Integer> size();
 
