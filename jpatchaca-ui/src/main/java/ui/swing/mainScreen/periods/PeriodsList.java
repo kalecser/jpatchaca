@@ -179,7 +179,6 @@ public class PeriodsList extends SimpleInternalFrame implements
 		}
 
 		this._selectedTask = selectedTask;
-		this.periodsTableModel.setTask(selectedTask);
 
 		if (_selectedTask == null) {
 			return;
@@ -229,9 +228,8 @@ public class PeriodsList extends SimpleInternalFrame implements
 	}
 
 	public void setSelectedPeriodTesting(final int index) {
-		this.periodsTable
-				.getSelectionModel()
-					.setSelectionInterval(index, index);
+		this.periodsTable.getSelectionModel()
+				.setSelectionInterval(index, index);
 
 	}
 
