@@ -3,6 +3,7 @@ package ui.swing.mainScreen;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -38,6 +39,7 @@ import ui.swing.mainScreen.dragAndDrop.TaskTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
+import ui.swing.utils.SwingUtils;
 import ui.swing.utils.UIEventsExecutor;
 import wheel.io.files.Directory;
 import basic.Alert;
@@ -65,10 +67,19 @@ public class TaskList extends JPanel {
 	class FireChangeListeners implements Runnable {
 
 		public void run() {
-			for (final TaskSelectionListener listener : listeners) {
-				listener.selectionChangedTo((TaskView) SelectedValueGetter
-						.getSelectedValueInSwingThread(tasksList));
-			}
+			final TaskView selectedValueInSwingThread = (TaskView) SelectedValueGetter
+					.getSelectedValueInSwingThread(tasksList);
+			selectedTask.supply(selectedValueInSwingThread);
+
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					for (final TaskSelectionListener listener : listeners) {
+						listener.selectionChangedTo(selectedValueInSwingThread);
+					}
+				}
+			});
 		}
 
 	}
@@ -205,7 +216,7 @@ public class TaskList extends JPanel {
 
 				@Override
 				public void run() {
-					selectedTaskChanged(e.getFirstIndex());
+					selectedTaskChanged(tasksList.getSelectedIndex());
 				}
 
 			});
@@ -215,11 +226,10 @@ public class TaskList extends JPanel {
 			fireTaskChangeListeners();
 
 			if (selectedIndex > -1) {
-				screenData.setSelectedTask(selectedIndex);
+				screenData.setSelectedTask(tasksListModel.getElementAt(
+						selectedIndex).name());
 				memory.mind(screenData);
 			}
-
-			selectedTask.supply((TaskView) tasksList.getSelectedValue());
 
 		}
 	}
@@ -267,9 +277,8 @@ public class TaskList extends JPanel {
 			@Override
 			public boolean canImport(final TransferSupport info) {
 				try {
-					final String data = (String) info
-							.getTransferable()
-								.getTransferData(DataFlavor.stringFlavor);
+					final String data = (String) info.getTransferable()
+							.getTransferData(DataFlavor.stringFlavor);
 					return data.startsWith("period -");
 				} catch (final Exception e) {
 				}
@@ -281,7 +290,7 @@ public class TaskList extends JPanel {
 			public boolean importData(final TransferSupport info) {
 				final Point point = info.getDropLocation().getDropPoint();
 				final int index = tasksList.locationToIndex(point);
-				dropTargetTask = (TaskView) tasksListModel.getElementAt(index);
+				dropTargetTask = tasksListModel.getElementAt(index);
 				movePeriodAlert.fire();
 				return true;
 			}
@@ -295,12 +304,33 @@ public class TaskList extends JPanel {
 
 	public void setTasks(final List<TaskView> tasks) {
 
+		if (EventQueue.isDispatchThread()) {
+			internalSetTasks(tasks);
+		} else {
+			SwingUtils.invokeAndWaitOrCry(new Runnable() {
+				@Override
+				public void run() {
+					internalSetTasks(tasks);
+				}
+			});
+		}
+	}
+
+	private void internalSetTasks(final List<TaskView> tasks) {
 		this.tasksListModel.setTasks(tasks);
 
 		final boolean hasElements = this.tasksListModel.getSize() > 0;
-		final boolean noneSelected = (this.tasksList.getSelectedIndex() == -1);
-		if (noneSelected && hasElements) {
-			this.tasksList.setSelectedIndex(screenData.getSelectedTask());
+		if (!hasElements) {
+			return;
+		}
+
+		final Maybe<TaskView> taskByName = tasksListModel
+				.getTaskByName(screenData.getSelectedTask());
+
+		if (taskByName != null) {
+			setSelectedTask(taskByName.unbox());
+		} else {
+			setSelectedTask(tasksListModel.getElementAt(0));
 		}
 
 		fireTaskChangeListeners();

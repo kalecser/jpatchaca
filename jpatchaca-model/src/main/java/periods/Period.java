@@ -17,14 +17,14 @@ public class Period {
 	private Date stop;
 	private Date day;
 	private Date month;
-	
-	public Period( final Date start) {
-		
+
+	public Period(final Date start) {
+
 		this.changeAlert = new AlertImpl();
 		this.year = new Source<Integer>(getYear(start));
-		
+
 		Validate.notNull(start);
-		
+
 		setStart(start);
 	}
 
@@ -35,7 +35,7 @@ public class Period {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
-		
+
 		return cal.getTime();
 	}
 
@@ -45,29 +45,31 @@ public class Period {
 		final int year = calendar.get(Calendar.YEAR);
 		return year;
 	}
-	
+
 	public Period(final Date start, final Date stop) {
-		
+
 		this(start);
 		this.stop = stop;
 	}
-	
+
 	public synchronized void setStart(final Date start) {
-		
+
 		this.start = start;
-		if (start == null)
+		if (start == null) {
 			return;
-		
+		}
+
 		final int newYear = getYear(start);
-		if (newYear != getYear(this.start))
+		if (newYear != getYear(this.start)) {
 			year.supply(newYear);
-		
+		}
+
 		this.day = extractDay(start);
 		this.month = extractMonth(start);
-		
+
 		this.changeAlert.fire();
 	}
-	
+
 	private Date extractMonth(final Date start2) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(start2);
@@ -76,7 +78,7 @@ public class Period {
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-		
+
 		return cal.getTime();
 	}
 
@@ -85,7 +87,7 @@ public class Period {
 		this.changeAlert.fire();
 	}
 
-	public synchronized  Date startTime() {
+	public synchronized Date startTime() {
 		return this.start;
 	}
 
@@ -94,9 +96,10 @@ public class Period {
 	}
 
 	public double getMiliseconds() {
-		if (this.stop == null)
+		if (this.stop == null) {
 			return 0.0;
-			
+		}
+
 		return this.stop.getTime() - this.start.getTime();
 	}
 
@@ -106,9 +109,8 @@ public class Period {
 
 	public Date getMonth() {
 		return month;
-	}	
-	
-	
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -120,36 +122,46 @@ public class Period {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final Period other = (Period) obj;
 		if (start == null) {
-			if (other.start != null)
+			if (other.start != null) {
 				return false;
-		} else if (!start.equals(other.start))
+			}
+		} else if (!start.equals(other.start)) {
 			return false;
+		}
 		if (stop == null) {
-			if (other.stop != null)
+			if (other.stop != null) {
 				return false;
-		} else if (!stop.equals(other.stop))
+			}
+		} else if (!stop.equals(other.stop)) {
 			return false;
+		}
 		return true;
 	}
 
 	@Override
-	public String toString() {		
-		final String stopString = (this.stop == null?"":this.stop.toString());
-		return "Period: " + this.start + " - " + stopString + " " + super.toString();
+	public String toString() {
+		final String stopString = (this.stop == null ? "" : this.stop
+				.toString());
+		return "Period: " + this.start + " - " + stopString + " "
+				+ super.toString();
 	}
-	
+
 	public Long totalTime() {
-		if (this.endTime() == null)
+		if (this.endTime() == null) {
 			return 0L;
-		
+		}
+
 		return this.endTime().getTime() - this.startTime().getTime();
 	}
 
@@ -166,12 +178,11 @@ public class Period {
 	}
 
 	public void subscribe(final Subscriber subscriber) {
-		changeAlert.subscribe(subscriber);	
+		changeAlert.subscribe(subscriber);
 	}
 
 	public void unsubscribe(final Subscriber subscriber) {
-		changeAlert.unsubscribe(subscriber);		
+		changeAlert.unsubscribe(subscriber);
 	}
 
-	
 }

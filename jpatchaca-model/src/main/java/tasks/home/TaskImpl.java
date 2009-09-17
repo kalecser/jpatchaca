@@ -13,6 +13,7 @@ import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsFactory;
 import periods.PeriodsListener;
+import reactive.ListSignal;
 import tasks.NotesListener;
 import tasks.Task;
 import tasks.notes.NoteView;
@@ -220,6 +221,11 @@ class TaskImpl implements Task {
 		this._active = true;
 		this.changedAlert.fire();
 
+	}
+
+	@Override
+	public ListSignal<Period> periodsList() {
+		return periodManager().periodsList();
 	}
 
 }

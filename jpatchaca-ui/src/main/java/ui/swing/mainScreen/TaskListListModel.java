@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
-import javax.swing.SwingUtilities;
 
+import lang.Maybe;
 import tasks.TaskView;
 import tasks.TasksByNameComparator;
 
@@ -18,7 +18,7 @@ class TaskListListModel extends AbstractListModel {
 	private final List<TaskView> tasks = new ArrayList<TaskView>();
 
 	@Override
-	public Object getElementAt(final int index) {
+	public TaskView getElementAt(final int index) {
 
 		if (index >= tasks.size()) {
 			return null;
@@ -33,24 +33,29 @@ class TaskListListModel extends AbstractListModel {
 	}
 
 	public void setTasks(final List<TaskView> tasks) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				final int oldSize = TaskListListModel.this.tasks.size();
-				TaskListListModel.this.tasks.clear();
-				TaskListListModel.this.tasks.addAll(tasks);
-				Collections.sort(TaskListListModel.this.tasks,
-						new TasksByNameComparator());
 
-				final int newSize = TaskListListModel.this.tasks.size();
-				if (oldSize > newSize) {
-					fireIntervalRemoved(this, oldSize - newSize - 1,
-							oldSize - 1);
-				}
+		final int oldSize = TaskListListModel.this.tasks.size();
+		TaskListListModel.this.tasks.clear();
+		TaskListListModel.this.tasks.addAll(tasks);
+		Collections.sort(TaskListListModel.this.tasks,
+				new TasksByNameComparator());
 
-				fireContentsChanged(this, 0, newSize - 1);
+		final int newSize = TaskListListModel.this.tasks.size();
+		if (oldSize > newSize) {
+			fireIntervalRemoved(this, oldSize - newSize - 1, oldSize - 1);
+		}
+
+		fireContentsChanged(this, 0, newSize - 1);
+	}
+
+	public Maybe<TaskView> getTaskByName(final String selectedTask) {
+
+		for (final TaskView task : tasks) {
+			if (task.name().equals(selectedTask)) {
+				return Maybe.wrap(task);
 			}
-		});
+		}
+		return null;
 	}
 
 }

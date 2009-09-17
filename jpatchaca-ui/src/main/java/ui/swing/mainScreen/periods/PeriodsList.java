@@ -18,6 +18,7 @@ import javax.swing.TransferHandler;
 import javax.swing.table.TableColumnModel;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.SortOrder;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 import org.jdesktop.swingx.renderer.StringValue;
 
@@ -31,16 +32,12 @@ import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
-import basic.Alert;
-import basic.AlertImpl;
 import basic.HardwareClock;
-import basic.Subscriber;
 
 @SuppressWarnings("serial")
 public class PeriodsList extends SimpleInternalFrame implements
 		TaskSelectionListener {
 
-	private final AlertImpl removePeriodAlert;
 	private JXTable periodsTable;
 	private JButton addPeriodButton;
 	private JButton removePeriodButton;
@@ -63,23 +60,12 @@ public class PeriodsList extends SimpleInternalFrame implements
 		this.periodsSystem = periodsInTasks;
 		this.periodsTableModel = periodsTableModel;
 		this.machineClock = machineClock;
-		this.model = new PeriodsListModel(periodsSystem);
+		this.model = new PeriodsListModel(periodsSystem, selectedTaskSource);
 
 		initialize();
 		listScrollListener = listScrollListener();
 
-		this.removePeriodAlert = new AlertImpl();
-
 		tasksList.addTaskSelectionListener(this);
-
-		// bug: I don't like it!
-		removePeriodAlert().subscribe(new Subscriber() {
-
-			public void fire() {
-				model.removePeriod(selectedTaskSource.currentValue(),
-						selectedPeriodIndex());
-			}
-		});
 
 	}
 
@@ -113,7 +99,10 @@ public class PeriodsList extends SimpleInternalFrame implements
 				.addActionListener(new java.awt.event.ActionListener() {
 
 					public void actionPerformed(final ActionEvent e) {
-						PeriodsList.this.removePeriodAlert.fire();
+						model.removePeriod(periodsTableModel
+								.getPeriod(periodsTable
+										.convertRowIndexToModel(periodsTable
+												.getSelectedRow())));
 					}
 				});
 
@@ -129,7 +118,8 @@ public class PeriodsList extends SimpleInternalFrame implements
 		this.periodsTable.getSelectionModel().setSelectionMode(
 				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-		periodsTable.setSortable(false);
+		periodsTable.setSortable(true);
+		periodsTable.setSortOrder(0, SortOrder.DESCENDING);
 
 		configureDragAndDropStuff();
 		adjustColumnsAppearance(this.periodsTable);
@@ -184,7 +174,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 			return;
 		}
 
-		selectAndScrollToRow(0);
+		// selectAndScrollToRow(0);
 		selectedTask.addPeriodsListener(listScrollListener);
 	}
 
@@ -214,6 +204,11 @@ public class PeriodsList extends SimpleInternalFrame implements
 	}
 
 	void selectAndScrollToRow(final int row) {
+
+		if (row > periodsTable.getRowCount()) {
+			return;
+		}
+
 		this.periodsTable.getSelectionModel().setSelectionInterval(row, row);
 		this.periodsTable.scrollRectToVisible(this.periodsTable.getCellRect(
 				row, 0, true));
@@ -224,7 +219,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 		if (selectedRow == -1) {
 			return null;
 		}
-		return this.periodsTableModel.getPeriodAt(selectedRow);
+		return this.periodsTableModel.getPeriod(selectedRow);
 	}
 
 	public void setSelectedPeriodTesting(final int index) {
@@ -235,10 +230,6 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 	public void clickOnAddPediodButton() {
 		addPeriodButton.doClick();
-	}
-
-	public Alert removePeriodAlert() {
-		return removePeriodAlert;
 	}
 
 	private void addPeriod() {
@@ -257,15 +248,10 @@ public class PeriodsList extends SimpleInternalFrame implements
 			@Override
 			public void run() {
 				final TaskView selectedTask = selectedTaskSource.currentValue();
-				new Thread() {
 
-					@Override
-					public void run() {
-						final Period newPeriod = new Period(machineClock
-								.getTime());
-						periodsSystem.addPeriod(selectedTask, newPeriod);
-					}
-				}.start();
+				final Period newPeriod = new Period(machineClock.getTime());
+				periodsSystem.addPeriod(selectedTask, newPeriod);
+
 			}
 		});
 	}

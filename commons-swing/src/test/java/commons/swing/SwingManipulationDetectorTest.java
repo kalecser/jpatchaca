@@ -25,7 +25,7 @@ public final class SwingManipulationDetectorTest {
 	public void testSwingManipulationDetector() {
 		SwingManipulationChecker detector = new SwingManipulationChecker();
 		List<String> detected = detector
-				.detect(SwingManipulationDetectorTest.class);
+				.detectIllegalSwingManipulations(SwingManipulationDetectorTest.class);
 
 		Assert.assertArrayEquals(
 				new String[] { 

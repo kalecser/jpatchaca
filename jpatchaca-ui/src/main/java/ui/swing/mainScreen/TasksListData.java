@@ -3,28 +3,28 @@
  */
 package ui.swing.mainScreen;
 
-public class TasksListData{		
-	private int selectedTask = 0;
+public class TasksListData {
+	private String selectedTaskName = "";
 	private int selectedLabel = 0;
 
-	public TasksListData(int selectedTask, int selectedlabel) {
-		this.selectedTask = selectedTask;
+	public TasksListData(final String selectedTaskName, final int selectedlabel) {
+		this.selectedTaskName = selectedTaskName;
 		this.selectedLabel = selectedlabel;
 	}
-	
-	public TasksListData(){
-		
+
+	public TasksListData() {
+
 	}
 
-	public int getSelectedTask() {
-		return selectedTask;
+	public String getSelectedTask() {
+		return selectedTaskName;
 	}
 
-	public void setSelectedTask(int selectedTask) {
-		this.selectedTask = selectedTask;
+	public void setSelectedTask(final String selectedTaskName) {
+		this.selectedTaskName = selectedTaskName;
 	}
 
-	public void setSelectedLabel(int selectedIndex) {
+	public void setSelectedLabel(final int selectedIndex) {
 		this.selectedLabel = selectedIndex;
 	}
 
@@ -33,29 +33,27 @@ public class TasksListData{
 	}
 
 	public String encodeAsString() {
-		return 
-			selectedTask + "\n" +
-			selectedLabel;
+		return selectedTaskName + "\n" + selectedLabel;
 	}
 
-	public static TasksListData decode(String encoded) {
-		String[] tokens = encoded.split("\n");
-		
-		TasksListData decoded = new TasksListData();
+	public static TasksListData decode(final String encoded) {
+		final String[] tokens = encoded.split("\n");
 
-			try {
-				if (tokens.length > 0){
-					decoded.setSelectedTask(Integer.parseInt(tokens[0]));
-				}
-				
-				if (tokens.length > 1){
-					decoded.setSelectedLabel(Integer.parseInt(tokens[1]));
-				}
-			} catch (NumberFormatException e) {
-				return new TasksListData(); 
+		final TasksListData decoded = new TasksListData();
+
+		try {
+			if (tokens.length > 0) {
+				decoded.setSelectedTask(tokens[0]);
 			}
-		
+
+			if (tokens.length > 1) {
+				decoded.setSelectedLabel(Integer.parseInt(tokens[1]));
+			}
+		} catch (final NumberFormatException e) {
+			return new TasksListData();
+		}
+
 		return decoded;
 	}
-	
+
 }

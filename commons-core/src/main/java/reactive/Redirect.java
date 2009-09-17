@@ -6,20 +6,23 @@ package reactive;
 import org.reactive.Receiver;
 import org.reactive.Source;
 
-final class Redirect<T> implements Receiver<T> {
+final class Redirect<T> extends Source<T> implements Receiver<T>{
 	
-	private final Source<T> target;
 
-	public Redirect(Source<T> target){
-		this.target = target;
+	public Redirect(){
+		super(null);
 	}
 	
+	public Redirect(T value) {
+		super(value);
+	}
+
 	@Override
 	public void receive(T value) {
 		if (value == null){
-			target.supply(null);
+			supply(null);
 			return;
 		}
-		target.supply(value);
+		supply(value);
 	}
 }

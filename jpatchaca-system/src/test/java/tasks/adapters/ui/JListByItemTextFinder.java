@@ -22,23 +22,24 @@ public class JListByItemTextFinder implements ComponentChooser {
 	 * @param text
 	 *            a text pattern
 	 */
-	public JListByItemTextFinder(String text) {
+	public JListByItemTextFinder(final String text) {
 		this(text, Operator.getDefaultStringComparator());
 	}
-	
+
 	/**
 	 * Constructs JListByItemTextFinder.
 	 * 
 	 * @param text
 	 *            a text pattern
-	 * @param comparator specifies string comparision algorithm.
+	 * @param comparator
+	 *            specifies string comparision algorithm.
 	 */
-	public JListByItemTextFinder(String text, StringComparator comparator) {
+	public JListByItemTextFinder(final String text,
+			final StringComparator comparator) {
 		this.text = text;
 		this.comparator = Operator.getDefaultStringComparator();
 
 	}
-	
 
 	@Override
 	public String getDescription() {
@@ -46,7 +47,7 @@ public class JListByItemTextFinder implements ComponentChooser {
 	}
 
 	@Override
-	public boolean checkComponent(Component comp) {
+	public boolean checkComponent(final Component comp) {
 		if (comp instanceof JList) {
 			if (text == null) {
 				return (true);
@@ -54,13 +55,11 @@ public class JListByItemTextFinder implements ComponentChooser {
 			final int size = ((JList) comp).getModel().getSize();
 
 			for (int i = 0; i < size; i++) {
-				final boolean found = 
-					comparator.equals(
-						((JList)comp).getModel().
-							getElementAt(i).toString(),
-							text);
-				if (found)
+				final boolean found = comparator.equals(((JList) comp)
+						.getModel().getElementAt(i).toString(), text);
+				if (found) {
 					return true;
+				}
 			}
 
 		}

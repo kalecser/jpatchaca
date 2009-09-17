@@ -3,6 +3,7 @@
  */
 package ui.swing.mainScreen;
 
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.MouseEvent;
@@ -14,6 +15,7 @@ import javax.swing.DropMode;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
 
+import ui.swing.utils.SwingUtils;
 import basic.Alert;
 import basic.AlertImpl;
 
@@ -101,6 +103,19 @@ public class LabelsList extends JList {
 
 	public void setLabels(final List<String> labels) {
 
+		if (EventQueue.isDispatchThread()) {
+			internalSetLabels(labels);
+		} else {
+			SwingUtils.invokeAndWaitOrCry(new Runnable() {
+				@Override
+				public void run() {
+					internalSetLabels(labels);
+				}
+			});
+		}
+	}
+
+	private void internalSetLabels(final List<String> labels) {
 		int selectedLabel = preferredIndex;
 		this.model.clear();
 		int i = 0;

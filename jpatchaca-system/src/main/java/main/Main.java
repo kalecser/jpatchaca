@@ -74,6 +74,7 @@ import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.options.OptionsScreen;
 import ui.swing.options.OptionsScreenModelImpl;
 import ui.swing.presenter.Presenter;
+import ui.swing.tasks.SelectedTaskPeriods;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
 import ui.swing.tasks.StartTaskScreen;
@@ -223,6 +224,7 @@ public class Main {
 		container.addComponent(OptionsScreenModelImpl.class);
 		container.addComponent(SwinglabelsUser.class);
 		container.addComponent(SelectedTaskSource.class);
+		container.addComponent(SelectedTaskPeriods.class);
 		container.addComponent(SelectedTaskName.class);
 		container.addComponent(TaskList.class);
 		container.addComponent(TaskListModel.class, TaskListModelImpl.class);

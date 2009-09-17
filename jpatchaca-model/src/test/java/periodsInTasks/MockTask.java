@@ -9,6 +9,8 @@ import org.reactive.Source;
 import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
+import periods.impl.PeriodManagerImpl;
+import reactive.ListSignal;
 import tasks.NotesListener;
 import tasks.notes.NoteView;
 import tasks.taskName.TaskName;
@@ -21,6 +23,7 @@ public class MockTask implements tasks.Task {
 	private Long startedMillisecondsAgo = null;
 	private boolean stopped;
 	private final Source<TaskName> nameSignal;
+	private final PeriodManagerImpl periodsManager;
 
 	public MockTask() {
 		this("empty");
@@ -30,6 +33,7 @@ public class MockTask implements tasks.Task {
 		this.name = string;
 		nameSignal = new Source<TaskName>(null);
 		nameSignal.supply(new MockTaskName(string));
+		periodsManager = new PeriodManagerImpl();
 	}
 
 	@Override
@@ -46,8 +50,7 @@ public class MockTask implements tasks.Task {
 
 	@Override
 	public void addPeriod(final Period period) {
-		// Auto-generated method stub
-
+		periodsManager.addPeriod(period);
 	}
 
 	@Override
@@ -203,6 +206,11 @@ public class MockTask implements tasks.Task {
 
 	public void assertStopped() {
 		Assert.assertTrue(stopped);
+	}
+
+	@Override
+	public ListSignal<Period> periodsList() {
+		return periodsManager.periodsList();
 	}
 
 }

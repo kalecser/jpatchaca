@@ -29,9 +29,9 @@ public class ListSource<T> implements ListSignal<T> {
 		sizeSource.supply(size);
 	}
 
-	public synchronized Signal<Maybe<T>> get(Signal<Integer> source) {
+	public synchronized Signal<Maybe<T>> get(int index) {
 		
-		return new ListElementSignal<T>(source, signalByIndex).output();
+		return signalByIndex.get(index);
 
 	}
 
@@ -40,8 +40,13 @@ public class ListSource<T> implements ListSignal<T> {
 		return value.currentValue();
 	}
 
-	public synchronized void remove(int i) {
-		signalByIndex.supply(i, null);	
+	public synchronized void remove(int index) {
+		
+		for (int i = index; i < currentSize() - 1; i++){
+			signalByIndex.supply(i, currentGet(i + 1).unbox());				
+		}
+		
+		
 		sizeSource.supply(sizeSource.currentValue() - 1);
 	}
 

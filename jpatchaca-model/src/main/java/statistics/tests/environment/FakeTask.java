@@ -10,6 +10,7 @@ import org.reactive.Signal;
 import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
+import reactive.ListSignal;
 import tasks.NotesListener;
 import tasks.TaskView;
 import tasks.notes.NoteView;
@@ -133,6 +134,12 @@ public class FakeTask implements TaskView {
 	@Override
 	public long totalTimeInMillis() {
 		throw new RuntimeException("Not expected");
+	}
+
+	@Override
+	public ListSignal<Period> periodsList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

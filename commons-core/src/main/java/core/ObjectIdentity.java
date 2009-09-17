@@ -9,7 +9,7 @@ public class ObjectIdentity implements Serializable {
 	private final String id;
 
 	public ObjectIdentity(String id) {
-		this.id = id;
+		this.id = id ;
 
 	}
 

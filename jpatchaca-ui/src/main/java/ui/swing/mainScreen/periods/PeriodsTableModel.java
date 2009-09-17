@@ -6,9 +6,9 @@ package ui.swing.mainScreen.periods;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -20,10 +20,10 @@ import org.apache.commons.lang.time.DateUtils;
 import org.reactive.Receiver;
 
 import periods.Period;
-import periods.PeriodsListener;
 import periodsInTasks.PeriodsInTasksSystem;
 import tasks.TaskView;
 import tasks.TasksSystem;
+import ui.swing.tasks.SelectedTaskPeriods;
 import ui.swing.tasks.SelectedTaskSource;
 import basic.Formatter;
 import basic.Subscriber;
@@ -38,19 +38,53 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private final TasksSystem tasksSystem;
 	private final PeriodsInTasksSystem periodsSystem;
-	private PeriodsListener periodsListener;
 	private final Formatter formatter;
 
 	private TaskView _task = null;
+	private final SelectedTaskPeriods selectedTaskperiods;
+
+	Map<Integer, Subscriber> periodSubscriberByRow = new LinkedHashMap<Integer, Subscriber>();
+
+	private final AtomicInteger size = new AtomicInteger(0);
 
 	public PeriodsTableModel(final TasksSystem tasksSystem,
 			final PeriodsInTasksSystem periodsSystem,
-			final Formatter formatter, final SelectedTaskSource selectedTask) {
+			final Formatter formatter, final SelectedTaskSource selectedTask,
+			final SelectedTaskPeriods selectedTaskperiods) {
 		this.tasksSystem = tasksSystem;
 		this.periodsSystem = periodsSystem;
 		this.formatter = formatter;
+		this.selectedTaskperiods = selectedTaskperiods;
 
 		bindToSelectedTask(selectedTask);
+
+		selectedTaskperiods.size().addReceiver(new Receiver<Integer>() {
+			@Override
+			public void receive(final Integer value) {
+
+				final int currentSize = size.intValue();
+
+				updateTableSizeInSwingThread(value, currentSize);
+
+				size.set(value);
+			}
+
+			private void updateTableSizeInSwingThread(final Integer value,
+					final int currentSize) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if (value > currentSize) {
+							fireTableRowsInserted(size.intValue(), value - 1);
+						}
+
+						if (value < currentSize) {
+							fireTableRowsDeleted(value + 1, size.intValue());
+						}
+					}
+				});
+			}
+		});
 
 	}
 
@@ -66,14 +100,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 	}
 
 	public int getRowCount() {
-		if (this._task == null) {
-			return 0;
-		}
-		return this._task.periods().size();
-	}
-
-	public Period getPeriodAt(final int rowIndex) {
-		return periodForRowIndex(rowIndex);
+		return this.selectedTaskperiods.currentSize();
 	}
 
 	public int getColumnCount() {
@@ -83,14 +110,26 @@ public class PeriodsTableModel extends AbstractTableModel {
 	public synchronized Object getValueAt(final int rowIndex,
 			final int columnIndex) {
 
-		if (this._task == null) {
-			return "";
+		final Period period = selectedTaskperiods.currentGet(rowIndex);
+
+		if (!periodSubscriberByRow.containsKey(rowIndex)) {
+			periodSubscriberByRow.put(rowIndex, new Subscriber() {
+				@Override
+				public void fire() {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							fireTableRowsUpdated(rowIndex, rowIndex);
+						}
+					});
+				}
+			});
 		}
 
-		final Period period = periodForRowIndex(rowIndex);
+		period.subscribe(periodSubscriberByRow.get(rowIndex));
 
 		if (columnIndex == 0) {
-			return formatter.formatShortDateWithWeekday(period.startTime());
+			return new ShortDateWithWeekDay(formatter, period.startTime());
 		}
 		if (columnIndex == 1) {
 			return formatter.formatShortTime(period.startTime());
@@ -114,19 +153,6 @@ public class PeriodsTableModel extends AbstractTableModel {
 		}
 	}
 
-	private Period periodForRowIndex(final int rowIndex) {
-
-		return _task.periodAt(rowToIndex(rowIndex));
-	}
-
-	private int rowToIndex(final int row) {
-		final int periodsCount = _task.periodsCount();
-		if (periodsCount == 0) {
-			throw new RuntimeException("No periods in task");
-		}
-		return periodsCount - row - 1;
-	}
-
 	@Override
 	public String getColumnName(final int column) {
 		return PeriodsTableModel.columnNames[column];
@@ -144,14 +170,13 @@ public class PeriodsTableModel extends AbstractTableModel {
 			throw new RuntimeException("invalid row -1");
 		}
 
-		final int rowToIndex = rowToIndex(row);
-		enqueueSetValueAt(value, row, column, rowToIndex);
+		enqueueSetValueAt(value, row, column);
 
 	}
 
 	private void enqueueSetValueAt(final Object value, final int row,
-			final int column, final int rowToIndex) {
-		if (rowToIndex == -1) {
+			final int column) {
+		if (row == -1) {
 			JOptionPane.showMessageDialog(null, "No row to edit");
 		}
 
@@ -162,8 +187,8 @@ public class PeriodsTableModel extends AbstractTableModel {
 				if (column == 0) {
 					final Maybe<Date> parseDate = parseDate(value);
 					if (parseDate != null) {
-						periodsSystem.editPeriodDay(_task, rowToIndex,
-								parseDate.unbox());
+						periodsSystem.editPeriodDay(_task, row, parseDate
+								.unbox());
 					}
 				}
 
@@ -171,16 +196,16 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 					final Maybe<Date> parseEditTime = parseEditTime(value, row);
 					if (parseEditTime != null) {
-						tasksSystem.setPeriodStarting(_task, rowToIndex,
-								parseEditTime.unbox());
+						tasksSystem.setPeriodStarting(_task, row, parseEditTime
+								.unbox());
 					}
 				}
 
 				if (column == 2) {
 					final Maybe<Date> parseEditTime = parseEditTime(value, row);
 					if (parseEditTime != null) {
-						tasksSystem.setPeriodEnding(_task, rowToIndex,
-								parseEditTime.unbox());
+						tasksSystem.setPeriodEnding(_task, row, parseEditTime
+								.unbox());
 					}
 				}
 			}
@@ -208,7 +233,8 @@ public class PeriodsTableModel extends AbstractTableModel {
 	private Maybe<Date> parseEditTime(final Object value, final int row) {
 		try {
 			final String insertedDateString = formatter
-					.formatShortDate(periodForRowIndex(row).startTime())
+					.formatShortDate(selectedTaskperiods.currentGet(row)
+							.startTime())
 					+ " " + (String) value;
 
 			return Maybe.wrap(formatter.parseShortDateTime(insertedDateString));
@@ -220,10 +246,6 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private final void setTask(final TaskView task) {
 
-		if (this._task != null) {
-			this._task.removePeriodListener(periodsListener);
-		}
-
 		this._task = task;
 		fireTableDataChanged();
 
@@ -231,90 +253,10 @@ public class PeriodsTableModel extends AbstractTableModel {
 			return;
 		}
 
-		if (periodsListener != null) {
-			periodsListener.clean();
-		}
-
-		periodsListener = createPeriodsListener();
-		task.addPeriodsListener(periodsListener);
 	}
 
-	private PeriodsListener createPeriodsListener() {
-		return new PeriodsListener() {
-			private final Map<Period, Subscriber> subscribers = new HashMap<Period, Subscriber>();
-
-			public void periodAdded(final Period period) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						add(period);
-					}
-				});
-			}
-
-			public void periodRemoved(final Period period) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						remove(period);
-					}
-				});
-
-			}
-
-			private synchronized void remove(final Period period) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						fireTableDataChanged();
-						removeSubscriber(period);
-					}
-				});
-
-			}
-
-			private synchronized void removeSubscriber(final Period period) {
-				final Subscriber subscriber = subscribers.remove(period);
-				if (subscriber != null) {
-					period.unsubscribe(subscriber);
-				}
-			}
-
-			private synchronized void add(final Period period) {
-
-				final int affectedRow = rowToIndex(_task.periods().size() - 1);
-				final Subscriber subscriber = new Subscriber() {
-					@Override
-					public void fire() {
-
-						SwingUtilities.invokeLater(new Runnable() {
-
-							@Override
-							public void run() {
-
-								fireTableRowsUpdated(affectedRow, affectedRow);
-							}
-						});
-
-					}
-				};
-
-				period.subscribe(subscriber);
-				fireTableRowsInserted(affectedRow, affectedRow);
-
-				subscribers.put(period, subscriber);
-
-			}
-
-			@Override
-			public synchronized void clean() {
-				for (final Period period : new HashSet<Period>(subscribers
-						.keySet())) {
-					removeSubscriber(period);
-				}
-
-			}
-		};
+	public Period getPeriod(final int selectedRow) {
+		return selectedTaskperiods.currentGet(selectedRow);
 	}
 
 }

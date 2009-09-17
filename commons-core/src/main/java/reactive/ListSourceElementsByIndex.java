@@ -13,7 +13,7 @@ class ListSourceElementsByIndex<T> {
 
 	public Map<Integer, Source<Maybe<T>>> sourceByIndex = new LinkedHashMap<Integer, Source<Maybe<T>>>();
 	
-	public Signal<Maybe<T>> get(Integer index) {
+	public synchronized Signal<Maybe<T>> get(Integer index) {
 		
 		if (!sourceByIndex.containsKey(index))
 			sourceByIndex.put(index, new Source<Maybe<T>>(null));
@@ -21,7 +21,7 @@ class ListSourceElementsByIndex<T> {
 		return sourceByIndex.get(index);
 	}
 	
-	public int indexOf(T value){
+	public synchronized int indexOf(T value){
 		int i = 0;
 		for (Map.Entry<Integer, Source<Maybe<T>>> entry : sourceByIndex.entrySet()){
 			Maybe<T> entryValue = entry.getValue().currentValue();
@@ -34,7 +34,7 @@ class ListSourceElementsByIndex<T> {
 		return -1;
 	}
 	
-	public void supply(int index, T value){
+	public synchronized void supply(int index, T value){
 		if (!sourceByIndex.containsKey(index))
 			sourceByIndex.put(index, new Source<Maybe<T>>(null));
 		

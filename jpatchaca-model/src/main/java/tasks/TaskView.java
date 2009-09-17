@@ -7,6 +7,7 @@ import org.reactive.Signal;
 import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
+import reactive.ListSignal;
 import tasks.notes.NoteView;
 import tasks.taskName.TaskName;
 import basic.Alert;
@@ -55,5 +56,7 @@ public interface TaskView {
 	void addNotesListener(NotesListener listener);
 
 	void removeNotesListener(NotesListener listener);
+
+	ListSignal<Period> periodsList();
 
 }

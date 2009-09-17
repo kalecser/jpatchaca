@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class AlertImpl implements Alert {
-	private final List<Subscriber> subscribers;
+	private List<Subscriber> subscribers;
 
 	public AlertImpl() {
 		this.subscribers = new ArrayList<Subscriber>();
@@ -17,9 +17,13 @@ public class AlertImpl implements Alert {
 	}
 
 	public synchronized void fire() {
-		for(final Subscriber subscriber : this.subscribers) {
+		
+		List<Subscriber> clonedSubscribers = new ArrayList<Subscriber>(subscribers);
+		
+		for(final Subscriber subscriber : clonedSubscribers) {
 			subscriber.fire();
 		}
+		
 	}
 
 	public synchronized void unsubscribe(Subscriber subscriber) {

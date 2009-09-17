@@ -10,7 +10,7 @@ public interface ListSignal<T> {
 
 	public void add(T value);
 
-	public Signal<Maybe<T>> get(Signal<Integer> source);
+	public Signal<Maybe<T>> get(int source);
 
 	public Maybe<T> currentGet(int i);
 

@@ -228,7 +228,7 @@ public class SwingManipulationChecker {
 
 	}
 
-	public List<String> detect(Class<?> class1) {
+	public List<String> detectIllegalSwingManipulations(Class<?> class1) {
 
 		List<String> swingInvocations = new ArrayList<String>();
 
