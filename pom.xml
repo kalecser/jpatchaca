@@ -4,11 +4,7 @@
 	<artifactId>jpatchaca</artifactId>
 	<packaging>pom</packaging>
 	<name>JPatchaca</name>
-	<version>SNAPSHOT</version>
-
-
-			 
-
+	<version>1.0-SNAPSHOT</version>
 		 
 	<build>
 		<pluginManagement>
