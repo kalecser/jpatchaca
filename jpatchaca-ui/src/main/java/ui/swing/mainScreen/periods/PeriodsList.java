@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -99,10 +101,10 @@ public class PeriodsList extends SimpleInternalFrame implements
 				.addActionListener(new java.awt.event.ActionListener() {
 
 					public void actionPerformed(final ActionEvent e) {
-						model.removePeriod(periodsTableModel
-								.getPeriod(periodsTable
-										.convertRowIndexToModel(periodsTable
-												.getSelectedRow())));
+						for (final Period period : selectedPeriods()) {
+							model.removePeriod(period);
+						}
+						periodsTable.getSelectionModel().clearSelection();
 					}
 				});
 
@@ -214,12 +216,23 @@ public class PeriodsList extends SimpleInternalFrame implements
 				row, 0, true));
 	}
 
-	public Period selectedPeriod() {
-		final int selectedRow = this.periodsTable.getSelectedRow();
-		if (selectedRow == -1) {
+	public Iterable<Period> selectedPeriods() {
+
+		final int[] selectedRows = this.periodsTable.getSelectedRows();
+
+		final boolean noneSelected = selectedRows == null
+				|| selectedRows.length == 0 || selectedRows[0] == -1;
+		if (noneSelected) {
 			return null;
 		}
-		return this.periodsTableModel.getPeriod(selectedRow);
+
+		final List<Period> selectedPeriods = new ArrayList<Period>();
+		for (final int index : selectedRows) {
+			selectedPeriods.add(periodsTableModel.getPeriod(periodsTable
+					.convertRowIndexToModel(index)));
+		}
+
+		return selectedPeriods;
 	}
 
 	public void setSelectedPeriodTesting(final int index) {
@@ -258,7 +271,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 	public int selectedPeriodIndex() {
 		final TaskView selectedTask = selectedTaskSource.currentValue();
-		return selectedTask.periods().indexOf(selectedPeriod());
+		return selectedTask.periods().indexOf(selectedPeriods());
 	}
 
 }

@@ -114,4 +114,12 @@ public class PeriodsInTasksSystemImpl implements PeriodsInTasksSystem,
 
 	}
 
+	@Override
+	public void removePeriods(final TaskView taskByName, final int beginIndex,
+			final int endIndex) {
+		for (int i = beginIndex; i <= endIndex; i++) {
+			removePeriod(taskByName, taskByName.getPeriod(beginIndex));
+		}
+	}
+
 }

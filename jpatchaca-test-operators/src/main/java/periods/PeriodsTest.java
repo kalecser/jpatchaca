@@ -79,6 +79,14 @@ public abstract class PeriodsTest extends TestCase{
 		
 	}
 	
+	public void testPeriodsIntervalRemoval(){
+		periodsOperator.addPeriod(taskName);
+		periodsOperator.addPeriod(taskName);
+		periodsOperator.removePeriods(taskName, 0, 1);
+		periodsOperator.assertPeriodCount(taskName, 0);
+		
+	}
+	
 	public void testActivePeriodEditionMightStopTask(){
 		tasksOperator.startTask(taskName);
 		periodsOperator.editPeriod(taskName, 0, "02:00 pm");

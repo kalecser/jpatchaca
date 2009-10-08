@@ -36,6 +36,7 @@ public class MainScreenOperator {
 	private final JFrameOperator mainScreen;
 	private final JTableOperator periodsTableOperator;
 	private final JListOperator tasksListOperator;
+	private final JButtonOperator removePeriodsButton;
 
 	public MainScreenOperator() {
 		final PopupMenu menu = getTrayIconMenu();
@@ -43,6 +44,7 @@ public class MainScreenOperator {
 		mainScreen = new JFrameOperator();
 		periodsTableOperator = new JTableOperator(mainScreen);
 		tasksListOperator = new JListOperator(mainScreen, 1);
+		removePeriodsButton = new JButtonOperator(mainScreen, "remove");
 	}
 
 	private static void clickRestoreWindow(final PopupMenu menu) {
@@ -307,7 +309,7 @@ public class MainScreenOperator {
 	public void removePeriod(final String taskName, final int i) {
 		selectTask(taskName);
 		periodsTableOperator.selectCell(i, 0);
-		new JButtonOperator(mainScreen, "remove").doClick();
+		removePeriodsButton.doClick();
 	}
 
 	public void addPeriod(final String taskName) {
@@ -369,6 +371,11 @@ public class MainScreenOperator {
 	public StartTaskScreenOperator openStartTaskScreen() {
 		new JButtonOperator(mainScreen, "Start task").push();
 		return new StartTaskScreenOperator();
+	}
+
+	public void removePeriods(final int beginIndex, final int endIndex) {
+		periodsTableOperator.setRowSelectionInterval(beginIndex, endIndex);
+		removePeriodsButton.push();
 	}
 
 }

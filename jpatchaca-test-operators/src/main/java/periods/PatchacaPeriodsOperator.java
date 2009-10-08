@@ -10,6 +10,7 @@ public interface PatchacaPeriodsOperator {
 	
 	void editPeriodDay(String taskName, int i, String dateMM_DD_YYYY);
 	void assertPeriodDay(String taskName, int i, String dateMM_DD_YYYY);
+	void removePeriods(String taskName, int beginIndex, int endIndex);
 
 
 }
