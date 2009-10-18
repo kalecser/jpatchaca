@@ -40,6 +40,12 @@ public class SwingUtils {
 	}
 
 	public static void invokeAndWaitOrCry(final Runnable runnable) {
+
+		if (SwingUtilities.isEventDispatchThread()) {
+			runnable.run();
+			return;
+		}
+
 		try {
 			SwingUtilities.invokeAndWait(runnable);
 		} catch (final InterruptedException e) {
@@ -48,6 +54,13 @@ public class SwingUtils {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	public static void assertInEventDispatchThread() {
+		if (!SwingUtilities.isEventDispatchThread()) {
+			throw new IllegalStateException(
+					"Must be called from event dispatch thread");
+		}
 	}
 
 }

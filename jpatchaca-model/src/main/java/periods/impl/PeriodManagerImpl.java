@@ -1,6 +1,7 @@
 package periods.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import periods.Period;
@@ -35,7 +36,7 @@ public class PeriodManagerImpl implements PeriodManager {
 	}
 
 	public synchronized List<Period> periods() {
-		return this.periods;
+		return Collections.unmodifiableList(this.periods);
 	}
 
 	public synchronized void addListener(final PeriodsListener listener) {
@@ -79,7 +80,7 @@ public class PeriodManagerImpl implements PeriodManager {
 	}
 
 	@Override
-	public ListSignal<Period> periodsList() {
+	public synchronized ListSignal<Period> periodsList() {
 		return periodsList;
 	}
 

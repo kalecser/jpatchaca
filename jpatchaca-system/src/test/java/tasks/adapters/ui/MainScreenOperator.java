@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -16,6 +17,7 @@ import java.util.TimeZone;
 
 import javax.swing.JList;
 import javax.swing.JTable;
+import javax.swing.JWindow;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -29,7 +31,10 @@ import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JPopupMenuOperator;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
+import org.netbeans.jemmy.operators.WindowOperator;
 import org.netbeans.jemmy.util.RegExComparator;
+
+import ui.swing.utils.SwingUtils;
 
 public class MainScreenOperator {
 
@@ -139,8 +144,15 @@ public class MainScreenOperator {
 	}
 
 	public void selectTask(final String taskName) {
-		tasksListOperator.waitState(new JListByItemTextFinder(taskName));
-		tasksListOperator.selectItem(taskName);
+
+		SwingUtils.invokeAndWaitOrCry(new Runnable() {
+			@Override
+			public void run() {
+				tasksListOperator
+						.waitState(new JListByItemTextFinder(taskName));
+				tasksListOperator.selectItem(taskName);
+			}
+		});
 
 	}
 
@@ -310,6 +322,22 @@ public class MainScreenOperator {
 		selectTask(taskName);
 		periodsTableOperator.selectCell(i, 0);
 		removePeriodsButton.doClick();
+		confirmPeriodsRemoval();
+	}
+
+	private void confirmPeriodsRemoval() {
+
+		for (final Window win : Window.getWindows()) {
+			if (win.getWidth() < 200 && win instanceof JWindow
+					&& win.isVisible()) {
+				final WindowOperator windowOperator = new WindowOperator(win);
+
+				new JButtonOperator(windowOperator, "yes").doClick();
+				return;
+			}
+		}
+
+		throw new IllegalStateException("Unable to confirm period exclusion");
 	}
 
 	public void addPeriod(final String taskName) {
@@ -376,6 +404,7 @@ public class MainScreenOperator {
 	public void removePeriods(final int beginIndex, final int endIndex) {
 		periodsTableOperator.setRowSelectionInterval(beginIndex, endIndex);
 		removePeriodsButton.push();
+		confirmPeriodsRemoval();
 	}
 
 }

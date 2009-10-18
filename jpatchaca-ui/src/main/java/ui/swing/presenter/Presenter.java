@@ -1,33 +1,49 @@
 package ui.swing.presenter;
 
+import java.awt.Color;
 import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import lang.Maybe;
+import net.java.balloontip.BalloonTip;
+import net.java.balloontip.utils.TimingUtils;
+
+import org.apache.commons.lang.Validate;
+import org.picocontainer.Startable;
+
 import ui.swing.utils.UIEventsExecutor;
 
-public class Presenter {
+import commons.swing.FloatingArea;
+
+public class Presenter implements Startable {
 
 	public Set<WeakReference<Window>> openedWindows = new LinkedHashSet<WeakReference<Window>>();
 	private final UIEventsExecutor executor;
-	private JFrame mainScreen;
-	private JDialog dialog;
+
+	private Maybe<JFrame> mainScreen;
+	private Maybe<FloatingArea> floatingArea;
 
 	public Presenter(final UIEventsExecutor executor) {
 		this.executor = executor;
 	}
 
 	public void setMainScreen(final JFrame mainScreen) {
-		this.mainScreen = mainScreen;
+		Validate.notNull(mainScreen);
+
+		this.mainScreen = Maybe.wrap(mainScreen);
+		this.floatingArea = Maybe.wrap(new FloatingArea(mainScreen));
 	}
 
 	public JDialog showOkCancelDialog(final ActionPane pane, final String title) {
 
-		dialog = new OkCancelDialog(executor, pane, title, mainScreen);
+		final OkCancelDialog dialog = new OkCancelDialog(executor, pane, title,
+				((mainScreen == null) ? null : mainScreen.unbox()));
 		return showDialog(dialog);
 	}
 
@@ -47,5 +63,47 @@ public class Presenter {
 			}
 		}
 
+		for (final Window win : Window.getWindows()) {
+			win.setVisible(false);
+			win.dispose();
+		}
+
+	}
+
+	public void showYesNoFloatingWindow(final String caption,
+			final UIAction action) {
+		if (floatingArea == null) {
+			throw new RuntimeException("Main screen is not set");
+		}
+
+		final YesNoPanel yesNoPanel = new YesNoPanel(caption, action);
+		yesNoPanel.setBackground(Color.WHITE);
+		yesNoPanel.setBorder(BorderFactory.createEtchedBorder());
+
+		floatingArea.unbox().setContents(yesNoPanel);
+	}
+
+	public void showMessageDialog(final String message) {
+
+		if (floatingArea == null || mainScreen == null) {
+			throw new RuntimeException("Main screen is not set");
+		}
+
+		final BalloonTip contents = new BalloonTip(mainScreen.unbox()
+				.getRootPane(), message);
+		final int tenSeconds = 10000;
+		TimingUtils.showTimedBalloon(contents, tenSeconds);
+
+		floatingArea.unbox().setContents(contents);
+	}
+
+	@Override
+	public void start() {
+	}
+
+	@Override
+	public void stop() {
+		closeAllWindows();
+		floatingArea = null;
 	}
 }

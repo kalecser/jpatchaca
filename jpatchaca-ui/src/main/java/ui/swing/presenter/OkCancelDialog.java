@@ -36,7 +36,7 @@ public class OkCancelDialog extends JDialog {
 
 		this.setLayout(new BorderLayout());
 		this.add(pane.getPanel(), BorderLayout.CENTER);
-		this.add(new OkCancelPanel(new Runnable() {
+		this.add(new BinaryButtonBar(new Runnable() {
 			@Override
 			public void run() {
 				doAction(pane);
@@ -46,7 +46,7 @@ public class OkCancelDialog extends JDialog {
 			public void run() {
 				OkCancelDialog.this.setVisible(false);
 			}
-		}), BorderLayout.SOUTH);
+		}, "ok", "cancel"), BorderLayout.SOUTH);
 
 		this.getRootPane().registerKeyboardAction(new ActionListener() {
 			@Override

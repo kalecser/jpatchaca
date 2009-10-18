@@ -38,10 +38,11 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private final TasksSystem tasksSystem;
 	private final PeriodsInTasksSystem periodsSystem;
+	private final SelectedTaskPeriods selectedTaskperiods;
 	private final Formatter formatter;
+	private final PeriodsTableWhiteboard whiteborad;
 
 	private TaskView _task = null;
-	private final SelectedTaskPeriods selectedTaskperiods;
 
 	Map<Integer, Subscriber> periodSubscriberByRow = new LinkedHashMap<Integer, Subscriber>();
 
@@ -50,11 +51,13 @@ public class PeriodsTableModel extends AbstractTableModel {
 	public PeriodsTableModel(final TasksSystem tasksSystem,
 			final PeriodsInTasksSystem periodsSystem,
 			final Formatter formatter, final SelectedTaskSource selectedTask,
-			final SelectedTaskPeriods selectedTaskperiods) {
+			final SelectedTaskPeriods selectedTaskperiods,
+			final PeriodsTableWhiteboard whiteborad) {
 		this.tasksSystem = tasksSystem;
 		this.periodsSystem = periodsSystem;
 		this.formatter = formatter;
 		this.selectedTaskperiods = selectedTaskperiods;
+		this.whiteborad = whiteborad;
 
 		bindToSelectedTask(selectedTask);
 
@@ -110,18 +113,29 @@ public class PeriodsTableModel extends AbstractTableModel {
 	public synchronized Object getValueAt(final int rowIndex,
 			final int columnIndex) {
 
+		if (rowIndex > getRowCount()) {
+			return null;
+		}
+
 		final Period period = selectedTaskperiods.currentGet(rowIndex);
 
 		if (!periodSubscriberByRow.containsKey(rowIndex)) {
 			periodSubscriberByRow.put(rowIndex, new Subscriber() {
 				@Override
 				public void fire() {
-					SwingUtilities.invokeLater(new Runnable() {
+
+					final Runnable fireTablerowsUpdated = new Runnable() {
 						@Override
 						public void run() {
 							fireTableRowsUpdated(rowIndex, rowIndex);
 						}
-					});
+					};
+
+					if (SwingUtilities.isEventDispatchThread()) {
+						fireTablerowsUpdated.run();
+					} else {
+						SwingUtilities.invokeLater(fireTablerowsUpdated);
+					}
 				}
 			});
 		}
@@ -219,8 +233,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 		try {
 			return Maybe.wrap(formatter.parseShortDate(dateString));
 		} catch (final ParseException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Invalid date");
+			whiteborad.postMessage("Invalid date " + dateString);
 			return null;
 		}
 	}
@@ -239,7 +252,8 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 			return Maybe.wrap(formatter.parseShortDateTime(insertedDateString));
 		} catch (final ParseException e) {
-			JOptionPane.showMessageDialog(null, "Invalid time " + value);
+
+			whiteborad.postMessage("Invalid time " + value);
 			return null;
 		}
 	}

@@ -7,34 +7,35 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class OkCancelPanel extends JPanel {
-	
-	public OkCancelPanel(final Runnable okAction, final Runnable cancelAction) {
-	
+public class BinaryButtonBar extends JPanel {
+
+	public BinaryButtonBar(final Runnable trueAction,
+			final Runnable falseAction, final String trueLabel,
+			final String falseLabel) {
+
+		setOpaque(false);
 		setLayout(new FlowLayout(FlowLayout.CENTER));
-		
-		JButton okButton = new JButton("ok");
+
+		final JButton okButton = new JButton(trueLabel);
 		okButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				okAction.run();
+			public void actionPerformed(final ActionEvent e) {
+				trueAction.run();
 			}
 		});
 
-		JButton cancelButton = new JButton("cancel");
+		final JButton cancelButton = new JButton(falseLabel);
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				cancelAction.run();
+			public void actionPerformed(final ActionEvent e) {
+				falseAction.run();
 			}
 		});
-		
+
 		add(okButton);
 		add(cancelButton);
 	}
 
 	private static final long serialVersionUID = 1L;
 
-	
-	
 }

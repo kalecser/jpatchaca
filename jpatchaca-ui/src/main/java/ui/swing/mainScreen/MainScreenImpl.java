@@ -17,6 +17,8 @@ import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.utils.UIEventsExecutor;
 import wheel.io.ui.JFrameBoundsKeeper;
 
+import commons.swing.FloatingArea;
+
 @SuppressWarnings("serial")
 public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 
@@ -71,6 +73,8 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		this.tasksSummary = tasksSummary;
 
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());
+
+		new FloatingArea(this);
 	}
 
 	private void initialize() {

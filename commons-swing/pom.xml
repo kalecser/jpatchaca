@@ -14,7 +14,12 @@
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>JPatchaca Commons Swing</name>
-	<dependencies>		
+	<dependencies>
+		<dependency>		
+			<groupId>net.java.balloontip</groupId>
+			<artifactId>balloontip</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.netbeans</groupId>
 			<artifactId>jemmy</artifactId>

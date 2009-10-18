@@ -1,6 +1,7 @@
 package ui.swing.mainScreen.periods;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -8,10 +9,14 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -19,14 +24,21 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.table.TableColumnModel;
 
+import net.java.balloontip.BalloonTip;
+import net.java.balloontip.TablecellBalloonTip;
+import net.java.balloontip.styles.RoundedBalloonStyle;
+import net.java.balloontip.utils.TimingUtils;
+
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.SortOrder;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 import org.jdesktop.swingx.renderer.StringValue;
+import org.reactive.Receiver;
 
 import periods.Period;
 import periods.PeriodsListener;
 import periodsInTasks.PeriodsInTasksSystem;
+import sun.swing.SwingUtilities2;
 import swing.JXTableImproved;
 import tasks.TaskView;
 import ui.swing.mainScreen.TaskList;
@@ -34,6 +46,7 @@ import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
+import ui.swing.utils.SwingUtils;
 import basic.HardwareClock;
 
 @SuppressWarnings("serial")
@@ -50,18 +63,24 @@ public class PeriodsList extends SimpleInternalFrame implements
 	private final PeriodsInTasksSystem periodsSystem;
 	protected final PeriodsListModel model;
 	private final HardwareClock machineClock;
+	private final RemovePeriodsDialogController removePeriodsDialogController;
+	private final PeriodsTableWhiteboard periodsWhiteboard;
 
 	public PeriodsList(final TaskList tasksList,
 			final SelectedTaskSource selectedTaskSource,
 			final PeriodsInTasksSystem periodsInTasks,
 			final PeriodsTableModel periodsTableModel,
-			final HardwareClock machineClock) {
+			final HardwareClock machineClock,
+			final RemovePeriodsDialogController removePeriodsDialogController,
+			final PeriodsTableWhiteboard periodsWhiteboard) {
 
 		super("Selected task's periods");
 		this.selectedTaskSource = selectedTaskSource;
 		this.periodsSystem = periodsInTasks;
 		this.periodsTableModel = periodsTableModel;
 		this.machineClock = machineClock;
+		this.removePeriodsDialogController = removePeriodsDialogController;
+		this.periodsWhiteboard = periodsWhiteboard;
 		this.model = new PeriodsListModel(periodsSystem, selectedTaskSource);
 
 		initialize();
@@ -101,10 +120,8 @@ public class PeriodsList extends SimpleInternalFrame implements
 				.addActionListener(new java.awt.event.ActionListener() {
 
 					public void actionPerformed(final ActionEvent e) {
-						for (final Period period : selectedPeriods()) {
-							model.removePeriod(period);
-						}
-						periodsTable.getSelectionModel().clearSelection();
+						removePeriodsDialogController
+								.confirmPeriodsRemoval(selectedPeriods());
 					}
 				});
 
@@ -116,6 +133,10 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 	private JScrollPane getPeriodsTable() {
 		this.periodsTable = new JXTableImproved(this.periodsTableModel);
+		final JScrollPane scrollPane = new JScrollPane(this.periodsTable);
+
+		bindPeriodsTableToWhiteboard(periodsTable, scrollPane);
+
 		periodsTable.setFont(Font.decode(Font.MONOSPACED));
 		this.periodsTable.getSelectionModel().setSelectionMode(
 				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -126,8 +147,78 @@ public class PeriodsList extends SimpleInternalFrame implements
 		configureDragAndDropStuff();
 		adjustColumnsAppearance(this.periodsTable);
 
-		final JScrollPane scrollPane = new JScrollPane(this.periodsTable);
 		return scrollPane;
+	}
+
+	private void bindPeriodsTableToWhiteboard(final JTable table,
+			final JScrollPane scrollPane) {
+
+		periodsWhiteboard.messageBoard().addReceiver(new Receiver<String>() {
+			TablecellBalloonTip tablecellBalloonTip;
+
+			@Override
+			public void receive(final String value) {
+				if (tablecellBalloonTip != null) {
+					hideTableCellBalloonTipInSwingThread();
+				}
+
+				if (value == null || value.equals("")) {
+					return;
+				}
+
+				tablecellBalloonTip = showBallonTipInSwingThread(value);
+
+			}
+
+			private TablecellBalloonTip showBallonTipInSwingThread(
+					final String value) {
+
+				final Future<TablecellBalloonTip> future = SwingUtilities2
+						.submit(new Callable<TablecellBalloonTip>() {
+
+							@Override
+							public TablecellBalloonTip call() throws Exception {
+								final TablecellBalloonTip tableBalloon = new TablecellBalloonTip(
+										table, value, table.getSelectedRow(),
+										table.getSelectedColumn(),
+										new RoundedBalloonStyle(5, 5,
+												Color.WHITE, Color.BLACK),
+										BalloonTip.Orientation.LEFT_ABOVE,
+										BalloonTip.AttachLocation.ALIGNED, 40,
+										20, true);
+								tableBalloon.setViewport(scrollPane
+										.getViewport());
+
+								final int fiveSeconds = 5000;
+								TimingUtils.showTimedBalloon(tableBalloon,
+										fiveSeconds);
+
+								return tableBalloon;
+							}
+
+						});
+
+				try {
+					return future.get();
+				} catch (final InterruptedException e) {
+					throw new RuntimeException(e);
+				} catch (final ExecutionException e) {
+					throw new RuntimeException(e);
+				}
+
+			}
+
+			private void hideTableCellBalloonTipInSwingThread() {
+
+				final Runnable hide = new Runnable() {
+					public void run() {
+						tablecellBalloonTip.setVisible(false);
+					}
+				};
+
+				SwingUtils.invokeAndWaitOrCry(hide);
+			}
+		});
 	}
 
 	private void adjustColumnsAppearance(final JXTable table) {
@@ -216,7 +307,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 				row, 0, true));
 	}
 
-	public Iterable<Period> selectedPeriods() {
+	public List<Period> selectedPeriods() {
 
 		final int[] selectedRows = this.periodsTable.getSelectedRows();
 
