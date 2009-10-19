@@ -4,10 +4,8 @@ import org.reactive.Signal;
 import org.reactive.Source;
 
 public class OptionsScreenMock implements OptionsScreenModel {
-	
-	Source<String> userName = new Source<String>("foo");
+
 	Source<String> password = new Source<String>("bar");
-	Source<Boolean> enabled = new Source<Boolean>(true);
 
 	@Override
 	public Signal<String> password() {
@@ -15,8 +13,9 @@ public class OptionsScreenMock implements OptionsScreenModel {
 	}
 
 	@Override
-	public void setConfig(boolean selected, String username, String password) {
-		
+	public void setConfig(final boolean selected, final String username,
+			final String password) {
+
 	}
 
 	@Override

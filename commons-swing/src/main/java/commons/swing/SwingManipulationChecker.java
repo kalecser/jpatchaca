@@ -15,7 +15,7 @@ import org.objectweb.asm.MethodVisitor;
 
 public class SwingManipulationChecker {
 
-	public final class SwingInvocationClassVisitor implements ClassVisitor {
+	public final static class SwingInvocationClassVisitor implements ClassVisitor {
 
 		private static final String JAVAX_SWING = "javax/swing";
 		private final List<String> swingInvocations;

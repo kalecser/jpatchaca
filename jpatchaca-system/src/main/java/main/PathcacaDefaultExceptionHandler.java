@@ -54,7 +54,9 @@ public class PathcacaDefaultExceptionHandler implements Startable,
 			e.printStackTrace(s);
 			s.flush();
 		} finally {
-			close(log);
+			if (log != null) {
+				close(log);
+			}
 		}
 	}
 

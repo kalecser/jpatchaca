@@ -18,7 +18,7 @@ import events.PersistenceManager;
 public class FileAppenderPersistence implements PersistenceManager {
 
 	private final Directory directory;
-	private final String fileName = "timer.dat";
+	private static final String fileName = "timer.dat";
 	private List<EventTransaction> eventsFormFile = null;
 
 	public FileAppenderPersistence(final Directory directory) {
