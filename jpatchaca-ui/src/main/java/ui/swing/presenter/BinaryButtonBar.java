@@ -16,7 +16,7 @@ public class BinaryButtonBar extends JPanel {
 		setOpaque(false);
 		setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		final JButton okButton = new JButton(trueLabel);
+		okButton = new JButton(trueLabel);
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
@@ -24,7 +24,7 @@ public class BinaryButtonBar extends JPanel {
 			}
 		});
 
-		final JButton cancelButton = new JButton(falseLabel);
+		cancelButton = new JButton(falseLabel);
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
@@ -37,5 +37,18 @@ public class BinaryButtonBar extends JPanel {
 	}
 
 	private static final long serialVersionUID = 1L;
+	private final JButton okButton;
+	private final JButton cancelButton;
+
+	public void requestFocusOn(final String label) {
+		if (okButton.getText().equals(label)) {
+			okButton.requestFocus();
+		}
+
+		if (cancelButton.getText().equals(label)) {
+			cancelButton.requestFocus();
+		}
+
+	}
 
 }

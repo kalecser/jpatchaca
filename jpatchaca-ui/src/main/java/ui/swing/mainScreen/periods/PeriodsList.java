@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -120,8 +122,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 				.addActionListener(new java.awt.event.ActionListener() {
 
 					public void actionPerformed(final ActionEvent e) {
-						removePeriodsDialogController
-								.confirmPeriodsRemoval(selectedPeriods());
+						removePeriods();
 					}
 				});
 
@@ -144,10 +145,23 @@ public class PeriodsList extends SimpleInternalFrame implements
 		periodsTable.setSortable(true);
 		periodsTable.setSortOrder(0, SortOrder.DESCENDING);
 
+		removePeriodsWithDelKey();
+
 		configureDragAndDropStuff();
 		adjustColumnsAppearance(this.periodsTable);
 
 		return scrollPane;
+	}
+
+	private void removePeriodsWithDelKey() {
+		periodsTable.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+					removePeriods();
+				}
+			}
+		});
 	}
 
 	private void bindPeriodsTableToWhiteboard(final JTable table,
@@ -314,7 +328,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 		final boolean noneSelected = selectedRows == null
 				|| selectedRows.length == 0 || selectedRows[0] == -1;
 		if (noneSelected) {
-			return null;
+			return new ArrayList<Period>();
 		}
 
 		final List<Period> selectedPeriods = new ArrayList<Period>();
@@ -363,6 +377,18 @@ public class PeriodsList extends SimpleInternalFrame implements
 	public int selectedPeriodIndex() {
 		final TaskView selectedTask = selectedTaskSource.currentValue();
 		return selectedTask.periods().indexOf(selectedPeriods());
+	}
+
+	private void removePeriods() {
+		final List<Period> selectedPeriods = selectedPeriods();
+
+		if (selectedPeriods.isEmpty()) {
+			PeriodsLogger.logger().error(
+					"Trying to remove periods with none selected");
+			return;
+		}
+
+		removePeriodsDialogController.confirmPeriodsRemoval(selectedPeriods);
 	}
 
 }

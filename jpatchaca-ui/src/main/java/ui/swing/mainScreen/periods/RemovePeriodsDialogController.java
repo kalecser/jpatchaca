@@ -22,11 +22,17 @@ public class RemovePeriodsDialogController {
 		final String question = "Remove selected "
 				+ ((periods.size() > 1) ? "periods" : "period") + "?";
 
-		presenter.showYesNoFloatingWindow(question, new UIAction() {
-			@Override
-			public void run() throws ValidationException {
-				model.removePeriods(periods);
-			}
-		});
+		try {
+			presenter.showYesNoFloatingWindow(question, new UIAction() {
+				@Override
+				public void run() throws ValidationException {
+					model.removePeriods(periods);
+				}
+			});
+		} catch (final ValidationException e) {
+			presenter.showMessageDialog("Error removing periods");
+			PeriodsLogger.logger()
+					.error("Error removing periods " + periods, e);
+		}
 	}
 }

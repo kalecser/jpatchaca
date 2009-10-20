@@ -9,14 +9,15 @@ public class YesNoPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private final UIAction action;
+	private final BinaryButtonBar buttonBar;
 
 	public YesNoPanel(final String caption, final UIAction action) {
 		this.action = action;
 		setLayout(new BorderLayout());
 
+		buttonBar = new BinaryButtonBar(yesAction(), noAction(), "yes", "no");
 		add(new JLabel(caption), BorderLayout.CENTER);
-		add(new BinaryButtonBar(yesAction(), noAction(), "yes", "no"),
-				BorderLayout.SOUTH);
+		add(buttonBar, BorderLayout.SOUTH);
 
 	}
 
@@ -42,6 +43,10 @@ public class YesNoPanel extends JPanel {
 				setVisible(false);
 			}
 		};
+	}
+
+	public void requestFocusOnNo() {
+		buttonBar.requestFocusOn("no");
 	}
 
 }

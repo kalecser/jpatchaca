@@ -1,14 +1,13 @@
 package ui.swing.presenter;
 
-import java.awt.Color;
 import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import lang.Maybe;
 import net.java.balloontip.BalloonTip;
@@ -71,16 +70,17 @@ public class Presenter implements Startable {
 	}
 
 	public void showYesNoFloatingWindow(final String caption,
-			final UIAction action) {
-		if (floatingArea == null) {
+			final UIAction action) throws ValidationException {
+		if (mainScreen == null) {
 			throw new RuntimeException("Main screen is not set");
 		}
 
-		final YesNoPanel yesNoPanel = new YesNoPanel(caption, action);
-		yesNoPanel.setBackground(Color.WHITE);
-		yesNoPanel.setBorder(BorderFactory.createEtchedBorder());
+		final int result = JOptionPane.showConfirmDialog(mainScreen.unbox(),
+				caption, caption, JOptionPane.YES_NO_OPTION);
 
-		floatingArea.unbox().setContents(yesNoPanel);
+		if (result == JOptionPane.YES_OPTION) {
+			action.run();
+		}
 	}
 
 	public void showMessageDialog(final String message) {
