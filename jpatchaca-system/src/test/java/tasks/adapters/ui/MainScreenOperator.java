@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -17,7 +16,6 @@ import java.util.TimeZone;
 
 import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.JWindow;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -31,7 +29,6 @@ import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JPopupMenuOperator;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
-import org.netbeans.jemmy.operators.WindowOperator;
 import org.netbeans.jemmy.util.RegExComparator;
 
 import ui.swing.utils.SwingUtils;
@@ -321,23 +318,14 @@ public class MainScreenOperator {
 	public void removePeriod(final String taskName, final int i) {
 		selectTask(taskName);
 		periodsTableOperator.selectCell(i, 0);
-		removePeriodsButton.doClick();
+		removePeriodsButton.pushNoBlock();
 		confirmPeriodsRemoval();
 	}
 
 	private void confirmPeriodsRemoval() {
 
-		for (final Window win : Window.getWindows()) {
-			if (win.getWidth() < 200 && win instanceof JWindow
-					&& win.isVisible()) {
-				final WindowOperator windowOperator = new WindowOperator(win);
-
-				new JButtonOperator(windowOperator, "yes").doClick();
-				return;
-			}
-		}
-
-		throw new IllegalStateException("Unable to confirm period exclusion");
+		final JDialogOperator dialogOperator = new JDialogOperator();
+		new JButtonOperator(dialogOperator, "Yes").doClick();
 	}
 
 	public void addPeriod(final String taskName) {
