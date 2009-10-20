@@ -2,6 +2,42 @@ package basic;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import wheel.lang.Threads;
+
+
+
+/**
+ * @author kalecser
+ *
+ * An Object whose purpose is to avoid multiple executions of self-annulling actions. 
+ * 
+ * It will receive two parameters: a runnable and an amount of milliseconds. 
+ * The runnable's run method will be called as a consequence of execute method in at least 
+ * x milliseconds being x the amount specified by user;
+ * If the execute method is called again before x milliseconds have passed the 
+ * runnable run method invocation will be postponed by x milliseconds.  
+ *   
+ * Example:
+
+		//creating DefferedExecutor with 1 second delay
+		DeferredExecutor executor = new DeferredExecutor(1000, new Runnable(){
+		@Override
+		public void run() {
+			System.out.println("foo");
+		}
+		});
+		
+		
+		executor.execute();
+		executor.execute();
+		executor.execute();
+		executor.execute();
+		//will print foo only once.
+		Thread.sleep(3000);
+		
+		
+		 
+ */
 public class DeferredExecutor{
 
 	private static boolean synchronous = false;
@@ -16,8 +52,9 @@ public class DeferredExecutor{
 
 	public DeferredExecutor(final int milliseconds, Runnable runnable) {
 		this.milliseconds = milliseconds;
-		this.runnable = runnable;
+		this.runnable = runnable;		
 	}
+	
 
 	public synchronized void execute() {
 		
