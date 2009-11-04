@@ -1,4 +1,4 @@
-package lang;
+package basic;
 
 import org.apache.commons.lang.Validate;
 

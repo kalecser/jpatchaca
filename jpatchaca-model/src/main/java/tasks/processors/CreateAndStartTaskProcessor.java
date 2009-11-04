@@ -4,7 +4,6 @@ import tasks.home.TasksHome;
 import tasks.taskName.TaskName;
 import tasks.taskName.TaskNameFactory;
 import tasks.tasks.TasksView;
-import basic.NonEmptyString;
 import core.ObjectIdentity;
 import events.CreateAndStartTask;
 import events.CreateTaskEvent3;
@@ -52,8 +51,8 @@ public class CreateAndStartTaskProcessor implements
 		if (name.equals("")) {
 			return;
 		}
-		startTaskProcessor.execute(new StartTaskEvent2(
-				new NonEmptyString(name), 0));
+		startTaskProcessor.execute(new StartTaskEvent2(new basic.NonEmptyString(
+				name), 0));
 
 	}
 
