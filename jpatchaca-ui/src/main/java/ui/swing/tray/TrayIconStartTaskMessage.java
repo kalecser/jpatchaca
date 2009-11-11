@@ -5,9 +5,10 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.lang.time.DateUtils;
 import org.picocontainer.Startable;
 
+import basic.Delegate;
+
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
-import ui.swing.mainScreen.Delegate;
 
 public class TrayIconStartTaskMessage implements Startable {
 

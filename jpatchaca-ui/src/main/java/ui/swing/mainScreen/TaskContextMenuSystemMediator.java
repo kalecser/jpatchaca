@@ -86,7 +86,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 							return;
 						}
 
-						startTaskDelegate.execute(new StartTaskData(
+						startTaskDelegate.starTask(new StartTaskData(
 								new NonEmptyString(name), 0));
 					}
 				}.start();
