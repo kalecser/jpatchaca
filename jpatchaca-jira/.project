@@ -1,0 +1,16 @@
+<projectDescription>
+  <name>jpatchaca-jira</name>
+  <comment/>
+  <projects>
+    <project>commons-core</project>
+    <project>jpatchaca-model</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
