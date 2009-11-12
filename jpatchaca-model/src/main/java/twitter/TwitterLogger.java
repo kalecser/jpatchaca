@@ -4,11 +4,11 @@ import net.unto.twitter.Api;
 
 import org.picocontainer.Startable;
 
+import basic.Delegate;
 import basic.NonEmptyString;
 
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
-import ui.swing.mainScreen.Delegate;
 
 public class TwitterLogger implements Startable {
 	

@@ -1,7 +1,7 @@
 package tasks.delegates;
 
+import basic.Delegate;
 import tasks.home.TaskData;
-import ui.swing.mainScreen.Delegate;
 
 public class CreateTaskDelegate extends Delegate<TaskData>{
 

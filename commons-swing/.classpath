@@ -6,6 +6,5 @@
   <classpathentry kind="var" path="M2_REPO/asm/asm-all/3.1/asm-all-3.1.jar" sourcepath="M2_REPO/asm/asm-all/3.1/asm-all-3.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/java/balloontip/balloontip/1.0/balloontip-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/netbeans/jemmy/2.2.7.5/jemmy-2.2.7.5.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.0.0/jmock-1.0.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.5/junit-4.5.jar" sourcepath="M2_REPO/junit/junit/4.5/junit-4.5-sources.jar"/>
 </classpath>

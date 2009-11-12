@@ -1,6 +1,6 @@
 package tasks.delegates;
 
-import ui.swing.mainScreen.Delegate;
+import basic.Delegate;
 
 public class StartTaskDelegate extends Delegate<StartTaskData> {
 

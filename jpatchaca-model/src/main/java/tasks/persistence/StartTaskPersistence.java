@@ -7,7 +7,7 @@ import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
 import tasks.home.TaskData;
 import tasks.tasks.Tasks;
-import ui.swing.mainScreen.Delegate;
+import basic.Delegate;
 import basic.NonEmptyString;
 import events.EventsConsumer;
 import events.StartTaskEvent2;

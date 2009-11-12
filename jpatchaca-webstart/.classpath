@@ -10,7 +10,7 @@
   <classpathentry kind="src" path="/commons-core"/>
   <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/1.4/commons-io-1.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.3/commons-lang-2.3.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.4/commons-lang-2.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1/commons-logging-1.1.jar"/>
   <classpathentry kind="src" path="/commons-swing"/>
   <classpathentry kind="var" path="M2_REPO/commons-transaction/commons-transaction/1.2/commons-transaction-1.2.jar"/>
@@ -18,13 +18,11 @@
   <classpathentry kind="var" path="M2_REPO/com/jgoodies/forms/1.2.1/forms-1.2.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/collections/google-collections/0.9/google-collections-0.9.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/unto/twitter/java-twitter/0.9-SNAPSHOT/java-twitter-0.9-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.0.0/jmock-1.0.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/1.6/joda-time-1.6.jar"/>
   <classpathentry kind="src" path="/jpatchaca-model"/>
   <classpathentry kind="src" path="/jpatchaca-system"/>
   <classpathentry kind="src" path="/jpatchaca-ui"/>
   <classpathentry kind="var" path="M2_REPO/net/sf/json-lib/json-lib/2.2.3/json-lib-2.2.3-jdk15.jar"/>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/4.5/junit-4.5.jar" sourcepath="M2_REPO/junit/junit/4.5/junit-4.5-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.9/log4j-1.2.9.jar" sourcepath="M2_REPO/log4j/log4j/1.2.9/log4j-1.2.9-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/logkit/logkit/1.0.1/logkit-1.0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/jgoodies/looks/2.2.1/looks-2.2.1.jar"/>

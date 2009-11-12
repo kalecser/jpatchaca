@@ -3,7 +3,8 @@ package tasks.persistence;
 import java.util.ArrayList;
 import java.util.List;
 
-import ui.swing.mainScreen.Delegate.Listener;
+import basic.Delegate.Listener;
+
 
 public class LoggingListener<T> implements Listener<T>{
 	public List<T> events = new ArrayList<T>();
