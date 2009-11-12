@@ -18,7 +18,6 @@
 		<dependency>
 			<artifactId>picocontainer</artifactId>
 			<groupId>org.picocontainer</groupId>
-			<version>2.7</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -28,39 +27,32 @@
 		<dependency>
 			<groupId>log4j</groupId>
   			<artifactId>log4j</artifactId>
-  			<version>1.2.9</version>
   		</dependency>		
 		<dependency>
 			<groupId>org.netbeans</groupId>
 			<artifactId>jemmy</artifactId>
-			<version>2.2.7.5</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-			<version>3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-transaction</groupId>
 			<artifactId>commons-transaction</artifactId>
-			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit3</artifactId>
-			<version>2.5.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.swinglabs</groupId>
 			<artifactId>swingx</artifactId>
-			<version>0.9.2</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>filters</artifactId>
