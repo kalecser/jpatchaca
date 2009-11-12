@@ -25,6 +25,10 @@
 			<artifactId>commons-core</artifactId>
 		</dependency>
 		<dependency>
+			<artifactId>picocontainer</artifactId>
+			<groupId>org.picocontainer</groupId>
+		</dependency>
+		<dependency>
 			<groupId>jmock</groupId>
 			<artifactId>jmock</artifactId>
 		</dependency>

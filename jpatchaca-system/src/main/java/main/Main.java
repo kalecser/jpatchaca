@@ -4,43 +4,14 @@ import java.io.IOException;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
-import labels.LabelsSystem;
-import labels.LabelsSystemImpl;
-import localization.BrazilDaylightSavingTimezoneAdjuster;
+import model.PatchacaModelContainerFactory;
 
 import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
 
-import periods.impl.PeriodsFactoryImpl;
-import periodsInTasks.impl.PeriodsInTasksSystemImpl;
 import statistics.ProjectVelocityCalculator;
 import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
-import tasks.ActiveTask;
-import tasks.TasksSystemImpl;
-import tasks.delegates.CreateTaskDelegate;
-import tasks.delegates.StartTaskDataParser;
-import tasks.delegates.StartTaskDelegate;
-import tasks.home.TasksHomeImpl;
-import tasks.persistence.CreateAndStartTaskRegister;
-import tasks.persistence.CreateTaskPersistence;
-import tasks.persistence.CreateTaskProcessorRegister;
-import tasks.persistence.StartTaskPersistence;
-import tasks.persistence.StartTaskProcessor2Register;
-import tasks.persistence.StartTaskProcessorRegister;
-import tasks.processors.CreateAndStartTaskProcessor;
-import tasks.processors.CreateTaskProcessor;
-import tasks.processors.CreateTaskProcessor2;
-import tasks.processors.CreateTaskProcessor2Register;
-import tasks.processors.StartTaskProcessor;
-import tasks.processors.StartTaskProcessor2;
-import tasks.taskName.ActiveTaskName;
-import tasks.taskName.TaskNameFactory;
-import tasks.tasks.Tasks;
-import twitter.TwitterLogger;
-import twitter.TwitterOptions;
-import twitter.processors.SetTwitterConfigProcessor;
 import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
@@ -100,14 +71,8 @@ import basic.DeferredExecutor;
 import basic.FormatterImpl;
 import basic.HardwareClock;
 import basic.PatchacaDirectory;
-import basic.SystemClockImpl;
-import basic.durable.DoubleIdProvider;
 import basic.durable.HardwareClockImpl;
 import basic.mock.MockHardwareClock;
-import events.EventsSystemImpl;
-import events.eventslist.CensorFromFile;
-import events.eventslist.EventListImpl;
-import events.persistence.FileAppenderPersistence;
 
 public class Main {
 
@@ -143,62 +108,24 @@ public class Main {
 
 	private static MutablePicoContainer createNonUIContainer(
 			final HardwareClock hardwareClock) {
-		final MutablePicoContainer container = new PicoBuilder()
-				.withConstructorInjection().withLifecycle().withCaching()
-				.build();
-
-		// FIXIT Move to registerSWINGStuff? This is UI, as it may display a
-		// JOptionPane.
-		container.addComponent(PatchacaUncaughtExceptionHandler.class,
-				PathcacaDefaultExceptionHandler.class);
-
-		container.addComponent(BrazilDaylightSavingTimezoneAdjuster.class);
-		container.addComponent(hardwareClock);
-		container.addComponent(DoubleIdProvider.class);
-		container.addComponent(PatchacaDirectory.class);
-		container.addComponent(SystemClockImpl.class);
-
-		container.addComponent(PeriodsFactoryImpl.class);
-		container.addComponent(FileAppenderPersistence.class);
-		container.addComponent(CensorFromFile.class);
-		container.addComponent(EventListImpl.class);
-		container.addComponent(EventsSystemImpl.class);
-		container.addComponent(ActiveTask.class);
-		container.addComponent(ActiveTaskName.class);
-		container.addComponent(TaskNameFactory.class);
-		container.addComponent(CreateTaskProcessor2.class);
-		container.addComponent(CreateTaskProcessor2Register.class);
-		container.addComponent(CreateAndStartTaskRegister.class);
-		container.addComponent(CreateAndStartTaskProcessor.class);
-		container.addComponent(CreateTaskProcessorRegister.class);
-		container.addComponent(CreateTaskProcessor.class);
-		container.addComponent(StartTaskProcessorRegister.class);
-		container.addComponent(StartTaskProcessor.class);
-		container.addComponent(StartTaskDataParser.class);
-		container.addComponent(Tasks.class);
-		container.addComponent(TasksHomeImpl.class);
-		container.addComponent(TasksSystemImpl.class);
-		container.addComponent(StartTaskDelegate.class);
-		container.addComponent(CreateTaskDelegate.class);
-		container.addComponent(StartTaskProcessor2Register.class);
-		container.addComponent(StartTaskProcessor2.class);
-		container.addComponent(StartTaskPersistence.class);
-		container.addComponent(CreateTaskPersistence.class);
-
-		container.addComponent(TwitterOptions.class);
-		container.addComponent(TwitterLogger.class);
-		container.addComponent(SetTwitterConfigProcessor.class);
-
-		container.addComponent(PeriodsInTasksSystemImpl.class);
-		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);
-		registerModelStuff(container);
-
-		return container;
+		return new PatchacaModelContainerFactory().create(hardwareClock);
 	}
 
 	private static void registerSWINGStuff(final MutablePicoContainer container) {
 		container.addComponent(UIEventsExecutor.class,
 				UIEventsExecutorImpl.class);
+
+		container.addComponent(PatchacaUncaughtExceptionHandler.class,
+				PathcacaDefaultExceptionHandler.class);
+
+		container.addComponent(ProjectVelocityCalculator.class,
+				ProjectVelocityCalculatorImpl.class);
+		container.addComponent(TooltipForTask.class, TooltipForTaskImpl.class);
+		container.addComponent(LabelTooltipProvider.class,
+				LabelTooltipProviderImpl.class);
+		container.addComponent(TaskSummarizer.class, TaskSummarizerImpl.class);
+		container.addComponent(basic.Formatter.class, FormatterImpl.class);
+
 		container.addComponent(DeferredDirectoryBoundPersistence.class);
 		container.addComponent(JFrameBoundsKeeperImpl.class);
 
@@ -254,16 +181,6 @@ public class Main {
 		container.addComponent(LabelsListSystemMediator.class);
 		container.addComponent(TaskExclusionScreen.class);
 
-	}
-
-	private static void registerModelStuff(final MutablePicoContainer container2) {
-		container2.addComponent(ProjectVelocityCalculator.class,
-				ProjectVelocityCalculatorImpl.class);
-		container2.addComponent(TooltipForTask.class, TooltipForTaskImpl.class);
-		container2.addComponent(LabelTooltipProvider.class,
-				LabelTooltipProviderImpl.class);
-		container2.addComponent(TaskSummarizer.class, TaskSummarizerImpl.class);
-		container2.addComponent(basic.Formatter.class, FormatterImpl.class);
 	}
 
 	public static MutablePicoContainer createDurableSWINGContainer() {
