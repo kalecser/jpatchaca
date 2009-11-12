@@ -28,6 +28,21 @@ public class ListSource<T> implements ListSignal<T> {
 		
 		sizeSource.supply(size);
 	}
+	
+	public synchronized void add(int index, T value) {
+		
+		if (value == null)
+			throw new IllegalArgumentException("value must not be null");
+		
+		if (index >= size().currentValue()){
+			add(value);
+			return;
+		}
+			
+		
+		signalByIndex.supply(index, value);
+		
+	}
 
 	public synchronized Signal<Maybe<T>> get(int index) {
 		
@@ -57,5 +72,12 @@ public class ListSource<T> implements ListSignal<T> {
 
 	public synchronized void remove(T value) {
 		remove(signalByIndex.indexOf(value));
+	}
+
+	public synchronized void clear() {
+		for (int i = 0; i < size().currentValue(); i++) {
+			signalByIndex.supply(i, null);
+		}
+		sizeSource.supply(0);
 	}
 }
