@@ -17,7 +17,8 @@ public class JiraIssuesRetrieverImpl implements JiraIssuesRetriever {
 	protected String _address;
 	
 	private final ListSource<String> _issues = new ListSource<String>();
-	private final Source<Boolean> _isConfigured = new Source<Boolean>(false);	
+	private final Source<Boolean> _isConfigured = new Source<Boolean>(false);
+	private final Source<String> _message = new Source<String>("");	
 
 
 	public JiraIssuesRetrieverImpl(JiraConfig config, Jira jira){
@@ -49,14 +50,18 @@ public class JiraIssuesRetrieverImpl implements JiraIssuesRetriever {
 			return;
 		}
 		
-		String[] issues = jira.getIssues(_userName, _password, _address);
-		
-		if (issues == null){
+		String[] issues;
+		try {
+			issues = jira.getIssues(_userName, _password, _address);
+		} catch (JiraException e) {
 			_issues.clear();
 			_isConfigured.supply(false);
+			_message.supply(e.getMessage());
 			return;
 		}
 		
+		
+		_message.supply("");
 		_isConfigured.supply(true);
 		
 		int i = 0;
@@ -74,5 +79,9 @@ public class JiraIssuesRetrieverImpl implements JiraIssuesRetriever {
 	@Override
 	public Signal<Boolean> isConfigured() {
 		return _isConfigured;
+	}
+
+	public Signal<String> errorMessage() {
+		return _message;
 	}
 }

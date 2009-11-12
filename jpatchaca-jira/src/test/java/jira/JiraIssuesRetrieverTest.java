@@ -17,7 +17,7 @@ public class JiraIssuesRetrieverTest {
 		config = new JiraConfig();
 		retriever = new JiraIssuesRetrieverImpl(config, new MockJira());
 		
-		config.supplyUserName("foo");
+		config.supplyUserName("existingUser");
 		config.supplyPassword("bar");
 		config.supplyJiraAddress("http://baz");
 	}
@@ -30,7 +30,7 @@ public class JiraIssuesRetrieverTest {
 		config.supplyUserName("nonExistingUser");
 		Assert.assertEquals(false, retriever.isConfigured().currentValue());
 		
-		config.supplyUserName("foo");
+		config.supplyUserName("existingUser");
 		Assert.assertEquals(true, retriever.isConfigured().currentValue());
 		
 		config.supplyJiraAddress(null);
@@ -46,6 +46,17 @@ public class JiraIssuesRetrieverTest {
 		
 		config.supplyUserName("nonExistingUser");
 		Assert.assertEquals(0, issues.currentSize());
+	}
+	
+	@Test
+	public void testConfigurationError(){
+		
+				
+		config.supplyUserName("nonExistingUser");
+		Assert.assertEquals("error",retriever.errorMessage().currentValue());
+		
+		config.supplyUserName("existingUser");
+		Assert.assertEquals("",retriever.errorMessage().currentValue());
 	}
 	
 	

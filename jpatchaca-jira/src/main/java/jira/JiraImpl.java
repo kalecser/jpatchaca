@@ -17,24 +17,19 @@ import com.dolby.jira.net.soap.jira.RemoteIssue;
 public class JiraImpl implements Jira {
 
 	@Override
-	public String[] getIssues(String name, String password, String address) {
+	public String[] getIssues(String name, String password, String address) throws JiraException {
 			try {
 				return internalGetIssues(name, password, address);
 			} catch (RemoteAuthenticationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new JiraException("Authentication failure", e);
 			} catch (com.dolby.jira.net.soap.jira.RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new JiraException("Communication failure", e);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new JiraException("Communication failure", e);
 			} catch (ServiceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new JiraException("Communication failure", e);
 			}
 			
-			return null;
 	}
 
 	private String[] internalGetIssues(String name, String password,
@@ -55,7 +50,7 @@ public class JiraImpl implements Jira {
 		
 		List<String> issues = new ArrayList<String>();
 		for (RemoteIssue issue : bugs){
-			issues.add(issue.getKey() + " " + issue.getSummary());
+			issues.add("[" + issue.getKey() + "] " + issue.getSummary());
 		}
 		
 		return issues.toArray(new String[]{});
