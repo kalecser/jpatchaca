@@ -51,9 +51,13 @@ public class CreateAndStartTaskProcessor implements
 		if (name.equals("")) {
 			return;
 		}
-		startTaskProcessor.execute(new StartTaskEvent2(new basic.NonEmptyString(
-				name), 0));
+		startTaskProcessor.execute(transformInStartTask2(name));
 
+	}
+
+	@SuppressWarnings("deprecation")
+	private StartTaskEvent2 transformInStartTask2(final String name) {
+		return new StartTaskEvent2(new basic.NonEmptyString(name), 0);
 	}
 
 }

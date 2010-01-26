@@ -12,12 +12,16 @@ public class MockHardwareClock implements HardwareClock {
 		return (Date) time.clone() ;
 	}
 
-	public void setTime(Date time) {
+	public synchronized void setTime(Date time) {
 		this.time = (Date) time.clone();
 	}
 
-	public void setTime(int time) {
+	public synchronized void setTime(int time) {
 		this.time = new Date(time);		
+	}
+
+	public synchronized void advanceTimeBy(long millis) {
+		this.time = new Date(time.getTime() + millis);
 	}
 
 }

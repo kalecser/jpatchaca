@@ -205,8 +205,16 @@ public class Main {
 		container.addComponent(new TransientDirectory());
 		registerSWINGStuff(container);
 
+		makePatchacaTrayStopShowingStatusMessages(container);
+
 		return container;
 
+	}
+
+	private static void makePatchacaTrayStopShowingStatusMessages(
+			final MutablePicoContainer container) {
+		final PatchacaTray tray = container.getComponent(PatchacaTray.class);
+		tray.test_mode = true;
 	}
 
 	public static MutablePicoContainer createTransientNonUIContainer(

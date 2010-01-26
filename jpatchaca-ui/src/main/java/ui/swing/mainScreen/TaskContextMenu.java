@@ -28,8 +28,6 @@ public class TaskContextMenu extends JPopupMenu {
 
 	protected String selectedLabelName;
 	private TaskContextMenuModel model;
-	
-	
 
 	public Alert createLabelAlert() {
 		return this.createLabelAlert;
@@ -44,95 +42,95 @@ public class TaskContextMenu extends JPopupMenu {
 		this.removeTaskAlert = new AlertImpl();
 		this.editTaskAlert = new AlertImpl();
 		this.addNoteAlert = new AlertImpl();
-		
 
 	}
 
-	public void show(Component invoker, int x, int y, TaskView selectedTask) {
-		
+	public void show(final Component invoker, final int x, final int y,
+			final TaskView selectedTask) {
+
 		removeAll();
-		
+
 		if (selectedTask.isActive()) {
 			addStartTaskMenuItem();
 		} else {
 			addStopTaskMenuItem();
 		}
-		
+
 		addSeparator();
 		addNoteItem();
 		addEditTaskItem();
-		addRemoveTaskItem();		
+		addRemoveTaskItem();
 		addSeparator();
-		addLabelsMenu();		
+		addLabelsMenu();
 		addRemoveFromLabelMenu(selectedTask);
-		
+
 		super.show(invoker, x, y);
 	}
 
 	private void addNoteItem() {
 		final JMenuItem item = new JMenuItem("add note");
-		item.addActionListener(new ActionListener() {		
-			public void actionPerformed(ActionEvent e) {
-				TaskContextMenu.this.addNoteAlert.fire();		
-			}		
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				TaskContextMenu.this.addNoteAlert.fire();
+			}
 		});
 		add(item);
-		
+
 	}
 
 	private void addEditTaskItem() {
 		final JMenuItem item = new JMenuItem("edit");
-		item.addActionListener(new ActionListener() {		
-			public void actionPerformed(ActionEvent e) {
-				TaskContextMenu.this.editTaskAlert.fire();		
-			}		
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				TaskContextMenu.this.editTaskAlert.fire();
+			}
 		});
 		add(item);
-		
+
 	}
 
 	private void addRemoveTaskItem() {
 		final JMenuItem item = new JMenuItem("remove");
-		item.addActionListener(new ActionListener() {		
-			public void actionPerformed(ActionEvent e) {
-				TaskContextMenu.this.removeTaskAlert.fire();		
-			}		
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				TaskContextMenu.this.removeTaskAlert.fire();
+			}
 		});
 		add(item);
 	}
 
 	private void addStopTaskMenuItem() {
 		final JMenuItem item = new JMenuItem("start");
-		item.addActionListener(new ActionListener() {		
-			public void actionPerformed(ActionEvent e) {
-				TaskContextMenu.this.startCurrentTaskAlert.fire();		
-			}		
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				TaskContextMenu.this.startCurrentTaskAlert.fire();
+			}
 		});
 		add(item);
 	}
 
 	private void addStartTaskMenuItem() {
 		final JMenuItem item = new JMenuItem("stop");
-		item.addActionListener(new ActionListener() {		
-			public void actionPerformed(ActionEvent e) {
-				TaskContextMenu.this.stopCurrentTaskAlert.fire();		
-			}		
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				TaskContextMenu.this.stopCurrentTaskAlert.fire();
+			}
 		});
 		add(item);
 	}
 
-	private void addRemoveFromLabelMenu(TaskView selectedTask) {
+	private void addRemoveFromLabelMenu(final TaskView selectedTask) {
 		final JMenu removeFromMenu = new JMenu("remove from...");
 		for (final String label : model.getLabelsFor(selectedTask)) {
 			final JMenuItem item = removeFromMenu.add(label);
-			item.addActionListener(new ActionListener() {			
-				public void actionPerformed(ActionEvent e) {
-					TaskContextMenu.this.selectedLabelName = label;					
+			item.addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
+					TaskContextMenu.this.selectedLabelName = label;
 					TaskContextMenu.this.removeFromLabelAlert.fire();
-				}			
+				}
 			});
 		}
-		
+
 		add(removeFromMenu);
 	}
 
@@ -141,22 +139,22 @@ public class TaskContextMenu extends JPopupMenu {
 
 		for (final String label : model.assignableLabels()) {
 			final JMenuItem item = labelsMenu.add(label);
-			item.addActionListener(new ActionListener() {			
-				public void actionPerformed(ActionEvent e) {
+			item.addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
 					TaskContextMenu.this.selectedLabelName = label;
 					TaskContextMenu.this.assignToLabelAlert.fire();
-				}			
+				}
 			});
 		}
 
 		labelsMenu.addSeparator();
 		final JMenuItem createLabelMenuItem = labelsMenu.add("new label");
 		createLabelMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				TaskContextMenu.this.createLabelAlert.fire();
 			}
 		});
-		
+
 		add(labelsMenu);
 	}
 
@@ -181,7 +179,7 @@ public class TaskContextMenu extends JPopupMenu {
 	public final Alert stopCurrentTaskAlert() {
 		return this.stopCurrentTaskAlert;
 	}
-	
+
 	public final Alert removeTaskAlert() {
 		return this.removeTaskAlert;
 	}
@@ -190,26 +188,27 @@ public class TaskContextMenu extends JPopupMenu {
 		return editTaskAlert;
 	}
 
-	public void setModel(TaskContextMenuModel model) {
+	public void setModel(final TaskContextMenuModel model) {
 		this.model = model;
 	}
 
-	public void clickAddNoteToTask() throws InterruptedException, InvocationTargetException {
-		for (final Component component : getComponents()){
-			if (component instanceof JMenuItem){
+	public void clickAddNoteToTask() throws InterruptedException,
+			InvocationTargetException {
+		for (final Component component : getComponents()) {
+			if (component instanceof JMenuItem) {
 				final JMenuItem item = (JMenuItem) component;
-				if (item.getText().equals("add note")){
+				if (item.getText().equals("add note")) {
 					SwingUtilities.invokeAndWait(new Runnable() {
 						public void run() {
 							item.doClick();
 						}
 					});
-					
+
 					return;
 				}
 			}
 		}
-		
+
 		throw new RuntimeException("Menu item " + "add note" + "not found.");
 	}
 

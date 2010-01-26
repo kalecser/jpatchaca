@@ -10,7 +10,7 @@ import tasks.delegates.StartTaskDelegate;
 import tasks.tasks.Tasks;
 import basic.NonEmptyString;
 import core.ObjectIdentity;
-import events.StartTaskEvent2;
+import events.StartTaskEvent3;
 import events.persistence.MustBeCalledInsideATransaction;
 
 public class StartTaskPersistenceTest {
@@ -37,7 +37,7 @@ public class StartTaskPersistenceTest {
 		tasks.add(new ObjectIdentity("1"), new MockTask("foo"));
 
 		delegate.starTask(new StartTaskData(new NonEmptyString("foo"), 42));
-		final StartTaskEvent2 event = (StartTaskEvent2) (consumer.lastEvent());
+		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.lastEvent());
 
 		Assert.assertTrue(!createTask.taskCreated());
 		Assert.assertEquals("foo", event.getName().unbox());
@@ -48,7 +48,7 @@ public class StartTaskPersistenceTest {
 	public void testStartNewTask() throws MustBeCalledInsideATransaction {
 
 		delegate.starTask(new StartTaskData(new NonEmptyString("foo"), 42));
-		final StartTaskEvent2 event = (StartTaskEvent2) (consumer.lastEvent());
+		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.lastEvent());
 
 		Assert.assertTrue(createTask.taskCreated());
 		Assert.assertEquals("foo", createTask.taskName());

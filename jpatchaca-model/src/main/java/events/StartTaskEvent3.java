@@ -4,14 +4,13 @@ import java.io.Serializable;
 
 import basic.NonEmptyString;
 
-public class StartTaskEvent2 implements Serializable {
+public class StartTaskEvent3 implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	private final long millisecondsAgo;
 	private final String taskName;
 
-	// use StartTaskEvent3 instead
-	@Deprecated
-	public StartTaskEvent2(final NonEmptyString taskName,
+	public StartTaskEvent3(final NonEmptyString taskName,
 			final long millisecondsAgo) {
 
 		this.taskName = taskName.unbox();

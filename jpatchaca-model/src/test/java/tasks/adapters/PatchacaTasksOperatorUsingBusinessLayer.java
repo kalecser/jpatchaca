@@ -85,8 +85,20 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 				new NonEmptyString(taskNewName), 0.0));
 	}
 
-	public long getTimeSpent(final String taskName, final int periodIndex) {
+	public long getTimeSpentInMinutes(final String taskName,
+			final int periodIndex) {
 		return taskByName(taskName).periodAt(periodIndex).totalTime();
+	}
+
+	private long getTimeSpentInMinutes(final String taskName) {
+		final int periodsCount = taskByName(taskName).periodsCount();
+		long totalTime = 0l;
+
+		for (int period = 0; period < periodsCount; period++) {
+			totalTime += getTimeSpentInMinutes(taskName, period);
+		}
+
+		return totalTime;
 	}
 
 	@Override
@@ -136,8 +148,21 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void assertTimeSpent(final String taskName, final int periodIndex,
 			final long expectedTimeSpent) {
-		final long timeSpent = getTimeSpent(taskName, periodIndex)
+		final long timeSpent = getTimeSpentInMinutes(taskName, periodIndex)
 				/ DateUtils.MILLIS_PER_MINUTE;
+		assertTimeSpentEquals(expectedTimeSpent, timeSpent);
+	}
+
+	@Override
+	public void assertTimeSpentInMinutes(final String taskName,
+			final long expectedTimeSpent) {
+		final long timeSpent = getTimeSpentInMinutes(taskName)
+				/ DateUtils.MILLIS_PER_MINUTE;
+		assertTimeSpentEquals(expectedTimeSpent, timeSpent);
+	}
+
+	private void assertTimeSpentEquals(final long expectedTimeSpent,
+			final long timeSpent) {
 		if (expectedTimeSpent != timeSpent) {
 			throw new RuntimeException("Time spent should be: "
 					+ expectedTimeSpent + " but was " + timeSpent);
@@ -154,6 +179,11 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 		}
 
 		Assert.assertEquals(taskName, currentValue.unbox().name());
+	}
+
+	@Override
+	public void advanceTimeBy(final long millis) {
+		mockHardwareClock.advanceTimeBy(millis);
 	}
 
 }

@@ -7,6 +7,7 @@ package tasks;
 public interface PatchacaTasksOperator{
 
 	void setTime(int time);
+	void advanceTimeBy(long millis);
 
 	String allLabelName();
 	boolean isTaskInLabel(String taskName, String labelnName);
@@ -22,6 +23,8 @@ public interface PatchacaTasksOperator{
 	void assertActiveTask(String taskName);
 
 	void assertTimeSpent(String taskName, int periodIndex, long timeSpentInMinutes);
+	void assertTimeSpentInMinutes(String taskName, long timeSpentInMillis);
+
 
 
 	

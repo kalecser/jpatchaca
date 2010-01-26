@@ -57,6 +57,7 @@ public class PatchacaTray implements Startable {
 
 	protected AtomicLong lastClicktime = new AtomicLong();
 	protected AtomicBoolean isprocessingClick = new AtomicBoolean(false);
+	public boolean test_mode = false;
 
 	public PatchacaTray(final PatchacaTrayModel model) {
 		this.model = model;
@@ -304,6 +305,9 @@ public class PatchacaTray implements Startable {
 	}
 
 	public void statusMessage(final String string) {
+		if (test_mode) {
+			return;
+		}
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				trayIcon.displayMessage("Message", string,

@@ -213,4 +213,9 @@ class MockTask implements tasks.Task {
 		return periodsManager.periodsList();
 	}
 
+	@Override
+	public void stop(final long millisecondsAgo) {
+		throw new RuntimeException("Not implemented");
+	}
+
 }

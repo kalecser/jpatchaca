@@ -24,6 +24,7 @@ public class MockTask implements tasks.Task {
 	private boolean stopped;
 	private final Source<TaskName> nameSignal;
 	private final PeriodManagerImpl periodsManager;
+	private long stopTime;
 
 	public MockTask() {
 		this("empty");
@@ -180,6 +181,12 @@ public class MockTask implements tasks.Task {
 
 	@Override
 	public void stop() {
+		stop(0);
+	}
+
+	@Override
+	public void stop(final long millisecondsAgo) {
+		stopTime = millisecondsAgo;
 		stopped = true;
 	}
 
@@ -204,8 +211,9 @@ public class MockTask implements tasks.Task {
 		Assert.assertEquals((Long) millisecondsAgo, startedMillisecondsAgo);
 	}
 
-	public void assertStopped() {
+	public void assertStoppedMillisecondsAgo(final long millis) {
 		Assert.assertTrue(stopped);
+		Assert.assertEquals(millis, stopTime);
 	}
 
 	@Override

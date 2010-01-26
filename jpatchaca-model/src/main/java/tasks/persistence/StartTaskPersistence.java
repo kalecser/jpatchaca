@@ -10,7 +10,7 @@ import tasks.tasks.Tasks;
 import basic.Delegate;
 import basic.NonEmptyString;
 import events.EventsConsumer;
-import events.StartTaskEvent2;
+import events.StartTaskEvent3;
 
 public class StartTaskPersistence implements Startable {
 
@@ -39,7 +39,7 @@ public class StartTaskPersistence implements Startable {
 					createTask.createTask(new TaskData(taskName, 0.0));
 				}
 
-				eventsConsumer.consume(new StartTaskEvent2(taskName, object
+				eventsConsumer.consume(new StartTaskEvent3(taskName, object
 						.millisecondsAgo()));
 
 			}

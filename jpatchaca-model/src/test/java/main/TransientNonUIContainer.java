@@ -17,7 +17,6 @@ import tasks.persistence.CreateAndStartTaskRegister;
 import tasks.persistence.CreateTaskPersistence;
 import tasks.persistence.CreateTaskProcessorRegister;
 import tasks.persistence.StartTaskPersistence;
-import tasks.persistence.StartTaskProcessor2Register;
 import tasks.persistence.StartTaskProcessorRegister;
 import tasks.processors.CreateAndStartTaskProcessor;
 import tasks.processors.CreateTaskProcessor;
@@ -25,6 +24,7 @@ import tasks.processors.CreateTaskProcessor2;
 import tasks.processors.CreateTaskProcessor2Register;
 import tasks.processors.StartTaskProcessor;
 import tasks.processors.StartTaskProcessor2;
+import tasks.processors.StartTaskProcessor3;
 import tasks.taskName.TaskNameFactory;
 import tasks.tasks.Tasks;
 import wheel.io.files.impl.tranzient.TransientDirectory;
@@ -41,11 +41,8 @@ public class TransientNonUIContainer {
 	private final MutablePicoContainer container;
 
 	public TransientNonUIContainer() {
-		container = new PicoBuilder()
-				.withLifecycle()
-					.withCaching()
-					.withConsoleMonitor()
-					.build();
+		container = new PicoBuilder().withLifecycle().withCaching()
+				.withConsoleMonitor().build();
 
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
@@ -60,9 +57,9 @@ public class TransientNonUIContainer {
 		container.addComponent(CreateAndStartTaskProcessor.class);
 		container.addComponent(CreateAndStartTaskRegister.class);
 		container.addComponent(StartTaskProcessorRegister.class);
-		container.addComponent(StartTaskProcessor2Register.class);
 		container.addComponent(StartTaskProcessor.class);
 		container.addComponent(StartTaskProcessor2.class);
+		container.addComponent(StartTaskProcessor3.class);
 		container.addComponent(CreateTaskProcessor2.class);
 		container.addComponent(CreateTaskProcessor2Register.class);
 		container.addComponent(TaskNameFactory.class);

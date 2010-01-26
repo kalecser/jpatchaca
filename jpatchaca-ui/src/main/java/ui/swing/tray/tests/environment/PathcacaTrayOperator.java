@@ -16,7 +16,6 @@ import java.util.concurrent.TimeoutException;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.UnhandledException;
 
 import wheel.lang.Threads;
@@ -182,11 +181,6 @@ public class PathcacaTrayOperator {
 		}
 
 		return ((PopupMenu) targetMenu).getItem(subMenuIndex).getLabel();
-	}
-
-	public void assertSelectedTask(final String taskName) {
-
-		throw new NotImplementedException();
 	}
 
 	public void startNewTaskNow(final String taskName) {

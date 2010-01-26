@@ -62,10 +62,19 @@ class TaskImpl implements Task {
 	}
 
 	public synchronized void stop() {
+		stop(0);
+	}
+
+	@Override
+	public synchronized void stop(final long millisecondsAgo) {
 		if (!this._active) {
 			return;
 		}
-		this.activePeriod.setStop(this.clock.getDate());
+
+		final Date now = this.clock.getDate();
+		final Date stopTime = new Date(now.getTime() - millisecondsAgo);
+		this.activePeriod.setStop(stopTime);
+
 		this._active = false;
 		this.changedAlert.fire();
 	}
@@ -224,7 +233,7 @@ class TaskImpl implements Task {
 	}
 
 	@Override
-	public ListSignal<Period> periodsList() {
+	public synchronized ListSignal<Period> periodsList() {
 		return periodManager().periodsList();
 	}
 

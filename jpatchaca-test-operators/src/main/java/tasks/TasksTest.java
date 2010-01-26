@@ -84,4 +84,22 @@ public abstract class TasksTest extends TestCase {
 		int periodIndex = 0;
 		tasksOperator.assertTimeSpent(taskName, periodIndex, 30);
 	}
+	
+	public void testStartNewTaskHalfAnHourAgo() throws InterruptedException{
+		long oneHour = DateUtils.MILLIS_PER_HOUR;
+
+		tasksOperator.createTask("test");
+		tasksOperator.createTask("test 2");
+		tasksOperator
+			.startTask("test");
+		tasksOperator.advanceTimeBy(oneHour);
+		
+		tasksOperator
+			.startTaskHalfAnHourAgo("test 2");
+		tasksOperator.stopTask();
+		
+		long halfAnHourInMinutes = 30;
+		tasksOperator.assertTimeSpentInMinutes("test", halfAnHourInMinutes);
+		tasksOperator.assertTimeSpentInMinutes("test 2", halfAnHourInMinutes);
+	}
 }

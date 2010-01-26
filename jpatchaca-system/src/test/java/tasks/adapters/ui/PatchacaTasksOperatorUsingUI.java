@@ -69,6 +69,11 @@ public final class PatchacaTasksOperatorUsingUI implements
 	}
 
 	@Override
+	public void advanceTimeBy(final long millis) {
+		mockHardwareClock.advanceTimeBy(millis);
+	}
+
+	@Override
 	public void startTask(final String taskName) {
 		mainScreen.startTask(taskName);
 	}
@@ -80,8 +85,6 @@ public final class PatchacaTasksOperatorUsingUI implements
 
 	public void selectTask(final String taskName) {
 		mainScreen.selectTask(taskName);
-		patchacaTray.assertSelectedTask(taskName);
-
 	}
 
 	@Override
@@ -106,8 +109,15 @@ public final class PatchacaTasksOperatorUsingUI implements
 	@Override
 	public void assertTimeSpent(final String taskName, final int periodIndex,
 			final long timeSpent) {
-		mainScreen.selectTask(taskName);
+		selectTask(taskName);
 		mainScreen.waitTimeSpent(periodIndex, timeSpent);
+	}
+
+	@Override
+	public void assertTimeSpentInMinutes(final String taskName,
+			final long timeSpentInMinutes) {
+		selectTask(taskName);
+		mainScreen.waitTimeSpent(timeSpentInMinutes);
 	}
 
 	@Override

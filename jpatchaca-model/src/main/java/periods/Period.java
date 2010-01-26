@@ -83,7 +83,13 @@ public class Period {
 	}
 
 	public void setStop(final Date stop) {
-		this.stop = stop;
+
+		if (stop != null && stop.before(start)) {
+			this.stop = start;
+		} else {
+			this.stop = stop;
+		}
+
 		this.changeAlert.fire();
 	}
 

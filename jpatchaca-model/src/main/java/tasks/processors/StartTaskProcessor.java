@@ -24,8 +24,12 @@ public class StartTaskProcessor implements Processor<StartTaskEvent> {
 	public void execute(final StartTaskEvent event)
 			throws MustBeCalledInsideATransaction {
 		final TaskView task = tasks.get(event.getTaskId());
-		startTaskProcessor.execute(new StartTaskEvent2(new NonEmptyString(task
-				.name()), 0));
+		startTaskProcessor.execute(transformIntoStartTaskEvent2(task));
+	}
+
+	@SuppressWarnings("deprecation")
+	private StartTaskEvent2 transformIntoStartTaskEvent2(final TaskView task) {
+		return new StartTaskEvent2(new NonEmptyString(task.name()), 0);
 	}
 
 	public Class<? extends Serializable> eventType() {

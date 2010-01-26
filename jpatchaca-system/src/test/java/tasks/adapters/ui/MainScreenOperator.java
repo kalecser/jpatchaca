@@ -246,6 +246,10 @@ public class MainScreenOperator {
 
 	}
 
+	public void waitTimeSpent(final long timeSpentInMinutes) {
+		waitTimeSpent(0, timeSpentInMinutes);
+	}
+
 	public void editPeriod(final int periodIndex, final String startHH_mm_a) {
 
 		waitPeriodCreated(periodIndex);
