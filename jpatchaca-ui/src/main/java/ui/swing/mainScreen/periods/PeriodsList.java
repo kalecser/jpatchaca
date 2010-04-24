@@ -51,7 +51,7 @@ import ui.swing.utils.SimpleInternalFrame;
 import ui.swing.utils.SwingUtils;
 import basic.HardwareClock;
 
-@SuppressWarnings("serial")
+@SuppressWarnings( { "serial", "restriction" })
 public class PeriodsList extends SimpleInternalFrame implements
 		TaskSelectionListener {
 

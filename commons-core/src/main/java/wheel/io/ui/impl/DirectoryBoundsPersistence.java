@@ -44,7 +44,7 @@ public class DirectoryBoundsPersistence implements BoundsPersistence {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<String, Rectangle> getStoredBounds() {
 		if (!_directory.fileExists(BOUNDS_FILE_NAME))
 			return new HashMap<String, Rectangle>();

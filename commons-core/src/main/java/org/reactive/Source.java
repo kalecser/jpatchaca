@@ -52,7 +52,6 @@ public class Source<T> implements Signal<T> {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -61,7 +60,7 @@ public class Source<T> implements Signal<T> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Source other = (Source) obj;
+		Source<?> other = (Source<?>) obj;
 		if (currentValue == null) {
 			if (other.currentValue != null)
 				return false;

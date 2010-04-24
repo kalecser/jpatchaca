@@ -131,11 +131,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 						}
 					};
 
-					if (SwingUtilities.isEventDispatchThread()) {
-						fireTablerowsUpdated.run();
-					} else {
-						SwingUtilities.invokeLater(fireTablerowsUpdated);
-					}
+					SwingUtilities.invokeLater(fireTablerowsUpdated);
 				}
 			});
 		}

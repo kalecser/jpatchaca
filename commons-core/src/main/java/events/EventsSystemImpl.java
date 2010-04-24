@@ -26,7 +26,7 @@ public class EventsSystemImpl implements EventsSystem {
 			fireHooks(event);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private synchronized void fireHooks(Serializable event) {
 		for (final EventHook hook: eventHooks){
 			if (hook.getEventType().isAssignableFrom(event.getClass())){

@@ -58,7 +58,7 @@ public class FileAppenderPersistence implements PersistenceManager {
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Collection<EventTransaction> readEventsOrCry(InputStream in) {
 		
 		Object readObject = readObjectOrCry(in);

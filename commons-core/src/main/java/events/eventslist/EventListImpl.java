@@ -94,7 +94,7 @@ public class EventListImpl implements EventList{
 			throw new RuntimeException("No processor found for '" + transaction.getEvent().getClass().getName() + "' event.");
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addProcessors(final Processor... processors) {
 		
 		for (final Processor processor : processors){
