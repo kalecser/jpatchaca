@@ -204,9 +204,6 @@ public final class TopBar extends JPanel {
 		final JMenuBar bar = new JMenuBar();
 		bar.add(getTaskMenu());
 
-		final JMenu viewMenu = new JMenu("View");
-		bar.add(viewMenu);
-
 		add(bar, BorderLayout.NORTH);
 	}
 
