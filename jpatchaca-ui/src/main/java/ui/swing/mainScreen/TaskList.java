@@ -130,9 +130,16 @@ public class TaskList extends JPanel {
 		final JScrollPane scrolledTasksList = new JScrollPane(this.tasksList);
 		scrolledLabelsList.setMinimumSize(new Dimension(0, 110));
 
+		final SimpleInternalFrame labels = new SimpleInternalFrame("Labels",
+				null, scrolledLabelsList);
+		final SimpleInternalFrame tasks = new SimpleInternalFrame("Tasks",
+				null, scrolledTasksList);
+
 		final JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				new SimpleInternalFrame("Labels", null, scrolledLabelsList),
-				new SimpleInternalFrame("Tasks", null, scrolledTasksList));
+				labels, tasks);
+
+		hideLabelsIfPropertySet(labels, split);
+
 		split.setContinuousLayout(true);
 
 		this.setLayout(new BorderLayout());
@@ -166,6 +173,13 @@ public class TaskList extends JPanel {
 
 		bindToLabelsList();
 		bindToActiveTaskSignal();
+	}
+
+	private void hideLabelsIfPropertySet(final SimpleInternalFrame labels,
+			final JSplitPane split) {
+		if (System.getProperty("HIDE_LABELS") != null) {
+			split.remove(labels);
+		}
 	}
 
 	private void bindToActiveTaskSignal() {
