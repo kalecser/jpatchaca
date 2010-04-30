@@ -18,6 +18,7 @@ public class OptionsScreen {
 	public class OptionsScreenOkCancelPane implements ActionPane {
 
 		private JCheckBox twitterEnabled;
+		private JCheckBox showLabels;
 		private JTextField username;
 		private JTextField password;
 
@@ -40,6 +41,11 @@ public class OptionsScreen {
 			password = new JTextField(30);
 			TextFieldBinder.bind(password, optionsScreenModel.password());
 			optionsPanel.add(password, "growx,span 3");
+
+			showLabels = new JCheckBox("Show labels");
+			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
+					.twitterEnabled());
+			optionsPanel.add(showLabels, "span 4");
 
 			twitterEnabled.requestFocus();
 

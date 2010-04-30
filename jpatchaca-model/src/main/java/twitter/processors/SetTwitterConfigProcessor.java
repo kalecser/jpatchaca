@@ -12,10 +12,10 @@ import events.persistence.MustBeCalledInsideATransaction;
 
 public class SetTwitterConfigProcessor implements Processor<SetTwitterConfig>, Startable {
 
-	private final TwitterOptions twitterHome;
+	private final TwitterOptions twitterOptions;
 
 	public SetTwitterConfigProcessor(TwitterOptions twitterHome, EventsSystem eventsSystem){
-		this.twitterHome = twitterHome;
+		this.twitterOptions = twitterHome;
 		eventsSystem.addProcessor(this);
 	}
 	
@@ -27,7 +27,7 @@ public class SetTwitterConfigProcessor implements Processor<SetTwitterConfig>, S
 	@Override
 	public void execute(SetTwitterConfig eventObj)
 			throws MustBeCalledInsideATransaction {
-		twitterHome.configure(eventObj.isTwitterLoggingEnabled(), eventObj.userName(), eventObj.password());	
+		twitterOptions.configure(eventObj.isTwitterLoggingEnabled(), eventObj.userName(), eventObj.password());	
 	}
 
 	@Override
