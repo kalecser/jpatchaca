@@ -1,7 +1,9 @@
 package basic;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 
 
@@ -18,7 +20,7 @@ public class AlertImpl implements Alert {
 
 	public synchronized void fire() {
 		
-		List<Subscriber> clonedSubscribers = new ArrayList<Subscriber>(subscribers);
+		Set<Subscriber> clonedSubscribers = new LinkedHashSet<Subscriber>(subscribers);
 		
 		for(final Subscriber subscriber : clonedSubscribers) {
 			subscriber.fire();

@@ -76,6 +76,7 @@ public final class PatchacaTasksOperatorUsingUI implements
 	@Override
 	public void startTask(final String taskName) {
 		mainScreen.startTask(taskName);
+		assertActiveTask(taskName);
 	}
 
 	@Override

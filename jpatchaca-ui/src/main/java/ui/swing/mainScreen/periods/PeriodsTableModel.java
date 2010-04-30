@@ -25,6 +25,7 @@ import tasks.TaskView;
 import tasks.TasksSystem;
 import ui.swing.tasks.SelectedTaskPeriods;
 import ui.swing.tasks.SelectedTaskSource;
+import ui.swing.utils.UIEventsExecutor;
 import basic.Formatter;
 import basic.Subscriber;
 
@@ -48,16 +49,20 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private final AtomicInteger size = new AtomicInteger(0);
 
+	private final UIEventsExecutor executor;
+
 	public PeriodsTableModel(final TasksSystem tasksSystem,
 			final PeriodsInTasksSystem periodsSystem,
 			final Formatter formatter, final SelectedTaskSource selectedTask,
 			final SelectedTaskPeriods selectedTaskperiods,
-			final PeriodsTableWhiteboard whiteborad) {
+			final PeriodsTableWhiteboard whiteborad,
+			final UIEventsExecutor executor) {
 		this.tasksSystem = tasksSystem;
 		this.periodsSystem = periodsSystem;
 		this.formatter = formatter;
 		this.selectedTaskperiods = selectedTaskperiods;
 		this.whiteborad = whiteborad;
+		this.executor = executor;
 
 		bindToSelectedTask(selectedTask);
 
@@ -136,7 +141,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 			});
 		}
 
-		period.subscribe(periodSubscriberByRow.get(rowIndex));
+		subscribeToPeriod(rowIndex, period);
 
 		if (columnIndex == 0) {
 			return new ShortDateWithWeekDay(formatter, period.startTime());
@@ -153,6 +158,15 @@ public class PeriodsTableModel extends AbstractTableModel {
 		}
 
 		return "";
+	}
+
+	private void subscribeToPeriod(final int rowIndex, final Period period) {
+		executor.execute(new Runnable() {
+			@Override
+			public void run() {
+				period.subscribe(periodSubscriberByRow.get(rowIndex));
+			}
+		});
 	}
 
 	private String formatEndTime(final Period period) {

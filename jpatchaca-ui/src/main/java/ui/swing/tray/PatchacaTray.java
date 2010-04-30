@@ -218,6 +218,13 @@ public class PatchacaTray implements Startable {
 
 	private static Image iconImage(final String resource) {
 		final URL iconURL = PatchacaTray.class.getResource(resource);
+
+		if (iconURL == null) {
+			throw new IllegalStateException("Resource " + resource
+					+ " for class " + PatchacaTray.class.getCanonicalName()
+					+ " not found");
+		}
+
 		final ImageIcon imageIcon = new ImageIcon(iconURL);
 		final Image image = imageIcon.getImage();
 		return image;
