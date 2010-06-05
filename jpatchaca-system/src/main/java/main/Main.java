@@ -2,8 +2,11 @@ package main;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import main.singleInstance.AlreadyRunningApplicationException;
+import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
 
 import org.picocontainer.MutablePicoContainer;
@@ -80,6 +83,14 @@ public class Main {
 
 	public static void main(final String[] args)
 			throws UnsupportedLookAndFeelException, IOException {
+
+		try {
+			AssureSingleInstance.registerAsRunning();
+		} catch (final AlreadyRunningApplicationException e) {
+			JOptionPane.showMessageDialog(null,
+					"JPatchaca is already running in another instance.");
+			return;
+		}
 
 		keepWorkingOnMinimize();
 		setLookAndFeel();
