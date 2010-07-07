@@ -47,7 +47,9 @@ import ui.swing.mainScreen.tasks.TaskExclusionScreen;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.TaskScreenModelImpl;
 import ui.swing.mainScreen.tasks.WindowManager;
+import ui.swing.mainScreen.tasks.summary.SummaryHoursFormat;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
+import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
 import ui.swing.options.OptionsScreen;
 import ui.swing.options.OptionsScreenModelImpl;
 import ui.swing.presenter.Presenter;
@@ -175,6 +177,8 @@ public class Main {
 		container.addComponent(TrayIconStartTaskMessage.class);
 
 		container.addComponent(TaskListSystemMediator.class);
+		container.addComponent(SummaryHoursFormat.class);
+		container.addComponent(SummaryTableModel.class);
 		container.addComponent(SummaryScreen.class);
 		container.addComponent(PeriodsTableWhiteboard.class);
 		container.addComponent(PeriodsTableModel.class);
