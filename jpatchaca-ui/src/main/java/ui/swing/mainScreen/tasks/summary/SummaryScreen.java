@@ -25,6 +25,7 @@ import statistics.TaskSummarizer;
 import tasks.tasks.TasksView;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.utils.SimpleInternalFrame;
+import basic.Subscriber;
 
 public class SummaryScreen extends SimpleInternalFrame implements Startable {
 
@@ -36,15 +37,15 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 	private JRadioButton groupByMonthRadio;
 	private final TasksView tasks;
 	private JRadioButton groupByYearRadio;
-	private final SummaryHoursFormat sumaryDateFormat;
+	private final SummaryHoursFormat summaryHoursFormat;
 
 	public SummaryScreen(final TaskList list, final TaskSummarizer summarizer,
-			final TasksView tasks, final SummaryHoursFormat sumaryDateFormat,
+			final TasksView tasks, final SummaryHoursFormat sumaryHoursFormat,
 			final SummaryTableModel summaryTableModel) {
 		super(SummaryScreen.panelTitle);
 		this.summarizer = summarizer;
 		this.tasks = tasks;
-		this.sumaryDateFormat = sumaryDateFormat;
+		this.summaryHoursFormat = sumaryHoursFormat;
 		summaryModel = summaryTableModel;
 		initialize();
 	}
@@ -56,6 +57,13 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 	private void initialize() {
 		add(getTopPannel(), BorderLayout.NORTH);
 		add(getSummaryTable(), BorderLayout.CENTER);
+
+		summaryHoursFormat.addChangeListener(new Subscriber() {
+			@Override
+			public void fire() {
+				summaryModel.fireTableDataChanged();
+			}
+		});
 	}
 
 	private JPanel getTopPannel() {
@@ -71,7 +79,7 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 
 		final JPanel panel = new JPanel();
 		panel.add(new JLabel("Format:"));
-		panel.add(sumaryDateFormat.getCombo());
+		panel.add(summaryHoursFormat.getCombo());
 
 		return panel;
 	}
@@ -80,7 +88,7 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 		final JPanel pannel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 		createGroupByMonthRadio();
-		createGroupByYearRadio();
+		createGroupByDayRadio();
 		groupButtons();
 
 		pannel.add(new JLabel("Group by:"));
@@ -95,15 +103,15 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 		buttonGroup.add(groupByYearRadio);
 	}
 
-	private void createGroupByYearRadio() {
-		final JRadioButton byYear = new JRadioButton("day");
-		byYear.addActionListener(new ActionListener() {
+	private void createGroupByDayRadio() {
+		final JRadioButton byDay = new JRadioButton("day");
+		byDay.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				showSummaryPerDay();
 			}
 		});
-		groupByYearRadio = byYear;
+		groupByYearRadio = byDay;
 	}
 
 	private void createGroupByMonthRadio() {
