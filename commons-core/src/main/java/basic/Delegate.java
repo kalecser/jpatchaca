@@ -19,7 +19,7 @@ public class Delegate<T> {
 		listeners.remove(listener);
 	}
 
-	protected void execute(final T object) {
+	public void execute(final T object) {
 		for (final Listener<T> listener : listeners) {
 			listener.execute(object);
 		}

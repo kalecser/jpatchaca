@@ -2,6 +2,7 @@ package model;
 
 import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
+import labels.labels.SelectedLabel;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
@@ -85,6 +86,7 @@ public class PatchacaModelContainerFactory {
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);
+		container.addComponent(SelectedLabel.class);
 
 		return container;
 	}

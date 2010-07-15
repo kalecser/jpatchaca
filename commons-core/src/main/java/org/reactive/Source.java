@@ -3,6 +3,8 @@ package org.reactive;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
+
 import lang.Maybe;
 
 
@@ -31,6 +33,10 @@ public class Source<T> implements Signal<T> {
 
 	public synchronized void supply(T value) {
 				
+		if (ObjectUtils.equals(currentValue, value)){
+			return;
+		}
+		
 		for (Receiver<T> receiver : receivers()){
 			receiver.receive(value);				
 		}

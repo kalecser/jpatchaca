@@ -2,6 +2,7 @@ package main;
 
 import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
+import labels.labels.SelectedLabel;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
@@ -72,6 +73,7 @@ public class TransientNonUIContainer {
 		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);
+		container.addComponent(SelectedLabel.class);
 
 		container.start();
 	}

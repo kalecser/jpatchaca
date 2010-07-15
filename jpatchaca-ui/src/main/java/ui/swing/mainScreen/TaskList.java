@@ -28,6 +28,7 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import labels.labels.SelectedLabel;
 import lang.Maybe;
 
 import org.reactive.Receiver;
@@ -101,13 +102,15 @@ public class TaskList extends JPanel {
 	private final SelectedTaskSource selectedTask;
 	private final ActiveTask activeTaskSignal;
 	private final UIEventsExecutor uiEventsExecutor;
+	private final SelectedLabel selectedLabel;
 
 	public TaskList(final TaskListModel model,
 			final UIEventsExecutor uiEventsExecutor,
 			final LabelsList labelsList, final Directory directory,
 			final TaskContextMenu taskContextMenu,
-			final SelectedTaskSource selectedTask, final ActiveTask activeTask) {
+			final SelectedTaskSource selectedTask, final ActiveTask activeTask, SelectedLabel selectedLabel) {
 
+		this.selectedLabel = selectedLabel;
 		this.executor = new DeferredExecutor(200, new FireChangeListeners());
 
 		this.uiEventsExecutor = uiEventsExecutor;
@@ -201,6 +204,11 @@ public class TaskList extends JPanel {
 							screenData.setSelectedLabel(selectedIndex);
 							labelsList.setPreferredIndex(selectedIndex);
 							memory.mind(screenData);
+							
+							
+							if (labelsList.getSelectedValue() != null){
+								selectedLabel.update((String)labelsList.getSelectedValue());								
+							}
 						} finally {
 							TaskList.this.labelsList.setCursor(new Cursor(
 									Cursor.DEFAULT_CURSOR));

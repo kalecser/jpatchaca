@@ -5,6 +5,7 @@ package tasks.adapters;
 
 import junit.framework.Assert;
 import labels.LabelsSystem;
+import labels.labels.LabelsHome;
 import lang.Maybe;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -64,14 +65,14 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void createTaskAndAssignToLabel(final String taskName,
 			final String labelName) {
-		createTaskDelegate.createTask(new TaskData(taskName, 0.0, labelName));
+		createTaskDelegate.createTask(new TaskData(new NonEmptyString(taskName), 0.0, labelName));
 
 	}
 
 	@Override
 	public void createTask(final String taskName) {
 		createTaskDelegate.createTask(new TaskData(
-				new NonEmptyString(taskName), 0.0));
+				new NonEmptyString(taskName), 0.0, LabelsHome.ALL_LABEL_NAME));
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void ediTask(final String taskName, final String taskNewName) {
 		tasksSystem.editTask(taskByName(taskName), new TaskData(
-				new NonEmptyString(taskNewName), 0.0));
+				new NonEmptyString(taskNewName), 0.0, LabelsHome.ALL_LABEL_NAME));
 	}
 
 	public long getTimeSpentInMinutes(final String taskName,
@@ -134,7 +135,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void startNewTaskNow(final String taskName) {
 		createTaskDelegate.createTask(new TaskData(
-				new NonEmptyString(taskName), 0.0));
+				new NonEmptyString(taskName), 0.0, LabelsHome.ALL_LABEL_NAME));
 		startTask(taskName);
 
 	}

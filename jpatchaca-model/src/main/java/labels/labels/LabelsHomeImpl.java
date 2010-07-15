@@ -17,7 +17,6 @@ public class LabelsHomeImpl implements LabelsHome {
 	private final Map<String, List<TaskView>> tasksByLabel;
 	private final AlertImpl labelsListChangedAlert;
 	private final AlertImpl tasksInLabelChangedAlert;
-	private final String allLabelName;
 	
 	
 	public LabelsHomeImpl() {
@@ -26,8 +25,7 @@ public class LabelsHomeImpl implements LabelsHome {
 		this.labelsListChangedAlert = new AlertImpl();
 		tasksInLabelChangedAlert = new AlertImpl();
 		
-		this.allLabelName = "All";
-		createLabel(this.allLabelName);
+		createLabel(LabelsHome.ALL_LABEL_NAME);
 	}
 
 	public List<TaskView> getTasksInLabel(final String labelName) {		
@@ -72,9 +70,9 @@ public class LabelsHomeImpl implements LabelsHome {
 
 	public List<String> labels() {
 		final List<String> labels = new ArrayList<String>(this.tasksByLabel.keySet());
-		labels.remove(this.allLabelName);
+		labels.remove(LabelsHome.ALL_LABEL_NAME);
 		Collections.sort(labels);
-		labels.add(0,this.allLabelName);
+		labels.add(0,LabelsHome.ALL_LABEL_NAME);
 		return labels;
 	}
 
@@ -84,7 +82,7 @@ public class LabelsHomeImpl implements LabelsHome {
 
 	public List<String> assignableLabels() {
 		final List<String> labels = labels();
-		labels.remove(this.allLabelName);
+		labels.remove(LabelsHome.ALL_LABEL_NAME);
 		return labels;
 	}
 
@@ -97,7 +95,7 @@ public class LabelsHomeImpl implements LabelsHome {
 	}
 
 	public String allLabelName() {
-		return allLabelName;
+		return LabelsHome.ALL_LABEL_NAME;
 	}
 
 	

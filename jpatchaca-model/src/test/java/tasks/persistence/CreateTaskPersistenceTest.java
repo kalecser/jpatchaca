@@ -1,5 +1,7 @@
 package tasks.persistence;
 
+import labels.labels.LabelsHome;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,9 +35,9 @@ public class CreateTaskPersistenceTest {
 
 		final NonEmptyString taskName = new NonEmptyString("foo");
 		final double budget = 0.0;
-		delegate.createTask(new TaskData(taskName, budget));
+		delegate.createTask(new TaskData(taskName, budget, LabelsHome.ALL_LABEL_NAME));
 
-		final CreateTaskEvent3 event3 = (CreateTaskEvent3) consumer.lastEvent();
+		final CreateTaskEvent3 event3 = (CreateTaskEvent3) consumer.popEvent();
 		Assert.assertEquals(taskName.unbox(), event3.getTaskName());
 		Assert.assertEquals(new Double(budget), event3.getBudget());
 		Assert

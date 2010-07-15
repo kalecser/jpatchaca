@@ -3,6 +3,7 @@ package labels.tests;
 import java.util.List;
 
 import labels.LabelsSystem;
+import labels.labels.LabelsHome;
 import main.TransientNonUIContainer;
 
 import org.jmock.MockObjectTestCase;
@@ -122,7 +123,7 @@ public class LabelsTest extends MockObjectTestCase {
 	
 	private TaskView createTask(String taskName, String taskId) {	
 		mockidProvider.setNextId(taskId);
-		createTaskDelegate.createTask(new TaskData(new NonEmptyString(taskName), 0.0));
+		createTaskDelegate.createTask(new TaskData(new NonEmptyString(taskName), 0.0, LabelsHome.ALL_LABEL_NAME));
 		return tasks.get(new ObjectIdentity(taskId));
 	}	
 	

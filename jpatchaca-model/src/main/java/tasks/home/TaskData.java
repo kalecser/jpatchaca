@@ -10,14 +10,8 @@ public class TaskData {
 	private final Double budget;
 	private final String label;
 
-	public TaskData(NonEmptyString taskName, Double budget) {
+	public TaskData(NonEmptyString taskName, Double budget, String label) {
 		this.taskName = taskName.unbox();
-		this.budget = budget;
-		this.label = null;
-	}
-	
-	public TaskData(String taskName, Double budget, String label) {
-		this.taskName = taskName;
 		this.budget = budget;
 		this.label = label;
 	}

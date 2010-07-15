@@ -1,5 +1,7 @@
 package tasks.persistence;
 
+import labels.labels.SelectedLabel;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,7 @@ public class StartTaskPersistenceTest {
 	private MockEventsConsumer consumer;
 	private Tasks tasks;
 	private MockCreateTaskDelegate createTask;
+	private SelectedLabel selectedLabel;
 
 	@Before
 	public void setup() {
@@ -26,8 +29,9 @@ public class StartTaskPersistenceTest {
 		consumer = new MockEventsConsumer();
 		tasks = new Tasks();
 		createTask = new MockCreateTaskDelegate();
+		selectedLabel = new SelectedLabel();
 		final StartTaskPersistence persistence = new StartTaskPersistence(
-				consumer, delegate, tasks, createTask);
+				consumer, delegate, tasks, createTask, selectedLabel);
 		persistence.start();
 	}
 
@@ -37,7 +41,7 @@ public class StartTaskPersistenceTest {
 		tasks.add(new ObjectIdentity("1"), new MockTask("foo"));
 
 		delegate.starTask(new StartTaskData(new NonEmptyString("foo"), 42));
-		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.lastEvent());
+		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.popEvent());
 
 		Assert.assertTrue(!createTask.taskCreated());
 		Assert.assertEquals("foo", event.getName().unbox());
@@ -47,13 +51,18 @@ public class StartTaskPersistenceTest {
 	@Test
 	public void testStartNewTask() throws MustBeCalledInsideATransaction {
 
+		selectedLabel.update("foobar");
 		delegate.starTask(new StartTaskData(new NonEmptyString("foo"), 42));
-		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.lastEvent());
-
+		
+		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.popEvent());
 		Assert.assertTrue(createTask.taskCreated());
 		Assert.assertEquals("foo", createTask.taskName());
+		Assert.assertEquals("foobar", createTask.labelName());
 		Assert.assertEquals("foo", event.getName().unbox());
 		Assert.assertEquals(42, event.getMillisecondsAgo());
+		
+		
+		
 	}
 
 }

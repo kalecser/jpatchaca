@@ -6,10 +6,12 @@ import tasks.home.TaskData;
 public class MockCreateTaskDelegate extends CreateTaskDelegate {
 
 	private String taskname = null;
+	private String labelName;
 
 	@Override
 	public void createTask(final TaskData taskData) {
 		taskname = taskData.getTaskName();
+		labelName = taskData.getLabel();
 		super.createTask(taskData);
 	}
 
@@ -19,6 +21,10 @@ public class MockCreateTaskDelegate extends CreateTaskDelegate {
 
 	public String taskName() {
 		return taskname;
+	}
+
+	public String labelName() {
+		return labelName;
 	}
 
 }

@@ -51,6 +51,8 @@ public class TasksHomeImpl implements TasksHome {
 		final Task task = new TaskImpl(name, this.clock, budget,
 				new PeriodManagerImpl(), this.periodsFactory);
 		tasks.add(taskId, task);
+		
+		
 		this.taskListChangedAlert.fire();
 		fireTaskCreated(task);
 

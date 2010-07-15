@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import labels.labels.SelectedLabel;
 import lang.Maybe;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,12 +32,14 @@ public class TaskScreenController{
 	private final Formatter formatter;
 	private final TaskScreenModel model;
 	private final Presenter presenter;
+	private final SelectedLabel selectedLabel;
 	
 
-	public TaskScreenController(Formatter formatter, TaskScreenModel model, Presenter presenter){			
+	public TaskScreenController(Formatter formatter, TaskScreenModel model, Presenter presenter, SelectedLabel selectedLabel){			
 		this.model = model;
 		this.formatter = formatter;
 		this.presenter = presenter;
+		this.selectedLabel = selectedLabel;
 	}
 	
 	public void createTaskStarted(long time) {
@@ -143,7 +146,7 @@ public class TaskScreenController{
 					if (taskName.equals(""))
 						throw new ValidationException("Task name must not be empty");
 					
-					TaskData data = new TaskData(new NonEmptyString(taskName), getBudget());
+					TaskData data = new TaskData(new NonEmptyString(taskName), getBudget(), selectedLabel.selectedLabelCurrentValue());
 					
 					if (taskView != null)
 						model.editTask(taskView, data);

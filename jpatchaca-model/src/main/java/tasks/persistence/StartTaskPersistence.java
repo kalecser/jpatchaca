@@ -1,5 +1,7 @@
 package tasks.persistence;
 
+import labels.labels.SelectedLabel;
+
 import org.picocontainer.Startable;
 
 import tasks.delegates.CreateTaskDelegate;
@@ -18,14 +20,16 @@ public class StartTaskPersistence implements Startable {
 	private final EventsConsumer eventsConsumer;
 	private final Tasks tasks;
 	private final CreateTaskDelegate createTask;
+	private final SelectedLabel selectedLabel;
 
 	public StartTaskPersistence(final EventsConsumer eventsConsumer,
 			final StartTaskDelegate startTaskDelegate, final Tasks tasks,
-			final CreateTaskDelegate createTask) {
+			final CreateTaskDelegate createTask, SelectedLabel selectedLabel) {
 		this.eventsConsumer = eventsConsumer;
 		this.startTaskDelegate = startTaskDelegate;
 		this.tasks = tasks;
 		this.createTask = createTask;
+		this.selectedLabel = selectedLabel;
 	}
 
 	@Override
@@ -36,7 +40,7 @@ public class StartTaskPersistence implements Startable {
 				final NonEmptyString taskName = object.taskName();
 
 				if (tasks.byName(taskName) == null) {
-					createTask.createTask(new TaskData(taskName, 0.0));
+					createTask.createTask(new TaskData(taskName, null, selectedLabel.selectedLabelCurrentValue()));
 				}
 
 				eventsConsumer.consume(new StartTaskEvent3(taskName, object
