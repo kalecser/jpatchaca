@@ -37,4 +37,6 @@ public interface PatchacaTrayModel {
 
 	public abstract void showStartTaskScreen();
 
+	public abstract void copyActiveTaskName();
+
 }

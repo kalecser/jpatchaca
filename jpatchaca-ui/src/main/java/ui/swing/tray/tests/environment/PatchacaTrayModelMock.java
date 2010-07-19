@@ -93,4 +93,9 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 		throw new RuntimeException("not implemented");
 	}
 
+	@Override
+	public void copyActiveTaskName() {
+		throw new RuntimeException("not implemented");		
+	}
+
 }

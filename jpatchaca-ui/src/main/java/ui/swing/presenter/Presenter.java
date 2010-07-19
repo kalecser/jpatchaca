@@ -82,10 +82,10 @@ public class Presenter implements Startable {
 			action.run();
 		}
 	}
+	
+	public void showMessageBalloon(final String message) {
 
-	public void showMessageDialog(final String message) {
-
-		if (floatingArea == null || mainScreen == null) {
+		if (floatingArea == null || mainScreen == null ) {
 			throw new RuntimeException("Main screen is not set");
 		}
 

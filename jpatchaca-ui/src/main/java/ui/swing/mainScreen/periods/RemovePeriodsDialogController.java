@@ -30,7 +30,7 @@ public class RemovePeriodsDialogController {
 				}
 			});
 		} catch (final ValidationException e) {
-			presenter.showMessageDialog("Error removing periods");
+			presenter.showMessageBalloon("Error removing periods");
 			PeriodsLogger.logger()
 					.error("Error removing periods " + periods, e);
 		}

@@ -33,6 +33,7 @@ import basic.AlertImpl;
 
 public class PatchacaTray implements Startable {
 
+	private static final String COPY_ACTIVE_TASK_NAME = "Copy active task name";
 	private static final String PATCHACA_TIMER = "Patchaca timer";
 	private static final String TRAY_ICON_ACTIVE_PATH = "jpon.png";
 	private static final Image ACTIVE_ICON = iconImage(TRAY_ICON_ACTIVE_PATH);
@@ -129,6 +130,8 @@ public class PatchacaTray implements Startable {
 				.selectedTaskName(), model).getMenu());
 		this.timerMenu.add(STOP_TASK);
 		this.timerMenu.addSeparator();
+		this.timerMenu.add(COPY_ACTIVE_TASK_NAME);
+		this.timerMenu.addSeparator();
 		this.timerMenu.add(buildSpecialStopTaskMenu());
 		this.timerMenu.addSeparator();
 
@@ -137,12 +140,15 @@ public class PatchacaTray implements Startable {
 
 		this.timerMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent event) {
-				if (event.getActionCommand().equals(OPEN)) {
+				String actionCommand = event.getActionCommand();
+				if (actionCommand.equals(OPEN)) {
 					showMainScreen();
-				} else if (event.getActionCommand().equals(EXIT)) {
+				} else if (actionCommand.equals(EXIT)) {
 					System.exit(0);
-				} else if (event.getActionCommand().startsWith(STOP_TASK)) {
+				} else if (actionCommand.startsWith(STOP_TASK)) {
 					PatchacaTray.this.stopTaskAlert.fire();
+				} else if (actionCommand.equals(COPY_ACTIVE_TASK_NAME)) {
+					model.copyActiveTaskName();
 				}
 
 			}

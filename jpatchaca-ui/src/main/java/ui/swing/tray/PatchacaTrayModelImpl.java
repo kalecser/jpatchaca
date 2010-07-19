@@ -1,6 +1,8 @@
 package ui.swing.tray;
 
 import java.awt.Frame;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 
 import javax.swing.SwingUtilities;
 
@@ -17,6 +19,7 @@ import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
+import ui.swing.presenter.Presenter;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
 
@@ -36,6 +39,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private final StartTaskController startTaskController;
 	private final SelectedTaskName selectedTaskName;
 	private final ActiveTaskName activeTaskName;
+	private final Presenter presenter;
 
 	public PatchacaTrayModelImpl(final MainScreen mainScreen,
 			final TasksSystem tasksSystem,
@@ -44,7 +48,8 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
 			final StartTaskController startTaskController,
-			final ActiveTaskName activeTaskName) {
+			final ActiveTaskName activeTaskName, 
+			final Presenter presenter) {
 
 		this.mainScreen = mainScreen;
 		this.tasksSystem = tasksSystem;
@@ -54,6 +59,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		this.windowManager = windowManager;
 		this.startTaskController = startTaskController;
 		this.activeTaskName = activeTaskName;
+		this.presenter = presenter;
 
 	}
 
@@ -208,6 +214,19 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	@Override
 	public void showStartTaskScreen() {
 		startTaskController.show();
+	}
+
+	@Override
+	public void copyActiveTaskName() {
+		
+		if (activeTaskName.currentValue() == null){
+			presenter.showMessageBalloon("You can only copy active task name if there is an active task.");
+			return;
+		}
+		
+		TaskName activeTaskNameNotNull = activeTaskName.currentValue().unbox();
+		StringSelection selection = new StringSelection(activeTaskNameNotNull.unbox());
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
 	}
 
 }
