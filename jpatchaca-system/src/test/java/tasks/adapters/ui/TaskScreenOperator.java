@@ -16,7 +16,7 @@ public class TaskScreenOperator {
 	}
 
 	public void setTaskName(String taskNewName) {
-		new JTextFieldOperator(frame).setText(taskNewName);		
+		new JTextFieldOperator(frame,1).setText(taskNewName);		
 	}
 
 	public void clickOk() {
