@@ -1,14 +1,12 @@
 package ui.swing.mainScreen.tasks;
 
 import java.awt.Color;
-import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -17,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import labels.labels.SelectedLabel;
 import jira.Jira;
 import jira.JiraException;
 import jira.JiraIssue;
@@ -48,16 +45,13 @@ public class TaskScreenController {
 	private final Formatter formatter;
 	private final TaskScreenModel model;
 	private final Presenter presenter;
-	private final SelectedLabel selectedLabel;
 	private final Jira jira;
 
 	public TaskScreenController(final Formatter formatter,
-			final TaskScreenModel model, final Presenter presenter,
-			final SelectedLabel selectedLabel, final Jira jira) {
+			final TaskScreenModel model, final Presenter presenter, final Jira jira) {
 		this.model = model;
 		this.formatter = formatter;
 		this.presenter = presenter;
-		this.selectedLabel = selectedLabel;
 		this.jira = jira;
 	}
 
