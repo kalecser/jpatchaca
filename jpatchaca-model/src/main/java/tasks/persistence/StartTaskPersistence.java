@@ -40,7 +40,10 @@ public class StartTaskPersistence implements Startable {
 				final NonEmptyString taskName = object.taskName();
 
 				if (tasks.byName(taskName) == null) {
-					createTask.createTask(new TaskData(taskName, null, selectedLabel.selectedLabelCurrentValue()));
+					TaskData taskData = new TaskData(taskName);
+					taskData.setBudget(null);
+					taskData.setLabel(selectedLabel.selectedLabelCurrentValue());
+					createTask.createTask(taskData);
 				}
 
 				eventsConsumer.consume(new StartTaskEvent3(taskName, object

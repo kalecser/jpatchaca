@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jira.JiraIssue;
+import lang.Maybe;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.reactive.Signal;
 
@@ -140,6 +143,17 @@ public class FakeTask implements TaskView {
 	public ListSignal<Period> periodsList() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Maybe<JiraIssue> getJiraIssue() {
+		throw new RuntimeException("Not expected");
+	}
+
+	@Override
+	public int getPeriodIndex(final Period period) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

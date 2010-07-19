@@ -1,5 +1,11 @@
 package model;
 
+import jira.JiraImpl;
+import jira.JiraOptions;
+import jira.JiraSystemImpl;
+import jira.processors.SendWorklogProcessor;
+import jira.processors.SetJiraConfigProcessor;
+import jira.processors.SetJiraIssueToTaskProcessor;
 import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
 import labels.labels.SelectedLabel;
@@ -83,6 +89,13 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(TwitterOptions.class);
 		container.addComponent(TwitterLogger.class);
 		container.addComponent(SetTwitterConfigProcessor.class);
+
+		container.addComponent(JiraOptions.class);
+		container.addComponent(SetJiraConfigProcessor.class);
+		container.addComponent(JiraImpl.class);
+		container.addComponent(SetJiraIssueToTaskProcessor.class);
+		container.addComponent(SendWorklogProcessor.class);
+		container.addComponent(JiraSystemImpl.class);
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);

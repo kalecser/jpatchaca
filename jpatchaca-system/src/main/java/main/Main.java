@@ -47,6 +47,7 @@ import ui.swing.mainScreen.tasks.TaskExclusionScreen;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.TaskScreenModelImpl;
 import ui.swing.mainScreen.tasks.WindowManager;
+import ui.swing.mainScreen.tasks.day.DayTasksList;
 import ui.swing.mainScreen.tasks.summary.SummaryHoursFormat;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
@@ -195,6 +196,7 @@ public class Main {
 				.addComponent(LabelsListModel.class, LabelsListModelImpl.class);
 		container.addComponent(LabelsListSystemMediator.class);
 		container.addComponent(TaskExclusionScreen.class);
+		container.addComponent(DayTasksList.class);
 
 	}
 

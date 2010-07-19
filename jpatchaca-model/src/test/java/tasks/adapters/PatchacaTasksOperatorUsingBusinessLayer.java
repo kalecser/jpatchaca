@@ -65,14 +65,19 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void createTaskAndAssignToLabel(final String taskName,
 			final String labelName) {
-		createTaskDelegate.createTask(new TaskData(new NonEmptyString(taskName), 0.0, labelName));
+		TaskData taskData = new TaskData(new NonEmptyString(taskName));
+		taskData.setBudget(0.0);
+		taskData.setLabel(labelName);
+		createTaskDelegate.createTask(taskData);
 
 	}
 
 	@Override
 	public void createTask(final String taskName) {
-		createTaskDelegate.createTask(new TaskData(
-				new NonEmptyString(taskName), 0.0, LabelsHome.ALL_LABEL_NAME));
+		TaskData taskData = new TaskData(new NonEmptyString(taskName));
+		taskData.setBudget(0.0);
+		taskData.setLabel(LabelsHome.ALL_LABEL_NAME);
+		createTaskDelegate.createTask(taskData);
 	}
 
 	@Override
@@ -82,8 +87,11 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 
 	@Override
 	public void ediTask(final String taskName, final String taskNewName) {
-		tasksSystem.editTask(taskByName(taskName), new TaskData(
-				new NonEmptyString(taskNewName), 0.0, LabelsHome.ALL_LABEL_NAME));
+		TaskData taskData = new TaskData(new NonEmptyString(taskNewName));
+		taskData.setBudget(0.0);
+		taskData.setLabel(LabelsHome.ALL_LABEL_NAME);
+
+		tasksSystem.editTask(taskByName(taskName), taskData);
 	}
 
 	public long getTimeSpentInMinutes(final String taskName,
@@ -134,8 +142,10 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 
 	@Override
 	public void startNewTaskNow(final String taskName) {
-		createTaskDelegate.createTask(new TaskData(
-				new NonEmptyString(taskName), 0.0, LabelsHome.ALL_LABEL_NAME));
+		TaskData taskData = new TaskData(new NonEmptyString(taskName));
+		taskData.setBudget(0.0);
+		taskData.setLabel(LabelsHome.ALL_LABEL_NAME);
+		createTaskDelegate.createTask(taskData);
 		startTask(taskName);
 
 	}

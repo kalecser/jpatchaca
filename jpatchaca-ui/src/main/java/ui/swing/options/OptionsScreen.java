@@ -4,6 +4,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
@@ -19,8 +20,12 @@ public class OptionsScreen {
 
 		private JCheckBox twitterEnabled;
 		private JCheckBox showLabels;
-		private JTextField username;
-		private JTextField password;
+		private JTextField twitterUsername;
+		private JTextField twitterPassword;
+
+		private JTextField jiraUsername;
+		private JTextField jiraPassword;
+		private JTextField jiraUrl;
 
 		@Override
 		public JPanel getPanel() {
@@ -33,19 +38,44 @@ public class OptionsScreen {
 			optionsPanel.add(twitterEnabled, "span 4");
 
 			optionsPanel.add(new JLabel("Twitter username"));
-			username = new JTextField(30);
-			TextFieldBinder.bind(username, optionsScreenModel.userName());
-			optionsPanel.add(username, "growx,span 3");
+			twitterUsername = new JTextField(30);
+			TextFieldBinder.bind(twitterUsername, optionsScreenModel
+					.twitterUserName());
+			optionsPanel.add(twitterUsername, "growx,span 3");
 
 			optionsPanel.add(new JLabel("Twitter Password"));
-			password = new JTextField(30);
-			TextFieldBinder.bind(password, optionsScreenModel.password());
-			optionsPanel.add(password, "growx,span 3");
+			twitterPassword = new JTextField(30);
+			TextFieldBinder.bind(twitterPassword, optionsScreenModel
+					.twitterPassword());
+			optionsPanel.add(twitterPassword, "growx,span 3");
 
 			showLabels = new JCheckBox("Show labels");
 			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
 					.twitterEnabled());
 			optionsPanel.add(showLabels, "span 4");
+
+			optionsPanel.add(new JSeparator(), "growx,span 4");
+
+			optionsPanel.add(new JLabel("Jira url"));
+			jiraUrl = new JTextField();
+			if (optionsScreenModel.jiraUrl() != null) {
+				jiraUrl.setText(optionsScreenModel.jiraUrl().unbox());
+			}
+			optionsPanel.add(jiraUrl, "growx,span 3");
+
+			optionsPanel.add(new JLabel("Jira username"));
+			jiraUsername = new JTextField(30);
+			if (optionsScreenModel.jiraUserName() != null) {
+				jiraUsername.setText(optionsScreenModel.jiraUserName().unbox());
+			}
+			optionsPanel.add(jiraUsername, "growx,span 3");
+
+			optionsPanel.add(new JLabel("Jira password"));
+			jiraPassword = new JTextField(30);
+			if (optionsScreenModel.jiraPassword() != null) {
+				jiraPassword.setText(optionsScreenModel.jiraPassword().unbox());
+			}
+			optionsPanel.add(jiraPassword, "growx,span 3");
 
 			twitterEnabled.requestFocus();
 
@@ -57,8 +87,11 @@ public class OptionsScreen {
 			return new UIAction() {
 				@Override
 				public void run() {
-					optionsScreenModel.setConfig(twitterEnabled.isSelected(),
-							username.getText(), password.getText());
+					optionsScreenModel.setTwitterConfig(twitterEnabled
+							.isSelected(), twitterUsername.getText(),
+							twitterPassword.getText());
+					optionsScreenModel.setJiraConfig(jiraUrl.getText(),
+							jiraUsername.getText(), jiraPassword.getText());
 				}
 			};
 		}

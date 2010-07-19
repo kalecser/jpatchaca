@@ -2,6 +2,9 @@ package ui.swing.tasks;
 
 import java.util.List;
 
+import jira.JiraIssue;
+import lang.Maybe;
+
 import org.junit.Assert;
 import org.reactive.Signal;
 import org.reactive.Source;
@@ -216,6 +219,24 @@ class MockTask implements tasks.Task {
 	@Override
 	public void stop(final long millisecondsAgo) {
 		throw new RuntimeException("Not implemented");
+	}
+
+	@Override
+	public Maybe<JiraIssue> getJiraIssue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setJiraIssue(final JiraIssue jiraIssue) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int getPeriodIndex(final Period period) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

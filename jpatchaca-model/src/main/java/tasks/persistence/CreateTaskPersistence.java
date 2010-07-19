@@ -1,12 +1,14 @@
 package tasks.persistence;
 
-import org.picocontainer.Startable;
+import jira.events.SetJiraIssueToTask;
 
+import org.picocontainer.Startable;
 import basic.Delegate;
 import basic.IdProvider;
 
 import tasks.delegates.CreateTaskDelegate;
 import tasks.home.TaskData;
+import core.ObjectIdentity;
 import events.CreateTaskEvent3;
 import events.EventsConsumer;
 
@@ -16,23 +18,26 @@ public class CreateTaskPersistence implements Startable{
 	private final EventsConsumer consumer;
 	private final IdProvider provider;
 
-	public CreateTaskPersistence(CreateTaskDelegate delegate, EventsConsumer consumer, IdProvider provider) {
-				this.delegate = delegate;
-				this.consumer = consumer;
-				this.provider = provider;
+	public CreateTaskPersistence(final CreateTaskDelegate delegate,
+			final EventsConsumer consumer, final IdProvider provider) {
+		this.delegate = delegate;
+		this.consumer = consumer;
+		this.provider = provider;
 	}
 
 	@Override
 	public void start() {
 		delegate.addListener(new Delegate.Listener<TaskData>() {
 			@Override
-			public void execute(TaskData object) {
-				consumer.consume(
-						new CreateTaskEvent3(
-								provider.provideId(), 
-								object.getTaskName(), 
-								object.getBudget(), 
-								object.getLabel()));
+			public void execute(final TaskData object) {
+				final ObjectIdentity taskId = provider.provideId();
+				consumer.consume(new CreateTaskEvent3(taskId, object
+						.getTaskName(), object.getBudget(), object.getLabel()));
+
+				if (object.getJiraIssue() != null) {
+					consumer.consume(new SetJiraIssueToTask(taskId,
+							object.getJiraIssue()));
+				}
 			}
 		});
 	}

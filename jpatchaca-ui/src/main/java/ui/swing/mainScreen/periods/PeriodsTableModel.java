@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ui.swing.mainScreen.periods;
 
 import java.text.ParseException;

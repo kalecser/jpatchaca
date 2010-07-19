@@ -44,5 +44,9 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.dolby.jira.net</groupId>
+			<artifactId>jira-soap</artifactId>
+		</dependency>
 	</dependencies>
 </project>

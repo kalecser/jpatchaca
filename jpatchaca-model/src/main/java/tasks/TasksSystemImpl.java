@@ -3,6 +3,8 @@ package tasks;
 import java.util.Calendar;
 import java.util.Date;
 
+import jira.JiraIssue;
+import jira.events.SetJiraIssueToTask;
 import lang.Maybe;
 
 import org.picocontainer.Startable;
@@ -109,7 +111,8 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 				.getTaskName(), taskData.getBudget());
 
 		this.eventsSystem.writeEvent(event);
-
+		final JiraIssue issue = taskData.getJiraIssue();
+		this.eventsSystem.writeEvent(new SetJiraIssueToTask(idOfTask, issue));
 	}
 
 	public synchronized void editPeriod(final TaskView selectedTask,
@@ -149,6 +152,10 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 			final long in) {
 		final CreateTaskEvent3 createTaskEvent = produceCreateTaskEvent(newTaskData);
 		this.eventsSystem.writeEvent(createTaskEvent);
+		if (newTaskData.getJiraIssue() != null) {
+			this.eventsSystem.writeEvent(new SetJiraIssueToTask(createTaskEvent
+					.getObjectIdentity(), newTaskData.getJiraIssue()));
+		}
 		final TaskView task = tasks.get(createTaskEvent.getObjectIdentity());
 		taskStarted(task, in);
 	}

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jira.JiraIssue;
+import lang.Maybe;
+
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.time.DateUtils;
 import org.reactive.Signal;
@@ -38,6 +41,8 @@ class TaskImpl implements Task {
 	private final List<NoteView> notes;
 	private final Source<TaskName> _nameSource;
 
+	private Maybe<JiraIssue> jiraIssue;
+
 	public TaskImpl(final TaskName name, final SystemClock clock,
 			final Double budget, final PeriodManager manager,
 			final PeriodsFactory periodsFactory) {
@@ -55,6 +60,8 @@ class TaskImpl implements Task {
 
 		this.notesListeners = new ArrayList<NotesListener>();
 		this.notes = new ArrayList<NoteView>();
+
+		this.jiraIssue = null;
 	}
 
 	public synchronized void start() {
@@ -237,4 +244,23 @@ class TaskImpl implements Task {
 		return periodManager().periodsList();
 	}
 
+	@Override
+	public Maybe<JiraIssue> getJiraIssue() {
+		return jiraIssue;
+	}
+
+	@Override
+	public void setJiraIssue(final JiraIssue jiraIssue) {
+		this.jiraIssue = Maybe.wrap(jiraIssue);
+	}
+
+	@Override
+	public int getPeriodIndex(final Period period) {
+		for (int i = 0; i < periodsCount(); i++) {
+			if (getPeriod(i) == period) {
+				return i;
+			}
+		}
+		return -1;
+	}
 }

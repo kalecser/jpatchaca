@@ -1,12 +1,12 @@
 package jira;
 
 import org.apache.axis.utils.StringUtils;
-import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
 
 import reactive.ListSignal;
 import reactive.ListSource;
+import org.reactive.Receiver;
 
 public class JiraIssuesRetrieverImpl implements JiraIssuesRetriever {
 

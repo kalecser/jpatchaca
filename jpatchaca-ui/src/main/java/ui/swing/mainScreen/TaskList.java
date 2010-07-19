@@ -2,6 +2,7 @@ package ui.swing.mainScreen;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -11,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +23,7 @@ import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -29,6 +34,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import labels.labels.SelectedLabel;
+import jira.JiraIssue;
+import jira.JiraOptions;
 import lang.Maybe;
 
 import org.reactive.Receiver;
@@ -102,13 +109,16 @@ public class TaskList extends JPanel {
 	private final SelectedTaskSource selectedTask;
 	private final ActiveTask activeTaskSignal;
 	private final UIEventsExecutor uiEventsExecutor;
+	private final JiraOptions jiraOptions;
 	private final SelectedLabel selectedLabel;
 
 	public TaskList(final TaskListModel model,
 			final UIEventsExecutor uiEventsExecutor,
 			final LabelsList labelsList, final Directory directory,
 			final TaskContextMenu taskContextMenu,
-			final SelectedTaskSource selectedTask, final ActiveTask activeTask, SelectedLabel selectedLabel) {
+			final SelectedTaskSource selectedTask, final ActiveTask activeTask,
+			final SelectedLabel selectedLabel,
+			final JiraOptions jiraOptions) {
 
 		this.selectedLabel = selectedLabel;
 		this.executor = new DeferredExecutor(200, new FireChangeListeners());
@@ -116,6 +126,7 @@ public class TaskList extends JPanel {
 		this.uiEventsExecutor = uiEventsExecutor;
 		this.selectedTask = selectedTask;
 		this.activeTaskSignal = activeTask;
+		this.jiraOptions = jiraOptions;
 		this.memory = new DeferredTaskListMemory(directory);
 		this.screenData = memory.retrieve();
 		this.taskContextMenu = taskContextMenu;
@@ -271,6 +282,29 @@ public class TaskList extends JPanel {
 
 			@Override
 			public void mouseClicked(final MouseEvent e) {
+
+				if (e.getButton() == MouseEvent.BUTTON1
+						&& e.getClickCount() == 2) {
+
+					final Maybe<JiraIssue> jiraIssue = ((TaskView) tasksList
+							.getSelectedValue()).getJiraIssue();
+
+					final Maybe<String> jiraUrl = jiraOptions.getURL();
+
+					if (jiraUrl != null && jiraIssue != null) {
+						final String url = "/browse/"
+								+ jiraIssue.unbox().getKey();
+						try {
+							final URI uri = new URI(jiraUrl.unbox() + url);
+							Desktop.getDesktop().browse(uri);
+						} catch (final IOException e1) {
+							throw new RuntimeException(e1);
+						} catch (final URISyntaxException e1) {
+							JOptionPane.showMessageDialog(TaskList.this,
+									"Invalid jira url: " + jiraUrl);
+						}
+					}
+				}
 
 				if (e.getButton() == MouseEvent.BUTTON3) {
 					final int index = tasksList.locationToIndex(e.getPoint());

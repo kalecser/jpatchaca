@@ -35,7 +35,10 @@ public class CreateTaskPersistenceTest {
 
 		final NonEmptyString taskName = new NonEmptyString("foo");
 		final double budget = 0.0;
-		delegate.createTask(new TaskData(taskName, budget, LabelsHome.ALL_LABEL_NAME));
+		TaskData taskData = new TaskData(taskName);
+		taskData.setBudget(budget);
+		taskData.setLabel(LabelsHome.ALL_LABEL_NAME);
+		delegate.createTask(taskData);
 
 		final CreateTaskEvent3 event3 = (CreateTaskEvent3) consumer.popEvent();
 		Assert.assertEquals(taskName.unbox(), event3.getTaskName());

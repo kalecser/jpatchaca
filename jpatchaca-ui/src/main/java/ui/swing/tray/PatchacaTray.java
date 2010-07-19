@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import lang.Maybe;
@@ -46,6 +47,8 @@ public class PatchacaTray implements Startable {
 	static final String NEW_TASK = "New task";
 	static final String EXIT = "Exit";
 	static final String STOP_TASK = "Stop task";
+
+	private NotificationTimer timer;
 
 	protected static final long HALF_AN_HOUR = DateUtils.MILLIS_PER_MINUTE * 30;
 	protected static final long ONE_HOUR = DateUtils.MILLIS_PER_MINUTE * 60;
@@ -124,6 +127,74 @@ public class PatchacaTray implements Startable {
 
 	}
 
+	private void startTimer() {
+		final String tempoDigitado = JOptionPane.showInputDialog(
+				"Numero de Minutos para o Alerta?", "15");
+
+		if (tempoDigitado != null) {
+			int intTempoDigitado = 0;
+
+			try {
+				intTempoDigitado = new Integer(tempoDigitado).intValue();
+			} catch (final NumberFormatException e) {
+				JOptionPane.showMessageDialog(null,
+						"Valor deve ser um inteiro!");
+				this.startTimer();
+			}
+
+			timer = new NotificationTimer(intTempoDigitado, trayIcon);
+			timer.start();
+
+			NotificationTimer.setStatus(TimerStatus.ON);
+			getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(
+					false);
+			getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
+					true);
+		}
+
+	}
+
+	private void stopTimer() {
+		NotificationTimer.setStatus(TimerStatus.OFF);
+
+		timer.interrupt();
+
+		JOptionPane.showMessageDialog(null, "Timer has been stopped!");
+		NotificationTimer.setStatus(TimerStatus.OFF);
+		getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(true);
+		getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
+				false);
+	}
+
+	private void createTimerMenu() {
+
+		final MenuItem menuItemStart = new MenuItem(
+				"Turn On - Keyboard Rotation Alert");
+		final MenuItem menuItemStop = new MenuItem(
+				"Turn Off - Keyboard Rotation Alert");
+
+		final ActionListener actionStart = new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				startTimer();
+			}
+		};
+
+		final ActionListener actionStop = new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				stopTimer();
+			}
+		};
+
+		menuItemStart.addActionListener(actionStart);
+		menuItemStop.addActionListener(actionStop);
+		menuItemStop.setEnabled(false);
+
+		this.timerMenu.add(menuItemStart);
+		this.timerMenu.add(menuItemStop);
+	}
+
 	private PopupMenu createPopupMenu() {
 		this.timerMenu = new PopupMenu("Patchaca");
 		this.timerMenu.add(new StartTaskMenu(model.selectedTaskSignal(), model
@@ -134,7 +205,8 @@ public class PatchacaTray implements Startable {
 		this.timerMenu.addSeparator();
 		this.timerMenu.add(buildSpecialStopTaskMenu());
 		this.timerMenu.addSeparator();
-
+		this.createTimerMenu();
+		this.timerMenu.addSeparator();
 		this.timerMenu.add(OPEN);
 		this.timerMenu.add(EXIT);
 

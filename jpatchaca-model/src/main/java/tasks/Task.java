@@ -1,5 +1,7 @@
 package tasks;
 
+import jira.JiraIssue;
+import lang.Maybe;
 import periods.Period;
 import periods.PeriodsListener;
 import tasks.notes.NoteView;
@@ -33,4 +35,7 @@ public interface Task extends TaskView {
 
 	public abstract void removePeriodListener(PeriodsListener listener);
 
+	public abstract Maybe<JiraIssue> getJiraIssue();
+
+	public abstract void setJiraIssue(JiraIssue jiraIssue);
 }

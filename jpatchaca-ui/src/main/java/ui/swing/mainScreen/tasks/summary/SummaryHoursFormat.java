@@ -7,6 +7,7 @@ import java.text.NumberFormat;
 
 import javax.swing.JComboBox;
 
+import jira.JiraUtil;
 import basic.AlertImpl;
 import basic.Subscriber;
 
@@ -41,9 +42,7 @@ public class SummaryHoursFormat {
 		}
 
 		if (combo.getSelectedItem().equals(HUMAN)) {
-			final int truncatedHours = ((int) hours);
-			final int minutes = ((int) ((hours - truncatedHours) * 60));
-			return truncatedHours + "h " + minutes + "m";
+			return JiraUtil.humanFormat(hours);
 		}
 
 		throw new IllegalStateException(

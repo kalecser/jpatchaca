@@ -5,21 +5,21 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import lang.Maybe;
 
-
 public class Whiteboard {
 
-	private Queue<String> warnings = new LinkedBlockingQueue<String>();
+	private final Queue<String> warnings = new LinkedBlockingQueue<String>();
 
-	public void postMessage(String warning) {
-		warnings.add(warning);		
+	public void postMessage(final String warning) {
+		warnings.add(warning);
 	}
-	
-	public Maybe<String> getMessage(){
-		String maybeMessage = warnings.poll();
-		
-		if (maybeMessage != null)
+
+	public Maybe<String> getMessage() {
+		final String maybeMessage = warnings.poll();
+
+		if (maybeMessage != null) {
 			return Maybe.wrap(maybeMessage);
-		
+		}
+
 		return null;
 	}
 

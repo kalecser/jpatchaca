@@ -17,6 +17,7 @@ public class Period {
 	private Date stop;
 	private Date day;
 	private Date month;
+	private boolean worklogSent;
 
 	public Period(final Date start) {
 
@@ -191,4 +192,11 @@ public class Period {
 		changeAlert.unsubscribe(subscriber);
 	}
 
+	public boolean isWorklogSent() {
+		return worklogSent;
+	}
+
+	public void setWorklogSent(final boolean worklogSent) {
+		this.worklogSent = worklogSent;
+	}
 }

@@ -123,7 +123,9 @@ public class LabelsTest extends MockObjectTestCase {
 	
 	private TaskView createTask(String taskName, String taskId) {	
 		mockidProvider.setNextId(taskId);
-		createTaskDelegate.createTask(new TaskData(new NonEmptyString(taskName), 0.0, LabelsHome.ALL_LABEL_NAME));
+		TaskData taskData = new TaskData(new NonEmptyString(taskName));
+		taskData.setLabel(LabelsHome.ALL_LABEL_NAME);
+		createTaskDelegate.createTask(taskData);
 		return tasks.get(new ObjectIdentity(taskId));
 	}	
 	

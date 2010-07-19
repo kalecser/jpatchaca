@@ -2,6 +2,9 @@ package tasks;
 
 import java.util.List;
 
+import jira.JiraIssue;
+import lang.Maybe;
+
 import org.reactive.Signal;
 
 import periods.Period;
@@ -59,4 +62,7 @@ public interface TaskView {
 
 	ListSignal<Period> periodsList();
 
+	Maybe<JiraIssue> getJiraIssue();
+
+	int getPeriodIndex(Period period);
 }

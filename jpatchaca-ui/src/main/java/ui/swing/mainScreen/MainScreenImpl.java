@@ -13,6 +13,7 @@ import org.picocontainer.Startable;
 import org.reactive.Receiver;
 
 import ui.swing.mainScreen.periods.PeriodsList;
+import ui.swing.mainScreen.tasks.day.DayTasksList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.utils.UIEventsExecutor;
 import wheel.io.ui.JFrameBoundsKeeper;
@@ -58,19 +59,22 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	final MainScreenModel model;
 	private final TaskList taskList;
 	private final PeriodsList periodsList;
+	private final DayTasksList dayTasksList;
 	private final SummaryScreen tasksSummary;
 	private final TopBar topBar;
 
 	public MainScreenImpl(final MainScreenModel model,
 			final UIEventsExecutor executor, final TaskList taskList,
 			final PeriodsList periodsList, final SummaryScreen tasksSummary,
-			final JFrameBoundsKeeper boundsKeeper, final TopBarModel topBarModel) {
+			final DayTasksList dayList, final JFrameBoundsKeeper boundsKeeper,
+			final TopBarModel topBarModel) {
 
 		this.model = model;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
 		this.topBar = new TopBar(executor, topBarModel);
 		this.tasksSummary = tasksSummary;
+		this.dayTasksList = dayList;
 
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());
 
@@ -106,12 +110,14 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		final JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.add("Periods", this.periodsList);
 		tabbedPane.add("Summary", this.tasksSummary);
+		tabbedPane.add("Day", this.dayTasksList);
 
 		tabbedPane.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(final ChangeEvent e) {
 				refrescateTasksSummary();
+				refrescateDaysTasksList();
 			}
 		});
 
@@ -145,6 +151,10 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 
 	void refrescateTasksSummary() {
 		tasksSummary.refrescate();
+	}
+
+	void refrescateDaysTasksList() {
+		dayTasksList.refrescate();
 	}
 
 }

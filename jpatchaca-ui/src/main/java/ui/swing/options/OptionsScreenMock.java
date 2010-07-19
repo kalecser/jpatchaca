@@ -1,5 +1,7 @@
 package ui.swing.options;
 
+import lang.Maybe;
+
 import org.reactive.Signal;
 import org.reactive.Source;
 
@@ -8,12 +10,18 @@ public class OptionsScreenMock implements OptionsScreenModel {
 	Source<String> password = new Source<String>("bar");
 
 	@Override
-	public Signal<String> password() {
+	public Signal<String> twitterPassword() {
 		return password;
 	}
 
 	@Override
-	public void setConfig(final boolean selected, final String username,
+	public void setTwitterConfig(final boolean selected, final String username,
+			final String password) {
+
+	}
+
+	@Override
+	public void setJiraConfig(final String url, final String username,
 			final String password) {
 
 	}
@@ -24,8 +32,25 @@ public class OptionsScreenMock implements OptionsScreenModel {
 	}
 
 	@Override
-	public Signal<String> userName() {
+	public Signal<String> twitterUserName() {
 		return new Source<String>("bar");
 	}
 
+	@Override
+	public Maybe<String> jiraPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Maybe<String> jiraUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Maybe<String> jiraUserName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

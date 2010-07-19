@@ -63,6 +63,7 @@ public class TaskContextMenu extends JPopupMenu {
 		addSeparator();
 		addLabelsMenu();
 		addRemoveFromLabelMenu(selectedTask);
+		addSeparator();
 
 		super.show(invoker, x, y);
 	}
