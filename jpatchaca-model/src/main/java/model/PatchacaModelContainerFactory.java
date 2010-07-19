@@ -3,6 +3,7 @@ package model;
 import jira.JiraImpl;
 import jira.JiraOptions;
 import jira.JiraSystemImpl;
+import jira.SslManagerSetup;
 import jira.processors.SendWorklogProcessor;
 import jira.processors.SetJiraConfigProcessor;
 import jira.processors.SetJiraIssueToTaskProcessor;
@@ -58,7 +59,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(DoubleIdProvider.class);
 		container.addComponent(PatchacaDirectory.class);
 		container.addComponent(SystemClockImpl.class);
-
+		container.addComponent(SslManagerSetup.class);
 		container.addComponent(PeriodsFactoryImpl.class);
 		container.addComponent(FileAppenderPersistence.class);
 		container.addComponent(CensorFromFile.class);
