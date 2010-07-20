@@ -14,9 +14,11 @@ import tasks.TaskView;
 import tasks.TasksListener;
 import tasks.notes.NoteView;
 import tasks.taskName.TaskName;
+import tasks.taskName.TaskNameFactory;
 import tasks.tasks.Tasks;
 import basic.Alert;
 import basic.AlertImpl;
+import basic.NonEmptyString;
 import basic.SystemClock;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -31,14 +33,16 @@ public class TasksHomeImpl implements TasksHome {
 	private final Deque<TaskView> lastActiveTasks;
 	private final Tasks tasks;
 	private final ActiveTask activeTask;
+	private final TaskNameFactory taskNameFactory;
 
 	public TasksHomeImpl(final PeriodsFactory periodsFactory,
 			final Tasks tasks, final SystemClock clock,
-			final ActiveTask activeTask) {
+			final ActiveTask activeTask, TaskNameFactory taskNameFactory) {
 		this.periodsFactory = periodsFactory;
 		this.tasks = tasks;
 		this.clock = clock;
 		this.activeTask = activeTask;
+		this.taskNameFactory = taskNameFactory;
 		this.tasksListeners = new ArrayList<TasksListener>();
 		this.taskListChangedAlert = new AlertImpl();
 		this.lastActiveTasksAlert = new AlertImpl();
@@ -90,10 +94,15 @@ public class TasksHomeImpl implements TasksHome {
 		tasks.get(taskId).addPeriod(period);
 	}
 
-	public void editTask(final ObjectIdentity taskId, final TaskName newName,
+	public void editTask(final ObjectIdentity taskId, final NonEmptyString newName,
 			final Double newBudget) {
 		final Task task = tasks.get(taskId);
-		task.setName(newName);
+		
+		boolean nameHasChanged = !task.name().equals(newName.unbox());
+		if (nameHasChanged){
+			task.setName(taskNameFactory.createTaskname(newName.unbox()));			
+		}
+		
 		task.setBudgetInHours(newBudget);
 
 	}

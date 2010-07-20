@@ -5,6 +5,7 @@ import tasks.home.TasksHome;
 import tasks.notes.NoteView;
 import tasks.taskName.TaskName;
 import basic.Alert;
+import basic.NonEmptyString;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 
@@ -39,7 +40,7 @@ public class MockTasksHome implements TasksHome {
 	}
 
 	@Override
-	public void editTask(final ObjectIdentity identity, final TaskName newName,
+	public void editTask(final ObjectIdentity identity, final NonEmptyString newName,
 			final Double newBudget) throws MustBeCalledInsideATransaction {
 		// TODO Auto-generated method stub
 

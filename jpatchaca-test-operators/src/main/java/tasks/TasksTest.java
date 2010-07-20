@@ -74,6 +74,17 @@ public abstract class TasksTest extends TestCase {
 		tasksOperator.assertActiveTask(taskNewName);
 	}
 	
+	public void testEditTaskWithoutChangingName(){
+		final String taskName = "test";
+		String taskNewName = "test";
+		
+		tasksOperator.createTask(taskName);
+		tasksOperator.startTask(taskName);
+		tasksOperator.ediTask(taskName, taskNewName);
+		
+		tasksOperator.assertActiveTask(taskNewName);
+	}
+	
 	public void testStartTaskHalfAnHourAgo(){
 		final String taskName = "test";
 		

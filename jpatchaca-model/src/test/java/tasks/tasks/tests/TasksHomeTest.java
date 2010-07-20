@@ -33,7 +33,7 @@ public class TasksHomeTest extends MockObjectTestCase {
 		tasksListenerMocker = mock(TasksListener.class);
 		tasks = new Tasks();
 		clock = new SystemClockImpl();
-		home = new TasksHomeImpl(null, tasks, clock, new ActiveTask());
+		home = new TasksHomeImpl(null, tasks, clock, new ActiveTask(), null);
 	}
 
 	public void testCreateTask() throws MustBeCalledInsideATransaction {

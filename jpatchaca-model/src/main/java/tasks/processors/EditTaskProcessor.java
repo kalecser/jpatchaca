@@ -3,7 +3,7 @@ package tasks.processors;
 import java.io.Serializable;
 
 import tasks.home.TasksHome;
-import tasks.taskName.TaskNameFactory;
+import basic.NonEmptyString;
 import events.EditTaskEvent;
 import events.Processor;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -11,18 +11,14 @@ import events.persistence.MustBeCalledInsideATransaction;
 public class EditTaskProcessor implements Processor<EditTaskEvent> {
 
 	private final TasksHome tasksHome;
-	private final TaskNameFactory taskNameFactory;
 
-	public EditTaskProcessor(final TasksHome home,
-			final TaskNameFactory taskNameFactory) {
-		this.tasksHome = home;
-		this.taskNameFactory = taskNameFactory;
+	public EditTaskProcessor(TasksHome tasksHome) {
+		this.tasksHome = tasksHome;
 	}
 
 	public void execute(final EditTaskEvent eventObj)
 			throws MustBeCalledInsideATransaction {
-		tasksHome.editTask(eventObj.taskId(), taskNameFactory
-				.createTaskname(eventObj.newNameForTask()), eventObj
+		tasksHome.editTask(eventObj.taskId(), new NonEmptyString(eventObj.newNameForTask()), eventObj
 				.newBudgetForTask());
 	}
 

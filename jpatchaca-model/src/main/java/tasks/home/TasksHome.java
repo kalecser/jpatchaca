@@ -6,6 +6,7 @@ import tasks.TasksListener;
 import tasks.notes.NoteView;
 import tasks.taskName.TaskName;
 import basic.Alert;
+import basic.NonEmptyString;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 
@@ -16,7 +17,7 @@ public interface TasksHome {
 
 	void remove(TaskView task) throws MustBeCalledInsideATransaction;
 
-	void editTask(ObjectIdentity identity, TaskName newName, Double newBudget)
+	void editTask(ObjectIdentity identity, NonEmptyString newName, Double newBudget)
 			throws MustBeCalledInsideATransaction;
 
 	// refactor consider moving these methods to periods system

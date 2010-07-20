@@ -75,12 +75,10 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 				taskNameFactory));
 		eventsSystem.addProcessor(new EditPeriodProcessor(tasks));
 		eventsSystem.addProcessor(new EditPeriodProcessor2(tasksHome, tasks));
-		eventsSystem.addProcessor(new EditTaskProcessor(tasksHome,
-				taskNameFactory));
+		eventsSystem.addProcessor(new EditTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new MovePeriodProcessor(tasksHome));
 		eventsSystem.addProcessor(new RemoveTaskProcessor(tasks, tasksHome));
-		eventsSystem.addProcessor(new RenameTaskProcessor(tasksHome,
-				taskNameFactory));
+		eventsSystem.addProcessor(new RenameTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new StopTaskProcessor(tasksHome));
 		eventsSystem.addProcessor(new AddNoteToTaskProcessor(tasksHome,
 				notesHome));
