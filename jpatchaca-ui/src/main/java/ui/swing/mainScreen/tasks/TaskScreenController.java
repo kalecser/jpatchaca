@@ -48,7 +48,8 @@ public class TaskScreenController {
 	private final Jira jira;
 
 	public TaskScreenController(final Formatter formatter,
-			final TaskScreenModel model, final Presenter presenter, final Jira jira) {
+			final TaskScreenModel model, final Presenter presenter,
+			final Jira jira) {
 		this.model = model;
 		this.formatter = formatter;
 		this.presenter = presenter;
@@ -91,7 +92,7 @@ public class TaskScreenController {
 		private JTextField budgetHours;
 		private TaskView taskView;
 		private JTextField jiraIssueKeyTextField;
-		private JiraIssue jiraIssue;
+		private Maybe<JiraIssue> jiraIssue;
 
 		private final Maybe<TaskView> maybeTaskView;
 
@@ -101,6 +102,8 @@ public class TaskScreenController {
 				final Maybe<Long> time) {
 			this.maybeTaskView = maybeTaskView;
 			this.time = time;
+			if (maybeTaskView != null)
+				this.jiraIssue = maybeTaskView.unbox().getJiraIssue();
 		}
 
 		private JPanel createDialog(final Maybe<Long> time) {
@@ -130,14 +133,14 @@ public class TaskScreenController {
 		private void addIssueKeyTextFieldListeners() {
 			jiraIssueKeyTextField.addActionListener(new ActionListener() {
 				@Override
-				public void actionPerformed(final ActionEvent e) {				
+				public void actionPerformed(final ActionEvent e) {
 					loadIssue();
 				}
 			});
 
 			jiraIssueKeyTextField.addKeyListener(new KeyAdapter() {
 				@Override
-				public void keyTyped(final KeyEvent e) {					
+				public void keyTyped(final KeyEvent e) {
 					if ('\n' != e.getKeyChar())
 						jiraIssueKeyTextField.setBackground(Color.WHITE);
 				}
@@ -149,7 +152,7 @@ public class TaskScreenController {
 				public void focusLost(FocusEvent e) {
 					if (jiraIssue == null)
 						loadIssue();
-					else if (!jiraIssue.getKey().equals(
+					else if (!jiraIssue.unbox().getKey().equals(
 							jiraIssueKeyTextField.getText()))
 						loadIssue();
 				}
@@ -168,10 +171,10 @@ public class TaskScreenController {
 			}
 
 			try {
-				jiraIssue = jira.getIssueByKey(key);
+				jiraIssue = Maybe.wrap(jira.getIssueByKey(key));
 				if (maybeTaskView == null) {
 					taskNameTextBox.setText(String.format("[%s] %s", jiraIssue
-							.getKey(), jiraIssue.getSummary()));
+							.unbox().getKey(), jiraIssue.unbox().getSummary()));
 				}
 				jiraIssueKeyTextField.setBackground(new Color(0xAAFFAA));
 
@@ -245,7 +248,8 @@ public class TaskScreenController {
 
 					TaskData data = new TaskData(new NonEmptyString(taskName));
 					data.setBudget(getBudget());
-					data.setJiraIssue(jiraIssue);
+					if(jiraIssue != null)
+						data.setJiraIssue(jiraIssue.unbox());
 
 					if (taskView != null) {
 						model.editTask(taskView, data);
