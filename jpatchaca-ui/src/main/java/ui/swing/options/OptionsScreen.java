@@ -4,6 +4,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
@@ -44,7 +45,8 @@ public class OptionsScreen {
 			optionsPanel.add(twitterUsername, "growx,span 3");
 
 			optionsPanel.add(new JLabel("Twitter Password"));
-			twitterPassword = new JTextField(30);
+			twitterPassword = new JPasswordField(30);
+			
 			TextFieldBinder.bind(twitterPassword, optionsScreenModel
 					.twitterPassword());
 			optionsPanel.add(twitterPassword, "growx,span 3");
@@ -71,7 +73,7 @@ public class OptionsScreen {
 			optionsPanel.add(jiraUsername, "growx,span 3");
 
 			optionsPanel.add(new JLabel("Jira password"));
-			jiraPassword = new JTextField(30);
+			jiraPassword = new JPasswordField(30);
 			if (optionsScreenModel.jiraPassword() != null) {
 				jiraPassword.setText(optionsScreenModel.jiraPassword().unbox());
 			}
