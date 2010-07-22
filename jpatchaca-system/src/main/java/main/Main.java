@@ -2,11 +2,8 @@ package main;
 
 import java.io.IOException;
 
-import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import main.singleInstance.AlreadyRunningApplicationException;
-import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
 
 import org.picocontainer.MutablePicoContainer;
@@ -54,6 +51,7 @@ import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
 import ui.swing.options.OptionsScreen;
 import ui.swing.options.OptionsScreenModelImpl;
 import ui.swing.presenter.Presenter;
+import ui.swing.singleInstance.ShowMainScreenOnSecondRun;
 import ui.swing.tasks.SelectedTaskPeriods;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
@@ -86,14 +84,6 @@ public class Main {
 
 	public static void main(final String[] args)
 			throws UnsupportedLookAndFeelException, IOException {
-
-		try {
-			AssureSingleInstance.registerAsRunning();
-		} catch (final AlreadyRunningApplicationException e) {
-			JOptionPane.showMessageDialog(null,
-					"JPatchaca is already running in another instance.");
-			return;
-		}
 
 		keepWorkingOnMinimize();
 		setLookAndFeel();
@@ -164,6 +154,8 @@ public class Main {
 		container.addComponent(MainScreen.class, MainScreenImpl.class);
 		container.addComponent(MainScreenSetup.class);
 
+		container.addComponent(ShowMainScreenOnSecondRun.class);
+		
 		container.addComponent(OptionsScreen.class);
 		container.addComponent(OptionsScreenModelImpl.class);
 		container.addComponent(SwinglabelsUser.class);

@@ -1,6 +1,6 @@
 package main.singleInstance;
 
-public class AlreadyRunningApplicationException extends Exception {
+public class AlreadyRunningApplicationException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	public AlreadyRunningApplicationException() {

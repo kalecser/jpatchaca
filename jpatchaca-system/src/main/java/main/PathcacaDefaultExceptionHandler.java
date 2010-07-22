@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 
 import javax.swing.JOptionPane;
 
+import main.singleInstance.AlreadyRunningApplicationException;
+
 import org.picocontainer.Startable;
 
 import ui.swing.utils.PatchacaUncaughtExceptionHandler;
@@ -32,6 +34,11 @@ public class PathcacaDefaultExceptionHandler implements Startable,
 
 	@Override
 	public synchronized void uncaughtException(final Thread t, final Throwable e) {
+		
+		if (e instanceof AlreadyRunningApplicationException){
+			System.exit(0);
+		}
+		
 		logExceptionToErrorLog(e);
 		e.printStackTrace();
 		JOptionPane

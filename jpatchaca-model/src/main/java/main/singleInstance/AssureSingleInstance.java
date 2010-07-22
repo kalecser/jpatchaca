@@ -1,0 +1,96 @@
+package main.singleInstance;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import org.apache.log4j.Logger;
+import org.picocontainer.Startable;
+
+import basic.AlertImpl;
+import basic.Subscriber;
+
+public class AssureSingleInstance implements Startable{
+
+	private static final int PORT = 18123;
+	
+	private final  AlertImpl _tryedToCreateAnotherInstance;
+	
+	public static ServerSocket socket;
+	
+	public AssureSingleInstance(){
+		_tryedToCreateAnotherInstance = new AlertImpl();
+	}
+	
+	private void registerAsRunning(){
+		try {
+			final int backlog = 0;
+			socket = new ServerSocket(PORT, backlog, InetAddress
+					.getByAddress(new byte[] { 127, 0, 0 , 1 }));
+			
+			alertOnNewConnection();
+		} catch (final Exception e) {
+			//ok, will pass
+			Logger.getLogger(AssureSingleInstance.class).error(e);
+		}
+	}
+
+	private void alertOnNewConnection() {
+		new Thread(){
+			public void run() {
+				while (true){
+					try {
+						socket.accept().close();
+						_tryedToCreateAnotherInstance.fire();
+					} catch (IOException e) {
+						_tryedToCreateAnotherInstance.fire();
+					}
+					
+				}
+			};
+		}.start();
+	}
+	
+	public void subscribeTryedToCreateAnotherInstance(Subscriber subscriber){
+		_tryedToCreateAnotherInstance.subscribe(subscriber);
+	}
+
+	@Override
+	public void start() {
+	
+		if (isRunning()){
+			throw new AlreadyRunningApplicationException();
+		}
+		
+		registerAsRunning();
+	
+	}
+
+	private boolean isRunning() {
+		try {
+			Socket socket = new Socket();	
+			try{
+				socket.connect(new InetSocketAddress("127.0.0.1", PORT));
+			} finally {
+				socket.close();
+			}
+			
+		} catch (IOException e) {
+			return false;
+		}
+		
+		return true;
+		
+	}
+
+	@Override
+	public void stop() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			throw new IllegalStateException("Erro closing " + AssureSingleInstance.class.getName() + " socket");
+		}
+	}
+}

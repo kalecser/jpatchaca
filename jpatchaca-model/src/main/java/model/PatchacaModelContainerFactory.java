@@ -10,6 +10,7 @@ import jira.processors.SetJiraIssueToTaskProcessor;
 import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
 import labels.labels.SelectedLabel;
+import main.singleInstance.AssureSingleInstance;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
@@ -56,6 +57,7 @@ public class PatchacaModelContainerFactory {
 				.withLifecycle().withCaching().build();
 
 		container.addComponent(hardwareClock);
+		container.addComponent(AssureSingleInstance.class);
 		container.addComponent(DoubleIdProvider.class);
 		container.addComponent(PatchacaDirectory.class);
 		container.addComponent(SystemClockImpl.class);
