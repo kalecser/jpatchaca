@@ -39,7 +39,7 @@ public class TaskScreenOperator {
 		
 	}
 
-	public void assertJiraKey(String jiraKey) {
+	public void waitJiraKey(String jiraKey) {
 		jiraKeyTextField.waitText(jiraKey);		
 	}
 

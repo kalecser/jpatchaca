@@ -28,6 +28,7 @@ public class MockTask implements tasks.Task {
 	private final Source<TaskName> nameSignal;
 	private final PeriodManagerImpl periodsManager;
 	private long stopTime;
+	private Maybe<JiraIssue> jiraIssue;
 
 	public MockTask() {
 		this("empty");
@@ -226,13 +227,12 @@ public class MockTask implements tasks.Task {
 
 	@Override
 	public Maybe<JiraIssue> getJiraIssue() {
-		// TODO Auto-generated method stub
-		return null;
+		return jiraIssue;
 	}
 
 	@Override
 	public void setJiraIssue(final JiraIssue jiraIssue) {
-		// TODO Auto-generated method stub
+		this.jiraIssue = Maybe.wrap(jiraIssue);
 	}
 
 	@Override

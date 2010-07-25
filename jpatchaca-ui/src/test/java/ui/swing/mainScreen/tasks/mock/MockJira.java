@@ -14,7 +14,7 @@ public class MockJira implements Jira {
 	@Override
 	public JiraIssue getIssueByKey(String key) throws JiraException {
 		JiraIssueData data = new JiraIssueData();
-		data.setKey("jira-issue-key");
+		data.setKey(key);
 		data.setSummary("jira-issue-summary");
 		return new JiraIssue(data);
 	}

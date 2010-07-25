@@ -51,9 +51,6 @@ public class AssureSingleInstance implements Startable{
 						}
 						
 						socket.unbox().accept().close();
-						if( this.isInterrupted()){
-							return;
-						}
 						_tryedToCreateAnotherInstance.fire();
 					} catch (IOException e) {
 						//ignore and return;

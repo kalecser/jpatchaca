@@ -245,6 +245,10 @@ public class TaskScreenController {
 						throw new ValidationException(
 								"Task name must not be empty");
 					}
+					
+					if (jiraIssue == null || !(jiraIssue.unbox().getKey().equals(jiraIssueKeyTextField.getText()))){						
+						loadIssue();
+					}
 
 					TaskData data = new TaskData(new NonEmptyString(taskName));
 					data.setBudget(getBudget());

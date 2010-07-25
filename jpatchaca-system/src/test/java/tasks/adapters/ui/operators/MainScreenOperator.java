@@ -404,7 +404,7 @@ public class MainScreenOperator {
 
 	public void assertJiraKeyForTask(String jiraKey, String task) {
 		TaskScreenOperator taskScreen = editTask(task);
-		taskScreen.assertJiraKey(jiraKey);
+		taskScreen.waitJiraKey(jiraKey);
 		
 	}
 
