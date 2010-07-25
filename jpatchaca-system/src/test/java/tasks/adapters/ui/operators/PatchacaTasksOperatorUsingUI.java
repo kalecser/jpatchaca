@@ -1,7 +1,7 @@
 /**
  * 
  */
-package tasks.adapters.ui;
+package tasks.adapters.ui.operators;
 
 import tasks.PatchacaTasksOperator;
 import ui.swing.tray.tests.environment.PathcacaTrayOperator;
@@ -42,6 +42,12 @@ public final class PatchacaTasksOperatorUsingUI implements
 			final String labelName) {
 		createTask(taskName);
 		mainScreen.assignTaskToLabel(taskName, labelName);
+	}
+	
+	@Override
+	public void createTaskWithJiraIntegration(String taskName, String jiraKey) {
+		mainScreen.createTaskWithJiraKey(taskName, jiraKey);
+		
 	}
 
 	@Override
@@ -125,6 +131,19 @@ public final class PatchacaTasksOperatorUsingUI implements
 	public void assertActiveTask(final String taskName) {
 		mainScreen.assertActiveTask(taskName);
 		patchacaTray.assertActiveTask(taskName);
+	}
+
+	
+
+	@Override
+	public void ediTaskJiraKey(String taskName, String jiraKey) {
+		mainScreen.editTaskJiraKey(taskName, jiraKey);
+		
+	}
+
+	@Override
+	public void assertJiraKeyForTask(String jiraKey, String task) {
+		mainScreen.assertJiraKeyForTask(jiraKey, task);
 	}
 
 }

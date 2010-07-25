@@ -90,7 +90,7 @@ public class AssureSingleInstance implements Startable{
 		try {
 			socket.close();
 		} catch (IOException e) {
-			throw new IllegalStateException("Erro closing " + AssureSingleInstance.class.getName() + " socket");
+			throw new IllegalStateException("Error closing " + AssureSingleInstance.class.getName() + " socket");
 		}
 	}
 }

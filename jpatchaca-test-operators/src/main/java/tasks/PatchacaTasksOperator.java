@@ -13,7 +13,10 @@ public interface PatchacaTasksOperator{
 	boolean isTaskInLabel(String taskName, String labelnName);
 	void createTask(String taskName);
 	void createTaskAndAssignToLabel(String taskName, String labelName);
+	void createTaskWithJiraIntegration(String taskName, String jiraKey);
+
 	void ediTask(String taskName, String taskNewName);
+	void ediTaskJiraKey(String string, String string2);
 	
 	void startTask(String taskName);
 	void startTaskHalfAnHourAgo(String taskName);
@@ -24,6 +27,7 @@ public interface PatchacaTasksOperator{
 
 	void assertTimeSpent(String taskName, int periodIndex, long timeSpentInMinutes);
 	void assertTimeSpentInMinutes(String taskName, long timeSpentInMillis);
+	void assertJiraKeyForTask(String jiraKey, String taskName);
 
 
 

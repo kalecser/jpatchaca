@@ -1,6 +1,6 @@
 package twitter;
 
-import tasks.adapters.ui.MainScreenOperator;
+import tasks.adapters.ui.operators.MainScreenOperator;
 
 public class TwitterOperatorUsingUI implements TwitterOperator {
 

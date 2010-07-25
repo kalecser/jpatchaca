@@ -1,30 +1,26 @@
 package tasks.adapters.ui;
 
-import main.Main;
 
 import org.picocontainer.MutablePicoContainer;
 
 import tasks.PatchacaTasksOperator;
+import tasks.adapters.ui.operators.ContainerForUiTestsFactory;
+import tasks.adapters.ui.operators.PatchacaTasksOperatorUsingUI;
 import basic.mock.MockHardwareClock;
 
 
 
 public final class TaskUsingUITest extends tasks.TasksTest {
 	
-
-	
 	private MutablePicoContainer container;
 
-	
-	
 	@Override
 	public PatchacaTasksOperator createOperator() {
-		final MockHardwareClock mockHardwareClock = new MockHardwareClock();
-		container = Main.createSWINGContainerForTests(mockHardwareClock);		
-		container.start();
+		container = ContainerForUiTestsFactory.createUIContainerForTests();
+		MockHardwareClock mockHardwareClock = container.getComponent(MockHardwareClock.class);
 		return new PatchacaTasksOperatorUsingUI(mockHardwareClock);
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		container.stop();

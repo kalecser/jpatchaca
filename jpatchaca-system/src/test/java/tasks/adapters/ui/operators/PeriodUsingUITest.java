@@ -1,4 +1,4 @@
-package tasks.adapters.ui;
+package tasks.adapters.ui.operators;
 
 import java.awt.SystemTray;
 

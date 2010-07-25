@@ -8,6 +8,7 @@ import labels.LabelsSystem;
 import labels.labels.LabelsHome;
 import lang.Maybe;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.time.DateUtils;
 
 import tasks.ActiveTask;
@@ -195,6 +196,23 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void advanceTimeBy(final long millis) {
 		mockHardwareClock.advanceTimeBy(millis);
+	}
+
+	@Override
+	public void ediTaskJiraKey(String string, String string2) {
+		throw new NotImplementedException();
+		
+	}
+
+	@Override
+	public void assertJiraKeyForTask(String string, String string2) {
+		throw new NotImplementedException();
+		
+	}
+	
+	@Override
+	public void createTaskWithJiraIntegration(String taskName, String jiraKey) {
+		throw new NotImplementedException();		
 	}
 
 }

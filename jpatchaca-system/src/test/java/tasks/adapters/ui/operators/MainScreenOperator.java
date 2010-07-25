@@ -1,4 +1,4 @@
-package tasks.adapters.ui;
+package tasks.adapters.ui.operators;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -30,8 +30,6 @@ import org.netbeans.jemmy.operators.JPopupMenuOperator;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.util.RegExComparator;
-
-import ui.swing.utils.SwingUtils;
 
 public class MainScreenOperator {
 
@@ -142,15 +140,10 @@ public class MainScreenOperator {
 
 	public void selectTask(final String taskName) {
 
-		SwingUtils.invokeAndWaitOrCry(new Runnable() {
-			@Override
-			public void run() {
-				tasksListOperator
-						.waitState(new JListByItemTextFinder(taskName));
-				tasksListOperator.selectItem(taskName);
-			}
-		});
-
+		tasksListOperator
+			.waitState(new JListByItemTextFinder(taskName));
+		tasksListOperator.selectItem(taskName);
+		
 	}
 
 	public void pushEditTaskMenu() {
@@ -161,6 +154,16 @@ public class MainScreenOperator {
 		pushCreateTaskMenu();
 		new TaskScreenOperator().setTaskNameAndOk(taskName);
 		waitTaskCreated(taskName);
+	}
+	
+	public void createTaskWithJiraKey(String taskName, String jiraKey) {
+		pushCreateTaskMenu();
+		TaskScreenOperator taskScreenOperator = new TaskScreenOperator();
+		taskScreenOperator.setJiraKey(jiraKey);
+		taskScreenOperator.setTaskName(taskName);
+		taskScreenOperator.clickOk();
+		
+		
 	}
 
 	private void waitTaskCreated(final String taskName) {
@@ -398,5 +401,29 @@ public class MainScreenOperator {
 		removePeriodsButton.push();
 		confirmPeriodsRemoval();
 	}
+
+	public void assertJiraKeyForTask(String jiraKey, String task) {
+		TaskScreenOperator taskScreen = editTask(task);
+		taskScreen.assertJiraKey(jiraKey);
+		
+	}
+
+	public void editTaskJiraKey(String taskName, String jiraKey) {
+		TaskScreenOperator taskScreen = editTask(taskName);
+		
+		taskScreen.setJiraKey(jiraKey);
+		taskScreen.clickOk();
+		
+	}
+	
+	private TaskScreenOperator editTask(String task) {
+		selectTask(task);
+		pushEditTaskMenu();
+		
+		TaskScreenOperator taskScreen = new TaskScreenOperator();
+		return taskScreen;
+	}
+
+	
 
 }

@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
+import jira.Jira;
+import jira.JiraImpl;
+import jira.JiraMock;
+
+import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
 
 import org.picocontainer.MutablePicoContainer;
@@ -210,9 +215,17 @@ public class Main {
 
 		DeferredExecutor.makeSynchronous();
 		final MutablePicoContainer container = createNonUIContainer(hardwareClock);
+		registerSWINGStuff(container);
+		
 		container.removeComponent(PatchacaDirectory.class);
 		container.addComponent(new TransientDirectory());
-		registerSWINGStuff(container);
+		
+		container.removeComponent(JiraImpl.class);
+		container.addComponent(JiraMock.class);
+		
+		
+		container.removeComponent(AssureSingleInstance.class);
+		container.removeComponent(ShowMainScreenOnSecondRun.class);
 
 		makePatchacaTrayStopShowingStatusMessages(container);
 

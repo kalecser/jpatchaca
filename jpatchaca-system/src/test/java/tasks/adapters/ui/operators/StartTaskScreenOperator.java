@@ -1,4 +1,4 @@
-package tasks.adapters.ui;
+package tasks.adapters.ui.operators;
 
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;

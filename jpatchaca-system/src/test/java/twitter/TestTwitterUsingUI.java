@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.picocontainer.MutablePicoContainer;
 
 import tasks.PatchacaTasksOperator;
-import tasks.adapters.ui.PatchacaTasksOperatorUsingUI;
+import tasks.adapters.ui.operators.PatchacaTasksOperatorUsingUI;
 import basic.mock.MockHardwareClock;
 
 public class TestTwitterUsingUI extends TwitterTests {
