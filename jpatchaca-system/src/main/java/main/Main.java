@@ -4,10 +4,8 @@ import java.io.IOException;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
-import jira.Jira;
 import jira.JiraImpl;
 import jira.JiraMock;
-
 import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
 
