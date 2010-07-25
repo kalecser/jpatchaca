@@ -1,5 +1,6 @@
 package main;
 
+import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
 
 import org.picocontainer.MutablePicoContainer;
@@ -24,6 +25,7 @@ public class TransientNonUIContainer {
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
 		
+		container.removeComponent(AssureSingleInstance.class);
 		
 		container.start();
 	}

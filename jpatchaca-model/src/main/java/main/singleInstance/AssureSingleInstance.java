@@ -6,6 +6,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import lang.Maybe;
+
 import org.apache.log4j.Logger;
 import org.picocontainer.Startable;
 
@@ -17,8 +19,10 @@ public class AssureSingleInstance implements Startable{
 	private static final int PORT = 18123;
 	
 	private final  AlertImpl _tryedToCreateAnotherInstance;
+
+	private Maybe<Thread> alertOnNewconnectionThread;
 	
-	public static ServerSocket socket;
+	public static Maybe<ServerSocket> socket;
 	
 	public AssureSingleInstance(){
 		_tryedToCreateAnotherInstance = new AlertImpl();
@@ -27,8 +31,8 @@ public class AssureSingleInstance implements Startable{
 	private void registerAsRunning(){
 		try {
 			final int backlog = 0;
-			socket = new ServerSocket(PORT, backlog, InetAddress
-					.getByAddress(new byte[] { 127, 0, 0 , 1 }));
+			socket = Maybe.wrap(new ServerSocket(PORT, backlog, InetAddress
+					.getByAddress(new byte[] { 127, 0, 0 , 1 })));
 			
 			alertOnNewConnection();
 		} catch (final Exception e) {
@@ -38,19 +42,31 @@ public class AssureSingleInstance implements Startable{
 	}
 
 	private void alertOnNewConnection() {
-		new Thread(){
+		Thread thread = new Thread(){
 			public void run() {
 				while (true){
 					try {
-						socket.accept().close();
+						if (socket == null){
+							return;
+						}
+						
+						socket.unbox().accept().close();
+						if( this.isInterrupted()){
+							return;
+						}
 						_tryedToCreateAnotherInstance.fire();
 					} catch (IOException e) {
-						_tryedToCreateAnotherInstance.fire();
+						//ignore and return;
+						return;
 					}
 					
 				}
 			};
-		}.start();
+		};
+		
+		thread.start();
+		alertOnNewconnectionThread = Maybe.wrap(thread);
+		
 	}
 	
 	public void subscribeTryedToCreateAnotherInstance(Subscriber subscriber){
@@ -88,7 +104,13 @@ public class AssureSingleInstance implements Startable{
 	@Override
 	public void stop() {
 		try {
-			socket.close();
+			if (alertOnNewconnectionThread != null){
+				alertOnNewconnectionThread.unbox().interrupt();				
+			}
+			
+			if (socket != null){
+				socket.unbox().close();				
+			}
 		} catch (IOException e) {
 			throw new IllegalStateException("Error closing " + AssureSingleInstance.class.getName() + " socket");
 		}
