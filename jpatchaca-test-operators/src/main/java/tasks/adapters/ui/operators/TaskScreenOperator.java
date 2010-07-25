@@ -6,8 +6,6 @@ import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 
-import ui.swing.mainScreen.tasks.TaskScreenController;
-
 public class TaskScreenOperator {
 
 	
@@ -15,7 +13,7 @@ public class TaskScreenOperator {
 	private final JTextFieldOperator jiraKeyTextField;
 
 	public TaskScreenOperator(){
-		frame = new JDialogOperator(TaskScreenController.TITLE);
+		frame = new JDialogOperator("Task edition");
 		jiraKeyTextField = new JTextFieldOperator(frame,0);
 	}
 
