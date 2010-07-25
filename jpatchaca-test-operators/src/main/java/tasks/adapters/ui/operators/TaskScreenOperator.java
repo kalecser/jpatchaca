@@ -11,14 +11,16 @@ public class TaskScreenOperator {
 	
 	private final JDialogOperator frame;
 	private final JTextFieldOperator jiraKeyTextField;
+	private JTextFieldOperator taskNameTextField;
 
 	public TaskScreenOperator(){
 		frame = new JDialogOperator("Task edition");
 		jiraKeyTextField = new JTextFieldOperator(frame,0);
+		taskNameTextField = new JTextFieldOperator(frame,1);
 	}
 
 	public void setTaskName(String taskNewName) {
-		new JTextFieldOperator(frame,1).setText(taskNewName);		
+		taskNameTextField.setText(taskNewName);		
 	}
 
 	public void clickOk() {
@@ -39,6 +41,10 @@ public class TaskScreenOperator {
 
 	public void assertJiraKey(String jiraKey) {
 		jiraKeyTextField.waitText(jiraKey);		
+	}
+
+	public void assertName(String name) {
+		taskNameTextField.waitText(name);		
 	}
 	
 }

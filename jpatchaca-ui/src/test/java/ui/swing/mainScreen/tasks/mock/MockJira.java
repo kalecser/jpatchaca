@@ -7,12 +7,16 @@ import org.apache.commons.lang.NotImplementedException;
 import jira.Jira;
 import jira.JiraException;
 import jira.JiraIssue;
+import jira.JiraIssueData;
 
 public class MockJira implements Jira {
 
 	@Override
 	public JiraIssue getIssueByKey(String key) throws JiraException {
-		throw new NotImplementedException();
+		JiraIssueData data = new JiraIssueData();
+		data.setKey("jira-issue-key");
+		data.setSummary("jira-issue-summary");
+		return new JiraIssue(data);
 	}
 
 	@Override
