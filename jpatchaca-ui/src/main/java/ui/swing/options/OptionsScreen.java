@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
@@ -30,34 +31,27 @@ public class OptionsScreen {
 
 		@Override
 		public JPanel getPanel() {
+			
+			final JTabbedPane tab = new JTabbedPane();
+			
+			addMainPreferences(tab);
+			addTwitterPreferences(tab);
+			addJiraPreferences(tab);
+
+			twitterEnabled.requestFocus();
+
+			JPanel jPanel = new JPanel();
+			jPanel.add(tab);
+			return jPanel;
+		}
+
+		private void addJiraPreferences(JTabbedPane tab) {
 			final JPanel optionsPanel = new JPanel();
 			optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));
 
-			twitterEnabled = new JCheckBox("Twitter logging enabled");
-			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
-					.twitterEnabled());
-			optionsPanel.add(twitterEnabled, "span 4");
-
-			optionsPanel.add(new JLabel("Twitter username"));
-			twitterUsername = new JTextField(30);
-			TextFieldBinder.bind(twitterUsername, optionsScreenModel
-					.twitterUserName());
-			optionsPanel.add(twitterUsername, "growx,span 3");
-
-			optionsPanel.add(new JLabel("Twitter Password"));
-			twitterPassword = new JPasswordField(30);
+			JCheckBox jiraEnabled = new JCheckBox("Jira enabled");
+			optionsPanel.add(jiraEnabled, "span 4");
 			
-			TextFieldBinder.bind(twitterPassword, optionsScreenModel
-					.twitterPassword());
-			optionsPanel.add(twitterPassword, "growx,span 3");
-
-			showLabels = new JCheckBox("Show labels");
-			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
-					.twitterEnabled());
-			optionsPanel.add(showLabels, "span 4");
-
-			optionsPanel.add(new JSeparator(), "growx,span 4");
-
 			optionsPanel.add(new JLabel("Jira url"));
 			jiraUrl = new JTextField();
 			if (optionsScreenModel.jiraUrl() != null) {
@@ -78,10 +72,41 @@ public class OptionsScreen {
 				jiraPassword.setText(optionsScreenModel.jiraPassword().unbox());
 			}
 			optionsPanel.add(jiraPassword, "growx,span 3");
+			
+			tab.add("Jira",optionsPanel);
+		}
 
-			twitterEnabled.requestFocus();
+		private void addTwitterPreferences(JTabbedPane tab) {
+			final JPanel optionsPanel = new JPanel();
+			optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));			
+			
+			twitterEnabled = new JCheckBox("Twitter logging enabled");
+			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
+					.twitterEnabled());
+			optionsPanel.add(twitterEnabled, "span 4");
 
-			return optionsPanel;
+			optionsPanel.add(new JLabel("Twitter username"));
+			twitterUsername = new JTextField(30);
+			TextFieldBinder.bind(twitterUsername, optionsScreenModel
+					.twitterUserName());
+			optionsPanel.add(twitterUsername, "growx,span 3");
+
+			optionsPanel.add(new JLabel("Twitter Password"));
+			twitterPassword = new JPasswordField(30);
+			
+			TextFieldBinder.bind(twitterPassword, optionsScreenModel
+					.twitterPassword());
+			optionsPanel.add(twitterPassword, "growx,span 3");
+
+			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
+					.twitterEnabled());
+			
+			tab.add("Twitter",optionsPanel);
+		}
+
+		private void addMainPreferences(JTabbedPane tab) {
+			showLabels = new JCheckBox("Show labels");
+			tab.add("Preferences",showLabels);
 		}
 
 		@Override
