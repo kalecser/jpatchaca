@@ -285,11 +285,7 @@ public class PatchacaTray implements Startable {
 
 		});
 
-		try {
-			tray().add(trayIcon);
-		} catch (final AWTException e) {
-			throw new RuntimeException(e);
-		}
+		addTrayIconOrCry();
 
 		return trayIcon;
 	}
@@ -399,5 +395,19 @@ public class PatchacaTray implements Startable {
 						TrayIcon.MessageType.INFO);
 			}
 		});
+	}
+
+	public void ensureTrayIconIsVisibleDueToWindowsBug() {
+		tray().remove(trayIcon);
+		addTrayIconOrCry();
+		
+	}
+	
+	private void addTrayIconOrCry() {
+		try {
+			tray().add(trayIcon);
+		} catch (final AWTException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
