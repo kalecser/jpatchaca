@@ -150,10 +150,12 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 			final long in) {
 		final CreateTaskEvent3 createTaskEvent = produceCreateTaskEvent(newTaskData);
 		this.eventsSystem.writeEvent(createTaskEvent);
+		
 		if (newTaskData.getJiraIssue() != null) {
 			this.eventsSystem.writeEvent(new SetJiraIssueToTask(createTaskEvent
 					.getObjectIdentity(), newTaskData.getJiraIssue()));
 		}
+		
 		final TaskView task = tasks.get(createTaskEvent.getObjectIdentity());
 		taskStarted(task, in);
 	}

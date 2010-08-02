@@ -146,4 +146,9 @@ public final class PatchacaTasksOperatorUsingUI implements
 		mainScreen.assertJiraKeyForTask(jiraKey, task);
 	}
 
+	@Override
+	public void selectLabel(String label) {
+		mainScreen.selectLabel(label);
+	}
+
 }

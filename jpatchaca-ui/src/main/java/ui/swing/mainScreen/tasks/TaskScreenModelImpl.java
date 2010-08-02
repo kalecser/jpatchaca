@@ -1,5 +1,6 @@
 package ui.swing.mainScreen.tasks;
 
+import labels.labels.SelectedLabel;
 import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.delegates.CreateTaskDelegate;
@@ -11,17 +12,21 @@ public class TaskScreenModelImpl implements TaskScreenModel {
 	private final TasksSystem taskSystem;
 	private final SelectedTaskSource selectedTask;
 	private final CreateTaskDelegate createTaskDelegate;
+	private final SelectedLabel selectedLabel;
 
 	public TaskScreenModelImpl(final TasksSystem taskSystem,
 			final SelectedTaskSource selectedTask,
-			final CreateTaskDelegate createTaskDelegate) {
+			final CreateTaskDelegate createTaskDelegate, SelectedLabel selectedLabel) {
 		this.taskSystem = taskSystem;
 		this.selectedTask = selectedTask;
 		this.createTaskDelegate = createTaskDelegate;
+		this.selectedLabel = selectedLabel;
 	}
 
 	@Override
 	public void createTask(final TaskData data) {
+		
+		data.setLabel(selectedLabel.selectedLabelCurrentValue());		
 		createTaskDelegate.createTask(data);
 	}
 

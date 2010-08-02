@@ -10,7 +10,10 @@ public class ContainerForUiTestsFactory {
 
 	public static MutablePicoContainer createUIContainerForTests() {
 		final MockHardwareClock mockHardwareClock = new MockHardwareClock();
-		MutablePicoContainer container = Main.createSWINGContainerForTests(mockHardwareClock);		
+		MutablePicoContainer container = Main.createSWINGContainerForTests(mockHardwareClock);	
+		
+		container.addComponent(PatchacaTasksOperatorUsingUI.class);
+		
 		container.start();
 		return container;
 	}

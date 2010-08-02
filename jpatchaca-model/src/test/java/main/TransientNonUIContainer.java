@@ -5,6 +5,7 @@ import model.PatchacaModelContainerFactory;
 
 import org.picocontainer.MutablePicoContainer;
 
+import tasks.adapters.PatchacaTasksOperatorUsingBusinessLayer;
 import wheel.io.files.impl.tranzient.TransientDirectory;
 import basic.PatchacaDirectory;
 import basic.durable.DoubleIdProvider;
@@ -24,6 +25,7 @@ public class TransientNonUIContainer {
 		container.removeComponent(DoubleIdProvider.class);
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
+		container.addComponent(PatchacaTasksOperatorUsingBusinessLayer.class);
 		
 		container.removeComponent(AssureSingleInstance.class);
 		

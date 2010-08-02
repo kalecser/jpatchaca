@@ -6,6 +6,7 @@ package tasks.adapters;
 import junit.framework.Assert;
 import labels.LabelsSystem;
 import labels.labels.LabelsHome;
+import labels.labels.SelectedLabel;
 import lang.Maybe;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -33,6 +34,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	private final TasksView tasks;
 	private final CreateTaskDelegate createTaskDelegate;
 	private final ActiveTask activeTask;
+	private final SelectedLabel selectedLabel;
 
 	public PatchacaTasksOperatorUsingBusinessLayer(
 			final LabelsSystem labelsSystem,
@@ -40,7 +42,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 			final TasksSystem tasksSystem,
 			final StartTaskDelegate startTaskDelegate, final TasksView tasks,
 			final CreateTaskDelegate createTaskDelegate,
-			final ActiveTask activeTask) {
+			final ActiveTask activeTask, SelectedLabel selectedLabel) {
 		super();
 		this.labelsSystem = labelsSystem;
 		this.mockHardwareClock = mockHardwareClock;
@@ -50,6 +52,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 		this.tasks = tasks;
 		this.createTaskDelegate = createTaskDelegate;
 		this.activeTask = activeTask;
+		this.selectedLabel = selectedLabel;
 	}
 
 	@Override
@@ -213,6 +216,11 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void createTaskWithJiraIntegration(String taskName, String jiraKey) {
 		throw new NotImplementedException();		
+	}
+
+	@Override
+	public void selectLabel(String label) {
+		selectedLabel.update(label);
 	}
 
 }

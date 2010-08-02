@@ -30,6 +30,15 @@ public abstract class TasksTest extends TestCase {
 		assertTrue(tasksOperator.isTaskInLabel(taskName, labelName));
 	}
 	
+	public void testCreatedTasksAssignedToSelectedLabel(){
+		tasksOperator.createTaskAndAssignToLabel("foo", "myLabel");
+		
+		tasksOperator.selectLabel("myLabel");
+		tasksOperator.createTask("bar");
+		
+		assertTrue(tasksOperator.isTaskInLabel("bar", "myLabel"));
+	}
+	
 	public void testTaskEdition(){
 		final String taskName = "test";
 		final String labelName = "label one";
@@ -41,8 +50,6 @@ public abstract class TasksTest extends TestCase {
 		assertTrue(tasksOperator.isTaskInLabel(taskNewName, labelName));
 		assertFalse(tasksOperator.isTaskInLabel(taskName, labelName));
 	}
-
-
 	
 	public void testStartStopTask(){
 		final String taskName = "test";
@@ -57,7 +64,6 @@ public abstract class TasksTest extends TestCase {
 		tasksOperator.setTime(oneHour);
 		tasksOperator.stopTask();
 		
-//		bug tasksOperator should not know periods
 		int periodIndex = 0;
 		tasksOperator.assertTimeSpent(taskName, periodIndex, 1 * 60);
 		

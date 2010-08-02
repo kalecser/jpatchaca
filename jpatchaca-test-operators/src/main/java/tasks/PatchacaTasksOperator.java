@@ -23,6 +23,8 @@ public interface PatchacaTasksOperator{
 	void startNewTaskNow(String taskName);
 	void stopTask();
 	
+	void selectLabel(String string);
+	
 	void assertActiveTask(String taskName);
 
 	void assertTimeSpent(String taskName, int periodIndex, long timeSpentInMinutes);
