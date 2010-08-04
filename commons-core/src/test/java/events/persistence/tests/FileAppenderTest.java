@@ -1,5 +1,9 @@
 package events.persistence.tests;
 
+import java.io.IOException;
+
+import org.junit.Ignore;
+
 import junit.framework.TestCase;
 import wheel.io.files.Directory;
 import wheel.io.files.impl.tranzient.TransientDirectory;
@@ -17,6 +21,7 @@ public final class FileAppenderTest extends TestCase {
 		testStartFromScratch(filePersistence);
 	}
 	
+	@Ignore
 	public void testStartFromScratchXMLAppender(){
 		PersistenceManager filePersistence = new XMLAppenderPersistence(directory);
 		testStartFromScratch(filePersistence);
@@ -33,6 +38,14 @@ public final class FileAppenderTest extends TestCase {
 		assertEquals(fortyTwo, persistence.getEventTransactions().get(0));
 		
 		persistence.writeEvent(fortyThree);
+		
+		try {
+			System.out.println(directory.contentsAsString("timer.xml"));
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
 		assertEquals(fortyTwo, 
 				persistence.getEventTransactions().get(0));
 		assertEquals(fortyThree, 

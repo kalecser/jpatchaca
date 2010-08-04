@@ -18,7 +18,7 @@ import events.PersistenceManager;
 public class FileAppenderPersistence implements PersistenceManager {
 
 	private final Directory directory;
-	private static final String fileName = "timer.dat";
+	protected String fileName = "timer.dat";
 
 	public FileAppenderPersistence(final Directory directory) {
 		this.directory = directory;
@@ -43,7 +43,7 @@ public class FileAppenderPersistence implements PersistenceManager {
 		}
 	}
 
-	private List<EventTransaction> readEvents(InputStream in) {
+	protected List<EventTransaction> readEvents(InputStream in) {
 		List<EventTransaction> list = new ArrayList<EventTransaction>();
 		
 		Collection<EventTransaction> event = null;
@@ -66,7 +66,7 @@ public class FileAppenderPersistence implements PersistenceManager {
 		return Arrays.asList((EventTransaction) readObject);
 	}
 
-	private Object readObjectOrCry(InputStream in) {
+	protected Object readObjectOrCry(InputStream in) {
 		Object readObject = null;
 		
 		try {

@@ -98,4 +98,9 @@ public final class PatchacaDirectory implements Directory {
 		return _subject.openFileForAppend(name);
 	}
 
+	@Override
+	public OutputStream openFileForAppendOrCry(String fileName) {
+		return _subject.openFileForAppendOrCry(fileName);
+	}
+
 }
