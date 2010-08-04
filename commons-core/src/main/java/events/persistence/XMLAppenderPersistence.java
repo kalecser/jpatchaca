@@ -17,6 +17,8 @@ import core.events.eventslist.EventTransaction;
 public class XMLAppenderPersistence extends FileAppenderPersistence{
 
 
+	private ObjectOutputStream oos;
+
 	public XMLAppenderPersistence(Directory directory) {
 		super(directory);
 		fileName = "timer.xml";
@@ -26,9 +28,11 @@ public class XMLAppenderPersistence extends FileAppenderPersistence{
 	protected void writeObjectOrCry(EventTransaction event, OutputStream out) {
 		
 		try {
-			ObjectOutputStream oos = new XStream().createObjectOutputStream(new OutputStreamWriter(out));
+			XStream xStream = new XStream();
+			if(oos == null)
+				oos = xStream.createObjectOutputStream(new OutputStreamWriter(out));
 			oos.writeObject(event);
-			oos.close();
+			oos.flush();
 		} catch (Throwable e) {
 			throw new IllegalStateException("Error writing transaction", e);
 		}

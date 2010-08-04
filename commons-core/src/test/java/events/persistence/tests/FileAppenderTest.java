@@ -2,9 +2,10 @@ package events.persistence.tests;
 
 import java.io.IOException;
 
+import junit.framework.TestCase;
+
 import org.junit.Ignore;
 
-import junit.framework.TestCase;
 import wheel.io.files.Directory;
 import wheel.io.files.impl.tranzient.TransientDirectory;
 import core.events.eventslist.EventTransaction;
@@ -51,5 +52,4 @@ public final class FileAppenderTest extends TestCase {
 		assertEquals(fortyThree, 
 				persistence.getEventTransactions().get(1));
 	}
-
 }
