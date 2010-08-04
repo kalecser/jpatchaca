@@ -19,23 +19,17 @@ public class FileAppenderPersistence implements PersistenceManager {
 
 	private final Directory directory;
 	private static final String fileName = "timer.dat";
-	private List<EventTransaction> eventsFormFile = null;
 
 	public FileAppenderPersistence(final Directory directory) {
 		this.directory = directory;
 	}
 
 	@Override
-	public List<EventTransaction> getEventTransactions() {
-
-		if (eventsFormFile == null)
-			eventsFormFile = getEventsFormFile();
-		
-		return eventsFormFile;
-			
+	public List<EventTransaction> getEventTransactions() {		
+		return getEventsFromFile();
 	}
 
-	public List<EventTransaction> getEventsFormFile() {
+	public List<EventTransaction> getEventsFromFile() {
 		boolean dataFileStillDoesNotExist = !directory.fileExists(fileName);
 		if (dataFileStillDoesNotExist)
 			return new ArrayList<EventTransaction>();
@@ -98,7 +92,7 @@ public class FileAppenderPersistence implements PersistenceManager {
 	@Override
 	public void writeEvent(EventTransaction event) {
 		
-		OutputStream out = openOutStreamOrCry();	
+		OutputStream out = directory.openFileForAppendOrCry(fileName);	
 		
 		try {			
 			writeObjectOrCry(event, out);	
@@ -117,22 +111,12 @@ public class FileAppenderPersistence implements PersistenceManager {
 		
 	}
 
-	private void writeObjectOrCry(EventTransaction event, OutputStream out) {
+	protected void writeObjectOrCry(EventTransaction event, OutputStream out) {
 		try {
 			new ObjectOutputStream(out).writeObject(event);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private OutputStream openOutStreamOrCry() {
-		OutputStream out = null; 
-		try {
-			out = directory.openFileForAppend(fileName);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return out;
 	}
 
 }

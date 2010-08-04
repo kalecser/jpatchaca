@@ -39,6 +39,17 @@ public abstract class AbstractDirectory implements Directory {
 			if (input != null) input.close();
 		}
 	}
+	
+	@Override
+	public OutputStream openFileForAppendOrCry(String fileName) {
+		OutputStream out = null; 
+		try {
+			out = this.openFileForAppend(fileName);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return out;
+	}
 
 	private final Map<String, Collection<Closeable>> _openStreamsByFilename = new HashMap<String, Collection<Closeable>>();
 	protected boolean _isClosed = false;

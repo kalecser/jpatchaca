@@ -10,6 +10,7 @@ public interface Directory {
 	OutputStream createFile(String fileName) throws IOException;
 	void createFile(String fileName, String contents) throws IOException;
 	OutputStream openFileForAppend(String fileName) throws IOException;
+	OutputStream openFileForAppendOrCry(String fileName);
 	
 	InputStream openFile(String fileName) throws IOException;
 	String contentsAsString(String fileName) throws IOException;
