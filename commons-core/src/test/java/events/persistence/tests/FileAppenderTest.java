@@ -1,7 +1,5 @@
 package events.persistence.tests;
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
 
 import org.junit.Ignore;
@@ -34,19 +32,10 @@ public final class FileAppenderTest extends TestCase {
 		
 		assertEquals(0, persistence.getEventTransactions().size());
 		
-		persistence.writeEvent(fortyTwo);
-		
+		persistence.writeEvent(fortyTwo);		
 		assertEquals(fortyTwo, persistence.getEventTransactions().get(0));
 		
-		persistence.writeEvent(fortyThree);
-		
-		try {
-			System.out.println(directory.contentsAsString("timer.xml"));
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-		
+		persistence.writeEvent(fortyThree);		
 		assertEquals(fortyTwo, 
 				persistence.getEventTransactions().get(0));
 		assertEquals(fortyThree, 
