@@ -99,11 +99,12 @@ public class FileAppenderPersistence implements PersistenceManager {
 		OutputStream out = directory.openFileForAppendOrCry(fileName);	
 		
 		try {			
-			writeObjectOrCry(event, out);	
+			writeObjectOrCry(event, out);
+			if(eventsFromFile != null)
+				eventsFromFile.add(event);
 		} finally {
 			closeOrCry(out);
 		}
-		
 	}
 
 	private void closeOrCry(java.io.Closeable out) {

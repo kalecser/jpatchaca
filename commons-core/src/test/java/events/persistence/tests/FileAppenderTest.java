@@ -34,11 +34,17 @@ public final class FileAppenderTest extends TestCase {
 		
 		persistence.writeEvent(fortyTwo);		
 		assertEquals(fortyTwo, persistence.getEventsFromFile().get(0));
+		assertEquals(fortyTwo, persistence.getEventTransactions().get(0));
+		
 		
 		persistence.writeEvent(fortyThree);		
 		assertEquals(fortyTwo, 
 				persistence.getEventsFromFile().get(0));
 		assertEquals(fortyThree, 
 				persistence.getEventsFromFile().get(1));
+		
+		assertEquals(fortyThree, 
+				persistence.getEventTransactions().get(1));
 	}
+	
 }
