@@ -1,10 +1,7 @@
 package events.persistence;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,13 +12,15 @@ import wheel.io.files.Directory;
 import core.events.eventslist.EventTransaction;
 import events.PersistenceManager;
 
-public class FileAppenderPersistence implements PersistenceManager {
+public class FileAppenderPersistence implements PersistenceManager, Serializer {
 
 	private final Directory directory;
 	protected String fileName = "timer.dat";
+	private final Serializer serializer;
 
-	public FileAppenderPersistence(final Directory directory) {
+	public FileAppenderPersistence(final Directory directory, Serializer serializer) {
 		this.directory = directory;
+		this.serializer = serializer;
 	}
 
 	List<EventTransaction> eventsFromFile = null;
@@ -70,17 +69,8 @@ public class FileAppenderPersistence implements PersistenceManager {
 		return Arrays.asList((EventTransaction) readObject);
 	}
 
-	protected Object readObjectOrCry(InputStream in) {
-		Object readObject = null;
-		
-		try {
-			readObject = new ObjectInputStream(in).readObject();
-		}catch (EOFException e) {
-			return null;
-		}catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return readObject;
+	public Object readObjectOrCry(InputStream in) {
+		return serializer.readObjectOrCry(in);
 	}
 
 	private InputStream openInStreamOrCry() {
@@ -116,12 +106,8 @@ public class FileAppenderPersistence implements PersistenceManager {
 		
 	}
 
-	protected void writeObjectOrCry(EventTransaction event, OutputStream out) {
-		try {
-			new ObjectOutputStream(out).writeObject(event);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	public void writeObjectOrCry(EventTransaction event, OutputStream out) {
+		serializer.writeObjectOrCry(event, out);
 	}
 
 }

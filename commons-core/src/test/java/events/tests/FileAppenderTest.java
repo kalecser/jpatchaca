@@ -5,6 +5,7 @@ import wheel.io.files.Directory;
 import wheel.io.files.impl.tranzient.TransientDirectory;
 import core.events.eventslist.EventTransaction;
 import events.persistence.FileAppenderPersistence;
+import events.persistence.JavaSerializer;
 
 public final class FileAppenderTest extends TestCase {
 
@@ -14,7 +15,7 @@ public final class FileAppenderTest extends TestCase {
 		EventTransaction fortyThree = new EventTransaction(43l, "forty three");
 		
 		Directory directory = new TransientDirectory();
-		FileAppenderPersistence filePersistence = new FileAppenderPersistence(directory);
+		FileAppenderPersistence filePersistence = new FileAppenderPersistence(directory, new JavaSerializer());
 		
 		assertEquals(0, filePersistence.getEventsFromFile().size());
 		

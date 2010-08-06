@@ -9,20 +9,21 @@ import wheel.io.files.impl.tranzient.TransientDirectory;
 import core.events.eventslist.EventTransaction;
 import events.PersistenceManager;
 import events.persistence.FileAppenderPersistence;
-import events.persistence.XMLAppenderPersistence;
+import events.persistence.JavaSerializer;
+import events.persistence.XMLSerializer;
 
 public final class FileAppenderTest extends TestCase {
 
 	private Directory directory = new TransientDirectory();
 	
 	public void testStartFromScratchFileAppender(){
-		PersistenceManager filePersistence = new FileAppenderPersistence(directory);
+		PersistenceManager filePersistence = new FileAppenderPersistence(directory, new JavaSerializer());
 		testStartFromScratch(filePersistence);
 	}
 	
 	@Ignore
 	public void testStartFromScratchXMLAppender(){
-		PersistenceManager filePersistence = new XMLAppenderPersistence(directory);
+		PersistenceManager filePersistence = new FileAppenderPersistence(directory, new XMLSerializer());
 		testStartFromScratch(filePersistence);
 	}	
 	
