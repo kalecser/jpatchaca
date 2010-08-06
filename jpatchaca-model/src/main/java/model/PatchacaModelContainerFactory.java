@@ -49,6 +49,7 @@ import events.EventsSystemImpl;
 import events.eventslist.CensorFromFile;
 import events.eventslist.EventListImpl;
 import events.persistence.FileAppenderPersistence;
+import events.persistence.XMLSerializer;
 
 public class PatchacaModelContainerFactory {
 
@@ -63,6 +64,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(SystemClockImpl.class);
 		container.addComponent(SslManagerSetup.class);
 		container.addComponent(PeriodsFactoryImpl.class);
+		container.addComponent(XMLSerializer.class);
 		container.addComponent(FileAppenderPersistence.class);
 		container.addComponent(CensorFromFile.class);
 		container.addComponent(EventListImpl.class);

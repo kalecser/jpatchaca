@@ -12,28 +12,34 @@ import wheel.io.files.Directory;
 import core.events.eventslist.EventTransaction;
 import events.PersistenceManager;
 
-public class FileAppenderPersistence implements PersistenceManager, Serializer {
+public class FileAppenderPersistence implements PersistenceManager {
 
 	private final Directory directory;
-	protected String fileName = "timer.dat";
 	private final Serializer serializer;
+
+	List<EventTransaction> eventsFromFile = null;
 
 	public FileAppenderPersistence(final Directory directory, Serializer serializer) {
 		this.directory = directory;
 		this.serializer = serializer;
 	}
 
-	List<EventTransaction> eventsFromFile = null;
 	@Override
-	public List<EventTransaction> getEventTransactions() {
-		if (eventsFromFile == null){
-			eventsFromFile = getEventsFromFile();
+	public void writeEvent(EventTransaction event) {
+		
+		OutputStream out = directory.openFileForAppendOrCry(serializer.fileName());	
+		
+		try {			
+			writeObjectOrCry(event, out);
+			if(eventsFromFile != null)
+				eventsFromFile.add(event);
+		} finally {
+			closeOrCry(out);
 		}
-		return eventsFromFile;
 	}
 
 	public List<EventTransaction> getEventsFromFile() {
-		boolean dataFileStillDoesNotExist = !directory.fileExists(fileName);
+		boolean dataFileStillDoesNotExist = !directory.fileExists(serializer.fileName());
 		if (dataFileStillDoesNotExist)
 			return new ArrayList<EventTransaction>();
 		
@@ -44,6 +50,14 @@ public class FileAppenderPersistence implements PersistenceManager, Serializer {
 		}  finally {
 			closeOrCry(in);
 		}
+	}
+
+	@Override
+	public List<EventTransaction> getEventTransactions() {
+		if (eventsFromFile == null){
+			eventsFromFile = getEventsFromFile();
+		}
+		return eventsFromFile;
 	}
 
 	protected List<EventTransaction> readEvents(InputStream in) {
@@ -69,32 +83,18 @@ public class FileAppenderPersistence implements PersistenceManager, Serializer {
 		return Arrays.asList((EventTransaction) readObject);
 	}
 
-	public Object readObjectOrCry(InputStream in) {
+	private Object readObjectOrCry(InputStream in) {
 		return serializer.readObjectOrCry(in);
 	}
 
 	private InputStream openInStreamOrCry() {
 		InputStream in;
 		try {
-			in = directory.openFile(fileName);
+			in = directory.openFile(serializer.fileName());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		return in;
-	}
-
-	@Override
-	public void writeEvent(EventTransaction event) {
-		
-		OutputStream out = directory.openFileForAppendOrCry(fileName);	
-		
-		try {			
-			writeObjectOrCry(event, out);
-			if(eventsFromFile != null)
-				eventsFromFile.add(event);
-		} finally {
-			closeOrCry(out);
-		}
 	}
 
 	private void closeOrCry(java.io.Closeable out) {
@@ -106,7 +106,7 @@ public class FileAppenderPersistence implements PersistenceManager, Serializer {
 		
 	}
 
-	public void writeObjectOrCry(EventTransaction event, OutputStream out) {
+	private void writeObjectOrCry(EventTransaction event, OutputStream out) {
 		serializer.writeObjectOrCry(event, out);
 	}
 

@@ -62,4 +62,9 @@ public class XMLSerializer implements Serializer{
 		}
 	}
 
+	@Override
+	public String fileName() {
+		return "timer.xml";
+	}
+
 }

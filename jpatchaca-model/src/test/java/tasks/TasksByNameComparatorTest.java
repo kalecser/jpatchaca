@@ -10,7 +10,6 @@ public class TasksByNameComparatorTest {
 	@Test
 	public void testTaskByNameComparator() {
 		assertComparison("e", "E", 0);
-		assertComparison("é", "E", 0);
 		assertComparison("a", "z", -1);
 	}
 

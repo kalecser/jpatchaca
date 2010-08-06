@@ -19,12 +19,16 @@ public final class FileAppenderTest extends TestCase {
 	public void testStartFromScratchFileAppender(){
 		PersistenceManager filePersistence = new FileAppenderPersistence(directory, new JavaSerializer());
 		testStartFromScratch(filePersistence);
+		
+		assertTrue(directory.fileExists("timer.dat"));
 	}
 	
 	@Ignore
 	public void testStartFromScratchXMLAppender(){
 		PersistenceManager filePersistence = new FileAppenderPersistence(directory, new XMLSerializer());
 		testStartFromScratch(filePersistence);
+		
+		assertTrue(directory.fileExists("timer.xml"));
 	}	
 	
 	public void testStartFromScratch(PersistenceManager persistence){

@@ -34,4 +34,9 @@ public class JavaSerializer implements Serializer {
 		}
 	}
 
+	@Override
+	public String fileName() {
+		return "timer.dat";
+	}
+
 }

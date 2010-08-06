@@ -11,5 +11,7 @@ public interface Serializer {
 
 	public abstract void writeObjectOrCry(EventTransaction event,
 			OutputStream out);
+	
+	public String fileName();
 
 }
