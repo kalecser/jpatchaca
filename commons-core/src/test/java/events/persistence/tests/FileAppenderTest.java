@@ -30,15 +30,15 @@ public final class FileAppenderTest extends TestCase {
 		EventTransaction fortyTwo = new EventTransaction(42l, "forty two");
 		EventTransaction fortyThree = new EventTransaction(43l, "forty three");
 		
-		assertEquals(0, persistence.getEventTransactions().size());
+		assertEquals(0, persistence.getEventsFromFile().size());
 		
 		persistence.writeEvent(fortyTwo);		
-		assertEquals(fortyTwo, persistence.getEventTransactions().get(0));
+		assertEquals(fortyTwo, persistence.getEventsFromFile().get(0));
 		
 		persistence.writeEvent(fortyThree);		
 		assertEquals(fortyTwo, 
-				persistence.getEventTransactions().get(0));
+				persistence.getEventsFromFile().get(0));
 		assertEquals(fortyThree, 
-				persistence.getEventTransactions().get(1));
+				persistence.getEventsFromFile().get(1));
 	}
 }

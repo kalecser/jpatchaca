@@ -21,4 +21,9 @@ public class TransientPersistenceManager implements PersistenceManager {
 		transactions.add(event);
 	}
 
+	@Override
+	public List<EventTransaction> getEventsFromFile() {
+		return getEventTransactions();
+	}
+
 }

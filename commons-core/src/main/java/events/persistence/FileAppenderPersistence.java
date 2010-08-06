@@ -24,9 +24,13 @@ public class FileAppenderPersistence implements PersistenceManager {
 		this.directory = directory;
 	}
 
+	List<EventTransaction> eventsFromFile = null;
 	@Override
-	public List<EventTransaction> getEventTransactions() {		
-		return getEventsFromFile();
+	public List<EventTransaction> getEventTransactions() {
+		if (eventsFromFile == null){
+			eventsFromFile = getEventsFromFile();
+		}
+		return eventsFromFile;
 	}
 
 	public List<EventTransaction> getEventsFromFile() {

@@ -159,6 +159,11 @@ public class EventListTest extends MockObjectTestCase {
 			eventsWritten.add(event);
 		}
 
+		@Override
+		public List<EventTransaction> getEventsFromFile() {
+			return getEventTransactions();
+		}
+
 	}
 	
 	

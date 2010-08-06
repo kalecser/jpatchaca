@@ -15,22 +15,22 @@ import com.thoughtworks.xstream.XStream;
 
 import core.events.eventslist.EventTransaction;
 
-public class XMLAppenderPersistence extends FileAppenderPersistence{
+public class XMLAppenderPersistence extends FileAppenderPersistence implements org.picocontainer.Startable{
 
-
-
+	private static final XStream XSTREAM = new XStream();
 	private static final String TIMER_XML_FILENAME = "timer.xml";
+	private final Directory directory2;
 
 	public XMLAppenderPersistence(Directory directory) {
 		super(directory);
+		directory2 = directory;
 		fileName = TIMER_XML_FILENAME;
 	}
 	
 	@Override
 	protected void writeObjectOrCry(EventTransaction event, OutputStream out) {		
 		try {
-			XStream xStream = new XStream();
-			String eventToXML = xStream.toXML(event);
+			String eventToXML = XSTREAM.toXML(event);
 			IOUtils.write(eventToXML + "\n", out);
 			out.flush();
 			
@@ -43,9 +43,11 @@ public class XMLAppenderPersistence extends FileAppenderPersistence{
 	
 	@Override
 	public List<EventTransaction> getEventsFromFile() {
+		
 		buffy = null;
 		return super.getEventsFromFile();
 	}
+	
 	
 	@Override
 	protected Object readObjectOrCry(InputStream in) {
@@ -65,7 +67,7 @@ public class XMLAppenderPersistence extends FileAppenderPersistence{
 			return null;
 		}
 		
-		return new XStream().fromXML(object.toString());
+		return XSTREAM.fromXML(object.toString());
 	}
 
 	private String readOrCry(BufferedReader buffy) {
@@ -75,5 +77,24 @@ public class XMLAppenderPersistence extends FileAppenderPersistence{
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void start() {
+		
+		if (!directory2.fileExists(TIMER_XML_FILENAME)){
+			FileAppenderPersistence pers = new FileAppenderPersistence(directory2);
+			for (EventTransaction evt : pers.getEventTransactions()){
+				writeEvent(evt);
+			}
+		}
+		
+	}
+
+	@Override
+	public void stop(){
+		
+	}
+	
+	
 
 }
