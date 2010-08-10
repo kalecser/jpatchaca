@@ -4,14 +4,14 @@ import java.util.Date;
 
 import basic.Formatter;
 import core.events.eventslist.EventTransaction;
-import events.persistence.FileAppenderPersistence;
+import events.PersistenceManager;
 
 public class EventsListPaneModel {
 
-	private final FileAppenderPersistence persistence;
+	private final PersistenceManager persistence;
 	private final Formatter formater;
 
-	public EventsListPaneModel(final FileAppenderPersistence persistence,
+	public EventsListPaneModel(final PersistenceManager persistence,
 			final Formatter formater) {
 		this.persistence = persistence;
 		this.formater = formater;

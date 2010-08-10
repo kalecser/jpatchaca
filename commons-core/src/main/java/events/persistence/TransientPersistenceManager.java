@@ -25,5 +25,4 @@ public class TransientPersistenceManager implements PersistenceManager {
 	public List<EventTransaction> getEventsFromFile() {
 		return getEventTransactions();
 	}
-
 }

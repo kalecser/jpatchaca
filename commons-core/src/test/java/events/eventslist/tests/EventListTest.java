@@ -9,7 +9,6 @@ import org.jmock.integration.junit3.MockObjectTestCase;
 
 import basic.SystemClockImpl;
 import basic.mock.MockHardwareClock;
-
 import core.events.eventslist.EventTransaction;
 import events.PersistenceManager;
 import events.Processor;
@@ -163,7 +162,6 @@ public class EventListTest extends MockObjectTestCase {
 		public List<EventTransaction> getEventsFromFile() {
 			return getEventTransactions();
 		}
-
 	}
 	
 	

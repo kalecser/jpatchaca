@@ -48,8 +48,9 @@ import basic.durable.DoubleIdProvider;
 import events.EventsSystemImpl;
 import events.eventslist.CensorFromFile;
 import events.eventslist.EventListImpl;
-import events.persistence.FileAppenderPersistence;
-import events.persistence.XMLSerializer;
+import events.persistence.JavaPersistenceManager;
+import events.persistence.PersistenceConverter;
+import events.persistence.XmlPersistenceManager;
 
 public class PatchacaModelContainerFactory {
 
@@ -64,8 +65,9 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(SystemClockImpl.class);
 		container.addComponent(SslManagerSetup.class);
 		container.addComponent(PeriodsFactoryImpl.class);
-		container.addComponent(XMLSerializer.class);
-		container.addComponent(FileAppenderPersistence.class);
+		container.addComponent(JavaPersistenceManager.class);
+		container.addComponent(XmlPersistenceManager.class);
+		container.addComponent(PersistenceConverter.class);
 		container.addComponent(CensorFromFile.class);
 		container.addComponent(EventListImpl.class);
 		container.addComponent(EventsSystemImpl.class);

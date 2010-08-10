@@ -50,6 +50,16 @@ public abstract class AbstractDirectory implements Directory {
 		}
 		return out;
 	}
+	
+	@Override
+	public void renameOrCry(String oldName, String newName) {
+		try {
+			renameFile(oldName, newName);
+		} catch (IOException e) {
+			String message = String.format("Error renaming %s to %s", oldName, newName);
+			throw new IllegalStateException(message , e);
+		}
+	}
 
 	private final Map<String, Collection<Closeable>> _openStreamsByFilename = new HashMap<String, Collection<Closeable>>();
 	protected boolean _isClosed = false;

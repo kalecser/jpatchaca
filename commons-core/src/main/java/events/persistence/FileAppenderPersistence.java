@@ -109,5 +109,4 @@ public class FileAppenderPersistence implements PersistenceManager {
 	private void writeObjectOrCry(EventTransaction event, OutputStream out) {
 		serializer.writeObjectOrCry(event, out);
 	}
-
 }

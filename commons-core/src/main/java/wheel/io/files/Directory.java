@@ -19,6 +19,7 @@ public interface Directory {
 	
 	boolean fileExists(String fileName);
 	void renameFile(String oldName, String newName) throws IOException;
+	void renameOrCry(String oldName, String newName);
 	void deleteFile(String fileName) throws IOException;
 		
 	void deleteAllContents() throws IOException;

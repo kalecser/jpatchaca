@@ -103,4 +103,9 @@ public final class PatchacaDirectory implements Directory {
 		return _subject.openFileForAppendOrCry(fileName);
 	}
 
+	@Override
+	public void renameOrCry(String oldName, String newName) {
+		_subject.renameOrCry(oldName, newName);
+	}
+
 }
