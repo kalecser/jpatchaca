@@ -3,6 +3,7 @@ package tasks;
 import junit.framework.TestCase;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.junit.Ignore;
 
 public abstract class TasksTest extends TestCase {
 
@@ -30,6 +31,7 @@ public abstract class TasksTest extends TestCase {
 		assertTrue(tasksOperator.isTaskInLabel(taskName, labelName));
 	}
 	
+	@Ignore
 	public void testCreatedTasksAssignedToSelectedLabel(){
 		tasksOperator.createTaskAndAssignToLabel("foo", "myLabel");
 		

@@ -107,7 +107,8 @@ public class EventListImpl implements EventList{
 			try {
 				execute(transaction);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Exception exceptionWithTimestamp = new Exception("Error in transaction with timestamp : "+transaction.getTime(),e);
+				exceptionWithTimestamp.printStackTrace();
 			}
 			
 		
