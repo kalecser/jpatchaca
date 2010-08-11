@@ -42,7 +42,7 @@ public class Presenter implements Startable {
 	public JDialog showOkCancelDialog(final ActionPane pane, final String title) {
 
 		final OkCancelDialog dialog = new OkCancelDialog(executor, pane, title,
-				((mainScreen == null) ? null : mainScreen.unbox()));
+				((getMainScreen() == null) ? null : getMainScreen().unbox()));
 		return showDialog(dialog);
 	}
 
@@ -71,11 +71,11 @@ public class Presenter implements Startable {
 
 	public void showYesNoFloatingWindow(final String caption,
 			final UIAction action) throws ValidationException {
-		if (mainScreen == null) {
+		if (getMainScreen() == null) {
 			throw new RuntimeException("Main screen is not set");
 		}
 
-		final int result = JOptionPane.showConfirmDialog(mainScreen.unbox(),
+		final int result = JOptionPane.showConfirmDialog(getMainScreen().unbox(),
 				caption, caption, JOptionPane.YES_NO_OPTION);
 
 		if (result == JOptionPane.YES_OPTION) {
@@ -85,11 +85,11 @@ public class Presenter implements Startable {
 	
 	public void showMessageBalloon(final String message) {
 
-		if (floatingArea == null || mainScreen == null ) {
+		if (floatingArea == null || getMainScreen() == null ) {
 			throw new RuntimeException("Main screen is not set");
 		}
 
-		final BalloonTip contents = new BalloonTip(mainScreen.unbox()
+		final BalloonTip contents = new BalloonTip(getMainScreen().unbox()
 				.getRootPane(), message);
 		final int tenSeconds = 10000;
 		TimingUtils.showTimedBalloon(contents, tenSeconds);
@@ -105,5 +105,9 @@ public class Presenter implements Startable {
 	public void stop() {
 		closeAllWindows();
 		floatingArea = null;
+	}
+
+	public Maybe<JFrame> getMainScreen() {
+		return mainScreen;
 	}
 }

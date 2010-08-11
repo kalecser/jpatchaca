@@ -12,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import org.picocontainer.Startable;
 import org.reactive.Receiver;
 
+import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.day.DayTasksList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
@@ -67,12 +68,12 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 			final UIEventsExecutor executor, final TaskList taskList,
 			final PeriodsList periodsList, final SummaryScreen tasksSummary,
 			final DayTasksList dayList, final JFrameBoundsKeeper boundsKeeper,
-			final TopBarModel topBarModel) {
+			final TopBarModel topBarModel, final ErrorLogScreen errorLogScreen) {
 
 		this.model = model;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
-		this.topBar = new TopBar(executor, topBarModel);
+		this.topBar = new TopBar(executor, topBarModel, errorLogScreen);
 		this.tasksSummary = tasksSummary;
 		this.dayTasksList = dayList;
 

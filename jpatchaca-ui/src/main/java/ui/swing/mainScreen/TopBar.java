@@ -11,6 +11,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.utils.UIEventsExecutor;
 
 @SuppressWarnings("serial")
@@ -38,12 +39,13 @@ public final class TopBar extends JPanel {
 	private JMenuItem removeTaskItem;
 	private JMenuItem exitItem;
 	private JMenuItem optionsItem;
+	private JMenuItem errorLogItem;
 
 	final Collection<Listener> listeners;
 	private final UIEventsExecutor executor;
 	private final TopBarModel model;
 
-	public TopBar(final UIEventsExecutor executor, final TopBarModel model) {
+	public TopBar(final UIEventsExecutor executor, final TopBarModel model, final ErrorLogScreen errorLogScreen) {
 		this.executor = executor;
 		this.model = model;
 
@@ -91,6 +93,13 @@ public final class TopBar extends JPanel {
 
 			public void actionPerformed(final ActionEvent e) {
 				fireOptions();
+			}
+		});
+		
+		this.errorLogItem.addActionListener(new ActionListener() {
+
+			public void actionPerformed(final ActionEvent e) {
+				errorLogScreen.show();
 			}
 		});
 
@@ -215,7 +224,9 @@ public final class TopBar extends JPanel {
 		this.editTaskItem = new JMenuItem("Edit task");
 		this.removeTaskItem = new JMenuItem("Remove task");
 		this.optionsItem = new JMenuItem("Options");
+		this.errorLogItem = new JMenuItem("Error Log");
 
+		
 		this.exitItem = new JMenuItem("Exit");
 
 		menu.add(this.createTaskItem);
@@ -225,6 +236,8 @@ public final class TopBar extends JPanel {
 		menu.add(this.removeTaskItem);
 		menu.addSeparator();
 		menu.add(this.optionsItem);
+		menu.addSeparator();
+		menu.add(this.errorLogItem);
 		menu.addSeparator();
 		menu.add(eventsListMenuItem());
 		menu.addSeparator();

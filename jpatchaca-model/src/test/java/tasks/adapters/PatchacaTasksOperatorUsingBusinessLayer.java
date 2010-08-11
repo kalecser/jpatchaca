@@ -79,8 +79,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void createTask(final String taskName) {
 		TaskData taskData = new TaskData(new NonEmptyString(taskName));
-		taskData.setBudget(0.0);
-		taskData.setLabel(LabelsHome.ALL_LABEL_NAME);
+		
 		createTaskDelegate.createTask(taskData);
 	}
 

@@ -15,6 +15,7 @@ import statistics.ProjectVelocityCalculator;
 import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
+import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
@@ -161,6 +162,7 @@ public class Main {
 		
 		container.addComponent(OptionsScreen.class);
 		container.addComponent(OptionsScreenModelImpl.class);
+		container.addComponent(ErrorLogScreen.class);
 		container.addComponent(SwinglabelsUser.class);
 		container.addComponent(SelectedTaskSource.class);
 		container.addComponent(SelectedTaskPeriods.class);
