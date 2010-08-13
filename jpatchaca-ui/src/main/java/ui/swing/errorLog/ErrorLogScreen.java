@@ -2,10 +2,6 @@ package ui.swing.errorLog;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -14,21 +10,34 @@ import javax.swing.JTextArea;
 
 import lang.Maybe;
 
+import org.reactive.Receiver;
+
+import basic.ErrorLog;
+
 import ui.swing.presenter.Presenter;
 import ui.swing.utils.UIEventsExecutorImpl;
 
-public class ErrorLogScreen {
+public class ErrorLogScreen  {
 
 	private final Presenter presenter;
 	private final JTextArea errorTextArea;
 
 	private JDialog errorLog;
 
-	public ErrorLogScreen(Presenter presenter) {
+	public ErrorLogScreen(final Presenter presenter, final ErrorLog errorLog) {
 		this.presenter = presenter;
 		errorTextArea = new JTextArea("empty log");
-		monitorSystemErr();
-		
+		monitorErrorLog(errorLog);
+	}
+
+
+	private void monitorErrorLog(ErrorLog errorLog) {
+		errorLog.errorLog.addReceiver(new Receiver<String>(){
+			@Override
+			public void receive(String value) {
+				errorTextArea.setText(value);
+			}
+		});
 	}
 
 
@@ -38,45 +47,6 @@ public class ErrorLogScreen {
 		}
 		presenter.showDialog(errorLog);
 	}
-
-
-	private ByteArrayOutputStream monitorSystemErr() {
-		ByteArrayOutputStream os = new ByteArrayOutputStream(){
-			@Override
-			public void write(byte[] b) throws IOException {
-				reloadErrorLog(this);
-				super.write(b);
-			}
-			
-			@Override
-			public synchronized void write(int b) {
-				reloadErrorLog(this);
-				super.write(b);
-			}
-			
-			@Override
-			public synchronized void write(byte[] b, int off, int len) {
-				reloadErrorLog(this);
-				super.write(b, off, len);
-			}
-			
-			@Override
-			public synchronized void writeTo(OutputStream out)
-					throws IOException {
-				reloadErrorLog(this);
-				super.writeTo(out);
-			}
-		};
-		
-		System.setErr(new PrintStream(os));
-		return os;
-	}
-
-
-	private void reloadErrorLog(ByteArrayOutputStream byteArrayOutputStream) {
-		errorTextArea.setText(byteArrayOutputStream.toString());
-	}
-
 
 	private JFrame getMainScreenOrCry(Presenter presenter) {
 		Maybe<JFrame> maybeMainScreen = presenter.getMainScreen();
@@ -106,7 +76,7 @@ public class ErrorLogScreen {
 	public static void main(String[] args) {
 		Presenter presenter = new Presenter(new UIEventsExecutorImpl(null));
 		presenter.setMainScreen(new JFrame());
-		ErrorLogScreen errorLogScreen = new ErrorLogScreen(presenter);
+		ErrorLogScreen errorLogScreen = new ErrorLogScreen(presenter, new ErrorLog());
 		
 		
 		errorLogScreen.show();

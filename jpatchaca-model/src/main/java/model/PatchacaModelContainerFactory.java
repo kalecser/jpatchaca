@@ -1,5 +1,6 @@
 package model;
 
+
 import jira.JiraImpl;
 import jira.JiraOptions;
 import jira.JiraSystemImpl;
@@ -41,6 +42,7 @@ import tasks.tasks.Tasks;
 import twitter.TwitterLogger;
 import twitter.TwitterOptions;
 import twitter.processors.SetTwitterConfigProcessor;
+import basic.ErrorLog;
 import basic.HardwareClock;
 import basic.PatchacaDirectory;
 import basic.SystemClockImpl;
@@ -58,6 +60,7 @@ public class PatchacaModelContainerFactory {
 		final MutablePicoContainer container = new PicoBuilder()
 				.withLifecycle().withCaching().build();
 
+		container.addComponent(ErrorLog.class);
 		container.addComponent(hardwareClock);
 		container.addComponent(AssureSingleInstance.class);
 		container.addComponent(DoubleIdProvider.class);
