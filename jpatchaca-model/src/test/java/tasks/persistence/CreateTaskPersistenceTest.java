@@ -1,6 +1,7 @@
 package tasks.persistence;
 
 import labels.labels.LabelsHome;
+import labels.labels.SelectedLabel;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +22,7 @@ public class CreateTaskPersistenceTest {
 
 	@Before
 	public void setup() {
-		delegate = new CreateTaskDelegate();
+		delegate = new CreateTaskDelegate(new SelectedLabel());
 		consumer = new MockEventsConsumer();
 		final IdProvider mockIdProvider = new MockIdProvider();
 

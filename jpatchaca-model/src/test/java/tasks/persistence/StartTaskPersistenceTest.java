@@ -28,7 +28,7 @@ public class StartTaskPersistenceTest {
 		delegate = new StartTaskDelegate();
 		consumer = new MockEventsConsumer();
 		tasks = new Tasks();
-		createTask = new MockCreateTaskDelegate();
+		createTask = new MockCreateTaskDelegate(null);
 		selectedLabel = new SelectedLabel();
 		final StartTaskPersistence persistence = new StartTaskPersistence(
 				consumer, delegate, tasks, createTask, selectedLabel);

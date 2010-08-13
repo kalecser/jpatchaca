@@ -6,7 +6,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 
@@ -49,7 +48,6 @@ public class JavaToXMLMigrationTest extends TestCase {
 		Assert.assertArrayEquals(new String[]{"foo", "bar", "baz"}, readEvents());
 	}
 	
-	@Ignore
 	public void testMigrationInterruptedByFailure(){
 		
 		startSystemwithJavaSerializer();

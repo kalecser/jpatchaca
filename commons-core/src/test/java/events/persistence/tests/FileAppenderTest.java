@@ -1,9 +1,6 @@
 package events.persistence.tests;
 
 import junit.framework.TestCase;
-
-import org.junit.Ignore;
-
 import wheel.io.files.Directory;
 import wheel.io.files.impl.tranzient.TransientDirectory;
 import core.events.eventslist.EventTransaction;
@@ -23,7 +20,6 @@ public final class FileAppenderTest extends TestCase {
 		assertTrue(directory.fileExists("timer.dat"));
 	}
 	
-	@Ignore
 	public void testStartFromScratchXMLAppender(){
 		PersistenceManager filePersistence = new FileAppenderPersistence(directory, new XMLSerializer());
 		testStartFromScratch(filePersistence);

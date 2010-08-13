@@ -1,9 +1,14 @@
 package tasks.persistence;
 
+import labels.labels.SelectedLabel;
 import tasks.delegates.CreateTaskDelegate;
 import tasks.home.TaskData;
 
 public class MockCreateTaskDelegate extends CreateTaskDelegate {
+
+	public MockCreateTaskDelegate(SelectedLabel selectedLabel) {
+		super(new SelectedLabel());
+	}
 
 	private String taskname = null;
 	private String labelName;
