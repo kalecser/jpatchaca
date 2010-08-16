@@ -3,6 +3,7 @@ package ui.cli.mock;
 import org.junit.Assert;
 
 import ui.commandLine.CommandLineInterface;
+import ui.commandLine.CommandLineInterfaceImpl;
 
 public class JPatchacaCommandLineSystemOperator {
 
@@ -12,7 +13,7 @@ public class JPatchacaCommandLineSystemOperator {
 
 	public JPatchacaCommandLineSystemOperator() {
 		mockWorkLogger = new WorkLoggerMock();
-		cli = new CommandLineInterface(mockWorkLogger);		
+		cli = new CommandLineInterfaceImpl(mockWorkLogger);		
 	}
 	
 	public void sendCommandLine(String command) {

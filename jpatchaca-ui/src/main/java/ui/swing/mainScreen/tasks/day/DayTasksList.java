@@ -43,6 +43,7 @@ import ui.swing.mainScreen.tasks.day.DayTasksTableModel.Pair;
 import ui.swing.presenter.Presenter;
 import ui.swing.utils.SimpleInternalFrame;
 import basic.Formatter;
+import basic.HardwareClock;
 
 public class DayTasksList extends SimpleInternalFrame implements Startable {
 
@@ -59,16 +60,18 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	private final JiraOptions jiraOptions;
 	private final JiraSystem jiraSystem;
 	private JXTable dayTasksTable;
+	private final HardwareClock clock;
 	
 	public DayTasksList(final TasksView tasks, final Formatter formatter,
 			final TasksSystem tasksSystem, final JiraOptions jiraOptions,
-			final JiraSystem jiraSystem, final Presenter presenter) {
+			final JiraSystem jiraSystem, final Presenter presenter, HardwareClock clock) {
 		super(DayTasksList.panelTitle);
 		this.tasks = tasks;
 		this.formatter = formatter;
 		this.tasksSystem = tasksSystem;
 		this.jiraOptions = jiraOptions;
 		this.jiraSystem = jiraSystem;
+		this.clock = clock;
 		initialize();
 	}
 
@@ -267,6 +270,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	}
 
 	public void refrescate() {
+		datePicker.setDate(clock.getTime());
 		showTasksByDay(datePicker.getDate());
 	}
 

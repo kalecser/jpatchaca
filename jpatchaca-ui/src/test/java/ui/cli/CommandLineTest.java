@@ -6,7 +6,7 @@ import ui.cli.mock.JPatchacaCommandLineSystemOperator;
 
 public class CommandLineTest {
 
-	JPatchacaCommandLineSystemOperator operator = new JPatchacaCommandLineSystemOperator()  ;
+	JPatchacaCommandLineSystemOperator operator = new JPatchacaCommandLineSystemOperator();
 	
 	@Test
 	public void testLogWork(){	
@@ -26,8 +26,5 @@ public class CommandLineTest {
 		operator.setWorklogSynchronizationToFail();
 		operator.sendCommandLine("sendWorklog");
 		operator.assertCommandResponse("Worklog not sent. Error: Any exception will do.");
-	}
-	
-
-	
+	}	
 }
