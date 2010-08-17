@@ -11,19 +11,33 @@ import ui.cli.PatchacaSocketServer;
 public class JpatchacaSocketOperator {
 	
 	private final PatchacaSocketServer patchacaSocketServer;
-	private final Socket socket;
+	private Socket socket;
 
 
 	public JpatchacaSocketOperator() throws UnknownHostException, IOException{
 		patchacaSocketServer = new PatchacaSocketServer(new MockCLI());
 		patchacaSocketServer.start();		
-		socket = new Socket("127.0.0.1", 48625 );
+		connect();
 	}
-
 
 	public String sendCommand(String command) throws UnknownHostException, IOException {
 		SocketUtils.writeLine(command, socket);
 		return SocketUtils.readLine(socket);		
 	}
+
+	public void reconnect() throws IOException {
+		socket.close();	
+		connect();
+	}
+
+	private void connect() throws UnknownHostException, IOException {
+		socket = new Socket("127.0.0.1", 48625 );
+	}
+
+	public void close() {
+		patchacaSocketServer.stop();	
+	}
+
+
 
 }
