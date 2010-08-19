@@ -15,8 +15,8 @@ public interface PatchacaTasksOperator{
 	void createTaskAndAssignToLabel(String taskName, String labelName);
 	void createTaskWithJiraIntegration(String taskName, String jiraKey);
 
-	void ediTask(String taskName, String taskNewName);
-	void ediTaskJiraKey(String string, String string2);
+	void editTask(String taskName, String taskNewName);
+	void editTaskJiraKey(String string, String string2);
 	
 	void startTask(String taskName);
 	void startTaskHalfAnHourAgo(String taskName);

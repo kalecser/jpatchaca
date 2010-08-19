@@ -5,6 +5,7 @@ import java.util.List;
 import labels.LabelsSystem;
 import labels.labels.LabelsHome;
 import main.TransientNonUIContainer;
+import main.TransientNonUiContainerWithTestOperators;
 
 import org.jmock.MockObjectTestCase;
 
@@ -34,7 +35,8 @@ public class LabelsTest extends MockObjectTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		
-		final TransientNonUIContainer container = new TransientNonUIContainer();
+		final TransientNonUIContainer container = new TransientNonUiContainerWithTestOperators();
+		container.start();
 		
 		labelsSystem = container.getComponent(LabelsSystem.class);
 		tasksSystem = container.getComponent(TasksSystem.class);

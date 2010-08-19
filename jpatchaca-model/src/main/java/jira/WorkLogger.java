@@ -1,4 +1,4 @@
-package ui.commandLine;
+package jira;
 
 public interface WorkLogger {
 

@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 import basic.SocketUtils;
 
-import ui.cli.PatchacaSocketServer;
+import ui.commandLine.PatchacaSocketServer;
 
 public class JpatchacaSocketOperator {
 	

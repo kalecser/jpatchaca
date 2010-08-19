@@ -57,7 +57,7 @@ public final class PatchacaTasksOperatorUsingUI implements
 	}
 
 	@Override
-	public void ediTask(final String taskName, final String taskNewName) {
+	public void editTask(final String taskName, final String taskNewName) {
 		selectDefaultLabel();
 
 		mainScreen.selectTask(taskName);
@@ -136,7 +136,7 @@ public final class PatchacaTasksOperatorUsingUI implements
 	
 
 	@Override
-	public void ediTaskJiraKey(String taskName, String jiraKey) {
+	public void editTaskJiraKey(String taskName, String jiraKey) {
 		mainScreen.editTaskJiraKey(taskName, jiraKey);
 		
 	}

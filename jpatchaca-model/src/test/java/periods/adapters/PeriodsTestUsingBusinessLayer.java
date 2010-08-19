@@ -1,6 +1,7 @@
 package periods.adapters;
 
 import main.TransientNonUIContainer;
+import main.TransientNonUiContainerWithTestOperators;
 import periods.PatchacaPeriodsOperator;
 import periods.PeriodsTest;
 import tasks.PatchacaTasksOperator;
@@ -11,8 +12,9 @@ public class PeriodsTestUsingBusinessLayer extends PeriodsTest {
 
 	@Override
 	protected void setUp() throws Exception {
-		TransientNonUIContainer transientNonUIContainer = new TransientNonUIContainer();
+		TransientNonUIContainer transientNonUIContainer = new TransientNonUiContainerWithTestOperators();
 		container = transientNonUIContainer;
+		container.start();
 		super.setUp();
 	}
 

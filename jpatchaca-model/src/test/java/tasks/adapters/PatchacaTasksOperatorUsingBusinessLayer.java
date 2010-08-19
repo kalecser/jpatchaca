@@ -92,7 +92,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	}
 
 	@Override
-	public void ediTask(final String taskName, final String taskNewName) {
+	public void editTask(final String taskName, final String taskNewName) {
 		TaskData taskData = new TaskData(new NonEmptyString(taskNewName));
 		taskData.setBudget(0.0);
 		taskData.setLabel(LabelsHome.ALL_LABEL_NAME);
@@ -204,7 +204,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	}
 
 	@Override
-	public void ediTaskJiraKey(String string, String string2) {
+	public void editTaskJiraKey(String string, String string2) {
 		throw new NotImplementedException();
 		
 	}

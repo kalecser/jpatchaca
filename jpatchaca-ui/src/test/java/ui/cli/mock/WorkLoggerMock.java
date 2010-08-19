@@ -1,6 +1,6 @@
 package ui.cli.mock;
 
-import ui.commandLine.WorkLogger;
+import jira.WorkLogger;
 
 public class WorkLoggerMock implements WorkLogger {
 

@@ -1,6 +1,7 @@
 package tasks.adapters;
 
 import main.TransientNonUIContainer;
+import main.TransientNonUiContainerWithTestOperators;
 import tasks.PatchacaTasksOperator;
 import tasks.TasksTest;
 
@@ -11,7 +12,8 @@ public final class TasksTestUsingBusinessLayerImpl extends TasksTest {
 	@Override
 	public PatchacaTasksOperator createOperator() {
 
-		container = new TransientNonUIContainer();
+		container = new TransientNonUiContainerWithTestOperators();
+		container.start();
 		return container.getComponent(PatchacaTasksOperator.class);
 	}
 

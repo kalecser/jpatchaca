@@ -17,7 +17,7 @@ public abstract class JiraIntegrationTest {
 	@Test
 	public void testEditJiraIssue(){
 		operator.createTaskWithJiraIntegration("test", "jira-key");
-		operator.ediTaskJiraKey("test", "jira-new-key");
+		operator.editTaskJiraKey("test", "jira-new-key");
 		
 		operator.assertJiraKeyForTask("jira-new-key", "test");
 	}

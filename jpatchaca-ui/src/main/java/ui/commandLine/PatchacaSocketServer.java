@@ -1,4 +1,4 @@
-package ui.cli;
+package ui.commandLine;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,7 +7,6 @@ import java.net.SocketException;
 
 import org.picocontainer.Startable;
 
-import ui.commandLine.CommandLineInterface;
 
 import basic.SocketUtils;
 

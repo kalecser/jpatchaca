@@ -1,5 +1,7 @@
 package ui.commandLine;
 
+import jira.WorkLogger;
+
 
 public class CommandLineInterfaceImpl implements CommandLineInterface {
 

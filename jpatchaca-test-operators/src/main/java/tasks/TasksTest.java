@@ -45,7 +45,7 @@ public abstract class TasksTest extends TestCase {
 		tasksOperator.createTaskAndAssignToLabel(taskName, labelName);
 		
 		final String taskNewName = "Two";
-		tasksOperator.ediTask(taskName, taskNewName);
+		tasksOperator.editTask(taskName, taskNewName);
 		
 		assertTrue(tasksOperator.isTaskInLabel(taskNewName, labelName));
 		assertFalse(tasksOperator.isTaskInLabel(taskName, labelName));
@@ -75,7 +75,7 @@ public abstract class TasksTest extends TestCase {
 		
 		tasksOperator.createTask(taskName);
 		tasksOperator.startTask(taskName);
-		tasksOperator.ediTask(taskName, taskNewName);
+		tasksOperator.editTask(taskName, taskNewName);
 		
 		tasksOperator.assertActiveTask(taskNewName);
 	}
@@ -86,7 +86,7 @@ public abstract class TasksTest extends TestCase {
 		
 		tasksOperator.createTask(taskName);
 		tasksOperator.startTask(taskName);
-		tasksOperator.ediTask(taskName, taskNewName);
+		tasksOperator.editTask(taskName, taskNewName);
 		
 		tasksOperator.assertActiveTask(taskNewName);
 	}

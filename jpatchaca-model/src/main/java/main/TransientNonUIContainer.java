@@ -5,9 +5,6 @@ import model.PatchacaModelContainerFactory;
 
 import org.picocontainer.MutablePicoContainer;
 
-import periods.adapters.PatchacaPeriodsOperatorUsingBusinessLayer;
-
-import tasks.adapters.PatchacaTasksOperatorUsingBusinessLayer;
 import wheel.io.files.impl.tranzient.TransientDirectory;
 import basic.PatchacaDirectory;
 import basic.durable.DoubleIdProvider;
@@ -27,12 +24,10 @@ public class TransientNonUIContainer {
 		container.removeComponent(DoubleIdProvider.class);
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
-		container.addComponent(PatchacaTasksOperatorUsingBusinessLayer.class);
-		container.addComponent(PatchacaPeriodsOperatorUsingBusinessLayer.class);
+		
 		
 		container.removeComponent(AssureSingleInstance.class);
 		
-		container.start();
 	}
 
 	public MockHardwareClock getMockHardwareClock() {
@@ -45,6 +40,15 @@ public class TransientNonUIContainer {
 
 	public void stop() {
 		container.stop();
+	}
+
+	public void start() {
+		container.start();
+		
+	}
+
+	public void addComponent(Class<?> component) {
+		container.addComponent(component);
 	}
 
 }
