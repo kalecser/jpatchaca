@@ -15,6 +15,8 @@ import statistics.ProjectVelocityCalculator;
 import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
+import ui.commandLine.CommandLineInterfaceImpl;
+import ui.commandLine.PatchacaSocketServer;
 import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
@@ -39,6 +41,7 @@ import ui.swing.mainScreen.TaskListSystemMediator;
 import ui.swing.mainScreen.TooltipForTask;
 import ui.swing.mainScreen.TooltipForTaskImpl;
 import ui.swing.mainScreen.TopBarModel;
+import ui.swing.mainScreen.WorkLoggerUsingSwing;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
 import ui.swing.mainScreen.periods.PeriodsTableWhiteboard;
@@ -110,7 +113,7 @@ public class Main {
 		final MutablePicoContainer swingContainer = container
 				.makeChildContainer();
 
-		registerSWINGStuff(swingContainer);
+		registerUIStuff(swingContainer);
 		return container;
 	}
 
@@ -119,7 +122,7 @@ public class Main {
 		return new PatchacaModelContainerFactory().create(hardwareClock);
 	}
 
-	private static void registerSWINGStuff(final MutablePicoContainer container) {
+	private static void registerUIStuff(final MutablePicoContainer container) {
 		container.addComponent(UIEventsExecutor.class,
 				UIEventsExecutorImpl.class);
 
@@ -194,6 +197,10 @@ public class Main {
 		container.addComponent(LabelsListSystemMediator.class);
 		container.addComponent(TaskExclusionScreen.class);
 		container.addComponent(DayTasksList.class);
+		
+		container.addComponent(CommandLineInterfaceImpl.class);
+		container.addComponent(WorkLoggerUsingSwing.class);
+		container.addComponent(PatchacaSocketServer.class);
 
 	}
 
@@ -215,7 +222,7 @@ public class Main {
 
 		DeferredExecutor.makeSynchronous();
 		final MutablePicoContainer container = createNonUIContainer(hardwareClock);
-		registerSWINGStuff(container);
+		registerUIStuff(container);
 		
 		container.removeComponent(PatchacaDirectory.class);
 		container.addComponent(new TransientDirectory());

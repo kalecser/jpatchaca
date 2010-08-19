@@ -7,6 +7,8 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -19,6 +21,7 @@ import javax.swing.JTable;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
+import org.jdesktop.swingx.JXDatePicker;
 import org.netbeans.jemmy.ComponentChooser;
 import org.netbeans.jemmy.operators.FrameOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
@@ -27,6 +30,7 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JListOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JPopupMenuOperator;
+import org.netbeans.jemmy.operators.JTabbedPaneOperator;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.util.RegExComparator;
@@ -422,6 +426,21 @@ public class MainScreenOperator {
 		
 		TaskScreenOperator taskScreen = new TaskScreenOperator();
 		return taskScreen;
+	}
+
+	public void sendTodaysWorkLog() {
+		new JTabbedPaneOperator(mainScreen).selectPage("Day");
+		JXDatePicker datePicker = new JXDatePicker();
+		DateFormat format = datePicker.getFormats()[0];
+		
+		JTextFieldOperator textFieldOperator = new JTextFieldOperator(mainScreen);
+		textFieldOperator.enterText(format.format(new Date()));
+		textFieldOperator.pressKey(KeyEvent.VK_ENTER);
+		
+		new JTableOperator(mainScreen).selectAll();
+		new JButtonOperator(mainScreen,"Send Worklog").push();
+		
+		new JDialogOperator().pressKey(KeyEvent.VK_ENTER);
 	}
 
 	

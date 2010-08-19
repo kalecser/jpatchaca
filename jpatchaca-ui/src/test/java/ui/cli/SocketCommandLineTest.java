@@ -42,6 +42,7 @@ public class SocketCommandLineTest {
 		
 		String secondCommandResult = op.sendCommand("anotherCommand");
 		Assert.assertEquals("Command anotherCommand received", secondCommandResult);
+		
 	}
 	
 	

@@ -30,8 +30,7 @@ public class PatchacaSocketServer implements Startable{
 				try {
 					int port = 48625;
 					serverSocket = new ServerSocket(port);
-					Socket socket = serverSocket.accept();
-					readCommandsWhileUniverseExists(socket);
+					acceptConnectionsWhileUniverseExists();
 				} catch (IOException e) {
 					throw new RuntimeException("Error openind ServerSocket for PatchacaSocketServer", e);
 				}
@@ -43,14 +42,25 @@ public class PatchacaSocketServer implements Startable{
 		
 	}
 	
+	protected void acceptConnectionsWhileUniverseExists() throws IOException {
+		final boolean universeExists = true;
+		while(universeExists){
+			Socket socket = serverSocket.accept();
+			readCommandsWhileUniverseExists(socket);
+		}
+		
+	}
+
 	private void readCommandsWhileUniverseExists(Socket socket) throws IOException {
 		final boolean universeExists = true;
 		while(universeExists){
 			try {
 				final String command = SocketUtils.readLine(socket);
+				if (command == null)
+					return;
 				SocketUtils.writeLine(cli.command(command), socket);				
 			} catch (SocketException ex){
-				socket = serverSocket.accept();
+				//do nothing
 			}
 		}
 	}
