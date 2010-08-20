@@ -21,6 +21,9 @@ public class SocketCommandLineTest {
 	
 	@After
 	public void tearDown(){
+		if (op == null){
+			return;
+		}
 		op.close();
 	}
 	
