@@ -31,6 +31,7 @@ import net.java.balloontip.TablecellBalloonTip;
 import net.java.balloontip.styles.RoundedBalloonStyle;
 import net.java.balloontip.utils.TimingUtils;
 
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.SortOrder;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
@@ -316,9 +317,13 @@ public class PeriodsList extends SimpleInternalFrame implements
 			return;
 		}
 
-		this.periodsTable.getSelectionModel().setSelectionInterval(row, row);
-		this.periodsTable.scrollRectToVisible(this.periodsTable.getCellRect(
-				row, 0, true));
+		try {
+			this.periodsTable.getSelectionModel().setSelectionInterval(row, row);			
+			this.periodsTable.scrollRectToVisible(this.periodsTable.getCellRect(
+					row, 0, true));
+		} catch (ArrayIndexOutOfBoundsException knownIndexOutOfbounds){
+			Logger.getLogger(PeriodsList.class).error("Known IndexOutOfbounds in setSelectionTo", knownIndexOutOfbounds);
+		}
 	}
 
 	public List<Period> selectedPeriods() {

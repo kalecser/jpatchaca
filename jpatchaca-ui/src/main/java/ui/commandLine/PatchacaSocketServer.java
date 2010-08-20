@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.apache.log4j.Logger;
 import org.picocontainer.Startable;
 
 
@@ -32,7 +33,7 @@ public class PatchacaSocketServer implements Startable{
 					serverSocket = new ServerSocket(port);
 					acceptConnectionsWhileUniverseExists();
 				} catch (IOException e) {
-					throw new RuntimeException("Error openind ServerSocket for PatchacaSocketServer", e);
+					Logger.getLogger(PatchacaSocketServer.class).error("Error openind ServerSocket for PatchacaSocketServer", e);
 				}
 			}
 		};
@@ -45,8 +46,13 @@ public class PatchacaSocketServer implements Startable{
 	protected void acceptConnectionsWhileUniverseExists() throws IOException {
 		final boolean universeExists = true;
 		while(universeExists){
-			Socket socket = serverSocket.accept();
-			readCommandsWhileUniverseExists(socket);
+			try {
+				Socket socket = serverSocket.accept();				
+				readCommandsWhileUniverseExists(socket);
+			} catch (SocketException se){
+				Logger.getLogger(PatchacaSocketServer.class).error(se);
+				return;
+			}
 		}
 		
 	}
@@ -67,6 +73,9 @@ public class PatchacaSocketServer implements Startable{
 
 	@Override
 	public void stop() {
+		if (serverSocket == null){
+			return;
+		}
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
