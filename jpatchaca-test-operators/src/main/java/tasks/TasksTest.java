@@ -3,6 +3,8 @@ package tasks;
 import junit.framework.TestCase;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public abstract class TasksTest extends TestCase {
 
@@ -102,6 +104,8 @@ public abstract class TasksTest extends TestCase {
 		tasksOperator.assertTimeSpent(taskName, periodIndex, 30);
 	}
 	
+	@Test
+	@Ignore
 	public void testStartNewTaskHalfAnHourAgo() throws InterruptedException{
 		long oneHour = DateUtils.MILLIS_PER_HOUR;
 
