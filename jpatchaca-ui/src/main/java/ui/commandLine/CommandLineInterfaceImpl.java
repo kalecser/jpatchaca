@@ -16,11 +16,12 @@ public class CommandLineInterfaceImpl implements CommandLineInterface {
 	 */
 	public String command(final String command){
 		
-		if(command.equals("sendWorklog")){
+		final String sendWorklog = "sendWorklog";
+		if(command.equals(sendWorklog)){
 			return sendWorklog();
 		}
 		
-		return "Invalid command: "+command;
+		return String.format("Invalid command: %s, valida commands are: %s", command, sendWorklog );
 	}
 
 	private String sendWorklog() {
