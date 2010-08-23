@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.junit.Assert;
+
 import basic.SocketUtils;
 
 import ui.commandLine.PatchacaSocketServer;
+import wheel.lang.Threads;
 
 public class JpatchacaSocketOperator {
 	
@@ -31,7 +35,21 @@ public class JpatchacaSocketOperator {
 	}
 
 	private void connect() throws UnknownHostException, IOException {
-		socket = new Socket("127.0.0.1", 48625 );
+		
+		long now = System.currentTimeMillis();
+		
+		long fiveSeconds = 5 * DateUtils.MILLIS_PER_SECOND;
+		while (System.currentTimeMillis() - now < fiveSeconds){
+			Threads.sleepWithoutInterruptions(100);
+			try{
+				socket = new Socket("127.0.0.1", 48625 );
+				return;
+			} catch (Exception ex){
+				//do nothing
+			}
+		}
+		
+		Assert.fail("Failed to connect");
 	}
 
 	public void close() {
