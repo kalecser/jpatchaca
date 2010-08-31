@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+    spec="6.0+"
+    codebase="http://autotelebuild/job/JPatchaca/lastSuccessfulBuild/artifact/trunk/jpatchaca-webstart/target/jnlp/"
+    href="jpatchacabuild.jnlp">
+  <information>
+    <title>JPatchaca Webstart</title>
+    <vendor>JPatchaca</vendor>
+    <homepage href="http://jpatchaca.googlecode.com/"/>
+    <offline-allowed/>
+  </information>
+  <security>
+     <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.6+"/>
+     
+
+<jar href="jpatchaca-system-1.0-SNAPSHOT.jar" main="true"/>
+
+  </resources>
+  <application-desc main-class="main.Main"/>
+</jnlp>
+
