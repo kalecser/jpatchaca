@@ -63,20 +63,10 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#selectedTaskName()
-	 */
 	public Source<Maybe<TaskName>> selectedTaskName() {
 		return this.selectedTaskName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#destroyMainScreen()
-	 */
 	public void destroyMainScreen() {
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -89,11 +79,6 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#showMainScreen()
-	 */
 	public void showMainScreen() {
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -116,11 +101,6 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#stopTaskIn(long)
-	 */
 	public void stopTaskIn(final long time) {
 
 		new Thread() {
@@ -133,12 +113,6 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		}.start();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeui.swing.tray.PatchacaTrayModel#setListener(ui.swing.tray.
-	 * PatchacaTrayModelImpl.Listener)
-	 */
 	public void setListener(final Listener listener) {
 		if (this.listener != null || listener == null) {
 			throw new IllegalArgumentException();
@@ -148,12 +122,6 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#startTaskIn(tasks.tasks.TaskView,
-	 * long)
-	 */
 	public void startTask(final TaskView task, final long timeAgo) {
 		new Thread() {
 
@@ -174,39 +142,20 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#selectedTask()
-	 */
 	public TaskView selectedTask() {
 		return selectedTask.currentValue();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#tooltip()
-	 */
 	public Signal<String> tooltip() {
 		return new PatchacaTrayTooltip(activeTaskName(), selectedTaskName())
 				.output();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#selectedTaskSignal()
-	 */
+
 	public Signal<TaskView> selectedTaskSignal() {
-		return selectedTask;
+		return selectedTask.output();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.swing.tray.PatchacaTrayModel#hasActiveTask()
-	 */
 	public boolean hasActiveTask() {
 		return activeTaskName.currentValue() != null;
 	}

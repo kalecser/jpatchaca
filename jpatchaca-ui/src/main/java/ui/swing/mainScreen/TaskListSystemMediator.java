@@ -1,5 +1,8 @@
 package ui.swing.mainScreen;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import labels.LabelsSystem;
 
 import org.picocontainer.Startable;
@@ -7,10 +10,11 @@ import org.picocontainer.Startable;
 import tasks.TaskView;
 import tasks.TasksListener;
 import tasks.TasksSystem;
-import ui.swing.mainScreen.periods.PeriodsList;
-import ui.swing.tasks.SelectedTaskSource;
+import tasks.tasks.Tasks;
 import ui.swing.users.SwingTasksUser;
+import ui.swing.utils.UIEventsExecutor;
 import basic.Subscriber;
+import core.ObjectIdentity;
 
 public class TaskListSystemMediator implements Startable {
 
@@ -19,10 +23,9 @@ public class TaskListSystemMediator implements Startable {
 	private final LabelsSystem labelsSystem;
 
 	public TaskListSystemMediator(final TaskList list,
-			final LabelsList labelsList, final TasksSystem tasksSystem,
+			final LabelsList labelsList, final TasksSystem tasksSystem, final Tasks tasks, 
 			final LabelsSystem labelsSystem,
-			final SelectedTaskSource selectedTaskSource,
-			final SwingTasksUser tasksUser, final PeriodsList periodsList) {
+			final SwingTasksUser tasksUser, final UIEventsExecutor executor) {
 		this.list = list;
 		this.labelsList = labelsList;
 		this.labelsSystem = labelsSystem;
@@ -60,9 +63,42 @@ public class TaskListSystemMediator implements Startable {
 		this.list.movePeriodAlert().subscribe(new Subscriber() {
 
 			public void fire() {
-				tasksSystem.movePeriod(selectedTaskSource.currentValue(),
-						tasksUser.getPeriodMovingTarget(), periodsList
-								.selectedPeriodIndex());
+				final TaskView periodMovingTarget = tasksUser.getPeriodMovingTarget();
+				
+				String movePeriodData = list.getMovePerioData();
+				
+				Matcher matcher = getMatcher(movePeriodData);
+				
+				final String taskId = matcher.group(1);
+				final Integer selectedPeriodIndex = Integer.valueOf(matcher.group(2));
+				
+				if (selectedPeriodIndex < 0){
+					throwErrorBecauseTransferHandlerKillRuntimeExceptions();
+				}
+				
+				executor.execute(new Runnable() {
+					
+					@Override
+					public void run() {
+						tasksSystem.movePeriod(tasks.get(new ObjectIdentity(taskId)),
+								periodMovingTarget, selectedPeriodIndex);						
+					}
+				});
+				
+			}
+
+			private Matcher getMatcher(String movePeriodData) {
+				Pattern pattern = Pattern.compile("task: (\\w+) period: ([0-9]+)");
+				Matcher matcher = pattern.matcher(movePeriodData);
+				if (!matcher.matches()){
+					throw new IllegalStateException(String.format("Unsupported move period data: %s", movePeriodData));
+				}
+				return matcher;
+			}
+
+			private void throwErrorBecauseTransferHandlerKillRuntimeExceptions()
+					throws Error {
+				throw new Error("Invalid selected period");
 			}
 		});
 

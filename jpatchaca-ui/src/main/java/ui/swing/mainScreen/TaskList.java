@@ -8,6 +8,7 @@ import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -33,11 +34,12 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import labels.labels.SelectedLabel;
 import jira.JiraIssue;
 import jira.JiraOptions;
+import labels.labels.SelectedLabel;
 import lang.Maybe;
 
+import org.apache.commons.lang.UnhandledException;
 import org.reactive.Receiver;
 
 import tasks.ActiveTask;
@@ -111,6 +113,7 @@ public class TaskList extends JPanel {
 	private final UIEventsExecutor uiEventsExecutor;
 	private final JiraOptions jiraOptions;
 	private final SelectedLabel selectedLabel;
+	protected String movePerioData;
 
 	public TaskList(final TaskListModel model,
 			final UIEventsExecutor uiEventsExecutor,
@@ -333,9 +336,8 @@ public class TaskList extends JPanel {
 			@Override
 			public boolean canImport(final TransferSupport info) {
 				try {
-					final String data = (String) info.getTransferable()
-							.getTransferData(DataFlavor.stringFlavor);
-					return data.startsWith("period -");
+					final String data = (String) getTransferableStringOrCry(info);
+					return data.startsWith("task");
 				} catch (final Exception e) {
 				}
 
@@ -347,8 +349,20 @@ public class TaskList extends JPanel {
 				final Point point = info.getDropLocation().getDropPoint();
 				final int index = tasksList.locationToIndex(point);
 				dropTargetTask = tasksListModel.getElementAt(index);
+				movePerioData =  getTransferableStringOrCry(info);
 				movePeriodAlert.fire();
 				return true;
+			}
+
+			private String getTransferableStringOrCry(final TransferSupport info)
+					 {
+				try {
+					return (String)info.getTransferable().getTransferData(DataFlavor.stringFlavor);
+				} catch (UnsupportedFlavorException e) {
+					throw new UnhandledException(e);
+				} catch (IOException e) {
+					throw new UnhandledException(e);
+				}
 			}
 		});
 
@@ -425,8 +439,8 @@ public class TaskList extends JPanel {
 		this.dropTargetTask = dropTargetTask;
 	}
 
-	public void doDropPeriod() {
-		movePeriodAlert.fire();
+	public String getMovePerioData() {
+		return movePerioData;
 	}
 
 }

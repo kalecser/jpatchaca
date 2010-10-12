@@ -44,6 +44,7 @@ import periodsInTasks.PeriodsInTasksSystem;
 import sun.swing.SwingUtilities2;
 import swing.JXTableImproved;
 import tasks.TaskView;
+import tasks.tasks.Tasks;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
@@ -68,6 +69,8 @@ public class PeriodsList extends SimpleInternalFrame implements
 	private final HardwareClock machineClock;
 	private final RemovePeriodsDialogController removePeriodsDialogController;
 	private final PeriodsTableWhiteboard periodsWhiteboard;
+	private final SelectedTaskSource selectedTask;
+	private final Tasks tasks;
 
 	public PeriodsList(final TaskList tasksList,
 			final SelectedTaskSource selectedTaskSource,
@@ -75,7 +78,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 			final PeriodsTableModel periodsTableModel,
 			final HardwareClock machineClock,
 			final RemovePeriodsDialogController removePeriodsDialogController,
-			final PeriodsTableWhiteboard periodsWhiteboard) {
+			final PeriodsTableWhiteboard periodsWhiteboard, SelectedTaskSource selectedTask, Tasks tasks) {
 
 		super("Selected task's periods");
 		this.selectedTaskSource = selectedTaskSource;
@@ -84,6 +87,8 @@ public class PeriodsList extends SimpleInternalFrame implements
 		this.machineClock = machineClock;
 		this.removePeriodsDialogController = removePeriodsDialogController;
 		this.periodsWhiteboard = periodsWhiteboard;
+		this.selectedTask = selectedTask;
+		this.tasks = tasks;
 		this.model = new PeriodsListModel(periodsSystem, selectedTaskSource);
 
 		initialize();
@@ -265,7 +270,8 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 			@Override
 			protected Transferable createTransferable(final JComponent arg0) {
-				return new PeriodTransferable(periodsTable.getSelectedRow());
+				String idOfSelectedTask = tasks.idOf(selectedTask.currentValue()).getId();
+				return new PeriodTransferable(idOfSelectedTask,  periodsTable.getSelectedRow());
 			}
 
 		});

@@ -20,6 +20,8 @@ public final class MovePeriodEvent implements Serializable {
 		Validate.notNull(selectedPeriod);
 		Validate.notNull(movePeriodDestinationTask);
 		
+		Validate.isTrue(selectedPeriod > -1);
+		
 		this.selectedTask = selectedTask;
 		this.selectedPeriod = selectedPeriod;
 		this.targetTask = movePeriodDestinationTask;

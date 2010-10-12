@@ -7,6 +7,7 @@ import jira.JiraIssue;
 import jira.events.SetJiraIssueToTask;
 import lang.Maybe;
 
+import org.apache.commons.lang.Validate;
 import org.picocontainer.Startable;
 
 import periods.Period;
@@ -136,6 +137,8 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	public synchronized void movePeriod(final TaskView taskFrom,
 			final TaskView taskTo, final int periodFrom) {
+		
+		Validate.isTrue(periodFrom > -1);
 		final MovePeriodEvent event = new MovePeriodEvent(tasks.idOf(taskFrom),
 				periodFrom, tasks.idOf(taskTo));
 		this.eventsSystem.writeEvent(event);

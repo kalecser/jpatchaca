@@ -11,8 +11,10 @@ public class PeriodTransferable implements Transferable {
 
 	
 	private final int periodIndex;
+	private final String taskId;
 
-	public PeriodTransferable(int periodIndex){
+	public PeriodTransferable(String taskId, int periodIndex){
+		this.taskId = taskId;
 		this.periodIndex = periodIndex;
 	}
 
@@ -28,7 +30,7 @@ public class PeriodTransferable implements Transferable {
 
 	public Object getTransferData(DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
-		return "period - " + periodIndex ;
+		return String.format("task: %s period: %s", taskId, periodIndex) ;
 	}
 
 }
