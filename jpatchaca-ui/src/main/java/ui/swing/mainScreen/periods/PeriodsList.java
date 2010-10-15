@@ -271,7 +271,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 			@Override
 			protected Transferable createTransferable(final JComponent arg0) {
 				String idOfSelectedTask = tasks.idOf(selectedTask.currentValue()).getId();
-				return new PeriodTransferable(idOfSelectedTask,  periodsTable.getSelectedRow());
+				return new PeriodTransferable(idOfSelectedTask,  selectedPeriodIndex());
 			}
 
 		});
