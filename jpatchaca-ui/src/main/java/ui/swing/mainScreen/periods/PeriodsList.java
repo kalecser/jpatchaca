@@ -387,8 +387,10 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 	public int selectedPeriodIndex() {
 		final TaskView selectedTask = selectedTaskSource.currentValue();
-		return selectedTask.periods().indexOf(selectedPeriods());
+		return selectedTask.periods().indexOf(selectedPeriods().get(0));
 	}
+
+	
 
 	private void removePeriods() {
 		final List<Period> selectedPeriods = selectedPeriods();
