@@ -110,6 +110,7 @@ public final class PatchacaTasksOperatorUsingUI implements
 		final StartTaskScreenOperator operator = mainScreen
 				.openStartTaskScreen();
 		operator.startTaskHalfAnHourAgo(taskName);
+		assertActiveTask(taskName);
 
 	}
 
