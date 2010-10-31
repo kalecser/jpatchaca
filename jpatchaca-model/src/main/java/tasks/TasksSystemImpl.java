@@ -212,7 +212,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 			return;
 		}
 
-		startTaskDelegate.starTask(new StartTaskData(new NonEmptyString(name),
+		startTaskDelegate.starTask(new StartTaskData(new TaskData(new NonEmptyString(name)),
 				0));
 
 		final Period lastPeriod = task.lastPeriod();

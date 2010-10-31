@@ -34,7 +34,7 @@ public class TrayIconStartTaskMessage implements Startable {
 								.millisecondsAgo();
 						tray
 								.statusMessage("Task "
-										+ object.taskName()
+										+ object.taskData().getTaskName()
 										+ " started "
 										+ ((millisecondsAgo == 0) ? "now "
 												: (millisecondsAgo

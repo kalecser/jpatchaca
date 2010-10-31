@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.time.DateUtils;
 
+import tasks.home.TaskData;
+
 import basic.NonEmptyString;
 
 public class StartTaskDataParser {
@@ -17,12 +19,11 @@ public class StartTaskDataParser {
 					minutesAgoregex, "");
 			final Integer minutesAgo = getMinutesAgo(minutesAgoregex, unbox);
 
-			return new StartTaskData(new NonEmptyString(
-					taskNameWithoutMilliseconds),
+			return new StartTaskData(new TaskData(new NonEmptyString(taskNameWithoutMilliseconds)),
 					(int) (minutesAgo * DateUtils.MILLIS_PER_MINUTE));
 		}
 
-		return new StartTaskData(taskname, 0);
+		return new StartTaskData(new TaskData(taskname), 0);
 	}
 
 	private Integer getMinutesAgo(final String minutesAgoregex,

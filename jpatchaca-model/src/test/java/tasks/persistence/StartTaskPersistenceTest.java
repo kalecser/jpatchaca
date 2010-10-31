@@ -9,6 +9,7 @@ import org.junit.Test;
 import periodsInTasks.MockTask;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
+import tasks.home.TaskData;
 import tasks.tasks.Tasks;
 import basic.NonEmptyString;
 import core.ObjectIdentity;
@@ -40,7 +41,7 @@ public class StartTaskPersistenceTest {
 
 		tasks.add(new ObjectIdentity("1"), new MockTask("foo"));
 
-		delegate.starTask(new StartTaskData(new NonEmptyString("foo"), 42));
+		delegate.starTask(new StartTaskData(new TaskData(new NonEmptyString("foo")), 42));
 		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.popEvent());
 
 		Assert.assertTrue(!createTask.taskCreated());
@@ -52,7 +53,7 @@ public class StartTaskPersistenceTest {
 	public void testStartNewTask() throws MustBeCalledInsideATransaction {
 
 		selectedLabel.update("foobar");
-		delegate.starTask(new StartTaskData(new NonEmptyString("foo"), 42));
+		delegate.starTask(new StartTaskData(new TaskData(new NonEmptyString("foo")), 42));
 		
 		final StartTaskEvent3 event = (StartTaskEvent3) (consumer.popEvent());
 		Assert.assertTrue(createTask.taskCreated());

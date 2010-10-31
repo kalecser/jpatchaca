@@ -128,8 +128,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 			return;
 		}
 
-		startTaskDelegate.starTask(new StartTaskData(new NonEmptyString(
-				taskName), 0));
+		startTaskDelegate.starTask(new StartTaskData(new TaskData(new NonEmptyString(taskName)), 0));
 	}
 
 	@Override
@@ -158,8 +157,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 
 	@Override
 	public void startTaskHalfAnHourAgo(final String taskName) {
-		startTaskDelegate.starTask(new StartTaskData(new NonEmptyString(
-				taskName), (int) (DateUtils.MILLIS_PER_MINUTE * 30)));
+		startTaskDelegate.starTask(new StartTaskData(new TaskData(new NonEmptyString(taskName)), (int) (DateUtils.MILLIS_PER_MINUTE * 30)));
 	}
 
 	@Override

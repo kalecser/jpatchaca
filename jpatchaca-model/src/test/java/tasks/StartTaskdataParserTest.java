@@ -22,7 +22,7 @@ public class StartTaskdataParserTest {
 		final StartTaskDataParser parser = new StartTaskDataParser();
 		final StartTaskData data = parser.parse(new NonEmptyString(string));
 
-		Assert.assertEquals(data.taskName().unbox(), taskName);
+		Assert.assertEquals(data.taskData().getTaskName(), taskName);
 		Assert.assertEquals(data.millisecondsAgo(), (Integer) millisecondsAgo);
 	}
 

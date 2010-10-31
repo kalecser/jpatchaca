@@ -10,6 +10,7 @@ import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
+import tasks.home.TaskData;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.users.LabelsUser;
@@ -87,7 +88,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 						}
 
 						startTaskDelegate.starTask(new StartTaskData(
-								new NonEmptyString(name), 0));
+								new TaskData(new NonEmptyString(name)), 0));
 					}
 				}.start();
 			}

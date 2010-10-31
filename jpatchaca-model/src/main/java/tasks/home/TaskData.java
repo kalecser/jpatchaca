@@ -5,7 +5,7 @@ import basic.NonEmptyString;
 
 public class TaskData {
 
-	private final String taskName;
+	private String taskName;
 	private Double budget;
 	private String label;
 	private JiraIssue jiraIssue;
@@ -42,5 +42,10 @@ public class TaskData {
 	
 	public void setJiraIssue(JiraIssue jiraIssue) {
 		this.jiraIssue = jiraIssue;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+		
 	}
 }

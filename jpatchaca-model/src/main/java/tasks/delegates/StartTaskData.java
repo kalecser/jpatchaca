@@ -1,21 +1,21 @@
 package tasks.delegates;
 
-import basic.NonEmptyString;
+import tasks.home.TaskData;
 
 public class StartTaskData {
 
-	private final NonEmptyString taskName;
+	private final TaskData taskData;
 	private final int millisecondsAgo;
 
 
-	public StartTaskData(NonEmptyString taskName, int millisecondsAgo) {
-		this.taskName = taskName;
+	public StartTaskData(TaskData taskdata, int millisecondsAgo) {
+		this.taskData = taskdata;
 		this.millisecondsAgo = millisecondsAgo;
 	}
 
 	
-	public NonEmptyString taskName() {
-		return taskName;
+	public TaskData taskData() {
+		return taskData;
 	}
 
 

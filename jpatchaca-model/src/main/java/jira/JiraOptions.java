@@ -31,4 +31,8 @@ public class JiraOptions {
 	public void setPassword(String password) {
 		this.password = Maybe.wrap(password);
 	}
+
+	public boolean isJiraEnabled() {
+		return this.password != null;
+	}
 }

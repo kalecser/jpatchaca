@@ -37,13 +37,13 @@ public class StartTaskPersistence implements Startable {
 		startTaskDelegate.addListener(new Delegate.Listener<StartTaskData>() {
 			@Override
 			public void execute(final StartTaskData object) {
-				final NonEmptyString taskName = object.taskName();
+				final TaskData taskdata = object.taskData();
 
+				NonEmptyString taskName = new NonEmptyString(taskdata.getTaskName());
 				if (tasks.byName(taskName) == null) {
-					TaskData taskData = new TaskData(taskName);
-					taskData.setBudget(null);
-					taskData.setLabel(selectedLabel.selectedLabelCurrentValue());
-					createTask.createTask(taskData);
+					taskdata.setBudget(null);
+					taskdata.setLabel(selectedLabel.selectedLabelCurrentValue());
+					createTask.createTask(taskdata);
 				}
 
 				eventsConsumer.consume(new StartTaskEvent3(taskName, object
