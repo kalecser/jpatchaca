@@ -21,10 +21,11 @@ public class TaskScreenOperator {
 
 	public void setTaskName(String taskNewName) {
 		taskNameTextField.setText(taskNewName);		
+		taskNameTextField.waitText(taskNewName);
 	}
 
 	public void clickOk() {
-		new JButtonOperator(frame).clickMouse();
+		new JButtonOperator(frame).push();
 	}
 
 	public void setTaskNameAndOk(String taskName) {

@@ -16,6 +16,7 @@ import net.java.balloontip.utils.TimingUtils;
 import org.apache.commons.lang.Validate;
 import org.picocontainer.Startable;
 
+import ui.swing.utils.SwingUtils;
 import ui.swing.utils.UIEventsExecutor;
 
 import commons.swing.FloatingArea;
@@ -103,8 +104,11 @@ public class Presenter implements Startable {
 
 	@Override
 	public void stop() {
-		closeAllWindows();
-		floatingArea = null;
+		
+		SwingUtils.invokeAndWaitOrCry(new Runnable() {	@Override public void run() {
+			closeAllWindows();
+			floatingArea = null;				
+		}});
 	}
 
 	public Maybe<JFrame> getMainScreen() {

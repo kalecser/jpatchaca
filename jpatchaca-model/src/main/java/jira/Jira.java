@@ -10,4 +10,5 @@ public interface Jira {
 
 	void newWorklog(String issueId, Calendar startDate, String timeSpent)
 			throws JiraException;
+
 }

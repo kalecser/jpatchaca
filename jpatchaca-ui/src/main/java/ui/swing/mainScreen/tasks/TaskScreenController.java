@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.Callable;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -20,6 +21,7 @@ import jira.JiraException;
 import jira.JiraIssue;
 import jira.JiraIssueNotFoundException;
 import jira.JiraOptionsNotSetException;
+import jira.JiraUtils;
 import lang.Maybe;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +33,7 @@ import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
 import ui.swing.presenter.UIAction;
 import ui.swing.presenter.ValidationException;
+import ui.swing.utils.SwingUtils;
 import basic.Formatter;
 import basic.NonEmptyString;
 
@@ -106,6 +109,61 @@ public class TaskScreenController {
 				this.jiraIssue = maybeTaskView.unbox().getJiraIssue();
 		}
 
+		@Override
+		public JPanel getPanel() {
+			final JPanel dialog = createDialog(time);
+		
+			taskNameTextBox.requestFocus();
+		
+			if (maybeTaskView == null) {
+				return dialog;
+			}
+		
+			taskView = maybeTaskView.unbox();
+			if (taskView.getJiraIssue() != null) {
+				jiraIssueKeyTextField.setText(taskView.getJiraIssue().unbox()
+						.getKey());
+			}
+			taskNameTextBox.setText(taskView.name());
+			if (taskView.budgetInHours() != null) {
+				budgetCheckBox.setSelected(true);
+				budgetHours.setText(formatter.formatNumber(taskView
+						.budgetInHours()));
+			} else {
+				budgetCheckBox.setSelected(false);
+				budgetHours.setText("");
+			}
+		
+			taskNameTextBox.selectAll();
+		
+			return dialog;
+		}
+
+		@Override
+		public UIAction action() {
+			return new UIAction() {
+		
+				@Override
+				public void run() throws ValidationException {
+		
+					TaskData data = getDataInSwingThread();
+					if (data.getTaskName().equals("")) {
+						throw new ValidationException(
+								"Task name must not be empty");
+					}
+		
+					if (taskView != null) {
+						model.editTask(taskView, data);
+					} else if (time == null) {
+						model.createTask(data);
+					} else {
+						model.createTaskAndStart(data, time.unbox());
+					}
+		
+				}
+			};
+		}
+
 		private JPanel createDialog(final Maybe<Long> time) {
 
 			taskNameTextBox = new JTextField(30);
@@ -173,8 +231,8 @@ public class TaskScreenController {
 			try {
 				jiraIssue = Maybe.wrap(jira.getIssueByKey(key));
 				if (maybeTaskView == null && taskNameTextBox.getText().equals("")) {
-					taskNameTextBox.setText(String.format("[%s] %s", jiraIssue
-							.unbox().getKey(), jiraIssue.unbox().getSummary()));
+					taskNameTextBox.setText(JiraUtils.getIssueDescription(jiraIssue
+										.unbox()));
 				}
 				jiraIssueKeyTextField.setBackground(new Color(0xAAFFAA));
 
@@ -194,36 +252,6 @@ public class TaskScreenController {
 			}
 		}
 
-		@Override
-		public JPanel getPanel() {
-			final JPanel dialog = createDialog(time);
-
-			taskNameTextBox.requestFocus();
-
-			if (maybeTaskView == null) {
-				return dialog;
-			}
-
-			taskView = maybeTaskView.unbox();
-			if (taskView.getJiraIssue() != null) {
-				jiraIssueKeyTextField.setText(taskView.getJiraIssue().unbox()
-						.getKey());
-			}
-			taskNameTextBox.setText(taskView.name());
-			if (taskView.budgetInHours() != null) {
-				budgetCheckBox.setSelected(true);
-				budgetHours.setText(formatter.formatNumber(taskView
-						.budgetInHours()));
-			} else {
-				budgetCheckBox.setSelected(false);
-				budgetHours.setText("");
-			}
-
-			taskNameTextBox.selectAll();
-
-			return dialog;
-		}
-
 		private Double getBudget() {
 			final String budgetHoursText = budgetHours.getText();
 			if (StringUtils.isNumeric(budgetHoursText)
@@ -232,39 +260,30 @@ public class TaskScreenController {
 			}
 			return null;
 		}
-
-		@Override
-		public UIAction action() {
-			return new UIAction() {
-
+		
+		private TaskData getDataInSwingThread(){
+			return SwingUtils.getOrCry(new Callable<TaskData>() {
 				@Override
-				public void run() throws ValidationException {
-
-					final String taskName = taskNameTextBox.getText();
-					if (taskName.equals("")) {
-						throw new ValidationException(
-								"Task name must not be empty");
-					}
-					
-					if (jiraIssue == null || !(jiraIssue.unbox().getKey().equals(jiraIssueKeyTextField.getText()))){						
-						loadIssue();
-					}
-
-					TaskData data = new TaskData(new NonEmptyString(taskName));
-					data.setBudget(getBudget());
-					if(jiraIssue != null)
-						data.setJiraIssue(jiraIssue.unbox());
-
-					if (taskView != null) {
-						model.editTask(taskView, data);
-					} else if (time == null) {
-						model.createTask(data);
-					} else {
-						model.createTaskAndStart(data, time.unbox());
-					}
-
+				public TaskData call() throws Exception {
+					return internalGettaskData();
 				}
-			};
+			});
+			
+		}
+
+		private TaskData internalGettaskData() {
+			final String taskName = taskNameTextBox.getText();
+			TaskData data = new TaskData(new NonEmptyString(taskName));
+			data.setBudget(getBudget());
+			
+			if (jiraIssue == null || !(jiraIssue.unbox().getKey().equals(jiraIssueKeyTextField.getText()))){						
+				loadIssue();
+			}
+			
+			if(jiraIssue != null)
+				data.setJiraIssue(jiraIssue.unbox());
+			
+			return data;
 		}
 	}
 

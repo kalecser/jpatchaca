@@ -35,6 +35,8 @@ import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.util.RegExComparator;
 
+import ui.swing.utils.SwingUtils;
+
 public class MainScreenOperator {
 
 	private final JFrameOperator mainScreen;
@@ -146,7 +148,10 @@ public class MainScreenOperator {
 
 		tasksListOperator
 			.waitState(new JListByItemTextFinder(taskName));
-		tasksListOperator.selectItem(taskName);
+		
+		SwingUtils.invokeAndWaitOrCry(new Runnable() {	@Override public void run() {
+				tasksListOperator.selectItem(taskName);				
+		}});
 		
 	}
 
