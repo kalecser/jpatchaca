@@ -9,9 +9,6 @@ import jira.JiraException;
 import jira.JiraIssue;
 import jira.JiraOptions;
 import jira.JiraUtils;
-
-import org.apache.commons.lang.UnhandledException;
-
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDataParser;
 import tasks.delegates.StartTaskDelegate;
