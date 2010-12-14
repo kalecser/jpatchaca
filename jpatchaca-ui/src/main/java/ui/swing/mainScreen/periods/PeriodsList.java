@@ -118,6 +118,8 @@ public class PeriodsList extends SimpleInternalFrame implements
 		removePeriodButton = new JButton(Icons.REMOVE_ICON);
 		addPeriodButton.setToolTipText("Delete period");
 		
+		
+		
 		addPeriodButton.setFocusable(false);
 		removePeriodButton.setFocusable(false);
 

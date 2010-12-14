@@ -50,7 +50,7 @@ public class MainScreenOperator {
 		mainScreen = new JFrameOperator();
 		periodsTableOperator = new JTableOperator(mainScreen);
 		tasksListOperator = new JListOperator(mainScreen, 1);
-		removePeriodsButton = new JButtonOperator(mainScreen, "remove");
+		removePeriodsButton = new JButtonOperator(mainScreen, 2);
 	}
 
 	private static void clickRestoreWindow(final PopupMenu menu) {
@@ -348,7 +348,7 @@ public class MainScreenOperator {
 
 		selectTask(taskName);
 		final int rowCount = periodsTableOperator.getRowCount();
-		new JButtonOperator(mainScreen, "add").doClick();
+		new JButtonOperator(mainScreen, 1).doClick();
 		waitPeriodCreated(rowCount);
 
 	}
