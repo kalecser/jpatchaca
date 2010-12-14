@@ -45,6 +45,7 @@ import sun.swing.SwingUtilities2;
 import swing.JXTableImproved;
 import tasks.TaskView;
 import tasks.tasks.Tasks;
+import ui.swing.Icons;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
 import ui.swing.mainScreen.tasks.TaskSelectionListener;
@@ -111,9 +112,12 @@ public class PeriodsList extends SimpleInternalFrame implements
 	private JToolBar getPeriodsToolbar() {
 		final JToolBar toolBar = new JToolBar();
 
-		addPeriodButton = new JButton("add");
-		removePeriodButton = new JButton("remove");
-
+		addPeriodButton = new JButton(Icons.ADD_ICON);
+		addPeriodButton.setToolTipText("Add period");
+		
+		removePeriodButton = new JButton(Icons.REMOVE_ICON);
+		addPeriodButton.setToolTipText("Delete period");
+		
 		addPeriodButton.setFocusable(false);
 		removePeriodButton.setFocusable(false);
 
@@ -132,7 +136,6 @@ public class PeriodsList extends SimpleInternalFrame implements
 					}
 				});
 
-		addPeriodButton.setToolTipText("Adds a new custom period");
 		toolBar.add(addPeriodButton);
 		toolBar.add(removePeriodButton);
 		return toolBar;
@@ -308,6 +311,13 @@ public class PeriodsList extends SimpleInternalFrame implements
 
 			@Override
 			public void periodRemoved(final Period period) {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						selectAndScrollToRow(periodsTable.getSelectedRow());
+					}
+				});
 			}
 
 			@Override
@@ -349,12 +359,6 @@ public class PeriodsList extends SimpleInternalFrame implements
 		}
 
 		return selectedPeriods;
-	}
-
-	public void setSelectedPeriodTesting(final int index) {
-		this.periodsTable.getSelectionModel()
-				.setSelectionInterval(index, index);
-
 	}
 
 	public void clickOnAddPediodButton() {
