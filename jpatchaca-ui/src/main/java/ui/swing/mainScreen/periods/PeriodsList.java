@@ -46,7 +46,6 @@ import swing.JXTableImproved;
 import tasks.TaskView;
 import tasks.tasks.Tasks;
 import ui.swing.Icons;
-import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
@@ -71,7 +70,7 @@ public class PeriodsList extends SimpleInternalFrame {
 	private final SelectedTaskSource selectedTask;
 	private final Tasks tasks;
 
-	public PeriodsList(final TaskList tasksList,
+	public PeriodsList(
 			final SelectedTaskSource selectedTaskSource,
 			final PeriodsInTasksSystem periodsInTasks,
 			final PeriodsTableModel periodsTableModel,
