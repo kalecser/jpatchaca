@@ -48,15 +48,13 @@ import tasks.tasks.Tasks;
 import ui.swing.Icons;
 import ui.swing.mainScreen.TaskList;
 import ui.swing.mainScreen.dragAndDrop.PeriodTransferable;
-import ui.swing.mainScreen.tasks.TaskSelectionListener;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SimpleInternalFrame;
 import ui.swing.utils.SwingUtils;
 import basic.HardwareClock;
 
 @SuppressWarnings( { "serial", "restriction" })
-public class PeriodsList extends SimpleInternalFrame implements
-		TaskSelectionListener {
+public class PeriodsList extends SimpleInternalFrame {
 
 	private JXTable periodsTable;
 	private JButton addPeriodButton;
@@ -92,11 +90,34 @@ public class PeriodsList extends SimpleInternalFrame implements
 		this.tasks = tasks;
 		this.model = new PeriodsListModel(periodsSystem, selectedTaskSource);
 
+		bindToSelectedtask(selectedTask);
 		initialize();
 		listScrollListener = listScrollListener();
 
-		tasksList.addTaskSelectionListener(this);
+	}
+	
+	public int selectedPeriodIndex() {
+		final TaskView selectedTask = selectedTaskSource.currentValue();
+		return selectedTask.periods().indexOf(selectedPeriods().get(0));
+	}
 
+	public List<Period> selectedPeriods() {
+	
+		final int[] selectedRows = this.periodsTable.getSelectedRows();
+	
+		final boolean noneSelected = selectedRows == null
+				|| selectedRows.length == 0 || selectedRows[0] == -1;
+		if (noneSelected) {
+			return new ArrayList<Period>();
+		}
+	
+		final List<Period> selectedPeriods = new ArrayList<Period>();
+		for (final int index : selectedRows) {
+			selectedPeriods.add(periodsTableModel.getPeriod(periodsTable
+					.convertRowIndexToModel(index)));
+		}
+	
+		return selectedPeriods;
 	}
 
 	private void initialize() {
@@ -105,7 +126,6 @@ public class PeriodsList extends SimpleInternalFrame implements
 		add(scrollPane, BorderLayout.CENTER);
 
 		final JToolBar toolBar = getPeriodsToolbar();
-
 		setToolBar(toolBar);
 	}
 
@@ -282,7 +302,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 		});
 	}
 
-	public void selectionChangedTo(final TaskView selectedTask) {
+	private void selectedtaskChangedTo(final TaskView selectedTask) {
 		if (_selectedTask != null) {
 			_selectedTask.removePeriodListener(listScrollListener);
 		}
@@ -293,7 +313,7 @@ public class PeriodsList extends SimpleInternalFrame implements
 			return;
 		}
 
-		// selectAndScrollToRow(0);
+
 		selectedTask.addPeriodsListener(listScrollListener);
 	}
 
@@ -344,29 +364,6 @@ public class PeriodsList extends SimpleInternalFrame implements
 		}
 	}
 
-	public List<Period> selectedPeriods() {
-
-		final int[] selectedRows = this.periodsTable.getSelectedRows();
-
-		final boolean noneSelected = selectedRows == null
-				|| selectedRows.length == 0 || selectedRows[0] == -1;
-		if (noneSelected) {
-			return new ArrayList<Period>();
-		}
-
-		final List<Period> selectedPeriods = new ArrayList<Period>();
-		for (final int index : selectedRows) {
-			selectedPeriods.add(periodsTableModel.getPeriod(periodsTable
-					.convertRowIndexToModel(index)));
-		}
-
-		return selectedPeriods;
-	}
-
-	public void clickOnAddPediodButton() {
-		addPeriodButton.doClick();
-	}
-
 	private void addPeriod() {
 		try {
 			addPeriodButton.setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -391,12 +388,14 @@ public class PeriodsList extends SimpleInternalFrame implements
 		});
 	}
 
-	public int selectedPeriodIndex() {
-		final TaskView selectedTask = selectedTaskSource.currentValue();
-		return selectedTask.periods().indexOf(selectedPeriods().get(0));
+	private void bindToSelectedtask(SelectedTaskSource selectedTask) {
+		selectedTask.addReceiver(new Receiver<TaskView>() {
+			@Override
+			public void receive(TaskView value) {
+				selectedtaskChangedTo(value);
+			}
+		});
 	}
-
-	
 
 	private void removePeriods() {
 		final List<Period> selectedPeriods = selectedPeriods();
