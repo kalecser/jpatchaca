@@ -40,6 +40,10 @@ public class PatchacaTray implements Startable {
 	private static final Image ACTIVE_ICON = iconImage(TRAY_ICON_ACTIVE_PATH);
 	private static final String TRAY_ICON_INACTIVE_PATH = "jpoff.png";
 	private static final Image INACTIVE_ICON = iconImage(TRAY_ICON_INACTIVE_PATH);
+	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jpoffTimer.png";
+	private static final Image INACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_INACTIVE_ROTATION_ON_PATH);
+	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jponTimer.png";
+	private static final Image ACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_ACTIVE_ROTATION_ON_PATH);
 
 	static final String STOP_TASK_SCPECIAL = "Stop task...";
 
@@ -111,12 +115,18 @@ public class PatchacaTray implements Startable {
 			@Override
 			public void receive(final Maybe<TaskName> taskName) {
 				if (taskName == null) {
-					trayIcon.setImage(INACTIVE_ICON);
+					if (timer == null)
+						trayIcon.setImage(INACTIVE_ICON);
+					else
+						trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);	
 					stopTaskItem.setLabel(STOP_TASK);
 					stopTaskItem.setEnabled(false);
 					stopTaskSpecialItem.setEnabled(false);
 				} else {
-					trayIcon.setImage(ACTIVE_ICON);
+					if (timer == null)
+						trayIcon.setImage(ACTIVE_ICON);
+					else
+						trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);	
 					stopTaskItem.setLabel(STOP_TASK + " ("
 							+ taskName.unbox().unbox() + ")");
 					stopTaskItem.setEnabled(true);
@@ -141,7 +151,14 @@ public class PatchacaTray implements Startable {
 						"Valor deve ser um inteiro!");
 				this.startTimer();
 			}
-
+			
+			if (model.hasActiveTask()) {
+				trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);
+			} else {
+				trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);
+			}
+			
+			
 			timer = new NotificationTimer(intTempoDigitado, trayIcon);
 			timer.start();
 
@@ -158,12 +175,19 @@ public class PatchacaTray implements Startable {
 		NotificationTimer.setStatus(TimerStatus.OFF);
 
 		timer.interrupt();
-
+		
+		if (model.hasActiveTask()) {
+			trayIcon.setImage(ACTIVE_ICON);
+		} else {
+			trayIcon.setImage(INACTIVE_ICON);
+		}
+		
 		JOptionPane.showMessageDialog(null, "Timer has been stopped!");
 		NotificationTimer.setStatus(TimerStatus.OFF);
 		getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(true);
 		getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
 				false);
+		timer = null;
 	}
 
 	private void createTimerMenu() {
@@ -370,14 +394,12 @@ public class PatchacaTray implements Startable {
 
 			if (model.hasActiveTask()) {
 				model.stopTaskIn(0);
-				trayIcon.setImage(INACTIVE_ICON);
 				return;
 			}
 
 			final TaskView selectedTask = model.selectedTask();
 			if (selectedTask != null) {
 				model.startTask(selectedTask, 0);
-				trayIcon.setImage(ACTIVE_ICON);
 			}
 
 		} finally {
