@@ -25,7 +25,7 @@ public class NotificationTimer extends Thread {
 				while (status == TimerStatus.ON) {
 					wait(minutesToWait * 60000);
 					trayIcon.displayMessage(title, message, MessageType.ERROR);
-					DialogShake.newShakeDialog(message, title);
+					DialogShake.showDialogShaking(message, title);
 				}
 			}
 		} catch (final InterruptedException e) {

@@ -10,23 +10,43 @@ import javax.swing.Timer;
 
 public class DialogShake {
 
-	public static void newShakeDialog(final String message, final String title) {
-		final JOptionPane pane = new JOptionPane(message,
-				JOptionPane.ERROR_MESSAGE);
-		final JDialog d = pane.createDialog(null, title);
-		final DialogShake dec = new DialogShake(d);
-		d.pack();
-		d.setModal(false);
-		d.setVisible(true);
-		dec.startShake();
+	private static DialogShake instance;
+	
+	public static void showDialogShaking(final String message, final String title){
+		
+		if(instance == null)
+			createShakeDialog();
+		
+		instance.mostraNovaMensagem(message, title);
+		instance.startShake();
 	}
 
+	
+	private static void createShakeDialog() {
+		pane = new JOptionPane("",
+				JOptionPane.ERROR_MESSAGE);
+		final JDialog d = pane.createDialog(null, "");
+		instance = new DialogShake(d);
+		d.pack();
+		d.setModal(false);
+	}
+
+	static JOptionPane pane;
 	JDialog dialog;
 	Point naturalLocation;
 	Timer shakeTimer;
 
-	public DialogShake(final JDialog d) {
+	
+	
+	private DialogShake(final JDialog d) {
 		dialog = d;
+	}
+	
+	private void mostraNovaMensagem(final String message,
+			final String title) {
+		pane.setMessage(message);
+		dialog.setVisible(true);
+		dialog.setTitle(title);
 	}
 
 	public void startShake() {

@@ -62,7 +62,7 @@ public class PatchacaTray implements Startable {
 
 	private PopupMenu timerMenu;
 	private TrayIcon trayIcon;
-
+	
 	protected AtomicLong lastClicktime = new AtomicLong();
 	protected AtomicBoolean isprocessingClick = new AtomicBoolean(false);
 	public boolean test_mode = false;
