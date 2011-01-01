@@ -59,7 +59,7 @@ import ui.swing.options.OptionsScreen;
 import ui.swing.options.OptionsScreenModelImpl;
 import ui.swing.presenter.Presenter;
 import ui.swing.singleInstance.ShowMainScreenOnSecondRun;
-import ui.swing.tasks.SelectedTaskPeriods;
+import ui.swing.tasks.SelectedTaskPeriodsImpl;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.tasks.StartTaskController;
 import ui.swing.tasks.StartTaskScreen;
@@ -168,7 +168,7 @@ public class Main {
 		container.addComponent(ErrorLogScreen.class);
 		container.addComponent(SwinglabelsUser.class);
 		container.addComponent(SelectedTaskSource.class);
-		container.addComponent(SelectedTaskPeriods.class);
+		container.addComponent(SelectedTaskPeriodsImpl.class);
 		container.addComponent(SelectedTaskName.class);
 		container.addComponent(TaskList.class);
 		container.addComponent(TaskListModel.class, TaskListModelImpl.class);
@@ -229,9 +229,9 @@ public class Main {
 		
 		container.removeComponent(JiraImpl.class);
 		container.addComponent(JiraMock.class);
+
+		container.removeComponent(AssureSingleInstance.class);		
 		
-		
-		container.removeComponent(AssureSingleInstance.class);
 		container.removeComponent(ShowMainScreenOnSecondRun.class);
 
 		makePatchacaTrayStopShowingStatusMessages(container);

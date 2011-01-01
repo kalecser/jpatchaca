@@ -11,6 +11,7 @@ public class Icons {
 	
 	public static final Icon ADD_ICON = loadIcon("add.png");
 	public static final Icon REMOVE_ICON = loadIcon("erase.png");
+	public static final Icon MERGE_ICON = loadIcon("merge.png");
 	
 	private static ImageIcon loadIcon(String icon) {
 		return new ImageIcon(Icons.class.getResource(BASE_ICONS_DIR + icon));

@@ -12,7 +12,7 @@ public class SelectedTaskPeriodsTest {
 	@Test
 	public void testSelectedTaskPeriods() {
 		final SelectedTaskSource selectedTask = new SelectedTaskSource();
-		final SelectedTaskPeriods periods = new SelectedTaskPeriods(
+		final SelectedTaskPeriods periods = new SelectedTaskPeriodsImpl(
 				selectedTask);
 
 		Assert.assertEquals(0, periods.currentSize());

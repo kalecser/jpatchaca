@@ -2,6 +2,7 @@ package ui.swing.mainScreen.periods;
 
 import periods.Period;
 import periodsInTasks.PeriodsInTasksSystem;
+import tasks.TaskView;
 import ui.swing.tasks.SelectedTaskSource;
 
 public class PeriodsListModel {
@@ -19,5 +20,11 @@ public class PeriodsListModel {
 	public void removePeriod(final Period period) {
 		periodsInTasksSystem.removePeriod(selectedTask.currentValue(), period);
 	}
+	
+	public int selectedPeriodIndex(Period selectedPeriod) {
+		final TaskView currentSelectedTask = selectedTask.currentValue();
+		return currentSelectedTask.periods().indexOf(selectedPeriod);
+	}
+
 
 }

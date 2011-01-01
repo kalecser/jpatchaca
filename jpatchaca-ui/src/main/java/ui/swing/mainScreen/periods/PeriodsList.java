@@ -15,6 +15,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -67,8 +68,8 @@ public class PeriodsList extends SimpleInternalFrame {
 	private final HardwareClock machineClock;
 	private final RemovePeriodsDialogController removePeriodsDialogController;
 	private final PeriodsTableWhiteboard periodsWhiteboard;
-	private final SelectedTaskSource selectedTask;
 	private final Tasks tasks;
+	private JButton mergePeriodsButton;
 
 	public PeriodsList(
 			final SelectedTaskSource selectedTaskSource,
@@ -76,7 +77,7 @@ public class PeriodsList extends SimpleInternalFrame {
 			final PeriodsTableModel periodsTableModel,
 			final HardwareClock machineClock,
 			final RemovePeriodsDialogController removePeriodsDialogController,
-			final PeriodsTableWhiteboard periodsWhiteboard, SelectedTaskSource selectedTask, Tasks tasks) {
+			final PeriodsTableWhiteboard periodsWhiteboard, Tasks tasks) {
 
 		super("Selected task's periods");
 		this.selectedTaskSource = selectedTaskSource;
@@ -85,19 +86,24 @@ public class PeriodsList extends SimpleInternalFrame {
 		this.machineClock = machineClock;
 		this.removePeriodsDialogController = removePeriodsDialogController;
 		this.periodsWhiteboard = periodsWhiteboard;
-		this.selectedTask = selectedTask;
 		this.tasks = tasks;
 		this.model = new PeriodsListModel(periodsSystem, selectedTaskSource);
 
-		bindToSelectedtask(selectedTask);
-		initialize();
+		bindToSelectedtask(selectedTaskSource);
+		initializeInSwingThread();
 		listScrollListener = listScrollListener();
 
 	}
-	
-	public int selectedPeriodIndex() {
-		final TaskView selectedTask = selectedTaskSource.currentValue();
-		return selectedTask.periods().indexOf(selectedPeriods().get(0));
+
+	public int selectedPeriodIndex(){
+		
+		List<Period> selectedPeriods = selectedPeriods();
+		
+		if (selectedPeriods.size() == 0)
+			return -1;
+			
+		Period firstPeriod = selectedPeriods.get(0);
+		return model.selectedPeriodIndex(firstPeriod);
 	}
 
 	public List<Period> selectedPeriods() {
@@ -118,6 +124,13 @@ public class PeriodsList extends SimpleInternalFrame {
 	
 		return selectedPeriods;
 	}
+	
+	private void initializeInSwingThread() {
+		SwingUtils.invokeAndWaitOrCry(new Runnable() {@Override public void run() {
+			initialize();
+		}});
+		
+	}
 
 	private void initialize() {
 		final JScrollPane scrollPane = getPeriodsTable();
@@ -135,8 +148,11 @@ public class PeriodsList extends SimpleInternalFrame {
 		addPeriodButton.setToolTipText("Add period");
 		
 		removePeriodButton = new JButton(Icons.REMOVE_ICON);
-		addPeriodButton.setToolTipText("Delete period");
+		removePeriodButton.setToolTipText("Delete period");
 		
+		mergePeriodsButton = new JButton(Icons.MERGE_ICON);
+		mergePeriodsButton.setBorder(BorderFactory.createEmptyBorder());
+		mergePeriodsButton.setToolTipText("Merge periods");
 		
 		
 		addPeriodButton.setFocusable(false);
@@ -159,6 +175,7 @@ public class PeriodsList extends SimpleInternalFrame {
 
 		toolBar.add(addPeriodButton);
 		toolBar.add(removePeriodButton);
+		//toolBar.add(mergePeriodsButton);
 		return toolBar;
 	}
 
@@ -294,7 +311,7 @@ public class PeriodsList extends SimpleInternalFrame {
 
 			@Override
 			protected Transferable createTransferable(final JComponent arg0) {
-				String idOfSelectedTask = tasks.idOf(selectedTask.currentValue()).getId();
+				String idOfSelectedTask = tasks.idOf(selectedTaskSource.currentValue()).getId();
 				return new PeriodTransferable(idOfSelectedTask,  selectedPeriodIndex());
 			}
 
