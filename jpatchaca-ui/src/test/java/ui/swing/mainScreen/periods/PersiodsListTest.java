@@ -153,11 +153,13 @@ public class PersiodsListTest {
 				selectedTaskperiods, 
 				periodsWhiteboard, 
 				executor);
+		PeriodsTable periodsTable = new PeriodsTable(periodsTableModel);
+		
 		
 		subject = new PeriodsList(
 				selectedTaskSource, 
 				periodsInTasks, 
-				periodsTableModel, 
+				periodsTable, 
 				machineClock, 
 				removePeriodsDialogController, 
 				periodsWhiteboard, 

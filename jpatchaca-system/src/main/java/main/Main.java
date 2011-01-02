@@ -43,6 +43,7 @@ import ui.swing.mainScreen.TooltipForTaskImpl;
 import ui.swing.mainScreen.TopBarModel;
 import ui.swing.mainScreen.WorkLoggerUsingSwing;
 import ui.swing.mainScreen.periods.PeriodsList;
+import ui.swing.mainScreen.periods.PeriodsTable;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
 import ui.swing.mainScreen.periods.PeriodsTableWhiteboard;
 import ui.swing.mainScreen.periods.RemovePeriodsDialogController;
@@ -183,6 +184,7 @@ public class Main {
 		container.addComponent(SummaryScreen.class);
 		container.addComponent(PeriodsTableWhiteboard.class);
 		container.addComponent(PeriodsTableModel.class);
+		container.addComponent(PeriodsTable.class);
 		container.addComponent(RemovePeriodsDialogController.class);
 		container.addComponent(RemovePeriodsDialogModel.class);
 		container.addComponent(PeriodsList.class);

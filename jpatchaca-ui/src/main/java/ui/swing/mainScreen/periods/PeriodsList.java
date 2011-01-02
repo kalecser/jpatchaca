@@ -44,11 +44,10 @@ import basic.HardwareClock;
 @SuppressWarnings( { "serial", "restriction" })
 public class PeriodsList extends SimpleInternalFrame {
 
-	private PeriodsTable periodsTable;
 	private JButton addPeriodButton;
 	private JButton removePeriodButton;
+	private final PeriodsTable periodsTable;
 	private final SelectedTaskSource selectedTaskSource;
-	private final PeriodsTableModel periodsTableModel;
 	private final PeriodsInTasksSystem periodsSystem;
 	protected final PeriodsListModel model;
 	private final HardwareClock machineClock;
@@ -60,7 +59,7 @@ public class PeriodsList extends SimpleInternalFrame {
 	public PeriodsList(
 			final SelectedTaskSource selectedTaskSource,
 			final PeriodsInTasksSystem periodsInTasks,
-			final PeriodsTableModel periodsTableModel,
+			final PeriodsTable periodsTable,
 			final HardwareClock machineClock,
 			final RemovePeriodsDialogController removePeriodsDialogController,
 			final PeriodsTableWhiteboard periodsWhiteboard, Tasks tasks) {
@@ -68,7 +67,7 @@ public class PeriodsList extends SimpleInternalFrame {
 		super("Selected task's periods");
 		this.selectedTaskSource = selectedTaskSource;
 		this.periodsSystem = periodsInTasks;
-		this.periodsTableModel = periodsTableModel;
+		this.periodsTable = periodsTable;
 		this.machineClock = machineClock;
 		this.removePeriodsDialogController = removePeriodsDialogController;
 		this.periodsWhiteboard = periodsWhiteboard;
@@ -79,7 +78,7 @@ public class PeriodsList extends SimpleInternalFrame {
 
 	}
 
-	public int selectedPeriodIndex(){
+	private int selectedPeriodIndex(){
 		
 		List<Period> selectedPeriods = periodsTable.selectedPeriods();
 		
@@ -147,7 +146,6 @@ public class PeriodsList extends SimpleInternalFrame {
 	}
 
 	private JScrollPane getPeriodsTable() {
-		this.periodsTable = new PeriodsTable(this.periodsTableModel);
 		final JScrollPane scrollPane = new JScrollPane(this.periodsTable);
 
 		bindPeriodsTableToWhiteboard(periodsTable, scrollPane);
