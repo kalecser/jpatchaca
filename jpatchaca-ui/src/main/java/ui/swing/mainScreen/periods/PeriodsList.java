@@ -8,7 +8,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -20,10 +19,8 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
-import javax.swing.table.TableColumnModel;
 
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.TablecellBalloonTip;
@@ -31,13 +28,9 @@ import net.java.balloontip.styles.RoundedBalloonStyle;
 import net.java.balloontip.utils.TimingUtils;
 
 import org.apache.log4j.Logger;
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.renderer.DefaultTableRenderer;
-import org.jdesktop.swingx.renderer.StringValue;
 import org.reactive.Receiver;
 
 import periods.Period;
-import periods.PeriodsListener;
 import periodsInTasks.PeriodsInTasksSystem;
 import sun.swing.SwingUtilities2;
 import tasks.TaskView;
@@ -52,13 +45,11 @@ import basic.HardwareClock;
 @SuppressWarnings( { "serial", "restriction" })
 public class PeriodsList extends SimpleInternalFrame {
 
-	private JXTable periodsTable;
+	private PeriodsTable periodsTable;
 	private JButton addPeriodButton;
 	private JButton removePeriodButton;
 	private final SelectedTaskSource selectedTaskSource;
 	private final PeriodsTableModel periodsTableModel;
-	private final PeriodsListener listScrollListener;
-	private TaskView _selectedTask;
 	private final PeriodsInTasksSystem periodsSystem;
 	protected final PeriodsListModel model;
 	private final HardwareClock machineClock;
@@ -87,13 +78,12 @@ public class PeriodsList extends SimpleInternalFrame {
 
 		bindToSelectedtask(selectedTaskSource);
 		initializeInSwingThread();
-		listScrollListener = listScrollListener();
 
 	}
 
 	public int selectedPeriodIndex(){
 		
-		List<Period> selectedPeriods = selectedPeriods();
+		List<Period> selectedPeriods = periodsTable.selectedPeriods();
 		
 		if (selectedPeriods.size() == 0)
 			return -1;
@@ -102,24 +92,7 @@ public class PeriodsList extends SimpleInternalFrame {
 		return model.selectedPeriodIndex(firstPeriod);
 	}
 
-	public List<Period> selectedPeriods() {
-	
-		final int[] selectedRows = this.periodsTable.getSelectedRows();
-	
-		final boolean noneSelected = selectedRows == null
-				|| selectedRows.length == 0 || selectedRows[0] == -1;
-		if (noneSelected) {
-			return new ArrayList<Period>();
-		}
-	
-		final List<Period> selectedPeriods = new ArrayList<Period>();
-		for (final int index : selectedRows) {
-			selectedPeriods.add(periodsTableModel.getPeriod(periodsTable
-					.convertRowIndexToModel(index)));
-		}
-	
-		return selectedPeriods;
-	}
+
 	
 	private void initializeInSwingThread() {
 		SwingUtils.invokeAndWaitOrCry(new Runnable() {@Override public void run() {
@@ -184,7 +157,6 @@ public class PeriodsList extends SimpleInternalFrame {
 		removePeriodsWithDelKey();
 
 		configureDragAndDropStuff();
-		adjustColumnsAppearance(this.periodsTable);
 
 		return scrollPane;
 	}
@@ -271,23 +243,6 @@ public class PeriodsList extends SimpleInternalFrame {
 		});
 	}
 
-	private void adjustColumnsAppearance(final JXTable table) {
-		final TableColumnModel columnModel = table.getColumnModel();
-		final int smallSize = 100;
-		final int mediumSize = 200;
-		columnModel.getColumn(0).setPreferredWidth(mediumSize);
-		columnModel.getColumn(0).setMaxWidth(mediumSize);
-		columnModel.getColumn(1).setPreferredWidth(smallSize);
-		columnModel.getColumn(1).setMaxWidth(smallSize);
-		columnModel.getColumn(2).setPreferredWidth(smallSize);
-		columnModel.getColumn(2).setMaxWidth(smallSize);
-		columnModel.getColumn(3).setPreferredWidth(smallSize);
-		columnModel.getColumn(3).setMaxWidth(smallSize);
-		columnModel.getColumn(3).setCellRenderer(
-				new DefaultTableRenderer(StringValue.TO_STRING,
-						SwingConstants.RIGHT));
-	}
-
 	private void configureDragAndDropStuff() {
 		this.periodsTable.setDragEnabled(true);
 
@@ -305,54 +260,7 @@ public class PeriodsList extends SimpleInternalFrame {
 			}
 
 		});
-	}
-
-	private void selectedtaskChangedTo(final TaskView selectedTask) {
-		if (_selectedTask != null) {
-			_selectedTask.removePeriodListener(listScrollListener);
-		}
-
-		this._selectedTask = selectedTask;
-
-		if (_selectedTask == null) {
-			return;
-		}
-
-
-		selectedTask.addPeriodsListener(listScrollListener);
-	}
-
-	private PeriodsListener listScrollListener() {
-		return new PeriodsListener() {
-
-			@Override
-			public void periodAdded(final Period period) {
-				SwingUtilities.invokeLater(new Runnable() {
-
-					@Override
-					public void run() {
-						selectAndScrollToRow(0);
-					}
-				});
-			}
-
-			@Override
-			public void periodRemoved(final Period period) {
-				SwingUtilities.invokeLater(new Runnable() {
-
-					@Override
-					public void run() {
-						selectAndScrollToRow(periodsTable.getSelectedRow());
-					}
-				});
-			}
-
-			@Override
-			public void clean() {
-			}
-
-		};
-	}
+	}	
 
 	void selectAndScrollToRow(final int row) {
 
@@ -394,16 +302,11 @@ public class PeriodsList extends SimpleInternalFrame {
 	}
 
 	private void bindToSelectedtask(SelectedTaskSource selectedTask) {
-		selectedTask.addReceiver(new Receiver<TaskView>() {
-			@Override
-			public void receive(TaskView value) {
-				selectedtaskChangedTo(value);
-			}
-		});
+		
 	}
 
 	private void removePeriods() {
-		final List<Period> selectedPeriods = selectedPeriods();
+		final List<Period> selectedPeriods = periodsTable.selectedPeriods();
 
 		if (selectedPeriods.isEmpty()) {
 			PeriodsLogger.logger().error(
