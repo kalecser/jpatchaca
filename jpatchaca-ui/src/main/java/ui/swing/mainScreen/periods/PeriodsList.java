@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -21,7 +20,6 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
@@ -34,7 +32,6 @@ import net.java.balloontip.utils.TimingUtils;
 
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.SortOrder;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 import org.jdesktop.swingx.renderer.StringValue;
 import org.reactive.Receiver;
@@ -43,7 +40,6 @@ import periods.Period;
 import periods.PeriodsListener;
 import periodsInTasks.PeriodsInTasksSystem;
 import sun.swing.SwingUtilities2;
-import swing.JXTableImproved;
 import tasks.TaskView;
 import tasks.tasks.Tasks;
 import ui.swing.Icons;
@@ -180,17 +176,10 @@ public class PeriodsList extends SimpleInternalFrame {
 	}
 
 	private JScrollPane getPeriodsTable() {
-		this.periodsTable = new JXTableImproved(this.periodsTableModel);
+		this.periodsTable = new PeriodsTable(this.periodsTableModel);
 		final JScrollPane scrollPane = new JScrollPane(this.periodsTable);
 
 		bindPeriodsTableToWhiteboard(periodsTable, scrollPane);
-
-		periodsTable.setFont(Font.decode(Font.MONOSPACED));
-		this.periodsTable.getSelectionModel().setSelectionMode(
-				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-		periodsTable.setSortable(true);
-		periodsTable.setSortOrder(0, SortOrder.DESCENDING);
 
 		removePeriodsWithDelKey();
 

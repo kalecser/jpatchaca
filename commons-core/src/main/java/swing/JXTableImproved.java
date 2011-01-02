@@ -12,7 +12,7 @@ import javax.swing.table.TableModel;
 
 import org.jdesktop.swingx.JXTable;
 
-public final class JXTableImproved extends JXTable {
+public class JXTableImproved extends JXTable {
 	private static final long serialVersionUID = 1L;
 
 	public JXTableImproved() {
