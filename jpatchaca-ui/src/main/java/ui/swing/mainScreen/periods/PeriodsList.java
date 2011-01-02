@@ -27,7 +27,6 @@ import net.java.balloontip.TablecellBalloonTip;
 import net.java.balloontip.styles.RoundedBalloonStyle;
 import net.java.balloontip.utils.TimingUtils;
 
-import org.apache.log4j.Logger;
 import org.reactive.Receiver;
 
 import periods.Period;
@@ -76,7 +75,6 @@ public class PeriodsList extends SimpleInternalFrame {
 		this.tasks = tasks;
 		this.model = new PeriodsListModel(periodsSystem, selectedTaskSource);
 
-		bindToSelectedtask(selectedTaskSource);
 		initializeInSwingThread();
 
 	}
@@ -262,21 +260,6 @@ public class PeriodsList extends SimpleInternalFrame {
 		});
 	}	
 
-	void selectAndScrollToRow(final int row) {
-
-		if (row > periodsTable.getRowCount()) {
-			return;
-		}
-
-		try {
-			this.periodsTable.getSelectionModel().setSelectionInterval(row, row);			
-			this.periodsTable.scrollRectToVisible(this.periodsTable.getCellRect(
-					row, 0, true));
-		} catch (ArrayIndexOutOfBoundsException knownIndexOutOfbounds){
-			Logger.getLogger(PeriodsList.class).error("Known IndexOutOfbounds in setSelectionTo", knownIndexOutOfbounds);
-		}
-	}
-
 	private void addPeriod() {
 		try {
 			addPeriodButton.setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -299,10 +282,6 @@ public class PeriodsList extends SimpleInternalFrame {
 
 			}
 		});
-	}
-
-	private void bindToSelectedtask(SelectedTaskSource selectedTask) {
-		
 	}
 
 	private void removePeriods() {
