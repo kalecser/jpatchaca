@@ -4,6 +4,7 @@ package model;
 import jira.JiraImpl;
 import jira.JiraOptions;
 import jira.JiraSystemImpl;
+import jira.JiraWorklogOverride;
 import jira.SslManagerSetup;
 import jira.processors.SendWorklogProcessor;
 import jira.processors.SetJiraConfigProcessor;
@@ -106,6 +107,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(SetJiraIssueToTaskProcessor.class);
 		container.addComponent(SendWorklogProcessor.class);
 		container.addComponent(JiraSystemImpl.class);
+		container.addComponent(JiraWorklogOverride.class);
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);

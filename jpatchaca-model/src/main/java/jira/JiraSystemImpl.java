@@ -6,19 +6,21 @@ import jira.events.SendWorklog;
 import periods.Period;
 import tasks.TaskView;
 import tasks.tasks.Tasks;
-import events.EventsSystem;
+import events.EventsConsumer;
 
 public class JiraSystemImpl implements JiraSystem {
 
 	private final Jira jira;
-	private final EventsSystem eventsSystem;
+	private final EventsConsumer consumer;
 	private final Tasks tasks;
+	private final JiraWorklogOverride worklogOverride;
 
-	public JiraSystemImpl(final Jira jira, final EventsSystem eventsSytem,
-			final Tasks tasks) {
+	public JiraSystemImpl(final Jira jira, final EventsConsumer consumer,
+			final Tasks tasks, JiraWorklogOverride worklogOverride) {
 		this.jira = jira;
-		this.eventsSystem = eventsSytem;
+		this.consumer = consumer;
 		this.tasks = tasks;
+		this.worklogOverride = worklogOverride;
 	}
 
 	@Override
@@ -29,17 +31,24 @@ public class JiraSystemImpl implements JiraSystem {
 					+ task.name());
 		}
 
-		try {
-			final Calendar calendar = Calendar.getInstance();
-			calendar.setTime(period.startTime());
-			final String duration = JiraUtil.humanFormat(period.totalTime());
-			final String issueKey = task.getJiraIssue().unbox().getKey();
-			jira.newWorklog(issueKey, calendar, duration);
-			final int periodIndex = task.getPeriodIndex(period);
-			eventsSystem.writeEvent(new SendWorklog(tasks.idOf(task),
-					periodIndex));
-		} catch (final Exception e) {
-			throw new RuntimeException(e);
-		}
+		final String issueKey = task.getJiraIssue().unbox().getKey();
+		logWorkOnIssue(period, issueKey);
+		markPeriodAsSent(task, period);
+
+	}
+
+	private void markPeriodAsSent(final TaskView task, final Period period) {
+		final int periodIndex = task.getPeriodIndex(period);
+		consumer.consume(new SendWorklog(tasks.idOf(task),
+				periodIndex));
+	}
+
+	void logWorkOnIssue(final Period period, final String issueKey) {
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(period.startTime());
+		
+		
+		final String duration = worklogOverride.getDuration(period);
+		jira.newWorklog(issueKey, calendar, duration);
 	}
 }

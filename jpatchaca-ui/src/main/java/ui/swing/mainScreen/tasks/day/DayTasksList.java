@@ -27,6 +27,7 @@ import javax.swing.table.TableColumnModel;
 
 import jira.JiraOptions;
 import jira.JiraSystem;
+import jira.JiraWorklogOverride;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.jdesktop.swingx.JXDatePicker;
@@ -61,10 +62,12 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	private final JiraSystem jiraSystem;
 	private JXTable dayTasksTable;
 	private final HardwareClock clock;
+	private final JiraWorklogOverride worklogOverride;
 	
 	public DayTasksList(final TasksView tasks, final Formatter formatter,
 			final TasksSystem tasksSystem, final JiraOptions jiraOptions,
-			final JiraSystem jiraSystem, final Presenter presenter, HardwareClock clock) {
+			final JiraSystem jiraSystem, final Presenter presenter, HardwareClock clock,
+			JiraWorklogOverride worklogOverride) {
 		super(DayTasksList.panelTitle);
 		this.tasks = tasks;
 		this.formatter = formatter;
@@ -72,6 +75,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 		this.jiraOptions = jiraOptions;
 		this.jiraSystem = jiraSystem;
 		this.clock = clock;
+		this.worklogOverride = worklogOverride;
 		initialize();
 	}
 
@@ -137,7 +141,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	}
 
 	private Component getSummaryTable() {
-		dayTasksTableModel = new DayTasksTableModel(formatter, tasksSystem);
+		dayTasksTableModel = new DayTasksTableModel(formatter, tasksSystem, worklogOverride);
 
 		dayTasksTableModel.addTableModelListener(new TableModelListener() {
 
@@ -164,10 +168,15 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 		columnModel.getColumn(2).setMaxWidth(100);
 		columnModel.getColumn(3).setPreferredWidth(100);
 		columnModel.getColumn(3).setMaxWidth(100);
-		columnModel.getColumn(4).setPreferredWidth(50);
-		columnModel.getColumn(4).setMaxWidth(100);
+		columnModel.getColumn(4).setPreferredWidth(100);
+		columnModel.getColumn(4).setMaxWidth(150);
+		columnModel.getColumn(5).setPreferredWidth(100);
+		columnModel.getColumn(5).setMaxWidth(150);
 
 		columnModel.getColumn(4).setCellRenderer(
+				new DefaultTableRenderer(StringValue.TO_STRING,
+						SwingConstants.RIGHT));
+		columnModel.getColumn(5).setCellRenderer(
 				new DefaultTableRenderer(StringValue.TO_STRING,
 						SwingConstants.RIGHT));
 	}

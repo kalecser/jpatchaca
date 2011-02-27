@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import jira.JiraWorklogOverride;
+
 import org.apache.commons.lang.time.DateUtils;
 
 import periods.Period;
@@ -23,15 +25,15 @@ public class DayTasksTableModel extends AbstractTableModel {
 	private final Formatter formatter;
 	private final TasksSystem tasksSystem;
 	private final CellValue[] cellValues;
+	private static JiraWorklogOverride worklogOverride;
 
 	public DayTasksTableModel(final Formatter formatter,
-			final TasksSystem tasksSystem) {
+			final TasksSystem tasksSystem, JiraWorklogOverride worklogOverride) {
 		this.formatter = formatter;
 		this.tasksSystem = tasksSystem;
 		CellValue.formatter = formatter;
-		cellValues = new CellValue[] { CellValue.TaskName,
-				CellValue.WorklogStatus, CellValue.Start, CellValue.End,
-				CellValue.Total };
+		DayTasksTableModel.worklogOverride = worklogOverride;
+		cellValues = CellValue.values();
 	}
 
 	@Override
@@ -81,24 +83,23 @@ public class DayTasksTableModel extends AbstractTableModel {
 
 				Date dateParsed = null;
 
-				switch (column) {
-				case 2:
+				
+				if (column ==  2){
 					dateParsed = editDate(period.startTime(), (String) value);
 
 					if (dateParsed != null) {
 						tasksSystem.setPeriodStarting(task, task
 								.getPeriodIndex(period), dateParsed);
 					}
-					break;
-
-				case 3:
+				} else if (column == 3){
 					dateParsed = editDate(period.endTime(), (String) value);
 
 					if (dateParsed != null) {
 						tasksSystem.setPeriodEnding(task, task
 								.getPeriodIndex(period), dateParsed);
 					}
-					break;
+				} else if (column == CellValue.ToSend.ordinal()){
+					worklogOverride.overrideTimeSpentForPeriod(value.toString(), period);
 				}
 
 				fireTableDataChanged();
@@ -145,7 +146,7 @@ public class DayTasksTableModel extends AbstractTableModel {
 
 	}
 
-	private enum CellValue {
+	enum CellValue {
 		TaskName {
 			@Override
 			public String getLabel() {
@@ -222,6 +223,23 @@ public class DayTasksTableModel extends AbstractTableModel {
 				final NumberFormat format = new DecimalFormat("#0.00");
 				return format.format(item.getPeriod().getMiliseconds()
 						/ DateUtils.MILLIS_PER_HOUR);
+			}
+		},
+		
+		ToSend {
+			@Override
+			public String getLabel() {
+				return "To send";
+			}
+
+			@Override
+			public Object getValue(final Pair item) {
+				return worklogOverride.getDuration(item.getPeriod());
+			}
+			
+			@Override
+			public boolean isEditable() {
+				return true;
 			}
 		};
 

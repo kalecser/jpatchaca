@@ -1,10 +1,14 @@
 package jira;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
 
 public class JiraMock implements Jira {
+
+	private Map<String, String> worklogsByKey = new HashMap<String, String>();
 
 	@Override
 	public JiraIssue getIssueByKey(String key) throws JiraException {
@@ -20,10 +24,13 @@ public class JiraMock implements Jira {
 	}
 
 	@Override
-	public void newWorklog(String issueId, Calendar startDate, String timeSpent)
-			throws JiraException {
-		throw new NotImplementedException();
+	public void newWorklog(String issueId, Calendar startDate, String timeSpent) {
+		worklogsByKey.put(issueId, timeSpent);
 
+	}
+
+	public String timeLoggedFor(String key) {
+		return worklogsByKey.get(key);
 	}
 
 }

@@ -8,7 +8,6 @@ public interface Jira {
 
 	JiraIssue getIssueById(String id) throws JiraException;
 
-	void newWorklog(String issueId, Calendar startDate, String timeSpent)
-			throws JiraException;
+	void newWorklog(String issueId, Calendar startDate, String timeSpent);
 
 }

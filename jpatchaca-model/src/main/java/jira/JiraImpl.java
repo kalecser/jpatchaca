@@ -149,19 +149,21 @@ public class JiraImpl implements Jira {
 
 	@Override
 	public void newWorklog(final String issueId, final Calendar startDate,
-			final String timeSpent) throws JiraException {
+			final String timeSpent) {
 		try {
 			internalNewWorklog(issueId, startDate, timeSpent);
 		} catch (final RemotePermissionException e) {
-			throw new JiraException(e);
+			throw new IllegalStateException(e);
 		} catch (final RemoteValidationException e) {
-			throw new JiraException(e);
+			throw new IllegalStateException(e);
 		} catch (final com.dolby.jira.net.soap.jira.RemoteException e) {
-			throw new JiraException(e);
+			throw new IllegalStateException(e);
 		} catch (final RemoteException e) {
-			throw new JiraException(e);
+			throw new IllegalStateException(e);
 		} catch (final ServiceException e) {
-			throw new JiraException(e);
+			throw new IllegalStateException(e);
+		} catch (JiraOptionsNotSetException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 
