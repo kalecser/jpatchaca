@@ -56,7 +56,6 @@
 		<module>jpatchaca-system</module>
 		<module>jpatchaca-test-operators</module>
 		<module>jpatchaca-jira</module>
-		<module>jpatchaca-jira-ui</module>
 		<module>jpatchaca-webstart</module>
 	</modules>
 	
