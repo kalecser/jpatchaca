@@ -217,8 +217,10 @@ public class MainScreenOperator {
 		clickForPopupInTask(activeTaskName());
 
 		final JPopupMenuOperator popup = new JPopupMenuOperator();
-
 		popup.pushMenu("stop");
+		
+		
+		
 
 	}
 
