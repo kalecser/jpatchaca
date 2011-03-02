@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 
 import lang.Maybe;
 
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.picocontainer.Startable;
 import org.reactive.Receiver;
@@ -36,13 +37,13 @@ public class PatchacaTray implements Startable {
 
 	private static final String COPY_ACTIVE_TASK_NAME = "Copy active task name";
 	private static final String PATCHACA_TIMER = "Patchaca timer";
-	private static final String TRAY_ICON_ACTIVE_PATH = "jpon.png";
+	private static final String TRAY_ICON_ACTIVE_PATH = "jpon32.png";
 	private static final Image ACTIVE_ICON = iconImage(TRAY_ICON_ACTIVE_PATH);
-	private static final String TRAY_ICON_INACTIVE_PATH = "jpoff.png";
+	private static final String TRAY_ICON_INACTIVE_PATH = "jpoff32.png";
 	private static final Image INACTIVE_ICON = iconImage(TRAY_ICON_INACTIVE_PATH);
-	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jpoffTimer.png";
+	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jpoffTimer32.png";
 	private static final Image INACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_INACTIVE_ROTATION_ON_PATH);
-	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jponTimer.png";
+	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jponTimer32.png";
 	private static final Image ACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_ACTIVE_ROTATION_ON_PATH);
 
 	static final String STOP_TASK_SCPECIAL = "Stop task...";
@@ -314,7 +315,7 @@ public class PatchacaTray implements Startable {
 		return trayIcon;
 	}
 
-	private static Image iconImage(final String resource) {
+	private static Image iconImage(String resource) {		
 		final URL iconURL = PatchacaTray.class.getResource(resource);
 
 		if (iconURL == null) {
@@ -324,7 +325,24 @@ public class PatchacaTray implements Startable {
 		}
 
 		final ImageIcon imageIcon = new ImageIcon(iconURL);
-		final Image image = imageIcon.getImage();
+		Image scaledImage = scaleImage(imageIcon);
+		return scaledImage;
+	}
+
+	private static Image scaleImage(final ImageIcon imageIcon) {
+		final Image image = imageIcon.getImage();		
+		
+		
+		if (SystemUtils.IS_OS_LINUX){
+			Image scaledImage = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+			return scaledImage;			
+		}
+		
+		if (SystemUtils.IS_OS_WINDOWS){
+			Image scaledImage = image.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+			return scaledImage;			
+		}
+		
 		return image;
 	}
 
