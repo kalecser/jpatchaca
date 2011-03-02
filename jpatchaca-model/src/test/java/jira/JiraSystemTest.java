@@ -37,7 +37,8 @@ public class JiraSystemTest {
 	public void testAddWorklogOverrideWrongFormat(){
 		
 		Period period = new Period(date(0l), date(DateUtils.MILLIS_PER_HOUR));
-		overrideWorkLog(period, "2:25");
+		String timeSpentOverrideWrongFormat = "2:25";
+		overrideWorkLog(period, timeSpentOverrideWrongFormat);
 		addWorklogFor(period);
 		Assert.assertEquals("1h 0m", timeLogged());
 		
