@@ -42,6 +42,17 @@ public class JiraSystemTest {
 		Assert.assertEquals("1h 0m", timeLogged());
 		
 	}
+	
+
+	@Test
+	public void testAddWorklogZeroMinutes(){
+		
+		Period period = new Period(date(0l), date(DateUtils.MILLIS_PER_HOUR));
+		overrideWorkLog(period, " 0h 0m ");
+		addWorklogFor(period);
+		Assert.assertEquals(null, timeLogged());
+		
+	}
 
 	private final JiraMock jira = new JiraMock();
 	private final JiraWorklogOverride  jiraWorklogOverride = new JiraWorklogOverride(); 

@@ -235,9 +235,6 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 
 		if (opt == JOptionPane.YES_OPTION) {
 			for (final Pair pair : tasksPeriods) {
-				if (pair.getPeriod().getMiliseconds() < DateUtils.MILLIS_PER_MINUTE){
-					continue;
-				}
 				jiraSystem.addWorklog(pair.getTask(), pair.getPeriod());
 				dayTasksTableModel.fireTableDataChanged();
 			}

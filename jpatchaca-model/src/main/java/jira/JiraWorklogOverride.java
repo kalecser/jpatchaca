@@ -12,8 +12,9 @@ public class JiraWorklogOverride {
 	
 	public void overrideTimeSpentForPeriod(String timeSpent, Period period) {
 		
-		if (timeSpent.matches(TIME_SPENT_PATTERN)){
-			overrides.put(period, timeSpent);					
+		String trimmedTimeSpent = timeSpent.trim();
+		if (trimmedTimeSpent.matches(TIME_SPENT_PATTERN)){
+			overrides.put(period, trimmedTimeSpent);					
 		}
 		
 	}
@@ -25,7 +26,7 @@ public class JiraWorklogOverride {
 			return overriden;
 		}
 		
-		final String duration = JiraUtil.humanFormat(period.totalTime());
+		final String duration = JiraUtil.humanFormat(period.totalTime()).trim();
 		return duration;
 	}
 

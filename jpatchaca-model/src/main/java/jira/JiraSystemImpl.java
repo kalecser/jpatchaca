@@ -47,8 +47,12 @@ public class JiraSystemImpl implements JiraSystem {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(period.startTime());
 		
-		
 		final String duration = worklogOverride.getDuration(period);
+		
+		if (duration.equals("0h 0m")){
+			return;
+		}
+		
 		jira.newWorklog(issueKey, calendar, duration);
 	}
 }
