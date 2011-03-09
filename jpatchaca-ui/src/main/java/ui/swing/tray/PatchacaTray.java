@@ -325,16 +325,23 @@ public class PatchacaTray implements Startable {
 		}
 
 		final ImageIcon imageIcon = new ImageIcon(iconURL);
-		Image scaledImage = scaleImage(imageIcon);
+		Image transparentImage = makeImageTransparent(imageIcon);
+		Image scaledImage = scaleImage(transparentImage);
 		return scaledImage;
 	}
 
-	private static Image scaleImage(final ImageIcon imageIcon) {
-		final Image image = imageIcon.getImage();		
+	private static Image makeImageTransparent(ImageIcon scaledImage) {
+		if (SystemUtils.IS_OS_LINUX){
+			return ImageUtils.replaceImageTrasparentByColor(scaledImage, ImageUtils.getTrayColor());			
+		}
 		
+		return scaledImage.getImage();
+	}
+
+	private static Image scaleImage(final Image image) {
 		
 		if (SystemUtils.IS_OS_LINUX){
-			Image scaledImage = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+			Image scaledImage = image.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
 			return scaledImage;			
 		}
 		
