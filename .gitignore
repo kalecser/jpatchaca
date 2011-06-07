@@ -1,6 +1,6 @@
-**/target
-**/.classpath
-**/.project
-**/.settings
-**/*.seq
+target
+.classpath
+.project
+.settings
+*.seq
 velocity.log
