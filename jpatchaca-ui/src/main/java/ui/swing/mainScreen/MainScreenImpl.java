@@ -63,12 +63,14 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	private final DayTasksList dayTasksList;
 	private final SummaryScreen tasksSummary;
 	private final TopBar topBar;
+	private final StatusBar statusBar;
 
 	public MainScreenImpl(final MainScreenModel model,
 			final UIEventsExecutor executor, final TaskList taskList,
 			final PeriodsList periodsList, final SummaryScreen tasksSummary,
 			final DayTasksList dayList, final JFrameBoundsKeeper boundsKeeper,
-			final TopBarModel topBarModel, final ErrorLogScreen errorLogScreen) {
+			final TopBarModel topBarModel, final ErrorLogScreen errorLogScreen,
+			final StatusBar statusBar) {
 
 		this.model = model;
 		this.taskList = taskList;
@@ -76,6 +78,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		this.topBar = new TopBar(executor, topBarModel, errorLogScreen);
 		this.tasksSummary = tasksSummary;
 		this.dayTasksList = dayList;
+		this.statusBar = statusBar;
 
 		boundsKeeper.keepBoundsFor(this, MainScreenImpl.class.getName());
 
@@ -90,6 +93,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		setLayout(new BorderLayout());
 		add(topBar, BorderLayout.NORTH);
 		add(getCenterPane(), BorderLayout.CENTER);
+		add(statusBar, BorderLayout.SOUTH);		
 		pack();
 
 		class TitleReceiver implements Receiver<String> {
@@ -129,7 +133,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		center.setContinuousLayout(true);
 		return center;
 	}
-
+	
 	@Override
 	public Window getWindow() {
 		return this;

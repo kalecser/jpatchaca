@@ -47,8 +47,8 @@ public class StartTaskScreenModelTest {
 	private final StartTaskDelegate startTaskDelegate = new StartTaskDelegate();
 	private final TasksView tasks = new Tasks();
 	private final StartTaskDataParser parser = new StartTaskDataParser();
-	private final MockJira jira = new MockJira();
 	JiraOptions options = new JiraOptions();
+	private final MockJira jira = new MockJira(options);	
 	private final StartTaskScreenModelImpl subject = new StartTaskScreenModelImpl(startTaskDelegate, tasks, parser, jira, options );
 	protected String startedTask;
 	

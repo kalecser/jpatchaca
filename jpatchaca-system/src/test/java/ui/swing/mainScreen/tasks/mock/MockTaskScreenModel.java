@@ -60,8 +60,7 @@ public class MockTaskScreenModel implements TaskScreenModel {
 	}
 
 	public void setSelectedTask(MockTask mockTask) {
-		selectedTask = mockTask;
-		
+		selectedTask = mockTask;		
 	}
 
 }

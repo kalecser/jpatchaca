@@ -120,8 +120,7 @@ public class TaskList extends JPanel {
 			final LabelsList labelsList, final Directory directory,
 			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask, final ActiveTask activeTask,
-			final SelectedLabel selectedLabel,
-			final JiraOptions jiraOptions) {
+			final SelectedLabel selectedLabel, final JiraOptions jiraOptions) {
 
 		this.selectedLabel = selectedLabel;
 		this.executor = new DeferredExecutor(200, new FireChangeListeners());
@@ -218,10 +217,10 @@ public class TaskList extends JPanel {
 							screenData.setSelectedLabel(selectedIndex);
 							labelsList.setPreferredIndex(selectedIndex);
 							memory.mind(screenData);
-							
-							
-							if (labelsList.getSelectedValue() != null){
-								selectedLabel.update((String)labelsList.getSelectedValue());								
+
+							if (labelsList.getSelectedValue() != null) {
+								selectedLabel.update((String) labelsList
+										.getSelectedValue());
 							}
 						} finally {
 							TaskList.this.labelsList.setCursor(new Cursor(
@@ -349,15 +348,15 @@ public class TaskList extends JPanel {
 				final Point point = info.getDropLocation().getDropPoint();
 				final int index = tasksList.locationToIndex(point);
 				dropTargetTask = tasksListModel.getElementAt(index);
-				movePerioData =  getTransferableStringOrCry(info);
+				movePerioData = getTransferableStringOrCry(info);
 				movePeriodAlert.fire();
 				return true;
 			}
 
-			private String getTransferableStringOrCry(final TransferSupport info)
-					 {
+			private String getTransferableStringOrCry(final TransferSupport info) {
 				try {
-					return (String)info.getTransferable().getTransferData(DataFlavor.stringFlavor);
+					return (String) info.getTransferable().getTransferData(
+							DataFlavor.stringFlavor);
 				} catch (UnsupportedFlavorException e) {
 					throw new UnhandledException(e);
 				} catch (IOException e) {

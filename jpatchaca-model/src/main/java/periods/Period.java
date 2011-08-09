@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.time.DateUtils;
 import org.reactive.Signal;
 import org.reactive.Source;
 
@@ -102,14 +103,6 @@ public class Period {
 		return this.stop;
 	}
 
-	public double getMiliseconds() {
-		if (this.stop == null) {
-			return 0.0;
-		}
-
-		return this.stop.getTime() - this.start.getTime();
-	}
-
 	public Date getDay() {
 		return day;
 	}
@@ -162,6 +155,19 @@ public class Period {
 				.toString());
 		return "Period: " + this.start + " - " + stopString + " "
 				+ super.toString();
+	}
+	
+	public double getMiliseconds() {
+		if (this.stop == null) {
+			return 0.0;
+		}
+
+		return this.stop.getTime() - this.start.getTime();
+	}
+	
+	public double getHours()
+	{
+		return getMiliseconds() / DateUtils.MILLIS_PER_HOUR;
 	}
 
 	public Long totalTime() {

@@ -15,6 +15,12 @@ public class TaskData {
 		this.taskName = taskName.unbox();
 		this.budget = 0.0;
 	}	
+	
+	public TaskData(NonEmptyString taskName, JiraIssue jiraIssue)
+	{
+		this(taskName);
+		this.jiraIssue = jiraIssue;
+	}
 
 	public final String getTaskName() {
 		return taskName;

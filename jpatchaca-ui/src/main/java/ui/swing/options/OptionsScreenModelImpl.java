@@ -32,8 +32,8 @@ public class OptionsScreenModelImpl implements OptionsScreenModel {
 
 	@Override
 	public void setJiraConfig(final String url, final String username,
-			final String password) {
-		eventsSystem.writeEvent(new SetJiraConfig(url, username, password));
+			final String password, boolean issueStatusManagementEnabled) {
+		eventsSystem.writeEvent(new SetJiraConfig(url, username, password, issueStatusManagementEnabled));
 		
 	}
 
@@ -62,6 +62,11 @@ public class OptionsScreenModelImpl implements OptionsScreenModel {
 	@Override
 	public Maybe<String> jiraPassword() {
 		return jiraOptions.getPassword();
+	}
+	
+	@Override
+	public boolean isIssueStatusManagementEnabled() {
+		return jiraOptions.isIssueStatusManagementEnabled();
 	}
 
 }

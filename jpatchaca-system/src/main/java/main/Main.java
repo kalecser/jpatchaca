@@ -21,6 +21,8 @@ import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
+import ui.swing.jira.JiraIssueStatusActionPane;
+import ui.swing.jira.JiraIssueStatusManagement;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
 import ui.swing.mainScreen.LabelsList;
@@ -32,6 +34,7 @@ import ui.swing.mainScreen.MainScreenImpl;
 import ui.swing.mainScreen.MainScreenModel;
 import ui.swing.mainScreen.MainScreenModelImpl;
 import ui.swing.mainScreen.SelectedTaskName;
+import ui.swing.mainScreen.StatusBar;
 import ui.swing.mainScreen.TaskContextMenu;
 import ui.swing.mainScreen.TaskContextMenuSystemMediator;
 import ui.swing.mainScreen.TaskList;
@@ -203,7 +206,10 @@ public class Main {
 		container.addComponent(CommandLineInterfaceImpl.class);
 		container.addComponent(WorkLoggerUsingSwing.class);
 		container.addComponent(PatchacaSocketServer.class);
-
+		
+		container.addComponent(JiraIssueStatusManagement.class);
+		container.addComponent(StatusBar.class);
+		container.addComponent(JiraIssueStatusActionPane.class);
 	}
 
 	public static MutablePicoContainer createDurableSWINGContainer() {

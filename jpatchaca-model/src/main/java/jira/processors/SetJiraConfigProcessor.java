@@ -31,6 +31,7 @@ public class SetJiraConfigProcessor implements Processor<SetJiraConfig>, Startab
 		jiraOptions.setURL(eventObj.getUrl());
 		jiraOptions.setUserName(eventObj.getUsername());
 		jiraOptions.setPassword(eventObj.getPassword());
+		jiraOptions.setIssueStatusManagementEnabled(eventObj.isIssueStatusManagementEnabled());
 	}
 
 	@Override

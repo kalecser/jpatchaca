@@ -40,7 +40,6 @@ import periods.Period;
 import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.tasks.TasksView;
-import ui.swing.mainScreen.tasks.day.DayTasksTableModel.Pair;
 import ui.swing.presenter.Presenter;
 import ui.swing.utils.SimpleInternalFrame;
 import basic.Formatter;
@@ -63,11 +62,12 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	private JXTable dayTasksTable;
 	private final HardwareClock clock;
 	private final JiraWorklogOverride worklogOverride;
-	
+
 	public DayTasksList(final TasksView tasks, final Formatter formatter,
 			final TasksSystem tasksSystem, final JiraOptions jiraOptions,
-			final JiraSystem jiraSystem, final Presenter presenter, HardwareClock clock,
-			JiraWorklogOverride worklogOverride) {
+			final JiraSystem jiraSystem, final Presenter presenter,
+			HardwareClock clock, JiraWorklogOverride worklogOverride) {
+		
 		super(DayTasksList.panelTitle);
 		this.tasks = tasks;
 		this.formatter = formatter;
@@ -141,7 +141,8 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	}
 
 	private Component getSummaryTable() {
-		dayTasksTableModel = new DayTasksTableModel(formatter, tasksSystem, worklogOverride);
+		dayTasksTableModel = new DayTasksTableModel(formatter, tasksSystem,
+				worklogOverride);
 
 		dayTasksTableModel.addTableModelListener(new TableModelListener() {
 
@@ -188,18 +189,13 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 
 	private void showTasksByDay(final Date data) {
 		final List<Pair> lista = new ArrayList<Pair>();
+		
+		for (final TaskView task : tasks.tasks())
+			for (final Period period : task.periods())
+				if (periodoDentroDoDia(data, period))
+					lista.add(new Pair(task, period, formatter, worklogOverride));
 
-		for (final TaskView task : tasks.tasks()) {
-
-			for (final Period period : task.periods()) {
-
-				if (periodoDentroDoDia(data, period)) {
-					lista.add(new Pair(task, period));
-				}
-			}
-		}
 		Collections.sort(lista);
-
 		setItems(lista);
 	}
 
@@ -213,8 +209,8 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 
 		for (final int i : dayTasksTable.getSelectedRows()) {
 			final Pair pair = items.get(i);
-			if (pair.getTask().getJiraIssue() != null
-					&& !pair.getPeriod().isWorklogSent()) {
+			if (pair.task().getJiraIssue() != null
+					&& !pair.period().isWorklogSent()) {
 				tasksPeriods.add(pair);
 			}
 		}
@@ -235,7 +231,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 
 		if (opt == JOptionPane.YES_OPTION) {
 			for (final Pair pair : tasksPeriods) {
-				jiraSystem.addWorklog(pair.getTask(), pair.getPeriod());
+				jiraSystem.addWorklog(pair.task(), pair.period());
 				dayTasksTableModel.fireTableDataChanged();
 			}
 		}
@@ -244,23 +240,15 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	private String getDayTotalHours(final List<Pair> lista) {
 		double totalHours = 0;
 
-		for (final Pair par : lista) {
-			totalHours += par.getPeriod().getMiliseconds();
-		}
+		for (final Pair par : lista) 
+			totalHours += par.period().getMiliseconds();
 
 		final NumberFormat format = new DecimalFormat("#0.00");
 		return format.format(totalHours / DateUtils.MILLIS_PER_HOUR);
-
 	}
 
 	private boolean periodoDentroDoDia(final Date data, final Period period) {
-
 		return period.getDay().equals(getDay(data));
-
-		// if (period.getDay().equals(getDay(data))) {
-		// return true;
-		// }
-		// return false;
 	}
 
 	private Date getDay(final Date date) {

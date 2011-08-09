@@ -9,12 +9,16 @@ public class SetJiraConfig implements Serializable{
 	private String url;
 	private String username;
 	private String password;
+	private boolean issueStatusManagementEnabled;
 	
-	public SetJiraConfig(String url, String username, String password)
+	
+	
+	public SetJiraConfig(String url, String username, String password, boolean issueStatusManagementEnabled)
 	{
 		this.url = url;
 		this.username = username;
 		this.password = password;
+		this.issueStatusManagementEnabled = issueStatusManagementEnabled;
 	}
 
 	public String getUrl() {
@@ -29,5 +33,8 @@ public class SetJiraConfig implements Serializable{
 	public String getPassword() {
 		return password;
 	}
-
+	
+	public boolean isIssueStatusManagementEnabled() {
+		return issueStatusManagementEnabled;
+	}
 }

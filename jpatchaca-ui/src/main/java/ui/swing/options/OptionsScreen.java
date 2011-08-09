@@ -27,6 +27,7 @@ public class OptionsScreen {
 		private JTextField jiraUsername;
 		private JTextField jiraPassword;
 		private JTextField jiraUrl;
+		private JCheckBox issueStatusManagementEnabled;
 
 		@Override
 		public JPanel getPanel() {
@@ -48,8 +49,13 @@ public class OptionsScreen {
 			final JPanel optionsPanel = new JPanel();
 			optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));
 
-			JCheckBox jiraEnabled = new JCheckBox("Jira enabled");
-			optionsPanel.add(jiraEnabled, "span 4");
+			// Nao estava sendo usado
+			//JCheckBox jiraEnabled = new JCheckBox("Jira enabled");
+			//optionsPanel.add(jiraEnabled, "span 4");
+			
+			issueStatusManagementEnabled = new JCheckBox("Issue Status Management");
+			issueStatusManagementEnabled.setSelected(optionsScreenModel.isIssueStatusManagementEnabled());
+			optionsPanel.add(issueStatusManagementEnabled, "span 4");
 			
 			optionsPanel.add(new JLabel("Jira url"));
 			jiraUrl = new JTextField();
@@ -116,8 +122,9 @@ public class OptionsScreen {
 					optionsScreenModel.setTwitterConfig(twitterEnabled
 							.isSelected(), twitterUsername.getText(),
 							twitterPassword.getText());
+					
 					optionsScreenModel.setJiraConfig(jiraUrl.getText(),
-							jiraUsername.getText(), jiraPassword.getText());
+							jiraUsername.getText(), jiraPassword.getText(), issueStatusManagementEnabled.isSelected());
 				}
 			};
 		}

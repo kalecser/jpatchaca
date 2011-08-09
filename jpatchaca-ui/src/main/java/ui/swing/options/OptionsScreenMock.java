@@ -22,7 +22,7 @@ public class OptionsScreenMock implements OptionsScreenModel {
 
 	@Override
 	public void setJiraConfig(final String url, final String username,
-			final String password) {
+			final String password, final boolean issueStatusManagementEnabled) {
 
 	}
 
@@ -52,5 +52,11 @@ public class OptionsScreenMock implements OptionsScreenModel {
 	public Maybe<String> jiraUserName() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isIssueStatusManagementEnabled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

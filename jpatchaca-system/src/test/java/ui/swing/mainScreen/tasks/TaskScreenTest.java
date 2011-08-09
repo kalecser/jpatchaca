@@ -16,64 +16,62 @@ import basic.FormatterImpl;
 
 public class TaskScreenTest {
 
-	
 	MockJira mockJira = new MockJira();
 	MockTaskScreenModel mockModel = new MockTaskScreenModel();
 	Presenter presenter = new Presenter(new UIEventsExecutorImpl(null));
-	TaskScreenController controller = new TaskScreenController(new FormatterImpl(), mockModel, presenter , mockJira);
-	
+	TaskScreenController controller = new TaskScreenController(new FormatterImpl(), mockModel, presenter, mockJira, null);
+
 	@Test
-	public void testTaskNameAutoCompleteFromJira(){
-		
+	public void testTaskNameAutoCompleteFromJira() {
+
 		controller.createTask();
-		
+
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.setJiraKey("jira-issue-key");
 		operator.assertName("[jira-issue-key] jira-issue-summary");
-		
+
 	}
-	
+
 	@Test
-	public void testTaskNameAutoCompleteFromJiraOnlyIfNameFieldIsEmpty(){
-		
+	public void testTaskNameAutoCompleteFromJiraOnlyIfNameFieldIsEmpty() {
+
 		controller.createTask();
-		
+
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.setTaskName("foobar");
 		operator.setJiraKey("test");
 		operator.assertName("foobar");
-		
+
 	}
-	
+
 	@Test
-	public void testCreateTaskWithJiraIssue(){
-		
+	public void testCreateTaskWithJiraIssue() {
+
 		controller.createTask();
-		
+
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.setJiraKey("test");
 		operator.setTaskName("name");
 		operator.clickOk();
-		
+
 		mockModel.waitCreatedTaskWithJiraId("test");
-		
-		
+
 	}
-	
+
 	@Test
-	public void testEditTaskWithJiraIssue(){
-		
+	public void testEditTaskWithJiraIssue() {
+
 		MockTask mockTask = createMockTaskWithJiraKey("foobar");
 		mockModel.setSelectedTask(mockTask);
 		controller.editSelectedTask();
-		
+
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.waitJiraKey("foobar");
-		
+
 		operator.setJiraKey("foobarbaz");
 		operator.clickOk();
 		mockModel.waitCreatedTaskWithJiraId("foobarbaz");
-		
+
 	}
 
 	private MockTask createMockTaskWithJiraKey(String jiraKey) {
@@ -83,11 +81,10 @@ public class TaskScreenTest {
 		mockTask.setJiraIssue(new JiraIssue(data));
 		return mockTask;
 	}
-	
-	
+
 	@After
-	public void tearDown(){
+	public void tearDown() {
 		presenter.stop();
 	}
-	
+
 }

@@ -50,11 +50,10 @@ public class TaskContextMenu extends JPopupMenu {
 
 		removeAll();
 
-		if (selectedTask.isActive()) {
+		if (selectedTask.isActive())
 			addStartTaskMenuItem();
-		} else {
+		else
 			addStopTaskMenuItem();
-		}
 
 		addSeparator();
 		addNoteItem();
@@ -76,7 +75,6 @@ public class TaskContextMenu extends JPopupMenu {
 			}
 		});
 		add(item);
-
 	}
 
 	private void addEditTaskItem() {

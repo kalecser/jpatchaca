@@ -17,15 +17,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import jira.Jira;
-import jira.JiraException;
 import jira.JiraIssue;
-import jira.JiraIssueNotFoundException;
-import jira.JiraOptionsNotSetException;
 import jira.JiraUtils;
+import jira.exception.JiraIssueNotFoundException;
+import jira.exception.JiraOptionsNotSetException;
 import lang.Maybe;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.UnhandledException;
 
 import tasks.TaskView;
 import tasks.home.TaskData;
@@ -33,6 +31,7 @@ import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
 import ui.swing.presenter.UIAction;
 import ui.swing.presenter.ValidationException;
+import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SwingUtils;
 import basic.Formatter;
 import basic.NonEmptyString;
@@ -49,14 +48,16 @@ public class TaskScreenController {
 	private final TaskScreenModel model;
 	private final Presenter presenter;
 	private final Jira jira;
-
+	private final SelectedTaskSource selectedTaskSource;
+	
 	public TaskScreenController(final Formatter formatter,
 			final TaskScreenModel model, final Presenter presenter,
-			final Jira jira) {
+			final Jira jira, SelectedTaskSource selectedTaskSource) {
 		this.model = model;
 		this.formatter = formatter;
 		this.presenter = presenter;
 		this.jira = jira;
+		this.selectedTaskSource = selectedTaskSource;
 	}
 
 	public void createTaskStarted(final long time) {
@@ -159,7 +160,7 @@ public class TaskScreenController {
 					} else {
 						model.createTaskAndStart(data, time.unbox());
 					}
-		
+					selectedTaskSource.supply(taskView);
 				}
 			};
 		}
@@ -247,8 +248,6 @@ public class TaskScreenController {
 			} catch (final JiraOptionsNotSetException ex) {
 				JOptionPane.showMessageDialog(taskNameTextBox,
 						"Jira options not set");
-			} catch (final JiraException ex) {
-				throw new UnhandledException(ex);
 			}
 		}
 

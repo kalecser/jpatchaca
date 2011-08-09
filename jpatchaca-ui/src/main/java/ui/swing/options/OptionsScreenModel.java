@@ -10,7 +10,7 @@ public interface OptionsScreenModel {
 			String password);
 
 	public abstract void setJiraConfig(String url, String username,
-			String password);
+			String password, boolean issueStatusManagementEnabled);
 
 	public abstract Signal<Boolean> twitterEnabled();
 
@@ -23,5 +23,7 @@ public interface OptionsScreenModel {
 	public abstract Maybe<String> jiraUserName();
 
 	public abstract Maybe<String> jiraPassword();
+	
+	public abstract boolean isIssueStatusManagementEnabled();
 
 }

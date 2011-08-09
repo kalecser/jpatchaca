@@ -33,6 +33,6 @@ public class JiraIssue implements Serializable{
 		if(obj.getClass() != this.getClass())
 			return false;
 		
-		return ((JiraIssue) obj).getId().equals(this.getId());
+		return ((JiraIssue) obj).getKey().equals(this.getKey());
 	}	
 }

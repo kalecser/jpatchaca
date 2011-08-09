@@ -6,20 +6,24 @@ import java.io.PrintWriter;
 
 import javax.swing.JOptionPane;
 
+import jira.exception.JiraException;
+
 import main.singleInstance.AlreadyRunningApplicationException;
 
 import org.picocontainer.Startable;
 
+import ui.swing.mainScreen.StatusBar;
 import ui.swing.utils.PatchacaUncaughtExceptionHandler;
 import wheel.io.files.Directory;
 
-public class PathcacaDefaultExceptionHandler implements Startable,
-		PatchacaUncaughtExceptionHandler {
+public class PathcacaDefaultExceptionHandler implements Startable, PatchacaUncaughtExceptionHandler {
 
 	private final Directory directory;
+	private final StatusBar statusBar;
 
-	public PathcacaDefaultExceptionHandler(final Directory directory) {
+	public PathcacaDefaultExceptionHandler(final Directory directory, final StatusBar statusBar) {
 		this.directory = directory;
+		this.statusBar = statusBar;
 	}
 
 	@Override
@@ -34,16 +38,19 @@ public class PathcacaDefaultExceptionHandler implements Startable,
 
 	@Override
 	public synchronized void uncaughtException(final Thread t, final Throwable e) {
-		
-		if (e instanceof AlreadyRunningApplicationException){
+
+		if (e instanceof AlreadyRunningApplicationException)
 			System.exit(0);
-		}
-		
+
 		logExceptionToErrorLog(e);
 		e.printStackTrace();
+		if (e instanceof JiraException) {
+			statusBar.setErrorMessage(e.getMessage());
+			return;
+		}
+
 		JOptionPane
-				.showMessageDialog(
-						null,
+				.showMessageDialog(null,
 						"An error has occured, see ~/.jpatchaca/error.log for further information. It's recomended to restart the application.");
 	}
 
