@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
     spec="6.0+"
-    codebase="http://autotelebuild/hudson/job/JPatchaca/lastSuccessfulBuild/artifact/trunk/jpatchaca-webstart/"
+    codebase="http://autotelebuild/hudson/job/JPatchaca/lastSuccessfulBuild/artifact/jpatchaca-webstart/"
     href="jpatchacabuild.jnlp">
   <information>
     <title>JPatchaca Webstart</title>
