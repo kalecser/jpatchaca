@@ -183,7 +183,7 @@ public class PatchacaTray implements Startable {
 			trayIcon.setImage(INACTIVE_ICON);
 		}
 		
-		JOptionPane.showMessageDialog(null, "Timer has been stopped!");
+		statusMessage("Timer has been stopped!");
 		NotificationTimer.setStatus(TimerStatus.OFF);
 		getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(true);
 		getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
