@@ -245,7 +245,7 @@ public class PatchacaTray implements Startable {
 				} else if (actionCommand.startsWith(STOP_TASK)) {
 					PatchacaTray.this.stopTaskAlert.fire();
 				} else if (actionCommand.equals(COPY_ACTIVE_TASK_NAME)) {
-					model.copyActiveTaskName();
+					model.copyActiveTaskNameToClipboard();
 				}
 
 			}

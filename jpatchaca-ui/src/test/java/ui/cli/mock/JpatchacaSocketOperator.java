@@ -43,6 +43,7 @@ public class JpatchacaSocketOperator {
 			Threads.sleepWithoutInterruptions(100);
 			try{
 				socket = new Socket("127.0.0.1", 48625 );
+				readGreeting();
 				return;
 			} catch (Exception ex){
 				//do nothing
@@ -50,6 +51,11 @@ public class JpatchacaSocketOperator {
 		}
 		
 		Assert.fail("Failed to connect");
+	}
+
+	private void readGreeting() throws IOException {
+		String greeting = SocketUtils.readLine(socket);
+		Assert.assertEquals("hello from your timetracker", greeting);
 	}
 
 	public void close() {

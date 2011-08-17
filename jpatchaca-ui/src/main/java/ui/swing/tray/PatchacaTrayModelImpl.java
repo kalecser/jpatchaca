@@ -166,7 +166,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	}
 
 	@Override
-	public void copyActiveTaskName() {
+	public void copyActiveTaskNameToClipboard() {
 		
 		if (activeTaskName.currentValue() == null){
 			presenter.showMessageBalloon("You can only copy active task name if there is an active task.");

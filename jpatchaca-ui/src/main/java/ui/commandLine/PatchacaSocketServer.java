@@ -1,10 +1,12 @@
 package ui.commandLine;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.picocontainer.Startable;
 
@@ -14,6 +16,7 @@ import basic.SocketUtils;
 public class PatchacaSocketServer implements Startable{
 
 
+	private static final int SERVER_PORT = 48625;
 	private final CommandLineInterface cli;
 	private ServerSocket serverSocket;
 
@@ -29,7 +32,7 @@ public class PatchacaSocketServer implements Startable{
 			@Override
 			public void run() {
 				try {
-					int port = 48625;
+					int port = SERVER_PORT;
 					serverSocket = new ServerSocket(port);
 					acceptConnectionsWhileUniverseExists();
 				} catch (IOException e) {
@@ -47,7 +50,8 @@ public class PatchacaSocketServer implements Startable{
 		final boolean universeExists = true;
 		while(universeExists){
 			try {
-				Socket socket = serverSocket.accept();				
+				Socket socket = serverSocket.accept();
+				greet(socket);
 				readCommandsWhileUniverseExists(socket);
 			} catch (SocketException se){
 				Logger.getLogger(PatchacaSocketServer.class).error(se);
@@ -55,6 +59,12 @@ public class PatchacaSocketServer implements Startable{
 			}
 		}
 		
+	}
+
+	private void greet(Socket socket) throws IOException {
+		OutputStream output = socket.getOutputStream();
+		IOUtils.write("hello from your timetracker\n", output);
+		output.flush();
 	}
 
 	private void readCommandsWhileUniverseExists(Socket socket) throws IOException {

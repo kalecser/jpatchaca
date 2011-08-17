@@ -27,4 +27,11 @@ public class CommandLineTest {
 		operator.sendCommandLine("sendWorklog");
 		operator.assertCommandResponse("Worklog not sent. Error: Any exception will do.");
 	}	
+	
+	@Test
+	public void testCopyActiveTaskNameToClipboard(){	
+		operator.sendCommandLine("copyActiveTaskName");
+		operator.assertCommandResponse("Active task name copied to clipboard");
+		operator.assertTaskNameCopied();
+	}
 }

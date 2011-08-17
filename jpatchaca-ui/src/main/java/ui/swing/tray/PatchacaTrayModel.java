@@ -7,9 +7,10 @@ import org.reactive.Source;
 
 import tasks.TaskView;
 import tasks.taskName.TaskName;
+import ui.common.ActiveTaskNameCopier;
 import ui.swing.tray.PatchacaTrayModelImpl.Listener;
 
-public interface PatchacaTrayModel {
+public interface PatchacaTrayModel extends ActiveTaskNameCopier {
 
 	public abstract Source<Maybe<TaskName>> selectedTaskName();
 
@@ -37,6 +38,6 @@ public interface PatchacaTrayModel {
 
 	public abstract void showStartTaskScreen();
 
-	public abstract void copyActiveTaskName();
+	public abstract void copyActiveTaskNameToClipboard();
 
 }

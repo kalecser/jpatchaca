@@ -94,7 +94,7 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public void copyActiveTaskName() {
+	public void copyActiveTaskNameToClipboard() {
 		throw new RuntimeException("not implemented");		
 	}
 
