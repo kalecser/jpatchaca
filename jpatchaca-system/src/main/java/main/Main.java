@@ -61,7 +61,7 @@ import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
 import ui.swing.options.OptionsScreen;
 import ui.swing.options.OptionsScreenModelImpl;
-import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import ui.swing.singleInstance.ShowMainScreenOnSecondRun;
 import ui.swing.tasks.SelectedTaskPeriodsImpl;
 import ui.swing.tasks.SelectedTaskSource;
@@ -157,7 +157,7 @@ public class Main {
 		container.addComponent(EventsListPane.class);
 		container.addComponent(EventsListPanePresenter.class);
 
-		container.addComponent(Presenter.class);
+		container.addComponent(PresenterImpl.class);
 
 		container.addComponent(TopBarModel.class);
 		container

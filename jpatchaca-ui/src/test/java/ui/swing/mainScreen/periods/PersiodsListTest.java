@@ -24,7 +24,7 @@ import tasks.tasks.Tasks;
 import ui.swing.mainScreen.periods.mock.PeriodsListOperator;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.PatchacaPrintToConsoleExceptionHandler;
-import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import ui.swing.presenter.UIAction;
 import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.UIEventsExecutor;
@@ -60,7 +60,7 @@ public class PersiodsListTest {
 	}
 	
 	private PeriodsList subject;
-	private Presenter presenter;
+	private PresenterImpl presenter;
 	private PeriodsListOperator operator;
 	private SelectedTaskPeriodsMock selectedTaskperiods;
 	
@@ -143,7 +143,7 @@ public class PersiodsListTest {
 		RemovePeriodsDialogController removePeriodsDialogController = null;
 		Tasks tasks = null;
 		UIEventsExecutor executor = new UIEventsExecutorImpl(new PatchacaPrintToConsoleExceptionHandler());
-		presenter = new Presenter(executor);
+		presenter = new PresenterImpl(executor);
 		
 		PeriodsTableModel periodsTableModel = new PeriodsTableModel(
 				tasksSystem, 

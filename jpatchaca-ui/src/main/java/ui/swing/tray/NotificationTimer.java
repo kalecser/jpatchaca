@@ -1,21 +1,21 @@
 package ui.swing.tray;
 
-import java.awt.TrayIcon;
-import java.awt.TrayIcon.MessageType;
-
-import ui.swing.utils.DialogShake;
+import keyboardRotation.KeyboardRotationOptions;
+import ui.swing.presenter.Presenter;
 
 public class NotificationTimer extends Thread {
 
-	private final TrayIcon trayIcon;
 	private final String title = "Timer Alert";
 	private final String message = "Keyboard Rotation!";
 	private final int minutesToWait;
 	private static TimerStatus status = TimerStatus.OFF;
+	private final Presenter presenter;
+	private final KeyboardRotationOptions preferences;
 
-	public NotificationTimer(final int minutesToWait, final TrayIcon trayIcon) {
+	public NotificationTimer(final int minutesToWait, final Presenter presenter, KeyboardRotationOptions preferences) {
 		this.minutesToWait = minutesToWait;
-		this.trayIcon = trayIcon;
+		this.presenter = presenter;
+		this.preferences = preferences;
 	}
 
 	@Override
@@ -24,8 +24,7 @@ public class NotificationTimer extends Thread {
 			synchronized (this) {
 				while (status == TimerStatus.ON) {
 					wait(minutesToWait * 60000);
-					trayIcon.displayMessage(title, message, MessageType.ERROR);
-					DialogShake.showDialogShaking(message, title);
+					showMessage();
 				}
 			}
 		} catch (final InterruptedException e) {
@@ -33,6 +32,18 @@ public class NotificationTimer extends Thread {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void showMessage() {
+		presenter.showMessageBalloon( message);
+		showDialogIfNeeded();
+	}
+
+	private void showDialogIfNeeded() {
+		if (preferences.supressDialogs())
+			return;
+		
+		presenter.showShakingMessageWithTitle(message, title);
 	}
 
 	public static TimerStatus getStatus() {

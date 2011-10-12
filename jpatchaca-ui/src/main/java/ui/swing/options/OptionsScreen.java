@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import ui.swing.presenter.UIAction;
 import wheel.swing.CheckboxSignalBinder;
 import wheel.swing.TextFieldBinder;
@@ -49,10 +50,6 @@ public class OptionsScreen {
 			final JPanel optionsPanel = new JPanel();
 			optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));
 
-			// Nao estava sendo usado
-			//JCheckBox jiraEnabled = new JCheckBox("Jira enabled");
-			//optionsPanel.add(jiraEnabled, "span 4");
-			
 			issueStatusManagementEnabled = new JCheckBox("Issue Status Management");
 			issueStatusManagementEnabled.setSelected(optionsScreenModel.isIssueStatusManagementEnabled());
 			optionsPanel.add(issueStatusManagementEnabled, "span 4");
@@ -154,7 +151,7 @@ public class OptionsScreen {
 	}
 
 	public static void main(final String[] args) {
-		new OptionsScreen(new OptionsScreenMock(), new Presenter(null)).show();
+		new OptionsScreen(new OptionsScreenMock(), new PresenterImpl(null)).show();
 	}
 
 }

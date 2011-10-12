@@ -1,117 +1,33 @@
 package ui.swing.presenter;
 
-import java.awt.Window;
-import java.lang.ref.WeakReference;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import lang.Maybe;
-import net.java.balloontip.BalloonTip;
-import net.java.balloontip.utils.TimingUtils;
 
-import org.apache.commons.lang.Validate;
-import org.picocontainer.Startable;
+public interface Presenter {
 
-import ui.swing.utils.SwingUtils;
-import ui.swing.utils.UIEventsExecutor;
+	public abstract void setMainScreen(final JFrame mainScreen);
 
-import commons.swing.FloatingArea;
+	public abstract JDialog showOkCancelDialog(final ActionPane pane,
+			final String title);
 
-public class Presenter implements Startable {
+	public abstract JDialog showDialog(final JDialog dialog);
 
-	public Set<WeakReference<Window>> openedWindows = new LinkedHashSet<WeakReference<Window>>();
-	private final UIEventsExecutor executor;
+	public abstract void showShakingMessageWithTitle(String message,
+			String title);
 
-	private Maybe<JFrame> mainScreen;
-	private Maybe<FloatingArea> floatingArea;
+	public abstract void closeAllWindows();
 
-	public Presenter(final UIEventsExecutor executor) {
-		this.executor = executor;
-	}
+	public abstract void showYesNoFloatingWindow(final String caption,
+			final UIAction action) throws ValidationException;
 
-	public void setMainScreen(final JFrame mainScreen) {
-		Validate.notNull(mainScreen);
+	public abstract void showMessageBalloon(final String message);
 
-		this.mainScreen = Maybe.wrap(mainScreen);
-		this.floatingArea = Maybe.wrap(new FloatingArea(mainScreen));
-	}
+	public abstract void start();
 
-	public JDialog showOkCancelDialog(final ActionPane pane, final String title) {
+	public abstract void stop();
 
-		final OkCancelDialog dialog = new OkCancelDialog(executor, pane, title,
-				((getMainScreen() == null) ? null : getMainScreen().unbox()));
-		return showDialog(dialog);
-	}
+	public abstract Maybe<JFrame> getMainScreen();
 
-	public JDialog showDialog(final JDialog dialog) {
-		openedWindows.add(new WeakReference<Window>(dialog));
-		dialog.setVisible(true);
-
-		return dialog;
-	}
-
-	public void closeAllWindows() {
-		for (final WeakReference<Window> windowRef : openedWindows) {
-			final Window window = windowRef.get();
-			if (window != null) {
-				window.setVisible(false);
-				window.dispose();
-			}
-		}
-
-		for (final Window win : Window.getWindows()) {
-			win.setVisible(false);
-			win.dispose();
-		}
-
-	}
-
-	public void showYesNoFloatingWindow(final String caption,
-			final UIAction action) throws ValidationException {
-		if (getMainScreen() == null) {
-			throw new RuntimeException("Main screen is not set");
-		}
-
-		final int result = JOptionPane.showConfirmDialog(getMainScreen().unbox(),
-				caption, caption, JOptionPane.YES_NO_OPTION);
-
-		if (result == JOptionPane.YES_OPTION) {
-			action.run();
-		}
-	}
-	
-	public void showMessageBalloon(final String message) {
-
-		if (floatingArea == null || getMainScreen() == null ) {
-			throw new RuntimeException("Main screen is not set");
-		}
-
-		final BalloonTip contents = new BalloonTip(getMainScreen().unbox()
-				.getRootPane(), message);
-		final int tenSeconds = 10000;
-		TimingUtils.showTimedBalloon(contents, tenSeconds);
-
-		floatingArea.unbox().setContents(contents);
-	}
-
-	@Override
-	public void start() {
-	}
-
-	@Override
-	public void stop() {
-		
-		SwingUtils.invokeAndWaitOrCry(new Runnable() {	@Override public void run() {
-			closeAllWindows();
-			floatingArea = null;				
-		}});
-	}
-
-	public Maybe<JFrame> getMainScreen() {
-		return mainScreen;
-	}
 }

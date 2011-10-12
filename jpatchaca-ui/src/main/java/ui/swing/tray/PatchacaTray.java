@@ -19,6 +19,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import keyboardRotation.KeyboardRotationOptions;
+
 import lang.Maybe;
 
 import org.apache.commons.lang.SystemUtils;
@@ -28,6 +30,7 @@ import org.reactive.Receiver;
 
 import tasks.TaskView;
 import tasks.taskName.TaskName;
+import ui.swing.presenter.Presenter;
 import wheel.io.ui.impl.SystemTrayNotSupported;
 import wheel.lang.Threads;
 import basic.Alert;
@@ -67,9 +70,13 @@ public class PatchacaTray implements Startable {
 	protected AtomicLong lastClicktime = new AtomicLong();
 	protected AtomicBoolean isprocessingClick = new AtomicBoolean(false);
 	public boolean test_mode = false;
+	private final Presenter presenter;
+	private final KeyboardRotationOptions preferences;
 
-	public PatchacaTray(final PatchacaTrayModel model) {
+	public PatchacaTray(final PatchacaTrayModel model, Presenter presenter, KeyboardRotationOptions preferences) {
 		this.model = model;
+		this.presenter = presenter;
+		this.preferences = preferences;
 
 		this.stopTaskAlert = new AlertImpl();
 
@@ -160,7 +167,7 @@ public class PatchacaTray implements Startable {
 			}
 			
 			
-			timer = new NotificationTimer(intTempoDigitado, trayIcon);
+			timer = new NotificationTimer(intTempoDigitado, presenter, preferences);
 			timer.start();
 
 			NotificationTimer.setStatus(TimerStatus.ON);

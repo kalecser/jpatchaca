@@ -13,11 +13,12 @@ import org.junit.Test;
 import tasks.tasks.mock.MockJira;
 import ui.swing.presenter.PatchacaPrintToConsoleExceptionHandler;
 import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import ui.swing.utils.UIEventsExecutorImpl;
 
 public class JiraIssueStatusManagementTest {
 
-	Presenter presenter = new Presenter(new UIEventsExecutorImpl(new PatchacaPrintToConsoleExceptionHandler()));
+	Presenter presenter = new PresenterImpl(new UIEventsExecutorImpl(new PatchacaPrintToConsoleExceptionHandler()));
 	JiraOptions jiraOptions = new JiraOptions();
 	MockJira jira = new MockJira(jiraOptions);
 	JiraIssueStatusManagement statusManagement = new JiraIssueStatusManagement(jira);

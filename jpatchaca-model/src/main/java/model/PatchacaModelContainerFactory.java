@@ -9,6 +9,7 @@ import jira.SslManagerSetup;
 import jira.processors.SendWorklogProcessor;
 import jira.processors.SetJiraConfigProcessor;
 import jira.processors.SetJiraIssueToTaskProcessor;
+import keyboardRotation.KeyboardRotationOptions;
 import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
 import labels.labels.SelectedLabel;
@@ -97,6 +98,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(CreateTaskPersistence.class);
 
+		container.addComponent(KeyboardRotationOptions.class);
 		container.addComponent(TwitterOptions.class);
 		container.addComponent(TwitterLogger.class);
 		container.addComponent(SetTwitterConfigProcessor.class);
