@@ -420,6 +420,7 @@ public class TaskList extends JPanel {
 			@Override
 			public void run() {
 				tasksList.setSelectedValue(task, true);
+				screenData.setSelectedTask(task.name());
 			}
 
 		}
