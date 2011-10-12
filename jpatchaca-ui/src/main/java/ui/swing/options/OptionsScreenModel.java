@@ -26,4 +26,8 @@ public interface OptionsScreenModel {
 	
 	public abstract boolean isIssueStatusManagementEnabled();
 
+	public abstract void setKeyboarRotationConfig(boolean supressShakingDialog);
+
+	public abstract boolean supressShakingDialog();
+
 }

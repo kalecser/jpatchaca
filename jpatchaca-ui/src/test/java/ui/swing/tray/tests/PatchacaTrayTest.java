@@ -11,6 +11,7 @@ import org.junit.Test;
 import tasks.tasks.tests.MockTaskName;
 import ui.swing.presenter.Presenter;
 import ui.swing.tray.PatchacaTray;
+import ui.swing.tray.mock.PresenterMock;
 import ui.swing.tray.tests.environment.PatchacaTrayModelMock;
 import ui.swing.tray.tests.environment.PathcacaTrayOperator;
 
@@ -27,7 +28,7 @@ public class PatchacaTrayTest {
 		}
 
 		modelMock = new PatchacaTrayModelMock();
-		Presenter presenter = null;
+		Presenter presenter = new PresenterMock();
 		KeyboardRotationOptions keyboardRotationPreferences = null;
 		tray = new PatchacaTray(modelMock, presenter, keyboardRotationPreferences);
 

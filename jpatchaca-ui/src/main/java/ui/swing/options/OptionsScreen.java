@@ -29,6 +29,7 @@ public class OptionsScreen {
 		private JTextField jiraPassword;
 		private JTextField jiraUrl;
 		private JCheckBox issueStatusManagementEnabled;
+		private JCheckBox supressShakingDialog;
 
 		@Override
 		public JPanel getPanel() {
@@ -38,12 +39,22 @@ public class OptionsScreen {
 			addMainPreferences(tab);
 			addTwitterPreferences(tab);
 			addJiraPreferences(tab);
+			addKeyboardRotationPreferences(tab);
 
 			twitterEnabled.requestFocus();
 
 			JPanel jPanel = new JPanel();
 			jPanel.add(tab);
 			return jPanel;
+		}
+
+		private void addKeyboardRotationPreferences(JTabbedPane tab) {
+			final JPanel optionsPanel = new JPanel();
+			optionsPanel.setLayout(new MigLayout("wrap 1,fillx"));
+			supressShakingDialog = new JCheckBox("Supress shaking dialog");
+			supressShakingDialog.setSelected(optionsScreenModel.supressShakingDialog());
+			optionsPanel.add(supressShakingDialog);
+			tab.add("Keyboard Rotation",optionsPanel);
 		}
 
 		private void addJiraPreferences(JTabbedPane tab) {
@@ -122,6 +133,8 @@ public class OptionsScreen {
 					
 					optionsScreenModel.setJiraConfig(jiraUrl.getText(),
 							jiraUsername.getText(), jiraPassword.getText(), issueStatusManagementEnabled.isSelected());
+					
+					optionsScreenModel.setKeyboarRotationConfig(supressShakingDialog.isSelected());
 				}
 			};
 		}

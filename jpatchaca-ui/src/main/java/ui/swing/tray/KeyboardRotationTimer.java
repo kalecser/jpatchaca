@@ -3,7 +3,7 @@ package ui.swing.tray;
 import keyboardRotation.KeyboardRotationOptions;
 import ui.swing.presenter.Presenter;
 
-public class NotificationTimer extends Thread {
+public class KeyboardRotationTimer extends Thread {
 
 	private final String title = "Timer Alert";
 	private final String message = "Keyboard Rotation!";
@@ -12,7 +12,7 @@ public class NotificationTimer extends Thread {
 	private final Presenter presenter;
 	private final KeyboardRotationOptions preferences;
 
-	public NotificationTimer(final int minutesToWait, final Presenter presenter, KeyboardRotationOptions preferences) {
+	public KeyboardRotationTimer(final int minutesToWait, final Presenter presenter, KeyboardRotationOptions preferences) {
 		this.minutesToWait = minutesToWait;
 		this.presenter = presenter;
 		this.preferences = preferences;
@@ -35,12 +35,12 @@ public class NotificationTimer extends Thread {
 	}
 
 	public void showMessage() {
-		presenter.showMessageBalloon( message);
+		presenter.showNotification( message);
 		showDialogIfNeeded();
 	}
 
 	private void showDialogIfNeeded() {
-		if (preferences.supressDialogs())
+		if (preferences.supressShakingDialog())
 			return;
 		
 		presenter.showShakingMessageWithTitle(message, title);
@@ -51,6 +51,6 @@ public class NotificationTimer extends Thread {
 	}
 
 	public static void setStatus(final TimerStatus status) {
-		NotificationTimer.status = status;
+		KeyboardRotationTimer.status = status;
 	}
 }

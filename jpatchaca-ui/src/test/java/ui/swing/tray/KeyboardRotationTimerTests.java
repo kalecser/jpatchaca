@@ -9,13 +9,13 @@ import events.persistence.MustBeCalledInsideATransaction;
 
 import ui.swing.tray.mock.PresenterMock;
 
-public class NotificationTimerTests {
+public class KeyboardRotationTimerTests {
 
 	@Test
 	public void showNotification_WillShowTrayAndDialogNotifications(){
 		showNotificationMessage();
 		Assert.assertEquals(
-				"showMessageBalloon()\n" +
+				"showNotification()\n" +
 				"showShakingMessageWithTitle()", getOperations());
 	}
 
@@ -23,7 +23,7 @@ public class NotificationTimerTests {
 	public void configureToSupressDialogNotification_WillOnlyShowTrayNotification(){
 		configureToSupressDialogs();
 		showNotificationMessage();
-		Assert.assertEquals("showMessageBalloon()", getOperations());
+		Assert.assertEquals("showNotification()", getOperations());
 	}
 
 	PresenterMock presenter = new PresenterMock();
@@ -35,13 +35,13 @@ public class NotificationTimerTests {
 
 	private void showNotificationMessage() {
 		int minutesToWaitDoesNotMatter = 1;
-		NotificationTimer timer = new NotificationTimer(minutesToWaitDoesNotMatter, presenter, preferences);
+		KeyboardRotationTimer timer = new KeyboardRotationTimer(minutesToWaitDoesNotMatter, presenter, preferences);
 		timer.showMessage();
 	}
 	
 	private void configureToSupressDialogs() {
 		try {
-			preferences.setSupressDialogs(true);
+			preferences.setSupressShakingDialog(true);
 		} catch (MustBeCalledInsideATransaction e) {
 			//supress
 		}

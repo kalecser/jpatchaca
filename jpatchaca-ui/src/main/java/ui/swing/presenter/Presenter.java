@@ -3,6 +3,8 @@ package ui.swing.presenter;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import org.reactive.Signal;
+
 import lang.Maybe;
 
 public interface Presenter {
@@ -23,6 +25,10 @@ public interface Presenter {
 			final UIAction action) throws ValidationException;
 
 	public abstract void showMessageBalloon(final String message);
+	
+	public abstract void showNotification(String message);
+	
+	public Signal<String> notification();
 
 	public abstract void start();
 

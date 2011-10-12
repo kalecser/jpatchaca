@@ -4,6 +4,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import tasks.MockEventsSystem;
+
 import events.SetKeyboardRotationOptions;
 import events.persistence.MustBeCalledInsideATransaction;
 
@@ -14,7 +16,7 @@ public class KeyboardRotationOptionsTest {
 	public void setKeyboardRotationOptions(){
 		boolean supressDialogs = true;
 		writeEvent(new SetKeyboardRotationOptions(supressDialogs));
-		Assert.assertEquals(true, options.supressDialogs());
+		Assert.assertEquals(true, options.supressShakingDialog());
 		
 	}
 
@@ -22,7 +24,7 @@ public class KeyboardRotationOptionsTest {
 	private void writeEvent(
 			SetKeyboardRotationOptions setKeyboardRotationOptions) {
 		try {
-			new SetKeyboardRotationOptionsProcessor(options).execute(setKeyboardRotationOptions);
+			new SetKeyboardRotationOptionsProcessor(options, new MockEventsSystem()).execute(setKeyboardRotationOptions);
 		} catch (MustBeCalledInsideATransaction e) {
 			//supress
 		}

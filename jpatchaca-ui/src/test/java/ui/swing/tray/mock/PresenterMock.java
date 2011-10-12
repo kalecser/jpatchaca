@@ -3,6 +3,9 @@ package ui.swing.tray.mock;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import org.reactive.Signal;
+import org.reactive.Source;
+
 import lang.Maybe;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
@@ -64,8 +67,18 @@ public class PresenterMock implements Presenter {
 		throw new RuntimeException("Not implemented");
 	}
 
+	@Override
+	public void showNotification(String message) {
+		operations.append("showNotification()\n");
+	}
+	
 	public String getOperations() {
 		return operations.toString().trim();
+	}
+
+	@Override
+	public Signal<String> notification() {
+		return new Source<String>("");
 	}
 
 }

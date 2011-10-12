@@ -5,14 +5,14 @@ import java.io.Serializable;
 public class SetKeyboardRotationOptions implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private final boolean supressDialogs;
+	private final boolean supressShakingDialog;
 
-	public SetKeyboardRotationOptions(boolean supressDialogs) {
-		this.supressDialogs = supressDialogs;
+	public SetKeyboardRotationOptions(boolean supressShakingDialog) {
+		this.supressShakingDialog = supressShakingDialog;
 	}
 
-	public boolean supressDialogs() {
-		return supressDialogs;
+	public boolean supressShakingDialog() {
+		return supressShakingDialog;
 	}
 
 }

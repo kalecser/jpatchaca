@@ -56,7 +56,7 @@ public class PatchacaTray implements Startable {
 	static final String EXIT = "Exit";
 	static final String STOP_TASK = "Stop task";
 
-	private NotificationTimer timer;
+	private KeyboardRotationTimer timer;
 
 	protected static final long HALF_AN_HOUR = DateUtils.MILLIS_PER_MINUTE * 30;
 	protected static final long ONE_HOUR = DateUtils.MILLIS_PER_MINUTE * 60;
@@ -79,7 +79,20 @@ public class PatchacaTray implements Startable {
 		this.preferences = preferences;
 
 		this.stopTaskAlert = new AlertImpl();
+		
+		showNotifications(presenter);
 
+	}
+
+	private void showNotifications(Presenter presenter) {
+		presenter.notification().addReceiver(new Receiver<String>() {
+			@Override
+			public void receive(String notification) {
+				if (notification.equals(""))
+						return;
+				statusMessage(notification);
+			}
+		});
 	}
 
 	public void initialize() {
@@ -167,10 +180,10 @@ public class PatchacaTray implements Startable {
 			}
 			
 			
-			timer = new NotificationTimer(intTempoDigitado, presenter, preferences);
+			timer = new KeyboardRotationTimer(intTempoDigitado, presenter, preferences);
 			timer.start();
 
-			NotificationTimer.setStatus(TimerStatus.ON);
+			KeyboardRotationTimer.setStatus(TimerStatus.ON);
 			getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(
 					false);
 			getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
@@ -180,7 +193,7 @@ public class PatchacaTray implements Startable {
 	}
 
 	private void stopTimer() {
-		NotificationTimer.setStatus(TimerStatus.OFF);
+		KeyboardRotationTimer.setStatus(TimerStatus.OFF);
 
 		timer.interrupt();
 		
@@ -191,7 +204,7 @@ public class PatchacaTray implements Startable {
 		}
 		
 		statusMessage("Timer has been stopped!");
-		NotificationTimer.setStatus(TimerStatus.OFF);
+		KeyboardRotationTimer.setStatus(TimerStatus.OFF);
 		getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(true);
 		getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
 				false);

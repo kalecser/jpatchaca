@@ -38,25 +38,31 @@ public class OptionsScreenMock implements OptionsScreenModel {
 
 	@Override
 	public Maybe<String> jiraPassword() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Maybe<String> jiraUrl() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Maybe<String> jiraUserName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isIssueStatusManagementEnabled() {
-		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setKeyboarRotationConfig(boolean supressShakingDialog) {
+		throw new RuntimeException("Not implemented");
+	}
+
+	@Override
+	public boolean supressShakingDialog() {
 		return false;
 	}
 }

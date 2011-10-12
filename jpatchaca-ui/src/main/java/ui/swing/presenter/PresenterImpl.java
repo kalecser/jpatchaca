@@ -15,6 +15,8 @@ import net.java.balloontip.utils.TimingUtils;
 
 import org.apache.commons.lang.Validate;
 import org.picocontainer.Startable;
+import org.reactive.Signal;
+import org.reactive.Source;
 
 import ui.swing.utils.SwingUtils;
 import ui.swing.utils.UIEventsExecutor;
@@ -28,6 +30,7 @@ public class PresenterImpl implements Startable, Presenter {
 
 	private Maybe<JFrame> mainScreen;
 	private Maybe<FloatingArea> floatingArea;
+	private Source<String> notification = new Source<String>("");
 
 	public PresenterImpl(final UIEventsExecutor executor) {
 		this.executor = executor;
@@ -126,4 +129,15 @@ public class PresenterImpl implements Startable, Presenter {
 	public Maybe<JFrame> getMainScreen() {
 		return mainScreen;
 	}
+
+	@Override
+	public void showNotification(String message) {
+		notification.supply(message);
+	}
+
+	@Override
+	public Signal<String> notification() {
+		return notification;
+	}
+
 }

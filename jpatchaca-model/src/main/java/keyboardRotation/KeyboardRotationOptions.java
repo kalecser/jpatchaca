@@ -6,11 +6,11 @@ public class KeyboardRotationOptions {
 
 	private boolean supressDialogs = false;
 
-	public void setSupressDialogs(boolean b) throws MustBeCalledInsideATransaction {
+	public void setSupressShakingDialog(boolean b) throws MustBeCalledInsideATransaction {
 		this.supressDialogs = b;
 	}
 	
-	public boolean supressDialogs(){
+	public boolean supressShakingDialog(){
 		return supressDialogs;
 	}
 

@@ -2,6 +2,7 @@ package ui.swing.options;
 
 import jira.JiraOptions;
 import jira.events.SetJiraConfig;
+import keyboardRotation.KeyboardRotationOptions;
 import lang.Maybe;
 
 import org.reactive.Signal;
@@ -9,18 +10,21 @@ import org.reactive.Signal;
 import twitter.TwitterOptions;
 import twitter.events.SetTwitterConfig;
 import events.EventsSystem;
+import events.SetKeyboardRotationOptions;
 
 public class OptionsScreenModelImpl implements OptionsScreenModel {
 	
 	private final EventsSystem eventsSystem;
 	private final TwitterOptions twitterOptions;
 	private final JiraOptions jiraOptions;
+	private final KeyboardRotationOptions keyboardRotationOptions;
 
 	public OptionsScreenModelImpl(final EventsSystem eventsSystem,
-			final TwitterOptions options, final JiraOptions jiraOptions) {
+			final TwitterOptions options, final JiraOptions jiraOptions, KeyboardRotationOptions keyboardRotationOptions) {
 		this.eventsSystem = eventsSystem;
 		this.twitterOptions = options;
 		this.jiraOptions = jiraOptions;
+		this.keyboardRotationOptions = keyboardRotationOptions;
 	}
 
 	public synchronized void setTwitterConfig(final boolean selected,
@@ -67,6 +71,16 @@ public class OptionsScreenModelImpl implements OptionsScreenModel {
 	@Override
 	public boolean isIssueStatusManagementEnabled() {
 		return jiraOptions.isIssueStatusManagementEnabled();
+	}
+
+	@Override
+	public void setKeyboarRotationConfig(boolean supressShakingDialog) {
+			eventsSystem.writeEvent(new SetKeyboardRotationOptions(supressShakingDialog));
+	}
+
+	@Override
+	public boolean supressShakingDialog() {
+			return keyboardRotationOptions.supressShakingDialog();
 	}
 
 }
