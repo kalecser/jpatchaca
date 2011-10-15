@@ -41,7 +41,6 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class TaskScreenController {
 
-	private static final long serialVersionUID = 1L;
 	public static final String TITLE = "Task edition";
 
 	private final Formatter formatter;
@@ -89,8 +88,6 @@ public class TaskScreenController {
 	}
 
 	class TaskScreenDialog implements ActionPane {
-		private static final long serialVersionUID = 1L;
-
 		private JTextField taskNameTextBox;
 		private JCheckBox budgetCheckBox;
 		private JTextField budgetHours;

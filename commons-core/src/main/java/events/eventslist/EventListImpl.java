@@ -21,7 +21,6 @@ import events.persistence.MustBeCalledInsideATransaction;
 
 public class EventListImpl implements EventList{
 
-	private static final long serialVersionUID = 1L;
 	private final PersistenceManager persistenceManager;
 	private final HardwareClock machineClock;
 	private final SystemClock clock;

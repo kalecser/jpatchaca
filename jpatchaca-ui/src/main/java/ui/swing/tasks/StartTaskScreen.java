@@ -17,7 +17,6 @@ import commons.swing.JAutoCompleteTextField;
 import commons.swing.JAutoCompleteTextFieldModel;
 
 public class StartTaskScreen implements ActionPane {
-	private static final long serialVersionUID = 1L;
 
 	private final JPanel panel;
 	private final StartTaskScreenModel model;

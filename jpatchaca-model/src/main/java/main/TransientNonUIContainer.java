@@ -13,8 +13,6 @@ import basic.mock.MockIdProvider;
 
 public class TransientNonUIContainer {
 
-	private static final long serialVersionUID = 1L;
-
 	private final MutablePicoContainer container;
 
 	public TransientNonUIContainer() {
