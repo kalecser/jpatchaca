@@ -1,8 +1,5 @@
 package ui.swing.mainScreen;
 
-import org.reactive.Signal;
-import org.reactive.Source;
-
 import ui.swing.events.EventsListPanePresenter;
 
 public class TopBarModelImpl implements TopBarModel {
@@ -18,14 +15,6 @@ public class TopBarModelImpl implements TopBarModel {
 		eventsListPresenter.show();
 	}
 
-	@Override
-	public Signal<Boolean> hasUnreadNewAndNoteworthy() {
-		return new Source<Boolean>(false);
-	}
-
-	@Override
-	public void markNewAndNoteworthyAsRead() {
-		throw new RuntimeException("Not implemented");
-	}
+	
 
 }
