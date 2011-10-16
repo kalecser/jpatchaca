@@ -6,15 +6,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-import org.reactive.Receiver;
-
 import ui.swing.errorLog.ErrorLogScreen;
+import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyMenu;
 import ui.swing.utils.UIEventsExecutor;
 
 @SuppressWarnings("serial")
@@ -47,10 +45,12 @@ public final class TopBar extends JPanel {
 	final Collection<Listener> listeners;
 	private final UIEventsExecutor executor;
 	private final TopBarModel model;
+	private final NewAndNoteworthyMenu newAndNoteworthyMenu;
 
-	public TopBar(final UIEventsExecutor executor, final TopBarModel model, final ErrorLogScreen errorLogScreen) {
+	public TopBar(final UIEventsExecutor executor, final TopBarModel model, final ErrorLogScreen errorLogScreen, NewAndNoteworthyMenu newAndNoteworthyMenu) {
 		this.executor = executor;
 		this.model = model;
+		this.newAndNoteworthyMenu = newAndNoteworthyMenu;
 
 		initialize();
 
@@ -215,42 +215,9 @@ public final class TopBar extends JPanel {
 
 		final JMenuBar bar = new JMenuBar();
 		bar.add(getTaskMenu());
-		bar.add(getNewAndNoteworthyMenu());
+		bar.add(newAndNoteworthyMenu.getNewAndNoteworthyMenu());
 
 		add(bar, BorderLayout.NORTH);
-	}
-
-	private JMenu getNewAndNoteworthyMenu() {
-		final JMenu menu = new JMenu("New and noteworthy");
-		JMenuItem item = menu.add("read");
-		
-		model.hasUnreadNewAndNoteworthy().addReceiver(new Receiver<Boolean>() {
-			@Override
-			public void receive(Boolean value) {
-				if (value){
-					menu.setIcon(new ImageIcon(TopBar.class.getResource("new.png")));
-					menu.setToolTipText("new");
-				} else {
-					menu.setIcon(null);
-					menu.setToolTipText("");
-				}
-					
-			}
-		});
-		
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				executor.execute(new Runnable() {
-					@Override
-					public void run() {
-						model.markNewAndNoteworthyAsRead();
-					}
-				});
-			}
-		});
-		
-		return menu;
 	}
 
 	private JMenu getTaskMenu() {

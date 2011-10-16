@@ -2,7 +2,9 @@ package ui.swing.mainScreen;
 
 import org.reactive.Signal;
 
-public interface TopBarModel {
+import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyModel;
+
+public interface TopBarModel extends NewAndNoteworthyModel {
 
 	public abstract void openEventsList();
 

@@ -12,7 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.netbeans.jemmy.operators.JFrameOperator;
 
-import ui.swing.mainScreen.mock.TopBarModelMock;
+import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyMenu;
+import ui.swing.mainScreen.newAndNoteworthy.mock.NewAndNoteworthyModelMock;
 import ui.swing.mainScreen.operators.TopBarMenuOperator;
 import ui.swing.utils.UIEventsExecutor;
 
@@ -20,7 +21,7 @@ public class TopBarTest {
 
 	private TopBarMenuOperator menuOperator;
 	private ExpectExceptExec exexex;
-	private TopBarModelMock modelMock;
+	private NewAndNoteworthyModelMock modelMock;
 
 	@Test
 	public void testFireStartTask() {
@@ -28,24 +29,15 @@ public class TopBarTest {
 		Assert.assertThat(exexex.happened, notNullValue());
 	}
 	
-	@Test
-	public void IfUnreadNewAndNoteworthy_willShowAlertIconOnMenu(){
-		setUnreadNewAndNoteworthy();
-		menuOperator.waitAlerIconToShowOnNewandNoteworthy();
-		menuOperator.readNewAndNoteworthy();
-		menuOperator.waitAlerIconToVanishOnNewandNoteworthy();
-	}
 	
-	private void setUnreadNewAndNoteworthy() {
-		modelMock.setUnreadNewandNoteworthy();
-	}
-
+	
 	@Before
 	public void before(){
 		exexex = new ExpectExceptExec();
 		
-		modelMock = new TopBarModelMock();
-		final TopBar bar = new TopBar(exexex, modelMock, null);
+		modelMock = new NewAndNoteworthyModelMock();
+		NewAndNoteworthyMenu newAndNoteworthyMenu = new NewAndNoteworthyMenu(exexex, modelMock);
+		final TopBar bar = new TopBar(exexex, null, null, newAndNoteworthyMenu);
 		bar.addListener(new Listener());
 		final JFrame frame = new JFrame();
 		frame.add(bar);

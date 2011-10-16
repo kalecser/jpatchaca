@@ -1,18 +1,13 @@
-package ui.swing.mainScreen.mock;
+package ui.swing.mainScreen.newAndNoteworthy.mock;
 
 import org.reactive.Signal;
 import org.reactive.Source;
 
-import ui.swing.mainScreen.TopBarModel;
+import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyModel;
 
-public class TopBarModelMock implements TopBarModel {
+public class NewAndNoteworthyModelMock implements NewAndNoteworthyModel{
 
 	Source<Boolean> unreadNewAndNoteworthy = new Source<Boolean>(false);
-	
-	@Override
-	public void openEventsList() {
-		throw new RuntimeException("Not implemented");
-	}
 
 	public void setUnreadNewandNoteworthy() {
 		unreadNewAndNoteworthy.supply(true);
