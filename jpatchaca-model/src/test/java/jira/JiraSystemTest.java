@@ -12,11 +12,8 @@ import tasks.tasks.Tasks;
 
 public class JiraSystemTest {
 
-	
-
 	@Test
 	public void testAddWorklog(){
-		
 		Period period = new Period(date(0l), date(DateUtils.MILLIS_PER_HOUR));
 		addWorklogFor(period);
 		Assert.assertEquals("1h 0m", timeLogged());
@@ -25,7 +22,6 @@ public class JiraSystemTest {
 	
 	@Test
 	public void testAddWorklogWithOverride(){
-		
 		Period period = new Period(date(0l), date(DateUtils.MILLIS_PER_HOUR));
 		overrideWorkLog(period, "2h 25m");
 		addWorklogFor(period);
@@ -35,7 +31,6 @@ public class JiraSystemTest {
 	
 	@Test
 	public void testAddWorklogOverrideWrongFormat(){
-		
 		Period period = new Period(date(0l), date(DateUtils.MILLIS_PER_HOUR));
 		String timeSpentOverrideWrongFormat = "2:25";
 		overrideWorkLog(period, timeSpentOverrideWrongFormat);
@@ -47,7 +42,6 @@ public class JiraSystemTest {
 
 	@Test
 	public void testAddWorklogZeroMinutes(){
-		
 		Period period = new Period(date(0l), date(DateUtils.MILLIS_PER_HOUR));
 		overrideWorkLog(period, " 0h 0m ");
 		addWorklogFor(period);

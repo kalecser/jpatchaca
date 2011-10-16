@@ -48,7 +48,7 @@ public class TopBarTest {
 	}
 	
 	@SuppressWarnings("serial")
-	class StartTaskException extends RuntimeException {
+	static  class StartTaskException extends RuntimeException {
 		// Empty test exception
 	}
 	class Listener extends TopBarListenerAdapter {
@@ -59,7 +59,7 @@ public class TopBarTest {
 		}
 	}
 	
-	class ExpectExceptExec implements UIEventsExecutor {
+	static class ExpectExceptExec implements UIEventsExecutor {
 
 		StartTaskException happened;
 

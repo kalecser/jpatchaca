@@ -10,6 +10,6 @@ public class JiraUtil {
 	}
 
 	public static String humanFormat(final long millis) {
-		return humanFormat(new Double(millis) / DateUtils.MILLIS_PER_HOUR);
+		return humanFormat((double)millis / DateUtils.MILLIS_PER_HOUR);
 	}
 }

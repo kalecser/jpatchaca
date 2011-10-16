@@ -22,7 +22,7 @@ public class AssureSingleInstance implements Startable{
 
 	private Maybe<Thread> alertOnNewconnectionThread;
 	
-	public static Maybe<ServerSocket> socket;
+	private static Maybe<ServerSocket> socket;
 	
 	public AssureSingleInstance(){
 		_tryedToCreateAnotherInstance = new AlertImpl();

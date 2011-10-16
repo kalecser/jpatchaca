@@ -5,8 +5,8 @@ import ui.swing.presenter.Presenter;
 
 public class KeyboardRotationTimer extends Thread {
 
-	private final String title = "Timer Alert";
-	private final String message = "Keyboard Rotation!";
+	private static final String title = "Timer Alert";
+	private static final String message = "Keyboard Rotation!";
 	private final int minutesToWait;
 	private static TimerStatus status = TimerStatus.OFF;
 	private final Presenter presenter;

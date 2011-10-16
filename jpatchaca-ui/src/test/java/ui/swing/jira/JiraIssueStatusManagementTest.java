@@ -18,7 +18,6 @@ import ui.swing.utils.UIEventsExecutorImpl;
 
 public class JiraIssueStatusManagementTest {
 
-	Presenter presenter = new PresenterImpl(new UIEventsExecutorImpl(new PatchacaPrintToConsoleExceptionHandler()));
 	JiraOptions jiraOptions = new JiraOptions();
 	MockJira jira = new MockJira(jiraOptions);
 	JiraIssueStatusManagement statusManagement = new JiraIssueStatusManagement(jira);
