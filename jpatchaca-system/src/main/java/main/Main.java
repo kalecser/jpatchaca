@@ -47,6 +47,7 @@ import ui.swing.mainScreen.TopBarModelImpl;
 import ui.swing.mainScreen.WorkLoggerUsingSwing;
 import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyMenu;
 import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyModelImpl;
+import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyPresenter;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTable;
 import ui.swing.mainScreen.periods.PeriodsTableModel;
@@ -164,6 +165,7 @@ public class Main {
 		container.addComponent(TopBarModelImpl.class);
 		container.addComponent(NewAndNoteworthyModelImpl.class);
 		container.addComponent(NewAndNoteworthyMenu.class);
+		container.addComponent(NewAndNoteworthyPresenter.class);
 		container
 				.addComponent(MainScreenModel.class, MainScreenModelImpl.class);
 		container.addComponent(MainScreen.class, MainScreenImpl.class);

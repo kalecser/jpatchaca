@@ -2,6 +2,7 @@ package ui.swing.presenter;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.reactive.Signal;
 
@@ -35,5 +36,7 @@ public interface Presenter {
 	public abstract void stop();
 
 	public abstract Maybe<JFrame> getMainScreen();
+
+	public abstract void showPlainDialog(JPanel panel,  String title);
 
 }

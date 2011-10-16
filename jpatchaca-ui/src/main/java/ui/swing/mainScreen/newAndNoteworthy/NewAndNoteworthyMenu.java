@@ -47,7 +47,7 @@ public class NewAndNoteworthyMenu {
 				executor.execute(new Runnable() {
 					@Override
 					public void run() {
-						model.markNewAndNoteworthyAsRead();
+						model.openNewAndNoteworthyScreen();
 					}
 				});
 			}

@@ -54,4 +54,8 @@ public class NewAndNoteworthyMenuOperator {
 		});
 	}
 
+	public void waitForNewAndNoteworthyScreenToOpen() {
+		new JFrameOperator("New and noteworthy");
+	}
+
 }

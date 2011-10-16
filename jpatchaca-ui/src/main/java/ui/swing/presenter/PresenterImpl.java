@@ -1,5 +1,6 @@
 package ui.swing.presenter;
 
+import java.awt.BorderLayout;
 import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashSet;
@@ -8,6 +9,7 @@ import java.util.Set;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import lang.Maybe;
 import net.java.balloontip.BalloonTip;
@@ -48,7 +50,7 @@ public class PresenterImpl implements Startable, Presenter {
 	public JDialog showOkCancelDialog(final ActionPane pane, final String title) {
 
 		final OkCancelDialog dialog = new OkCancelDialog(executor, pane, title,
-				((getMainScreen() == null) ? null : getMainScreen().unbox()));
+				getOwner());
 		return showDialog(dialog);
 	}
 
@@ -138,6 +140,21 @@ public class PresenterImpl implements Startable, Presenter {
 	@Override
 	public Signal<String> notification() {
 		return notification;
+	}
+
+	@Override
+	public void showPlainDialog(JPanel panel, String title) {
+		
+		JDialog dialog = new JDialog(getOwner());
+		dialog.setTitle(title);
+		dialog.setLayout(new BorderLayout());
+		dialog.add(panel);
+		dialog.pack();
+		showDialog(dialog);
+	}
+	
+	private JFrame getOwner() {
+		return (getMainScreen() == null) ? null : getMainScreen().unbox();
 	}
 
 }

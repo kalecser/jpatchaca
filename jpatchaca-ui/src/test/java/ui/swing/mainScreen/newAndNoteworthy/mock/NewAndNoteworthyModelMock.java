@@ -19,7 +19,7 @@ public class NewAndNoteworthyModelMock implements NewAndNoteworthyModel{
 	}
 
 	@Override
-	public void markNewAndNoteworthyAsRead() {
+	public void openNewAndNoteworthyScreen() {
 		unreadNewAndNoteworthy.supply(false);
 	}
 

@@ -2,6 +2,7 @@ package ui.swing.tray.mock;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.reactive.Signal;
 import org.reactive.Source;
@@ -79,6 +80,11 @@ public class PresenterMock implements Presenter {
 	@Override
 	public Signal<String> notification() {
 		return new Source<String>("");
+	}
+
+	@Override
+	public void showPlainDialog(JPanel panel, String title) {
+		throw new RuntimeException("Not implemented");
 	}
 
 }

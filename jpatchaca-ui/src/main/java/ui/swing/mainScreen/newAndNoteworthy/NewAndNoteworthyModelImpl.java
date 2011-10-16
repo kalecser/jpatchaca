@@ -1,18 +1,27 @@
 package ui.swing.mainScreen.newAndNoteworthy;
 
+import newAndNoteworthy.NewAndNoteworthy;
+
 import org.reactive.Signal;
-import org.reactive.Source;
 
 public class NewAndNoteworthyModelImpl implements NewAndNoteworthyModel {
 
+	private final NewAndNoteworthyPresenter newAndNoteworthyPresenter;
+	private final NewAndNoteworthy newAndNoteworthy;
+
+	public NewAndNoteworthyModelImpl(NewAndNoteworthy newAndNoteworthy, NewAndNoteworthyPresenter newAndNoteworthyPresenter){
+		this.newAndNoteworthy = newAndNoteworthy;
+		this.newAndNoteworthyPresenter = newAndNoteworthyPresenter;
+	}
+	
 	@Override
 	public Signal<Boolean> hasUnreadNewAndNoteworthy() {
-		return new Source<Boolean>(false);
+		return newAndNoteworthy.hasUnreadNewAndNoteworthy();
 	}
 
 	@Override
-	public void markNewAndNoteworthyAsRead() {
-		throw new RuntimeException("Not implemented");
+	public void openNewAndNoteworthyScreen() {
+		newAndNoteworthyPresenter.show();
 	}
 
 }

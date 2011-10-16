@@ -15,6 +15,8 @@ import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
 import labels.labels.SelectedLabel;
 import main.singleInstance.AssureSingleInstance;
+import newAndNoteworthy.NewAndNoteworthyConsumptionProcessor;
+import newAndNoteworthy.NewAndNoteworthyImpl;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
@@ -98,6 +100,9 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(StartTaskProcessor2.class);
 		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(CreateTaskPersistence.class);
+		
+		container.addComponent(NewAndNoteworthyImpl.class);
+		container.addComponent(NewAndNoteworthyConsumptionProcessor.class);
 
 		container.addComponent(KeyboardRotationOptions.class);
 		container.addComponent(TwitterOptions.class);

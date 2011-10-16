@@ -1,0 +1,4 @@
+15/10/2011 - Version 0.95
+
+- New option: supress keyboard rotation dialogs;
+- New and noteworthy screen;
