@@ -6,10 +6,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+
+import org.reactive.Receiver;
 
 import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.utils.UIEventsExecutor;
@@ -212,12 +215,46 @@ public final class TopBar extends JPanel {
 
 		final JMenuBar bar = new JMenuBar();
 		bar.add(getTaskMenu());
+		bar.add(getNewAndNoteworthyMenu());
 
 		add(bar, BorderLayout.NORTH);
 	}
 
+	private JMenu getNewAndNoteworthyMenu() {
+		final JMenu menu = new JMenu("New and noteworthy");
+		JMenuItem item = menu.add("read");
+		
+		model.hasUnreadNewAndNoteworthy().addReceiver(new Receiver<Boolean>() {
+			@Override
+			public void receive(Boolean value) {
+				if (value){
+					menu.setIcon(new ImageIcon(TopBar.class.getResource("new.png")));
+					menu.setToolTipText("new");
+				} else {
+					menu.setIcon(null);
+					menu.setToolTipText("");
+				}
+					
+			}
+		});
+		
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						model.markNewAndNoteworthyAsRead();
+					}
+				});
+			}
+		});
+		
+		return menu;
+	}
+
 	private JMenu getTaskMenu() {
-		final JMenu menu = new JMenu("File");
+		final JMenu menu = new JMenu("Task");
 		this.createTaskItem = new JMenuItem("Create task");
 		this.startTaskItem = new JMenuItem("Start task");
 		this.stopTaskItem = new JMenuItem("Stop task");

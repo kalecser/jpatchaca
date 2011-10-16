@@ -43,7 +43,7 @@ import ui.swing.mainScreen.TaskListModelImpl;
 import ui.swing.mainScreen.TaskListSystemMediator;
 import ui.swing.mainScreen.TooltipForTask;
 import ui.swing.mainScreen.TooltipForTaskImpl;
-import ui.swing.mainScreen.TopBarModel;
+import ui.swing.mainScreen.TopBarModelImpl;
 import ui.swing.mainScreen.WorkLoggerUsingSwing;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.periods.PeriodsTable;
@@ -159,7 +159,7 @@ public class Main {
 
 		container.addComponent(PresenterImpl.class);
 
-		container.addComponent(TopBarModel.class);
+		container.addComponent(TopBarModelImpl.class);
 		container
 				.addComponent(MainScreenModel.class, MainScreenModelImpl.class);
 		container.addComponent(MainScreen.class, MainScreenImpl.class);

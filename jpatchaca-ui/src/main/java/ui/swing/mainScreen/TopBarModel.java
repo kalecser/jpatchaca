@@ -1,17 +1,13 @@
 package ui.swing.mainScreen;
 
-import ui.swing.events.EventsListPanePresenter;
+import org.reactive.Signal;
 
-public class TopBarModel {
+public interface TopBarModel {
 
-	private final EventsListPanePresenter eventsListPresenter;
+	public abstract void openEventsList();
 
-	public TopBarModel(final EventsListPanePresenter eventsListPresenter) {
-		this.eventsListPresenter = eventsListPresenter;
-	}
+	public abstract Signal<Boolean> hasUnreadNewAndNoteworthy();
 
-	public void openEventsList() {
-		eventsListPresenter.show();
-	}
+	public abstract void markNewAndNoteworthyAsRead();
 
 }

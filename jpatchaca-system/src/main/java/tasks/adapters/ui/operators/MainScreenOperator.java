@@ -87,7 +87,7 @@ public class MainScreenOperator {
 	}
 
 	private void pushCreateTaskMenu() {
-		pushMenu("File/Create task");
+		pushMenu("Task/Create task");
 	}
 
 	private void pushMenu(final String path) {
@@ -156,7 +156,7 @@ public class MainScreenOperator {
 	}
 
 	public void pushEditTaskMenu() {
-		pushMenu("File/Edit task");
+		pushMenu("Task/Edit task");
 	}
 
 	public void createTask(final String taskName) {
@@ -399,7 +399,7 @@ public class MainScreenOperator {
 	}
 
 	public void pushOptionsMenu() {
-		pushMenu("File/Options");
+		pushMenu("Task/Options");
 	}
 
 	public StartTaskScreenOperator openStartTaskScreen() {
