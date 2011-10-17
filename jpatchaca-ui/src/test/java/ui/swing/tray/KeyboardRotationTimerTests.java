@@ -15,28 +15,31 @@ public class KeyboardRotationTimerTests {
 	public void showNotification_WillShowTrayAndDialogNotifications(){
 		showNotificationMessage();
 		Assert.assertEquals(
-				"showNotification()\n" +
-				"showShakingMessageWithTitle()", getOperations());
+				"showNotification(\"Keyboard rotation, turn 0!\")\n" +
+				"showShakingMessageWithTitle(\"Keyboard rotation, turn 0!\")", getOperations());
 	}
 
 	@Test
 	public void configureToSupressDialogNotification_WillOnlyShowTrayNotification(){
 		configureToSupressDialogs();
 		showNotificationMessage();
-		Assert.assertEquals("showNotification()", getOperations());
+		showNotificationMessage();
+		Assert.assertEquals(
+				"showNotification(\"Keyboard rotation, turn 0!\")\n" +
+				"showNotification(\"Keyboard rotation, turn 1!\")", getOperations());
 	}
 
 	PresenterMock presenter = new PresenterMock();
 	KeyboardRotationOptions preferences = new KeyboardRotationOptions();
+	int minutesToWaitDoesNotMatter = 1;
+	KeyboardRotationTimer subject = new KeyboardRotationTimer(minutesToWaitDoesNotMatter, presenter, preferences);
 
 	private String getOperations() {
 		return presenter.getOperations();
 	}
 
 	private void showNotificationMessage() {
-		int minutesToWaitDoesNotMatter = 1;
-		KeyboardRotationTimer timer = new KeyboardRotationTimer(minutesToWaitDoesNotMatter, presenter, preferences);
-		timer.showMessage();
+		subject.showTurnMessage();
 	}
 	
 	private void configureToSupressDialogs() {

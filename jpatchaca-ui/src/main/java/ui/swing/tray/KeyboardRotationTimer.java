@@ -6,11 +6,13 @@ import ui.swing.presenter.Presenter;
 public class KeyboardRotationTimer extends Thread {
 
 	private static final String title = "Timer Alert";
-	private static final String message = "Keyboard Rotation!";
+	private static final String message = "Keyboard rotation, turn %s!";
 	private final int minutesToWait;
 	private static TimerStatus status = TimerStatus.OFF;
 	private final Presenter presenter;
 	private final KeyboardRotationOptions preferences;
+	
+	private int turn =0;
 
 	public KeyboardRotationTimer(final int minutesToWait, final Presenter presenter, KeyboardRotationOptions preferences) {
 		this.minutesToWait = minutesToWait;
@@ -24,7 +26,7 @@ public class KeyboardRotationTimer extends Thread {
 			synchronized (this) {
 				while (status == TimerStatus.ON) {
 					wait(minutesToWait * 60000);
-					showMessage();
+					showTurnMessage();
 				}
 			}
 		} catch (final InterruptedException e) {
@@ -34,16 +36,24 @@ public class KeyboardRotationTimer extends Thread {
 		}
 	}
 
-	public void showMessage() {
-		presenter.showNotification( message);
-		showDialogIfNeeded();
+	public void showTurnMessage() {
+		showMessage(getTurnMessage());
 	}
 
-	private void showDialogIfNeeded() {
+	private String getTurnMessage() {
+		return String.format(message, turn++);
+	}
+
+	private void showMessage(String turnMessage) {
+		presenter.showNotification( turnMessage);
+		showDialogIfNeeded(turnMessage);
+	}
+
+	private void showDialogIfNeeded(String turnMessage) {
 		if (preferences.supressShakingDialog())
 			return;
 		
-		presenter.showShakingMessageWithTitle(message, title);
+		presenter.showShakingMessageWithTitle(turnMessage, title);
 	}
 
 	public static TimerStatus getStatus() {

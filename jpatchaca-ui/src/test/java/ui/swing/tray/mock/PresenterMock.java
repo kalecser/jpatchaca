@@ -34,7 +34,7 @@ public class PresenterMock implements Presenter {
 
 	@Override
 	public void showShakingMessageWithTitle(String message, String title) {
-		operations.append("showShakingMessageWithTitle()\n");
+		operations.append("showShakingMessageWithTitle(\"" + message +  "\")\n");
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class PresenterMock implements Presenter {
 
 	@Override
 	public void showMessageBalloon(String message) {
-		operations .append( "showMessageBalloon()\n" );
+		operations .append( "showMessageBalloon(\"" + message + "\")\n" );
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class PresenterMock implements Presenter {
 
 	@Override
 	public void showNotification(String message) {
-		operations.append("showNotification()\n");
+		operations.append("showNotification(\"" + message + "\")\n");
 	}
 	
 	public String getOperations() {
