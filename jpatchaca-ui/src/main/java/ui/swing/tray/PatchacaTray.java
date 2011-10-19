@@ -44,9 +44,9 @@ public class PatchacaTray implements Startable {
 	private static final Image ACTIVE_ICON = iconImage(TRAY_ICON_ACTIVE_PATH);
 	private static final String TRAY_ICON_INACTIVE_PATH = "jpoff32.png";
 	private static final Image INACTIVE_ICON = iconImage(TRAY_ICON_INACTIVE_PATH);
-	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jpoffTimer32.png";
+	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jponTimer32.png";
 	private static final Image INACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_INACTIVE_ROTATION_ON_PATH);
-	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jponTimer32.png";
+	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jpoffTimer32.png";
 	private static final Image ACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_ACTIVE_ROTATION_ON_PATH);
 
 	static final String STOP_TASK_SCPECIAL = "Stop task...";
