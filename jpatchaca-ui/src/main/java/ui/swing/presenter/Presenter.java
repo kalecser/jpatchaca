@@ -39,4 +39,10 @@ public interface Presenter {
 
 	public abstract void showPlainDialog(JPanel panel,  String title);
 
+	public abstract void setOrangeTurn();
+
+	public abstract void setBlueTurn();
+	
+	public Signal<Boolean> isBlueTurn();
+
 }

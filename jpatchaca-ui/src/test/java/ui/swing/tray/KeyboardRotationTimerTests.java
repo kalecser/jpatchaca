@@ -16,7 +16,8 @@ public class KeyboardRotationTimerTests {
 		showNotificationMessage();
 		Assert.assertEquals(
 				"showNotification(\"Keyboard rotation, turn 0!\")\n" +
-				"showShakingMessageWithTitle(\"Keyboard rotation, turn 0!\")", getOperations());
+				"showShakingMessageWithTitle(\"Keyboard rotation, turn 0!\")\n" +
+				"setBlueTurn()", getOperations());
 	}
 
 	@Test
@@ -26,9 +27,12 @@ public class KeyboardRotationTimerTests {
 		showNotificationMessage();
 		Assert.assertEquals(
 				"showNotification(\"Keyboard rotation, turn 0!\")\n" +
-				"showNotification(\"Keyboard rotation, turn 1!\")", getOperations());
+				"setBlueTurn()\n" +
+				"showNotification(\"Keyboard rotation, turn 1!\")\n" +
+				"setOrangeTurn()", getOperations());
 	}
-
+	
+	
 	PresenterMock presenter = new PresenterMock();
 	KeyboardRotationOptions preferences = new KeyboardRotationOptions();
 	int minutesToWaitDoesNotMatter = 1;

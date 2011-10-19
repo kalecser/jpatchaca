@@ -87,4 +87,19 @@ public class PresenterMock implements Presenter {
 		throw new RuntimeException("Not implemented");
 	}
 
+	@Override
+	public void setOrangeTurn() {
+		operations.append("setOrangeTurn()\n");
+	}
+
+	@Override
+	public void setBlueTurn() {
+		operations.append("setBlueTurn()\n");
+	}
+
+	@Override
+	public Signal<Boolean> isBlueTurn() {
+		return new Source<Boolean>(false);
+	}
+
 }

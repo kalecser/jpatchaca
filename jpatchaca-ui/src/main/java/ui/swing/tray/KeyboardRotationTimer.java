@@ -47,6 +47,15 @@ public class KeyboardRotationTimer extends Thread {
 	private void showMessage(String turnMessage) {
 		presenter.showNotification( turnMessage);
 		showDialogIfNeeded(turnMessage);
+		setOrangeBlueTurn();			
+	}
+
+	private void setOrangeBlueTurn() {
+		boolean isEven = turn % 2 == 0;
+		if (isEven)
+			presenter.setOrangeTurn();
+		else
+			presenter.setBlueTurn();
 	}
 
 	private void showDialogIfNeeded(String turnMessage) {

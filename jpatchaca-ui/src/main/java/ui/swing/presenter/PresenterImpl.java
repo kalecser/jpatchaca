@@ -33,6 +33,7 @@ public class PresenterImpl implements Startable, Presenter {
 	private Maybe<JFrame> mainScreen;
 	private Maybe<FloatingArea> floatingArea;
 	private Source<String> notification = new Source<String>("");
+	private Source<Boolean> isBlueTurn = new Source<Boolean>(false);
 
 	public PresenterImpl(final UIEventsExecutor executor) {
 		this.executor = executor;
@@ -155,6 +156,20 @@ public class PresenterImpl implements Startable, Presenter {
 	
 	private JFrame getOwner() {
 		return (getMainScreen() == null) ? null : getMainScreen().unbox();
+	}
+
+	@Override
+	public void setOrangeTurn() {
+		isBlueTurn.supply(false);
+	}
+
+	@Override
+	public void setBlueTurn() {
+		isBlueTurn.supply(true);
+	}
+	
+	public Signal<Boolean> isBlueTurn(){
+		return isBlueTurn;
 	}
 
 }

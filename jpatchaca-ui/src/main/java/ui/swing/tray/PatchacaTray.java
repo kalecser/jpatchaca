@@ -44,10 +44,12 @@ public class PatchacaTray implements Startable {
 	private static final Image ACTIVE_ICON = iconImage(TRAY_ICON_ACTIVE_PATH);
 	private static final String TRAY_ICON_INACTIVE_PATH = "jpoff32.png";
 	private static final Image INACTIVE_ICON = iconImage(TRAY_ICON_INACTIVE_PATH);
-	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jponTimer32.png";
+	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jpoffTimer32.png";
 	private static final Image INACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_INACTIVE_ROTATION_ON_PATH);
-	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jpoffTimer32.png";
+	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jponTimer32.png";
+	private static final String TRAY_ICON_ACTIVE_ROTATION_BLUE_TURN_ON_PATH = "jponTimerBlue32.png";
 	private static final Image ACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_ACTIVE_ROTATION_ON_PATH);
+	private static final Image ACTIVE_ROTATION_ON_ICON_BLUE = iconImage(TRAY_ICON_ACTIVE_ROTATION_BLUE_TURN_ON_PATH);
 
 	static final String STOP_TASK_SCPECIAL = "Stop task...";
 
@@ -79,9 +81,6 @@ public class PatchacaTray implements Startable {
 		this.preferences = preferences;
 
 		this.stopTaskAlert = new AlertImpl();
-		
-		showNotifications(presenter);
-
 	}
 
 	private void showNotifications(Presenter presenter) {
@@ -95,6 +94,19 @@ public class PatchacaTray implements Startable {
 		});
 	}
 
+	private void bindToOrangeBlueTurn(Presenter presenter) {
+		presenter.isBlueTurn().addReceiver(new Receiver<Boolean>() {
+			@Override
+			public void receive(Boolean isBlueTurn) {
+				if (isBlueTurn){
+					setBlueTurnIcon();
+				} else {
+					setOrangeTurnIcon();
+				}
+			}
+		});
+	}
+
 	public void initialize() {
 
 		TrayIcon icon = null;
@@ -104,6 +116,9 @@ public class PatchacaTray implements Startable {
 			showMainScreen();
 			return;
 		}
+		
+		showNotifications(presenter);
+		bindToOrangeBlueTurn(presenter);
 
 		final PopupMenu timerMenu = createPopupMenu();
 
@@ -147,7 +162,7 @@ public class PatchacaTray implements Startable {
 					if (timer == null)
 						trayIcon.setImage(ACTIVE_ICON);
 					else
-						trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);	
+						setOrangeTurnIcon();	
 					stopTaskItem.setLabel(STOP_TASK + " ("
 							+ taskName.unbox().unbox() + ")");
 					stopTaskItem.setEnabled(true);
@@ -174,7 +189,7 @@ public class PatchacaTray implements Startable {
 			}
 			
 			if (model.hasActiveTask()) {
-				trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);
+				setOrangeTurnIcon();
 			} else {
 				trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);
 			}
@@ -458,12 +473,18 @@ public class PatchacaTray implements Startable {
 		}
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				trayIcon.displayMessage("Message", string,
-						TrayIcon.MessageType.INFO);
+				displayMessageInSwingThread(string);
 			}
+
 		});
 	}
 
+	private void displayMessageInSwingThread(final String message) {
+		trayIcon.displayMessage("Message", message,
+				TrayIcon.MessageType.INFO);
+	}
+	
+	
 	public void ensureTrayIconIsVisibleDueToWindowsBug() {
 		tray().remove(trayIcon);
 		addTrayIconOrCry();
@@ -476,5 +497,13 @@ public class PatchacaTray implements Startable {
 		} catch (final AWTException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private void setOrangeTurnIcon() {
+		trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);
+	}
+	
+	private void setBlueTurnIcon() {
+		trayIcon.setImage(ACTIVE_ROTATION_ON_ICON_BLUE);
 	}
 }
