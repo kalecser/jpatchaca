@@ -1,3 +1,5 @@
-2011/10/15 - Version 1.0
+2011/10/15 - Version 1.1
+- New icons!!
 
+2011/10/15 - Version 1.0
 - New option: Tasks->Options->Keyboard rotation:  supress shaking dialog
