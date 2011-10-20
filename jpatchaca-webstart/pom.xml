@@ -9,7 +9,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>patchaca-webstart</artifactId>
+	<artifactId>jpatchaca-webstart</artifactId>
 	<packaging>jar</packaging>
 	<name>JPatchaca Webstart</name>
 

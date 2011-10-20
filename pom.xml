@@ -72,7 +72,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.jpatchaca</groupId>
-				<artifactId>commons-swing</artifactId>
+				<artifactId>jpatchaca-commons-swing</artifactId>
 				<version>${project.version}</version>
 				<scope>compile</scope>
 			</dependency>
@@ -114,7 +114,7 @@
 			</dependency>	
 			<dependency>
 				<groupId>org.jpatchaca</groupId>
-				<artifactId>commons-core</artifactId>
+				<artifactId>jpatchaca-commons-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

@@ -20,7 +20,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.jpatchaca</groupId>
-			<artifactId>commons-core</artifactId>
+			<artifactId>jpatchaca-commons-core</artifactId>
 		</dependency>
 		<dependency>
 			<artifactId>picocontainer</artifactId>
