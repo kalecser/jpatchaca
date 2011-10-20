@@ -14,13 +14,13 @@
    height="16"
    id="svg3157"
    sodipodi:version="0.32"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.1 r9760"
    version="1.0"
    sodipodi:docname="orangeBlueRunningTurnOrange.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="C:\JPatchaca\jpatchaca-ui\src\main\resources\ui\swing\tray\teste.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="/home/lcsantos/Público/sprint.png"
+   inkscape:export-xdpi="540"
+   inkscape:export-ydpi="540">
   <defs
      id="defs3159">
     <linearGradient
@@ -115,14 +115,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.3232438"
-     inkscape:cx="-4.4554807"
-     inkscape:cy="-1.3193591"
+     inkscape:zoom="13.144068"
+     inkscape:cx="3.756931"
+     inkscape:cy="-8.5"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="876"
+     inkscape:window-width="1680"
+     inkscape:window-height="997"
      inkscape:window-x="0"
      inkscape:window-y="24"
      showguides="true"
@@ -144,6 +144,13 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <rect
+       style="fill:#edeceb;fill-opacity:1;stroke:none"
+       id="rect3793"
+       width="16"
+       height="16"
+       x="0"
+       y="7.4940054e-16" />
     <g
        id="g4002-7"
        transform="matrix(0.77150426,0,0,0.77150426,-11.111146,0.68112404)">
