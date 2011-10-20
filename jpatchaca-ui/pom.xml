@@ -24,11 +24,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jpatchaca</groupId>
-			<artifactId>commons-core</artifactId>
+			<artifactId>jpatchaca-commons-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jpatchaca</groupId>
-			<artifactId>commons-swing</artifactId>
+			<artifactId>jpatchaca-commons-swing</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.netbeans</groupId>
