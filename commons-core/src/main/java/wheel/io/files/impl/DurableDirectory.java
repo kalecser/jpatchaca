@@ -15,7 +15,7 @@ public class DurableDirectory extends AbstractDirectory {
 
 		private Listener _closeListener;
 
-		private DurableFileOutputStream(File file) throws FileNotFoundException {
+		DurableFileOutputStream(File file) throws FileNotFoundException {
 			super(file);
 		}
 
@@ -39,6 +39,7 @@ public class DurableDirectory extends AbstractDirectory {
 			}
 		}
 
+		@Override
 		public void notifyOnClose(Listener listener) {
 			_closeListener = listener;
 		}
@@ -49,7 +50,7 @@ public class DurableDirectory extends AbstractDirectory {
 
 		private Listener _closeListener;
 
-		private CloseListenableFileInputStream(File file) throws FileNotFoundException {
+		CloseListenableFileInputStream(File file) throws FileNotFoundException {
 			super(file);
 		}
 
@@ -59,6 +60,7 @@ public class DurableDirectory extends AbstractDirectory {
 			super.close();
 		}
 
+		@Override
 		public void notifyOnClose(Listener listener) {
 			_closeListener = listener;
 		}
@@ -75,6 +77,7 @@ public class DurableDirectory extends AbstractDirectory {
 	private final File _delegate;
 
 
+	@Override
 	public OutputStream createFile(String name) throws IOException {
 		assertNotClosed();
 
@@ -84,6 +87,7 @@ public class DurableDirectory extends AbstractDirectory {
 		return result;
 	}
 
+	@Override
 	public InputStream openFile(String name) throws IOException {
 		assertNotClosed();
 
@@ -104,6 +108,7 @@ public class DurableDirectory extends AbstractDirectory {
 		throwUnableToDelete(name);
 	}
 
+	@Override
 	public boolean fileExists(String fileName) {
 		assertNotClosed();
 
@@ -116,6 +121,7 @@ public class DurableDirectory extends AbstractDirectory {
 		throwUnableToRename(oldName, newName);
 	}
 
+	@Override
 	public void deleteAllContents() throws IOException {
 		assertNotClosed();
 
@@ -124,6 +130,7 @@ public class DurableDirectory extends AbstractDirectory {
 			deleteFile(fileName);
 	}
 
+	@Override
 	public String[] fileNames() {
 		assertNotClosed();
 

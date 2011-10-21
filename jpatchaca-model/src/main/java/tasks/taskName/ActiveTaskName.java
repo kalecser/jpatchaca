@@ -11,7 +11,7 @@ import tasks.Task;
 
 public class ActiveTaskName implements Signal<Maybe<TaskName>> {
 
-	private final class ActiveTaskNameListener implements Receiver<TaskName> {
+	final class ActiveTaskNameListener implements Receiver<TaskName> {
 		@Override
 		public void receive(final TaskName pulse) {
 			supply(pulse);

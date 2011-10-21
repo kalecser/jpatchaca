@@ -37,11 +37,7 @@ public class StartTaskMenu {
 
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				if (selectedTask == null) {
-					return;
-				}
-
-				model.startTask(selectedTask, 0);
+				startSelectedTask();
 			}
 		});
 
@@ -49,11 +45,7 @@ public class StartTaskMenu {
 
 			@Override
 			public void receive(final TaskView pulse) {
-				selectedTask = pulse;
-				if (selectedTask == null) {
-					menuItem.setLabel(START_TASK);
-					return;
-				}
+				onReceiveSelectedTask(menuItem, pulse);
 			}
 		});
 
@@ -70,6 +62,22 @@ public class StartTaskMenu {
 		});
 
 		return menuItem;
+	}
+
+	void startSelectedTask() {
+		if (selectedTask == null) {
+			return;
+		}
+
+		model.startTask(selectedTask, 0);
+	}
+
+	void onReceiveSelectedTask(final MenuItem menuItem,
+			final TaskView pulse) {
+		selectedTask = pulse;
+		if (selectedTask == null) {
+			menuItem.setLabel(START_TASK);
+		}
 	}
 
 }

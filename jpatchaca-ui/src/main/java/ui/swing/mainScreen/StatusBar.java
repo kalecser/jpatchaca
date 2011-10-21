@@ -52,7 +52,7 @@ public class StatusBar extends JPanel {
 		setVisible(true);
 	}
 	
-	private class ClearMessageAction implements ActionListener {
+	class ClearMessageAction implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
