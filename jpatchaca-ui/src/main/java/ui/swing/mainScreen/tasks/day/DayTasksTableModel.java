@@ -72,21 +72,7 @@ public class DayTasksTableModel extends AbstractTableModel {
 		new Thread() {
 			@Override
 			public void run() {
-				switch (column) {
-				case Start:
-					editPeriodStart(value, item);
-					break;
-
-				case End:
-					editPeriodEnd(value, item);
-					break;
-
-				case ToSend:
-					editWorklogOverride(value, item);
-					break;
-				}
-
-				fireTableDataChanged();
+				editCell(column, value, item);
 			}
 		}.start();
 	}
@@ -126,5 +112,27 @@ public class DayTasksTableModel extends AbstractTableModel {
 			e.printStackTrace();
 		}
 		return dateParsed;
+	}
+
+	void editCell(final DayTaskTableModelCellValue column, final Object value,
+			final Pair item) {
+		switch (column) {
+		case Start:
+			editPeriodStart(value, item);
+			break;
+
+		case End:
+			editPeriodEnd(value, item);
+			break;
+
+		case ToSend:
+			editWorklogOverride(value, item);
+			break;
+			
+		default:
+			// Nothing to do
+		}
+
+		fireTableDataChanged();
 	}
 }

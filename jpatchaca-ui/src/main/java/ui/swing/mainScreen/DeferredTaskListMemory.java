@@ -20,7 +20,7 @@ public class DeferredTaskListMemory implements TaskListMemory {
 		writer = new DeferredExecutor(2000, new WriteDataToDisk());		
 	}
 	
-	private class WriteDataToDisk implements Runnable{
+	class WriteDataToDisk implements Runnable{
 		
 		@Override
 		public void run() {

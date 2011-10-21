@@ -14,11 +14,11 @@
    height="16"
    id="svg3157"
    sodipodi:version="0.32"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.1 r9760"
    version="1.0"
    sodipodi:docname="orangeBlueReadyToRun.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="C:\JPatchaca\jpatchaca-ui\src\main\resources\ui\swing\tray\teste.png"
+   inkscape:export-filename="/home/lcsantos/workspacePersonal/jpatchaca/jpatchaca-ui/src/main/resources/ui/swing/tray/jpoffTimer.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -115,14 +115,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.93432206"
-     inkscape:cx="-215.29606"
-     inkscape:cy="-70.465572"
+     inkscape:zoom="29.898306"
+     inkscape:cx="1.0441378"
+     inkscape:cy="5.6393609"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="876"
+     inkscape:window-width="1680"
+     inkscape:window-height="997"
      inkscape:window-x="0"
      inkscape:window-y="24"
      showguides="true"
@@ -136,7 +136,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -144,6 +144,13 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <rect
+       style="fill:#edeceb;fill-opacity:1;stroke:none"
+       id="rect3793"
+       width="16"
+       height="16"
+       x="0"
+       y="0" />
     <g
        id="g3994-1-1"
        transform="matrix(0.74844819,0.66319327,-0.66319327,0.74844819,8.4051698,0.27044705)">

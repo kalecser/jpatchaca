@@ -8,7 +8,7 @@ import events.persistence.MustBeCalledInsideATransaction;
 public class TwitterOptions {
 
 	private final Source<Boolean> twitterLoggingEnabled = new Source<Boolean>(
-			false);
+			Boolean.FALSE);
 	private final Source<String> userName = new Source<String>("");
 	private final Source<String> password = new Source<String>("");
 
@@ -24,12 +24,12 @@ public class TwitterOptions {
 		return twitterLoggingEnabled;
 	}
 
-	public synchronized void configure(final boolean twitterLoggingEnabled,
-			final String userName, final String password)
+	public synchronized void configure(final boolean newtwitterLoggingEnabled,
+			final String newuserName, final String newpassword)
 			throws MustBeCalledInsideATransaction {
-		this.twitterLoggingEnabled.supply(twitterLoggingEnabled);
-		this.userName.supply(userName);
-		this.password.supply(password);
+		this.twitterLoggingEnabled.supply(Boolean.valueOf(newtwitterLoggingEnabled));
+		this.userName.supply(newuserName);
+		this.password.supply(newpassword);
 
 	}
 

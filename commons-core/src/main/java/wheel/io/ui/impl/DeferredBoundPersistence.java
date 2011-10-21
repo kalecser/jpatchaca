@@ -21,7 +21,7 @@ public final class DeferredBoundPersistence implements BoundsPersistence {
 	}
 	
 	
-	private final class PersistBounds implements Runnable {
+	final class PersistBounds implements Runnable {
 
 
 		@Override

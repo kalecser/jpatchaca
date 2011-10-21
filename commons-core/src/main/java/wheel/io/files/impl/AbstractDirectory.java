@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ import wheel.io.files.impl.Closeable.Listener;
 
 public abstract class AbstractDirectory implements Directory {
 
+	@Override
 	public void createFile(String fileName, String contents) throws IOException {
 		OutputStream output = null;
 		try {
@@ -30,6 +30,7 @@ public abstract class AbstractDirectory implements Directory {
 		
 	}
 
+	@Override
 	public String contentsAsString(String fileName) throws IOException {
 		InputStream input = null;
 		try {
@@ -89,6 +90,7 @@ public abstract class AbstractDirectory implements Directory {
 
 	protected synchronized void mindOpenStream(Closeable stream, final String filename) {
 		stream.notifyOnClose(new Listener() {
+				@Override
 				public void streamClosed(Closeable closedStream) {
 					forgetStream(closedStream, filename);
 				}
@@ -97,6 +99,7 @@ public abstract class AbstractDirectory implements Directory {
 		openStreamsFor(filename).add(stream);
 	}
 
+	@Override
 	public synchronized void close() {
 		closeStreams(allOpenStreams());
 
@@ -121,18 +124,26 @@ public abstract class AbstractDirectory implements Directory {
 		return result;
 	}
 
-	private synchronized void forgetStream(Object closedStream, String filename) {
+	synchronized void forgetStream(Object closedStream, String filename) {
 		final Collection<?> openStreams = openStreamsFor(filename);
 		openStreams.remove(closedStream);
 		if (openStreams.isEmpty()) _openStreamsByFilename.remove(filename);
 	}
 
 	private void closeStreams(List<Closeable> streams) {
-		final Iterator<Closeable> it = streams.iterator();
-		while (it.hasNext()) {
-			try {
-				it.next().close();
-			} catch (final IOException ignored) {}
+		for (Closeable closeable : streams) {
+			closeQuietly(closeable);
+		}
+	}
+
+	/**
+	 * @see IOUtils#closeQuietly(InputStream)
+	 */
+	private void closeQuietly(Closeable closeable) {
+		try {
+			closeable.close();
+		} catch (final IOException ignored) {
+			// ignore
 		}
 	}
 
@@ -144,6 +155,7 @@ public abstract class AbstractDirectory implements Directory {
 		if (_isClosed) throw new IllegalStateException("" + getClass() + " already closed.");
 	}
 
+	@Override
 	public synchronized void deleteFile(String name) throws IOException {
 		assertNotClosed();
 
@@ -155,6 +167,7 @@ public abstract class AbstractDirectory implements Directory {
 
 	protected abstract void physicalDelete(String name) throws IOException;
 
+	@Override
 	public synchronized void renameFile(String oldName, String newName) throws IOException {
 		assertNotClosed();
 

@@ -389,7 +389,7 @@ public class SimpleInternalFrame extends JPanel {
     // Helper Classes *******************************************************
 
     // A custom border for the raised header pseudo 3D effect.
-    private static class RaisedHeaderBorder extends AbstractBorder {
+    static class RaisedHeaderBorder extends AbstractBorder {
 
         private static final Insets INSETS = new Insets(1, 1, 1, 0);
 
@@ -411,7 +411,7 @@ public class SimpleInternalFrame extends JPanel {
     }
 
     // A custom border that has a shadow on the right and lower sides.
-    private static class ShadowBorder extends AbstractBorder {
+    static class ShadowBorder extends AbstractBorder {
 
         private static final Insets INSETS = new Insets(1, 1, 3, 3);
 
@@ -464,7 +464,7 @@ public class SimpleInternalFrame extends JPanel {
      */
     private static final class GradientPanel extends JPanel {
         
-        private GradientPanel(LayoutManager lm, Color background) {
+        GradientPanel(LayoutManager lm, Color background) {
             super(lm);
             setBackground(background);
         }

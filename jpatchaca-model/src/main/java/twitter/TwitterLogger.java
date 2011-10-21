@@ -23,15 +23,14 @@ public class TwitterLogger implements Startable {
 		startTaskDelegate.addListener(new Delegate.Listener<StartTaskData>(){
 			@Override
 			public void execute(final StartTaskData task) {
-				if (twitterConfig.isTwitterLoggingEnabled().currentValue())
-					enqueueTwitterUpdate(task.taskData().getTaskName(), twitterConfig.username().currentValue(), twitterConfig.password().currentValue());
+				onReceiveStartTaskData(task);
 			}
 		});
 	}
 
 	@Override
 	public void stop() {
-
+		// Nothing to do
 	}
 
 	private void enqueueTwitterUpdate(final String str, final String username, final String password) {
@@ -48,6 +47,11 @@ public class TwitterLogger implements Startable {
 
 			}
 		}.start();
+	}
+
+	void onReceiveStartTaskData(final StartTaskData task) {
+		if (twitterConfig.isTwitterLoggingEnabled().currentValue().booleanValue())
+			enqueueTwitterUpdate(task.taskData().getTaskName(), twitterConfig.username().currentValue(), twitterConfig.password().currentValue());
 	}
 
 }

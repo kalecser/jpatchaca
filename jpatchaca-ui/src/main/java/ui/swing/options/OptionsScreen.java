@@ -127,22 +127,26 @@ public class OptionsScreen {
 			return new UIAction() {
 				@Override
 				public void run() {
-					optionsScreenModel.setTwitterConfig(twitterEnabled
-							.isSelected(), twitterUsername.getText(),
-							twitterPassword.getText());
-					
-					optionsScreenModel.setJiraConfig(jiraUrl.getText(),
-							jiraUsername.getText(), jiraPassword.getText(), issueStatusManagementEnabled.isSelected());
-					
-					optionsScreenModel.setKeyboarRotationConfig(supressShakingDialog.isSelected());
+					doAction();
 				}
 			};
+		}
+
+		void doAction() {
+			optionsScreenModel.setTwitterConfig(twitterEnabled
+					.isSelected(), twitterUsername.getText(),
+					twitterPassword.getText());
+			
+			optionsScreenModel.setJiraConfig(jiraUrl.getText(),
+					jiraUsername.getText(), jiraPassword.getText(), issueStatusManagementEnabled.isSelected());
+			
+			optionsScreenModel.setKeyboarRotationConfig(supressShakingDialog.isSelected());
 		}
 
 	}
 
 	private JDialog optionsScreen;
-	private final OptionsScreenModel optionsScreenModel;
+	final OptionsScreenModel optionsScreenModel;
 	private final Presenter presenter;
 
 	public OptionsScreen(final OptionsScreenModel optionsScreenModel,

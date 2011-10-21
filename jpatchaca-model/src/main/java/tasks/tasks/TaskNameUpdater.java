@@ -16,18 +16,11 @@ class TaskNameUpdater {
 
 	private TaskName name;
 
-	private class TaskNameReceiver implements Receiver<TaskName> {
+	class TaskNameReceiver implements Receiver<TaskName> {
 
 		@Override
 		public synchronized void receive(final TaskName value) {
-			if (name == null) {
-				names.add(value.unbox());
-				return;
-			}
-
-			names.remove(name.unbox());
-			names.add(value.unbox());
-			name = value;
+			onReceiveTaskName(value);
 		}
 
 	}
@@ -45,6 +38,17 @@ class TaskNameUpdater {
 			names.remove(name.unbox());
 		}
 
+	}
+
+	void onReceiveTaskName(final TaskName value) {
+		if (name == null) {
+			names.add(value.unbox());
+			return;
+		}
+
+		names.remove(name.unbox());
+		names.add(value.unbox());
+		name = value;
 	}
 
 }
