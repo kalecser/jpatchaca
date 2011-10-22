@@ -11,10 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tasks.tasks.mock.MockJira;
-import ui.swing.presenter.PatchacaPrintToConsoleExceptionHandler;
-import ui.swing.presenter.Presenter;
-import ui.swing.presenter.PresenterImpl;
-import ui.swing.utils.UIEventsExecutorImpl;
 
 public class JiraIssueStatusManagementTest {
 
