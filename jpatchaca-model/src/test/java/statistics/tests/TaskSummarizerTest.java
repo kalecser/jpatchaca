@@ -1,12 +1,14 @@
 package statistics.tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.jmock.MockObjectTestCase;
+import org.junit.Test;
 
 import statistics.SummaryItem;
 import statistics.SummaryItemImpl;
@@ -16,10 +18,11 @@ import statistics.tests.environment.FakeTask;
 import tasks.TaskView;
 
 
-public class TaskSummarizerTest extends MockObjectTestCase {
+public class TaskSummarizerTest {
 
 	final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	
+	@Test
 	public void testSummarizeTaskPerDay() throws ParseException{
 
 		final TaskView task1 = 
@@ -43,6 +46,7 @@ public class TaskSummarizerTest extends MockObjectTestCase {
 		assertEquals(new SummaryItemImpl(toDate("17/12/2005"),"task1",2.0), items.get(3));
 	}
 	
+	@Test
 	public void testSummarizeTaskPerMonth() throws ParseException{
 
 		final TaskView task1 = 

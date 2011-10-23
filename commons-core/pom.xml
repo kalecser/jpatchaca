@@ -47,9 +47,14 @@
 			<artifactId>commons-io</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>	
+		</dependency>
+		<dependency>
 			<groupId>org.jmock</groupId>
-			<artifactId>jmock-junit3</artifactId>
-			<scope>test</scope>
+			<artifactId>jmock-junit4</artifactId>
+			<scope>test</scope>	
 		</dependency>
 		<dependency>
 			<groupId>org.swinglabs</groupId>

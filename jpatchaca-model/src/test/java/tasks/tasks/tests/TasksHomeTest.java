@@ -1,9 +1,14 @@
 package tasks.tasks.tests;
 
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import tasks.ActiveTask;
+import tasks.TaskView;
 import tasks.TasksListener;
 import tasks.home.TasksHomeImpl;
 import tasks.tasks.Tasks;
@@ -12,40 +17,46 @@ import basic.SystemClockImpl;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 
-public class TasksHomeTest extends MockObjectTestCase {
+public class TasksHomeTest {
 
+	private final Mockery context = new JUnit4Mockery();
 	private ObjectIdentity oid;
 	private String taskName;
 	private Double budget;
-	private Mock subscriberMocker;
-	private Mock tasksListenerMocker;
+	private Subscriber subscriberMocker;
+	private TasksListener tasksListenerMocker;
 	private TasksHomeImpl home;
 	private Tasks tasks;
 	private SystemClockImpl clock;
 
-	@Override
+	@Before
 	public void setUp() {
 		oid = new ObjectIdentity("1");
 		taskName = "test";
 		budget = 10.0;
 
-		subscriberMocker = mock(Subscriber.class);
-		tasksListenerMocker = mock(TasksListener.class);
+		subscriberMocker = context.mock(Subscriber.class);
+		tasksListenerMocker = context.mock(TasksListener.class);
 		tasks = new Tasks();
 		clock = new SystemClockImpl();
 		home = new TasksHomeImpl(null, tasks, clock, new ActiveTask(), null);
 	}
 
+	@Test
 	public void testCreateTask() throws MustBeCalledInsideATransaction {
 
-		home.taskListChangedAlert().subscribe(
-				(Subscriber) subscriberMocker.proxy());
-		home.addTasksListener((TasksListener) tasksListenerMocker.proxy());
+		home.taskListChangedAlert().subscribe(subscriberMocker);
+		home.addTasksListener(tasksListenerMocker);
 
 		assertEquals(0, tasks.tasks().size());
 
-		tasksListenerMocker.expects(once()).method("createdTask");
-		subscriberMocker.expects(once()).method("fire");
+		context.checking(new Expectations() {
+
+			{
+				oneOf(tasksListenerMocker).createdTask(with(any(TaskView.class)));
+				oneOf(subscriberMocker).fire();
+			}
+		});
 		home.createTask(oid, new MockTaskName(taskName), budget);
 
 		assertEquals(1, tasks.tasks().size());
@@ -54,13 +65,20 @@ public class TasksHomeTest extends MockObjectTestCase {
 
 	}
 
+	@Test
 	public void testRemoveTask() throws MustBeCalledInsideATransaction {
 
 		home.createTask(oid, new MockTaskName(taskName), budget);
 
-		home.taskListChangedAlert().subscribe(
-				(Subscriber) subscriberMocker.proxy());
-		subscriberMocker.expects(once()).method("fire");
+		home.taskListChangedAlert().subscribe(subscriberMocker);
+		
+		context.checking(new Expectations() {
+
+			{
+				oneOf(subscriberMocker).fire();
+			}
+		});
+		
 		home.remove(tasks.get(oid));
 
 		assertEquals(0, tasks.tasks().size());

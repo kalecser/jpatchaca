@@ -5,25 +5,30 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import periods.Period;
 import periods.PeriodManager;
 import periods.PeriodsListener;
 import periods.impl.PeriodManagerImpl;
 
-public class PeriodManagerTest extends MockObjectTestCase {
+public class PeriodManagerTest {
 
 	PeriodManager manager;
 
-	@Override
-	protected void setUp() throws Exception {
+	private final Mockery context = new JUnit4Mockery();
+	
+	@Before
+	public void setUp() {
 		manager = new PeriodManagerImpl();
-		super.setUp();
 	}
 
+	@Test
 	public void testAddPeriods() {
 		final PeriodManager manager = new PeriodManagerImpl();
 
@@ -39,10 +44,9 @@ public class PeriodManagerTest extends MockObjectTestCase {
 		Assert.assertEquals(1, manager.periodsList().currentSize());
 	}
 
+	@Test
 	public void testListeners() throws ParseException {
-		final Mock listenerMocker = mock(PeriodsListener.class);
-		final PeriodsListener listenerMock = (PeriodsListener) listenerMocker
-				.proxy();
+		final PeriodsListener listenerMocker = context.mock(PeriodsListener.class);
 
 		final DateFormat dateTimeFormat = new SimpleDateFormat(
 				"dd/MM/yyyy hh:mm");
@@ -62,28 +66,48 @@ public class PeriodManagerTest extends MockObjectTestCase {
 
 		manager.addPeriod(period1);
 
-		listenerMocker.expects(once()).method("periodAdded").with(eq(period1));
-		listenerMocker.expects(once()).method("periodAdded").with(eq(period2));
-		manager.addListener(listenerMock);
+		context.checking(new Expectations() {
+
+			{
+				oneOf(listenerMocker).periodAdded(period1);
+				oneOf(listenerMocker).periodAdded(period2);
+			}
+		});
+		manager.addListener(listenerMocker);
 		manager.addPeriod(period2);
 
-		listenerMocker.expects(once()).method("periodAdded").with(eq(period3));
+		context.checking(new Expectations() {
+
+			{
+				oneOf(listenerMocker).periodAdded(period3);
+			}
+		});
 		manager.addPeriod(period3);
 
-		listenerMocker.expects(once()).method("periodAdded").with(eq(period4));
+		context.checking(new Expectations() {
+
+			{
+				oneOf(listenerMocker).periodAdded(period4);
+			}
+		});
 		manager.addPeriod(period4);
 
-		listenerMocker.expects(once()).method("periodRemoved")
-				.with(eq(period4));
+		context.checking(new Expectations() {
+
+			{
+				oneOf(listenerMocker).periodRemoved(period4);
+			}
+		});
 		manager.removePeriod(period4);
 
 	}
 
+	@Test
 	public void testTotalTime() {
 
 		manager.addPeriod(new Period(new Date(0), new Date(100)));
 		manager.addPeriod(new Period(new Date(100), new Date(200)));
-		assertTrue(200L == manager.totalTime());
+		Assert.assertTrue(200L == manager.totalTime());
 	}
 
 }

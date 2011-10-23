@@ -158,19 +158,14 @@
 				<version>0.9.2</version>
 			</dependency>
 			<dependency>
-				<groupId>jmock</groupId>
-				<artifactId>jmock</artifactId>
-				<version>1.0.0</version>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.1</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.5</version>
-			</dependency>
-			<dependency>
 				<groupId>org.jmock</groupId>
-				<artifactId>jmock-junit3</artifactId>
+				<artifactId>jmock-junit4</artifactId>
 				<version>2.5.1</version>
 				<scope>test</scope>
 			</dependency>
@@ -183,18 +178,7 @@
 				<groupId>org.netbeans</groupId>
 				<artifactId>jemmy</artifactId>
 				<version>2.2.7.5</version>
-			</dependency>
-			<dependency>
-				<groupId>org.netbeans</groupId>
-				<artifactId>jemmy</artifactId>
-				<version>2.2.7.5</version>
 				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>jmock</groupId>
-				<artifactId>jmock</artifactId>
-				<version>1.0.0</version>
-				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

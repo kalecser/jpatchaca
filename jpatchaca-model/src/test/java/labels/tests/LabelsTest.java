@@ -1,5 +1,8 @@
 package labels.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import labels.LabelsSystem;
@@ -7,7 +10,8 @@ import labels.labels.LabelsHome;
 import main.TransientNonUIContainer;
 import main.TransientNonUiContainerWithTestOperators;
 
-import org.jmock.MockObjectTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import tasks.TaskView;
 import tasks.TasksSystem;
@@ -22,7 +26,7 @@ import events.CreateTaskEvent;
 import events.DeprecatedEvent;
 import events.EventsSystem;
 
-public class LabelsTest extends MockObjectTestCase {
+public class LabelsTest {
 
 	private LabelsSystem labelsSystem;
 	private TasksSystem tasksSystem;
@@ -32,8 +36,8 @@ public class LabelsTest extends MockObjectTestCase {
 	private MockIdProvider mockidProvider;
 	
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() {
 		
 		final TransientNonUIContainer container = new TransientNonUiContainerWithTestOperators();
 		container.start();
@@ -46,10 +50,12 @@ public class LabelsTest extends MockObjectTestCase {
 		eventsSystem = container.getComponent(EventsSystem.class);
 	}
 	
+	@Test
 	public void testLabelsContainsAll(){
 		assertEquals(labelsSystem.allLabelName(), labelsSystem.labels().get(0));
 	}
 	
+	@Test
 	public void testAssignLabelToTask(){
 		final String firstLabelName = "test";
 		
@@ -86,6 +92,7 @@ public class LabelsTest extends MockObjectTestCase {
 		
 	}
 
+	@Test
 	public void testRemoveLabelFromTask(){
 		final String labelName = "test";
 		final ObjectIdentity taskId = new ObjectIdentity("1");
@@ -98,11 +105,13 @@ public class LabelsTest extends MockObjectTestCase {
 		
 	}
 	
+	@Test
 	public void testCreatedTasksGoToAllLabel(){
 		final TaskView task = createTask("task name", "1");
 		assertEquals(task, labelsSystem.tasksInlabel(labelsSystem.allLabelName()).get(0));
 	}
 	
+	@Test
 	public void testRemovedTasksAreRemovedFromLabels(){
 		final TaskView task = createTask("task name", "1");
 		labelsSystem.setLabelToTask(task, "label");
@@ -116,13 +125,13 @@ public class LabelsTest extends MockObjectTestCase {
 		
 	}
 	
+	@Test
 	public void testOldCreatedTasksGoToAllLabel() throws DeprecatedEvent{
 		final String taskName = "test";
 		eventsSystem.writeEvent(new CreateTaskEvent(new ObjectIdentity("1"), taskName));
 		assertEquals(taskName, labelsSystem.tasksInlabel(labelsSystem.allLabelName()).get(0).name());
 	}
-	
-	
+		
 	private TaskView createTask(String taskName, String taskId) {	
 		mockidProvider.setNextId(taskId);
 		TaskData taskData = new TaskData(new NonEmptyString(taskName));

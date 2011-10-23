@@ -5,7 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.jmock.Expectations;
-import org.jmock.integration.junit3.MockObjectTestCase;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import basic.SystemClockImpl;
 import basic.mock.MockHardwareClock;
@@ -15,8 +19,10 @@ import events.Processor;
 import events.eventslist.EventListImpl;
 import events.persistence.MustBeCalledInsideATransaction;
 
-public class EventListTest extends MockObjectTestCase {
+public class EventListTest {
 
+	private final Mockery context = new JUnit4Mockery();
+	
 	private EventListImpl list;
 
 	private PersistenceManagerMock persistenceManager;
@@ -26,7 +32,7 @@ public class EventListTest extends MockObjectTestCase {
 	private SystemClockImpl systemClock;
 
 
-	@Override
+	@Before
 	public void setUp() {
 
 		mockHardwareClock = new MockHardwareClock();
@@ -36,6 +42,7 @@ public class EventListTest extends MockObjectTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testPersistence() throws MustBeCalledInsideATransaction {
 		final String storedEvent = "previously on JPatchaca";
 		final long storedEventTime = 1L;
@@ -44,9 +51,9 @@ public class EventListTest extends MockObjectTestCase {
 
 		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 
-		final Processor<String> mockProcessor = mock(Processor.class);
+		final Processor<String> mockProcessor = context.mock(Processor.class);
 		
-		checking(new Expectations() {{
+		context.checking(new Expectations() {{
 			one(mockProcessor).eventType(); will(returnValue(storedEvent.getClass()));
 			one(mockProcessor).execute(storedEvent);
 		}});
@@ -56,7 +63,7 @@ public class EventListTest extends MockObjectTestCase {
 
 		final String newEvent = "2";
 		final long newEventTime = 1000L;
-		checking(new Expectations() {{
+		context.checking(new Expectations() {{
 			one(mockProcessor).eventType(); will(returnValue(newEvent.getClass()));
 			one(mockProcessor).execute(newEvent);
 		}});
@@ -73,19 +80,20 @@ public class EventListTest extends MockObjectTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testProcessors() throws MustBeCalledInsideATransaction {
 		final Double doubleEvent = new Double(10);
 		final String stringEvent = "3";
 
-		final Processor<String> stringProcessor = mock(Processor.class, "stringProcessor");
-		final Processor<Double>doubleProcessor = mock(Processor.class, "doubleProcessor");
+		final Processor<String> stringProcessor = context.mock(Processor.class, "stringProcessor");
+		final Processor<Double>doubleProcessor = context.mock(Processor.class, "doubleProcessor");
 
 		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 		list.addProcessors(new Processor[] {
 				stringProcessor,
 				doubleProcessor});
 
-		checking(new Expectations() {{
+		context.checking(new Expectations() {{
 			atLeast(1).of(doubleProcessor).eventType(); will(returnValue(Double.class));
 			atLeast(1).of(doubleProcessor).execute(doubleEvent);
 			atLeast(1).of(stringProcessor).eventType(); will(returnValue(String.class));
@@ -97,17 +105,18 @@ public class EventListTest extends MockObjectTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testPersistenceAfterProcessor() throws MustBeCalledInsideATransaction {
 		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 
 		
 		
-		final Processor<String> mockProcessor = mock(Processor.class);
+		final Processor<String> mockProcessor = context.mock(Processor.class);
 
 		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 		list.addProcessors(new Processor[] { mockProcessor });
 
-		checking(new Expectations() {{
+		context.checking(new Expectations() {{
 			atLeast(1).of(mockProcessor).eventType(); will(returnValue(String.class));
 			atLeast(1).of(mockProcessor).execute("3"); will(throwException(new RuntimeException("I've crached")));
 		}});
@@ -122,15 +131,16 @@ public class EventListTest extends MockObjectTestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testThrowRuntimeIfNoProcessorForThatEventIsAvailable() {
 		
-		final Processor<Boolean> processorMock = mock(Processor.class);
+		final Processor<Boolean> processorMock = context.mock(Processor.class);
 		
 
 		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock);
 		list.addProcessors(new Processor[] { processorMock});
 
-		checking(new Expectations() {{
+		context.checking(new Expectations() {{
 			atLeast(1).of(processorMock).eventType(); will(returnValue(Boolean.class));
 		}});
 
@@ -142,6 +152,7 @@ public class EventListTest extends MockObjectTestCase {
 
 	}
 	
+	@Test
 	public void testCensor(){
 		list = new EventListImpl(persistenceManager, mockHardwareClock, systemClock, new RejectAllCensor());
 		list.add("foo");

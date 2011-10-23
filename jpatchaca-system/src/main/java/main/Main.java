@@ -1,17 +1,10 @@
 package main;
 
-import java.io.IOException;
-
-import javax.swing.UnsupportedLookAndFeelException;
-
-
-
 import ui.swing.utils.LookAndFeelSetter;
 
 public class Main {
 
-	public static void main(final String[] args)
-			throws UnsupportedLookAndFeelException, IOException {
+	public static void main(final String[] args) {
 
 		keepWorkingOnMinimize();
 		setLookAndFeel();
