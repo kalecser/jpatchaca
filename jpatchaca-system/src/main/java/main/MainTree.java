@@ -19,8 +19,7 @@ public class MainTree {
 
 	
 	public static void main(final String[] args) {
-		final MutablePicoContainer container = Main.createDurableSWINGContainer();
-		container.start();
+		final MutablePicoContainer container = DurableSWINGContainerBuilder.startDurableSWINGContainer();
 		
 		final JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

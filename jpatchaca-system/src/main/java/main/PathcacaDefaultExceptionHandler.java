@@ -74,7 +74,7 @@ public class PathcacaDefaultExceptionHandler implements Startable, PatchacaUncau
 		}
 	}
 
-	private void close(final OutputStream log) {
+	private static void close(final OutputStream log) {
 		try {
 			log.close();
 		} catch (final IOException e) {

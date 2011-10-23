@@ -74,7 +74,7 @@ public class TaskScreenTest {
 
 	}
 
-	private MockTask createMockTaskWithJiraKey(String jiraKey) {
+	private static MockTask createMockTaskWithJiraKey(String jiraKey) {
 		MockTask mockTask = new MockTask();
 		JiraIssueData data = new JiraIssueData();
 		data.setKey(jiraKey);

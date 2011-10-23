@@ -4,7 +4,6 @@ package tasks.adapters.ui;
 import org.picocontainer.MutablePicoContainer;
 
 import tasks.PatchacaTasksOperator;
-import tasks.adapters.ui.operators.ContainerForUiTestsFactory;
 import tasks.adapters.ui.operators.PatchacaTasksOperatorUsingUI;
 import basic.mock.MockHardwareClock;
 

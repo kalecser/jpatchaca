@@ -61,6 +61,11 @@ import events.persistence.XmlPersistenceManager;
 
 public class PatchacaModelContainerFactory {
 
+	public static MutablePicoContainer createNonUIContainer(
+			final HardwareClock hardwareClock) {
+		return new PatchacaModelContainerFactory().create(hardwareClock);
+	}
+	
 	public MutablePicoContainer create(final HardwareClock hardwareClock) {
 		final MutablePicoContainer container = new PicoBuilder()
 				.withLifecycle().withCaching().build();

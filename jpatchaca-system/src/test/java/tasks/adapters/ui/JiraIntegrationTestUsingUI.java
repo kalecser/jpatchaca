@@ -6,7 +6,6 @@ import org.picocontainer.MutablePicoContainer;
 import basic.mock.MockHardwareClock;
 import tasks.JiraIntegrationTest;
 import tasks.PatchacaTasksOperator;
-import tasks.adapters.ui.operators.ContainerForUiTestsFactory;
 import tasks.adapters.ui.operators.PatchacaTasksOperatorUsingUI;
 
 public class JiraIntegrationTestUsingUI extends JiraIntegrationTest {

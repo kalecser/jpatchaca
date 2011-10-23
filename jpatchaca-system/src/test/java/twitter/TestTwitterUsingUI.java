@@ -1,6 +1,6 @@
 package twitter;
 
-import main.Main;
+import main.SWINGContainerForTestsBuilder;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +18,7 @@ public class TestTwitterUsingUI extends TwitterTests {
 	@Before
 	public void setup(){
 		mockHardwareClock = new MockHardwareClock();
-		container = Main.createSWINGContainerForTests(mockHardwareClock);		
+		container = SWINGContainerForTestsBuilder.createSWINGContainerForTests(mockHardwareClock);		
 		container.start();
 	}
 	

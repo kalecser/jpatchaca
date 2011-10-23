@@ -2,7 +2,7 @@ package tasks.adapters.ui.operators;
 
 import java.awt.SystemTray;
 
-import main.Main;
+import main.SWINGContainerForTestsBuilder;
 
 import org.picocontainer.MutablePicoContainer;
 
@@ -20,7 +20,7 @@ public class PeriodUsingUITest extends periods.PeriodsTest {
 	@Override
 	protected void setUp() throws Exception {
 		mockHardwareClock = new MockHardwareClock();
-		container = Main.createSWINGContainerForTests(mockHardwareClock);
+		container = SWINGContainerForTestsBuilder.createSWINGContainerForTests(mockHardwareClock);
 		container.start();
 
 		if (!SystemTray.isSupported()) {

@@ -9,9 +9,7 @@ import org.picocontainer.MutablePicoContainer;
 public class BasicTest extends TestCase {
 
 	public void testIfSystemTurnsOn() throws IOException{
-		final MutablePicoContainer container = Main.createDurableSWINGContainer();
-		container.start();
+		final MutablePicoContainer container = DurableSWINGContainerBuilder.startDurableSWINGContainer();
 		container.stop();
-		
 	}
 }
