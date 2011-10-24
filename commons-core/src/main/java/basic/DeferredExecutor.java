@@ -63,29 +63,35 @@ public class DeferredExecutor{
 		
 		wasCalled.set(true);
 
-		if (  running.getAndSet(false) && (!waitingToRun.get())){
-				thread = new Thread(){
-					@Override
-					public void run() {
-						try {
-							while (wasCalled.getAndSet(false))
-								Thread.sleep(milliseconds);
-						} catch (InterruptedException e) {
-							throw new RuntimeException(e);
-						}
-						waitingToRun.set(true);
-						synchronized (runnable) {
-							waitingToRun.set(false);
-							running.set(true);
-							runnable.run();
-						}	
-					}
-				};
-				thread.start();
+		if (  !running.getAndSet(false) || waitingToRun.get()) 
+			return;
+		
+		thread = new Thread(){
+			@Override
+			public void run() {
+				executeAsynchronous();	
 			}
+		};
+		thread.start();
 		
 	}
 	
+	void executeAsynchronous() {
+		try {
+			while (wasCalled.getAndSet(false))
+				Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		waitingToRun.set(true);
+		synchronized (runnable) {
+			waitingToRun.set(false);
+			running.set(true);
+			runnable.run();
+		}
+	}
+
+
 	public static void makeSynchronous(){
 		synchronous = true;
 	}

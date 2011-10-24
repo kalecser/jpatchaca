@@ -31,8 +31,7 @@ public class FloatingArea extends JWindow{
 		floatingAreaComponentListener = new ComponentAdapter(){
 			@Override
 			public void componentHidden(ComponentEvent e) {
-				FloatingArea.this.setVisible(false);
-				contentsOrNull = null;
+				hideFloatingAreaAndClearContents();
 			}
 		};
 		
@@ -102,7 +101,7 @@ public class FloatingArea extends JWindow{
 		
 	}
 
-	private void showFloatingArea() {
+	void showFloatingArea() {
 		
 		if (contentsOrNull == null)
 			return;
@@ -111,7 +110,7 @@ public class FloatingArea extends JWindow{
 			pack();
 	}
 
-	private void hideFloatingArea() {
+	void hideFloatingArea() {
 		setVisible(false);
 	}
 	
@@ -134,6 +133,11 @@ public class FloatingArea extends JWindow{
 		adjustWindowToSubject();
 		contentsOrNull = contents;		
 		FloatingArea.this.setVisible(true);
+	}
+
+	void hideFloatingAreaAndClearContents() {
+		hideFloatingArea();
+		contentsOrNull = null;
 	}
 
 }

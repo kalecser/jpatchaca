@@ -22,7 +22,6 @@ import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
 import ui.swing.presenter.UIAction;
 import ui.swing.presenter.ValidationException;
-import ui.swing.utils.UIEventsExecutor;
 import basic.Delegate;
 
 public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startable {
@@ -36,7 +35,7 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 	private HashSet<RemoteJiraIssue> processedIssues;
 
 	public JiraIssueStatusActionPane(StartTaskDelegate startTaskDelegate, JiraIssueStatusManagement jiraIssueStatus,
-			JiraOptions jiraOptions, Presenter presenter, UIEventsExecutor executor) {
+			JiraOptions jiraOptions, Presenter presenter) {
 		this.startTaskDelegate = startTaskDelegate;
 		this.jiraIssueStatus = jiraIssueStatus;
 		this.jiraOptions = jiraOptions;
@@ -131,9 +130,10 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 
 	@Override
 	public void stop() {
+		// Nothing to do.
 	}
 
-	private void showIssuesForUpdateIfAny(StartTaskData startTaskData) {		
+	void showIssuesForUpdateIfAny(StartTaskData startTaskData) {		
 		JiraIssue jiraIssue = startTaskData.taskData().getJiraIssue();
 		
 		if (jiraIssue == null)

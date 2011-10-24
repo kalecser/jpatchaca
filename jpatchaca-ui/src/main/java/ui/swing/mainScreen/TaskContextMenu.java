@@ -70,8 +70,9 @@ public class TaskContextMenu extends JPopupMenu {
 	private void addNoteItem() {
 		final JMenuItem item = new JMenuItem("add note");
 		item.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
-				TaskContextMenu.this.addNoteAlert.fire();
+				fireAddNoteAlert();
 			}
 		});
 		add(item);
@@ -80,8 +81,9 @@ public class TaskContextMenu extends JPopupMenu {
 	private void addEditTaskItem() {
 		final JMenuItem item = new JMenuItem("edit");
 		item.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
-				TaskContextMenu.this.editTaskAlert.fire();
+				fireEditTaskAlert();
 			}
 		});
 		add(item);
@@ -91,8 +93,9 @@ public class TaskContextMenu extends JPopupMenu {
 	private void addRemoveTaskItem() {
 		final JMenuItem item = new JMenuItem("remove");
 		item.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
-				TaskContextMenu.this.removeTaskAlert.fire();
+				fireRemoveTaskAlert();
 			}
 		});
 		add(item);
@@ -101,8 +104,9 @@ public class TaskContextMenu extends JPopupMenu {
 	private void addStopTaskMenuItem() {
 		final JMenuItem item = new JMenuItem("start");
 		item.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
-				TaskContextMenu.this.startCurrentTaskAlert.fire();
+				fireStartCurrentTaskAlert();
 			}
 		});
 		add(item);
@@ -111,8 +115,9 @@ public class TaskContextMenu extends JPopupMenu {
 	private void addStartTaskMenuItem() {
 		final JMenuItem item = new JMenuItem("stop");
 		item.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
-				TaskContextMenu.this.stopCurrentTaskAlert.fire();
+				fireStopCurrentTaskAlert();
 			}
 		});
 		add(item);
@@ -123,9 +128,9 @@ public class TaskContextMenu extends JPopupMenu {
 		for (final String label : model.getLabelsFor(selectedTask)) {
 			final JMenuItem item = removeFromMenu.add(label);
 			item.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(final ActionEvent e) {
-					TaskContextMenu.this.selectedLabelName = label;
-					TaskContextMenu.this.removeFromLabelAlert.fire();
+					fireRemoveFromLabelAlert(label);
 				}
 			});
 		}
@@ -139,9 +144,9 @@ public class TaskContextMenu extends JPopupMenu {
 		for (final String label : model.assignableLabels()) {
 			final JMenuItem item = labelsMenu.add(label);
 			item.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(final ActionEvent e) {
-					TaskContextMenu.this.selectedLabelName = label;
-					TaskContextMenu.this.assignToLabelAlert.fire();
+					fireAssignToLabelAlert(label);
 				}
 			});
 		}
@@ -149,8 +154,9 @@ public class TaskContextMenu extends JPopupMenu {
 		labelsMenu.addSeparator();
 		final JMenuItem createLabelMenuItem = labelsMenu.add("new label");
 		createLabelMenuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
-				TaskContextMenu.this.createLabelAlert.fire();
+				fireCreateLabelAlert();
 			}
 		});
 
@@ -198,6 +204,7 @@ public class TaskContextMenu extends JPopupMenu {
 				final JMenuItem item = (JMenuItem) component;
 				if (item.getText().equals("add note")) {
 					SwingUtilities.invokeAndWait(new Runnable() {
+						@Override
 						public void run() {
 							item.doClick();
 						}
@@ -213,5 +220,39 @@ public class TaskContextMenu extends JPopupMenu {
 
 	public final AlertImpl addNoteAlert() {
 		return addNoteAlert;
+	}
+
+	void fireAddNoteAlert() {
+		this.addNoteAlert.fire();
+	}
+
+	void fireEditTaskAlert() {
+		this.editTaskAlert.fire();
+	}
+
+	void fireRemoveTaskAlert() {
+		this.removeTaskAlert.fire();
+	}
+
+	void fireStartCurrentTaskAlert() {
+		this.startCurrentTaskAlert.fire();
+	}
+
+	void fireStopCurrentTaskAlert() {
+		this.stopCurrentTaskAlert.fire();
+	}
+
+	void fireRemoveFromLabelAlert(final String label) {
+		this.selectedLabelName = label;
+		this.removeFromLabelAlert.fire();
+	}
+
+	void fireAssignToLabelAlert(final String label) {
+		this.selectedLabelName = label;
+		this.assignToLabelAlert.fire();
+	}
+
+	void fireCreateLabelAlert() {
+		this.createLabelAlert.fire();
 	}
 }
