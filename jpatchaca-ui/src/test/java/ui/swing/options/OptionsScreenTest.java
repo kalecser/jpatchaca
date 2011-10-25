@@ -21,6 +21,7 @@ public class OptionsScreenTest {
 	@Test
 	public void testUseOldIcons(){
 		openOptionsScreen();
+		@SuppressWarnings("unused")
 		OptionsScreenOperator op = new OptionsScreenOperator();
 	}
 

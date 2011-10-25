@@ -18,7 +18,6 @@ import java.util.TimeZone;
 
 import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -38,7 +37,6 @@ import org.netbeans.jemmy.util.RegExComparator;
 
 import tasks.Task;
 import ui.swing.utils.SwingUtils;
-import wheel.lang.Threads;
 
 public class MainScreenOperator {
 
