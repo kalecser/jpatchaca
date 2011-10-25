@@ -4,13 +4,13 @@ import javax.swing.JDialog;
 
 import ui.swing.presenter.Presenter;
 
-public class StartTaskController {
+public class StartTaskPresenter {
 
 	private final StartTaskScreen startTaskScreen;
 	private final Presenter presenter;
 	private JDialog dialog;
 
-	public StartTaskController(final Presenter presenter,
+	public StartTaskPresenter(final Presenter presenter,
 			final StartTaskScreen startTaskScreen) {
 		this.presenter = presenter;
 		this.startTaskScreen = startTaskScreen;

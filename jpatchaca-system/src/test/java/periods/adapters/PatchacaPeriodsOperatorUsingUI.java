@@ -1,6 +1,7 @@
-package tasks.adapters.ui.operators;
+package periods.adapters;
 
 import periods.PatchacaPeriodsOperator;
+import tasks.adapters.ui.operators.MainScreenOperator;
 
 class PatchacaPeriodsOperatorUsingUI implements PatchacaPeriodsOperator {
 

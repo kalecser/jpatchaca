@@ -293,7 +293,7 @@ public class PeriodsList extends SimpleInternalFrame {
 	}
 
 	void addPeriodToSelectedTask() {
-		final TaskView selectedTask = selectedTaskSource.currentValue();
+		final TaskView selectedTask = selectedTaskSource.waitForSelectedTask();
 		final Period newPeriod = new Period(machineClock.getTime());
 		periodsSystem.addPeriod(selectedTask, newPeriod);
 	}

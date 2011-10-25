@@ -532,4 +532,5 @@ public class PatchacaTray implements Startable {
 	void setBlueTurnIcon() {
 		trayIcon.setImage(ACTIVE_ROTATION_ON_ICON_BLUE);
 	}
+	
 }

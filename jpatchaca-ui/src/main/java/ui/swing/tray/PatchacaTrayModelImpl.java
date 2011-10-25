@@ -21,7 +21,7 @@ import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.presenter.Presenter;
 import ui.swing.tasks.SelectedTaskSource;
-import ui.swing.tasks.StartTaskController;
+import ui.swing.tasks.StartTaskPresenter;
 
 public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
@@ -36,7 +36,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private Maybe<Listener> listener;
 	private final WindowManager windowManager;
 	private final TaskScreenController taskScreen;
-	private final StartTaskController startTaskController;
+	private final StartTaskPresenter startTaskController;
 	private final SelectedTaskName selectedTaskName;
 	private final ActiveTaskName activeTaskName;
 	private final Presenter presenter;
@@ -47,7 +47,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final SelectedTaskSource selectedTask,
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
-			final StartTaskController startTaskController,
+			final StartTaskPresenter startTaskController,
 			final ActiveTaskName activeTaskName, 
 			final Presenter presenter) {
 

@@ -1,4 +1,4 @@
-package periodsInTasks;
+package ui.swing.mainScreen.tasks.mock;
 
 import java.util.List;
 
@@ -15,12 +15,13 @@ import periods.PeriodsListener;
 import periods.impl.PeriodManagerImpl;
 import reactive.ListSignal;
 import tasks.NotesListener;
+import tasks.Task;
 import tasks.notes.NoteView;
 import tasks.taskName.TaskName;
 import tasks.tasks.tests.MockTaskName;
 import basic.Alert;
 
-public class MockTask implements tasks.Task {
+public class MockTask implements Task {
 
 	private String name;
 	private Long startedMillisecondsAgo = null;
