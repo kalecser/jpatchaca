@@ -13,7 +13,6 @@ import ui.swing.presenter.UIAction;
 
 public class OptionsScreen implements ActionPane {
 
-	private JCheckBox twitterEnabled;
 	private JCheckBox showLabels;
 
 	private JTextField jiraUsername;
@@ -35,8 +34,6 @@ public class OptionsScreen implements ActionPane {
 		addMainPreferences(tab);
 		addJiraPreferences(tab);
 		addKeyboardRotationPreferences(tab);
-
-		twitterEnabled.requestFocus();
 
 		JPanel jPanel = new JPanel();
 		jPanel.add(tab);
