@@ -30,4 +30,6 @@ public interface OptionsScreenModel {
 
 	public abstract boolean supressShakingDialog();
 
+	public abstract void isToUseOldIcons();
+
 }

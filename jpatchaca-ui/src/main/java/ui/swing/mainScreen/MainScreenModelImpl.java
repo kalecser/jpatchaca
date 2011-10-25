@@ -13,9 +13,9 @@ import tasks.TasksSystem;
 import tasks.taskName.ActiveTaskName;
 import tasks.taskName.TaskName;
 import ui.swing.mainScreen.tasks.TaskScreenController;
-import ui.swing.options.OptionsScreen;
+import ui.swing.options.OptionsScreenPresenter;
 import ui.swing.tasks.SelectedTaskSource;
-import ui.swing.tasks.StartTaskController;
+import ui.swing.tasks.StartTaskPresenter;
 import ui.swing.users.SwingTasksUser;
 import version.PatchacaVersion;
 import events.EventsSystem;
@@ -26,9 +26,9 @@ public class MainScreenModelImpl implements MainScreenModel {
 	private final EventsSystem eventsSystem;
 	private final SwingTasksUser tasksUser;
 
-	private final OptionsScreen optionsScreen;
+	private final OptionsScreenPresenter optionsScreen;
 	private final TaskScreenController taskScreen;
-	private final StartTaskController startTaskController;
+	private final StartTaskPresenter startTaskController;
 
 	private final Source<String> title;
 	private final ActiveTaskName activeTaskName;
@@ -37,8 +37,8 @@ public class MainScreenModelImpl implements MainScreenModel {
 	public MainScreenModelImpl(final SelectedTaskSource selectedTask,
 			final EventsSystem eventsSystem, final SwingTasksUser taskUser,
 			final TasksSystem tasksSystem,
-			final StartTaskController startTaskController,
-			final OptionsScreen optionsScreen,
+			final StartTaskPresenter startTaskController,
+			final OptionsScreenPresenter optionsScreen,
 			final TaskScreenController taskScreen,
 			final ActiveTaskName activeTaskName) {
 		this.selectedTask = selectedTask;

@@ -14,25 +14,40 @@ public class SelectedTaskSource {
 		_subject = new Source<TaskView>(null);
 	}
 
-	public void addReceiver(Receiver<TaskView> receiver) {
+	public synchronized void addReceiver(Receiver<TaskView> receiver) {
 		_subject.addReceiver(receiver);		
 	}
 
-	public TaskView currentValue() { 
+	public synchronized TaskView currentValue() { 
 		return _subject.currentValue();
 	}
 
-	public void removeReceiver(Receiver<TaskView> taskReceiver) {
+	public synchronized void removeReceiver(Receiver<TaskView> taskReceiver) {
 		_subject.removeReceiver(taskReceiver);
 	}
 
-	public void supply(TaskView t) {
+	public synchronized void supply(TaskView t) {
 		_subject.supply(t);
+		this.notify();
 	}
 
-	public Signal<TaskView> output() {
+	public synchronized Signal<TaskView> output() {
 		return _subject;
 	}
+
+	public TaskView waitForSelectedTask() {
+			final TaskView selectedTask = this.currentValue();
+			
+			if (selectedTask == null)
+				this.waitUntilTimeout(200);
+			
+			return this.currentValue();
+	}
 	
+	public synchronized void waitUntilTimeout(int i) {
+		try {
+			this.wait(200);
+		} catch (InterruptedException expected) {	}
+	}
 
 }

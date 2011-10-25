@@ -83,4 +83,9 @@ public class OptionsScreenModelImpl implements OptionsScreenModel {
 			return keyboardRotationOptions.supressShakingDialog();
 	}
 
+	@Override
+	public void isToUseOldIcons() {
+		throw new RuntimeException("Not implemented");
+	}
+
 }

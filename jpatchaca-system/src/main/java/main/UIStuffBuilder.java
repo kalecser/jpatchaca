@@ -53,13 +53,13 @@ import ui.swing.mainScreen.tasks.day.DayTasksList;
 import ui.swing.mainScreen.tasks.summary.SummaryHoursFormat;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
-import ui.swing.options.OptionsScreen;
+import ui.swing.options.OptionsScreenPresenter;
 import ui.swing.options.OptionsScreenModelImpl;
 import ui.swing.presenter.PresenterImpl;
 import ui.swing.singleInstance.ShowMainScreenOnSecondRun;
 import ui.swing.tasks.SelectedTaskPeriodsImpl;
 import ui.swing.tasks.SelectedTaskSource;
-import ui.swing.tasks.StartTaskController;
+import ui.swing.tasks.StartTaskPresenter;
 import ui.swing.tasks.StartTaskScreen;
 import ui.swing.tasks.StartTaskScreenModelImpl;
 import ui.swing.tray.PatchacaTray;
@@ -122,7 +122,7 @@ final class UIStuffBuilder {
 
 		container.addComponent(ShowMainScreenOnSecondRun.class);
 
-		container.addComponent(OptionsScreen.class);
+		container.addComponent(OptionsScreenPresenter.class);
 		container.addComponent(OptionsScreenModelImpl.class);
 		container.addComponent(ErrorLogScreen.class);
 		container.addComponent(SwinglabelsUser.class);
@@ -133,7 +133,7 @@ final class UIStuffBuilder {
 		container.addComponent(TaskListModel.class, TaskListModelImpl.class);
 		container.addComponent(StartTaskScreenModelImpl.class);
 		container.addComponent(StartTaskScreen.class);
-		container.addComponent(StartTaskController.class);
+		container.addComponent(StartTaskPresenter.class);
 		container.addComponent(TrayIconStartTaskMessage.class);
 
 		container.addComponent(TaskListSystemMediator.class);

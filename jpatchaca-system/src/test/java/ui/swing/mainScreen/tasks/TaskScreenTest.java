@@ -6,9 +6,9 @@ import jira.JiraIssueData;
 import org.junit.After;
 import org.junit.Test;
 
-import periodsInTasks.MockTask;
 import tasks.adapters.ui.operators.TaskScreenOperator;
 import ui.swing.mainScreen.tasks.mock.MockJira;
+import ui.swing.mainScreen.tasks.mock.MockTask;
 import ui.swing.mainScreen.tasks.mock.MockTaskScreenModel;
 import ui.swing.presenter.PresenterImpl;
 import ui.swing.utils.UIEventsExecutorImpl;

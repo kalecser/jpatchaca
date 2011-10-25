@@ -1,4 +1,4 @@
-package tasks.adapters.ui.operators;
+package periods.adapters;
 
 import java.awt.SystemTray;
 
@@ -8,6 +8,7 @@ import org.picocontainer.MutablePicoContainer;
 
 import periods.PatchacaPeriodsOperator;
 import tasks.PatchacaTasksOperator;
+import tasks.adapters.ui.operators.PatchacaTasksOperatorUsingUI;
 import basic.mock.MockHardwareClock;
 
 //bug move to ui

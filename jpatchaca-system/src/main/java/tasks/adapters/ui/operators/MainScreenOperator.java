@@ -18,6 +18,7 @@ import java.util.TimeZone;
 
 import javax.swing.JList;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -35,7 +36,9 @@ import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.util.RegExComparator;
 
+import tasks.Task;
 import ui.swing.utils.SwingUtils;
+import wheel.lang.Threads;
 
 public class MainScreenOperator {
 
@@ -153,6 +156,26 @@ public class MainScreenOperator {
 				tasksListOperator.selectItem(taskName);				
 		}});
 		
+		waitSelectedTask(taskName);
+	}
+
+	private void waitSelectedTask(final String taskName) {
+		tasksListOperator.waitState(new ComponentChooser() {
+			
+			@Override
+			public String getDescription() {
+				return "Waiting for task " + taskName + " to be selected";
+			}
+			
+			@Override
+			public boolean checkComponent(Component comp) {
+				Task task = (Task) tasksListOperator.getSelectedValue();
+				if (task == null){
+					return false;
+				}
+				return task.name().equals(taskName);
+			}
+		});
 	}
 
 	public void pushEditTaskMenu() {
@@ -273,20 +296,18 @@ public class MainScreenOperator {
 	}
 
 	private void waitPeriodCreated(final int periodIndex) {
-		final long timeout = 8000;
-		final long currentTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - currentTime < timeout) {
-			try {
-				Thread.sleep(200);
-			} catch (final InterruptedException e) {
-				throw new RuntimeException(e);
+		periodsTableOperator.waitState(new ComponentChooser() {
+			
+			@Override
+			public String getDescription() {
+				return "Waiting for period to be created on index " + periodIndex;
 			}
-			if (periodsTableOperator.getRowCount() > periodIndex) {
-				return;
+			
+			@Override
+			public boolean checkComponent(Component comp) {
+				return (periodsTableOperator.getRowCount() > periodIndex);
 			}
-		}
-
-		throw new RuntimeException("no period in row " + periodIndex);
+		});
 	}
 
 	private static String getTimeInScreenInputFormat(final String startHH_mm_a) {
