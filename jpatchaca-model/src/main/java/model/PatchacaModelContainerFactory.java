@@ -44,8 +44,6 @@ import tasks.processors.StartTaskProcessor3;
 import tasks.taskName.ActiveTaskName;
 import tasks.taskName.TaskNameFactory;
 import tasks.tasks.Tasks;
-import twitter.TwitterLogger;
-import twitter.TwitterOptions;
 import twitter.processors.SetTwitterConfigProcessor;
 import basic.ErrorLog;
 import basic.HardwareClock;
@@ -110,8 +108,6 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(NewAndNoteworthyConsumptionProcessor.class);
 
 		container.addComponent(KeyboardRotationOptions.class);
-		container.addComponent(TwitterOptions.class);
-		container.addComponent(TwitterLogger.class);
 		container.addComponent(SetTwitterConfigProcessor.class);
 		container.addComponent(SetKeyboardRotationOptionsProcessor.class);
 

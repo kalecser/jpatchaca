@@ -10,13 +10,6 @@
 	<artifactId>jpatchaca-model</artifactId>
 	<packaging>jar</packaging>
 	<name>JPatchaca Model</name>
-	<repositories>
-		<repository>
-			<id>java-twitter-repository</id>
-			<url>http://java-twitter.googlecode.com/svn/repository/</url>
-			<name>java-twitter maven repository</name>
-		</repository>
-	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.jpatchaca</groupId>
@@ -35,10 +28,6 @@
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
 			<scope>test</scope>	
-		</dependency>
-		<dependency>
-			<groupId>net.unto.twitter</groupId>
-			<artifactId>java-twitter</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jpatchaca</groupId>

@@ -10,15 +10,11 @@ import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.UIAction;
-import wheel.swing.CheckboxSignalBinder;
-import wheel.swing.TextFieldBinder;
 
 public class OptionsScreen implements ActionPane {
 
 	private JCheckBox twitterEnabled;
 	private JCheckBox showLabels;
-	private JTextField twitterUsername;
-	private JTextField twitterPassword;
 
 	private JTextField jiraUsername;
 	private JTextField jiraPassword;
@@ -37,7 +33,6 @@ public class OptionsScreen implements ActionPane {
 		final JTabbedPane tab = new JTabbedPane();
 		
 		addMainPreferences(tab);
-		addTwitterPreferences(tab);
 		addJiraPreferences(tab);
 		addKeyboardRotationPreferences(tab);
 
@@ -88,35 +83,7 @@ public class OptionsScreen implements ActionPane {
 		
 		tab.add("Jira",optionsPanel);
 	}
-
-	private void addTwitterPreferences(JTabbedPane tab) {
-		final JPanel optionsPanel = new JPanel();
-		optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));			
-		
-		twitterEnabled = new JCheckBox("Twitter logging enabled");
-		CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
-				.twitterEnabled());
-		optionsPanel.add(twitterEnabled, "span 4");
-
-		optionsPanel.add(new JLabel("Twitter username"));
-		twitterUsername = new JTextField(30);
-		TextFieldBinder.bind(twitterUsername, optionsScreenModel
-				.twitterUserName());
-		optionsPanel.add(twitterUsername, "growx,span 3");
-
-		optionsPanel.add(new JLabel("Twitter Password"));
-		twitterPassword = new JPasswordField(30);
-		
-		TextFieldBinder.bind(twitterPassword, optionsScreenModel
-				.twitterPassword());
-		optionsPanel.add(twitterPassword, "growx,span 3");
-
-		CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
-				.twitterEnabled());
-		
-		tab.add("Twitter",optionsPanel);
-	}
-
+	
 	private void addMainPreferences(JTabbedPane tab) {
 		showLabels = new JCheckBox("Show labels");
 		tab.add("Preferences",showLabels);
@@ -133,10 +100,6 @@ public class OptionsScreen implements ActionPane {
 	}
 
 	void doAction() {
-		optionsScreenModel.setTwitterConfig(twitterEnabled
-				.isSelected(), twitterUsername.getText(),
-				twitterPassword.getText());
-		
 		optionsScreenModel.setJiraConfig(jiraUrl.getText(),
 				jiraUsername.getText(), jiraPassword.getText(), issueStatusManagementEnabled.isSelected());
 		
