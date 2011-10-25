@@ -25,10 +25,7 @@ public class DeferredTaskListMemory implements TaskListMemory {
 		@Override
 		public void run() {
 			try {
-				if (directory.fileExists(FILE_NAME))
-					directory.deleteFile(FILE_NAME);
-				
-				directory.createFile(FILE_NAME, tasksListData.encodeAsString());
+				writeDataToDisk();
 			} catch (final IOException e) {
 				throw new UnhandledException(e);
 			}
@@ -36,30 +33,33 @@ public class DeferredTaskListMemory implements TaskListMemory {
 		
 	}
 
-	private TasksListData readTaskListDataFromDiskIFAvailable(final Directory directory) {
-		if (!directory.fileExists(FILE_NAME))
+	private TasksListData readTaskListDataFromDiskIFAvailable(final Directory dir) {
+		if (!dir.fileExists(FILE_NAME))
 			return new TasksListData();			
 		
 		try {
-			return TasksListData.decode(directory.contentsAsString(FILE_NAME));
+			return TasksListData.decode(dir.contentsAsString(FILE_NAME));
 		} catch (final IOException e) {
 			throw new UnhandledException(e);
 		}
 	}
 
 	@Override
-	public void mind(final TasksListData tasksListData) {
-		this.tasksListData = tasksListData;
+	public void mind(final TasksListData value) {
+		this.tasksListData = value;
 		writer.execute();
 	}
-
-	
-	
-
 
 	@Override
 	public TasksListData retrieve() {
 		return tasksListData;
+	}
+
+	void writeDataToDisk() throws IOException {
+		if (directory.fileExists(FILE_NAME))
+			directory.deleteFile(FILE_NAME);
+		
+		directory.createFile(FILE_NAME, tasksListData.encodeAsString());
 	}
 
 }

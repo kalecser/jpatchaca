@@ -23,37 +23,9 @@ public final class DeferredBoundPersistence implements BoundsPersistence {
 	
 	final class PersistBounds implements Runnable {
 
-
 		@Override
 		public void run() {
-			
-			while(true){ 
-			
-				if (_isDirty.getAndSet(false))
-					deferredWriteBoundsToDisk();
-				
-				synchronized (_isDirty){
-					if (!_isDirty.get())
-						try {
-							_isDirty.wait();
-						} catch (InterruptedException e) {
-							break;
-						}
-				}
-			
-			}
-				
-		}
-
-		private void deferredWriteBoundsToDisk() {
-			final int diskWriteThreshold = 1000;
-			Threads.sleepWithoutInterruptions(diskWriteThreshold);
-			if (_isDirty.getAndSet(false)){
-				deferredWriteBoundsToDisk();
-				return;
-			}
-			
-			_persistence.store();				
+			persistBounds();
 		}
 
 	}
@@ -79,6 +51,35 @@ public final class DeferredBoundPersistence implements BoundsPersistence {
 
 	public void dispose() {
 		_boundsKeeperThread.interrupt();	
+	}
+
+	void persistBounds() {
+		while(true){ 
+		
+			if (_isDirty.getAndSet(false))
+				deferredWriteBoundsToDisk();
+			
+			synchronized (_isDirty){
+				if (!_isDirty.get())
+					try {
+						_isDirty.wait();
+					} catch (InterruptedException e) {
+						break;
+					}
+			}
+		
+		}
+	}
+
+	private void deferredWriteBoundsToDisk() {
+		final int diskWriteThreshold = 1000;
+		Threads.sleepWithoutInterruptions(diskWriteThreshold);
+		if (_isDirty.getAndSet(false)){
+			deferredWriteBoundsToDisk();
+			return;
+		}
+		
+		_persistence.store();				
 	}
 
 }

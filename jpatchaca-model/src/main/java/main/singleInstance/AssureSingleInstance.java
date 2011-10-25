@@ -43,22 +43,10 @@ public class AssureSingleInstance implements Startable{
 
 	private void alertOnNewConnection() {
 		Thread thread = new Thread(){
+			@Override
 			public void run() {
-				while (true){
-					try {
-						if (socket == null){
-							return;
-						}
-						
-						socket.unbox().accept().close();
-						_tryedToCreateAnotherInstance.fire();
-					} catch (IOException e) {
-						//ignore and return;
-						return;
-					}
-					
-				}
-			};
+				alertOnNewConnectionLoop();
+			}
 		};
 		
 		thread.start();
@@ -81,13 +69,13 @@ public class AssureSingleInstance implements Startable{
 	
 	}
 
-	private boolean isRunning() {
+	private static boolean isRunning() {
 		try {
-			Socket socket = new Socket();	
+			Socket local = new Socket();	
 			try{
-				socket.connect(new InetSocketAddress("127.0.0.1", PORT));
+				local.connect(new InetSocketAddress("127.0.0.1", PORT));
 			} finally {
-				socket.close();
+				local.close();
 			}
 			
 		} catch (IOException e) {
@@ -110,6 +98,23 @@ public class AssureSingleInstance implements Startable{
 			}
 		} catch (IOException e) {
 			throw new IllegalStateException("Error closing " + AssureSingleInstance.class.getName() + " socket");
+		}
+	}
+
+	void alertOnNewConnectionLoop() {
+		while (true){
+			try {
+				if (socket == null){
+					return;
+				}
+				
+				socket.unbox().accept().close();
+				_tryedToCreateAnotherInstance.fire();
+			} catch (IOException e) {
+				//ignore and return;
+				return;
+			}
+			
 		}
 	}
 }

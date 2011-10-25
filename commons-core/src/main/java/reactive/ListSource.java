@@ -5,6 +5,7 @@ import lang.Maybe;
 import org.reactive.Signal;
 import org.reactive.Source;
 
+@SuppressWarnings("boxing")
 public class ListSource<T> implements ListSignal<T> {
 
 	
@@ -16,6 +17,7 @@ public class ListSource<T> implements ListSignal<T> {
 		return sizeSource;
 	}
 
+	@Override
 	public synchronized void add(T value) {
 		
 		if (value == null)
@@ -44,17 +46,20 @@ public class ListSource<T> implements ListSignal<T> {
 		
 	}
 
+	@Override
 	public synchronized Signal<Maybe<T>> get(int index) {
 		
 		return signalByIndex.get(index);
 
 	}
 
+	@Override
 	public synchronized Maybe<T> currentGet(int i) {
 		Signal<Maybe<T>> value = signalByIndex.get(i);
 		return value.currentValue();
 	}
 
+	@Override
 	public synchronized void remove(int index) {
 		
 		for (int i = index; i < currentSize() - 1; i++){
@@ -70,6 +75,7 @@ public class ListSource<T> implements ListSignal<T> {
 		return sizeSource.currentValue();
 	}
 
+	@Override
 	public synchronized void remove(T value) {
 		remove(signalByIndex.indexOf(value));
 	}
