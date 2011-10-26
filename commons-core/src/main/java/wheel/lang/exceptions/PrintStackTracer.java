@@ -14,6 +14,7 @@ public class PrintStackTracer implements Catcher {
 
 	private final PrintStream _printStream;
 
+	@Override
 	public void catchThis(Throwable throwable) {
 		throwable.printStackTrace(_printStream);
 	}

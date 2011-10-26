@@ -19,11 +19,13 @@ public class AddNoteToTaskProcessor implements Processor<AddNoteToTaskEvent> {
 		this.notesHome = notesHome;
 	}
 
+	@Override
 	public void execute(AddNoteToTaskEvent eventObj) throws MustBeCalledInsideATransaction {
 		final NoteView note = notesHome.createNote(eventObj.getText());
 		tasksHome.addNoteToTask(eventObj.getIdOfTask(), note);
 	}
 	
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return AddNoteToTaskEvent.class;
 	}

@@ -12,10 +12,12 @@ class NoteImpl implements NoteView {
 		this.text = text;
 	}
 
+	@Override
 	public String text() {
 		return text;
 	}
 
+	@Override
 	public Date timeStamp() {
 		return time;
 	}

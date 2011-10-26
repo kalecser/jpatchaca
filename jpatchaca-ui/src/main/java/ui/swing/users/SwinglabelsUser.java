@@ -18,6 +18,7 @@ public class SwinglabelsUser implements LabelsUser {
 		
 	}
 	
+	@Override
 	public String getNewLabelName(JFrame parent) throws UserOperationCancelledException {
 		final String taskName = JOptionPane.showInputDialog(parent, "Enter label name");
 		
@@ -28,6 +29,7 @@ public class SwinglabelsUser implements LabelsUser {
 		
 	}
 
+	@Override
 	public String getLabelToAssignTaskTo() {
 		
 		final String dropToLabel = labelsList.getDropToLabel();
@@ -41,6 +43,7 @@ public class SwinglabelsUser implements LabelsUser {
 		throw new RuntimeException("There is no label to assign task to...");
 	}
 
+	@Override
 	public String selectedLabel() {
 		return labelsList.selectedLabel();
 	}

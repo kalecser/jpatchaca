@@ -37,6 +37,7 @@ public class Tasks implements TasksView, TaskNames {
 		taskNameUpdaterByTask.put(task, new TaskNameUpdater(task, names));
 	}
 
+	@Override
 	public synchronized Task get(final ObjectIdentity oid) {
 		final Task task = this.tasksById.get(oid);
 		if (task == null) {
@@ -47,6 +48,7 @@ public class Tasks implements TasksView, TaskNames {
 		return task;
 	}
 
+	@Override
 	public synchronized ObjectIdentity idOf(final TaskView task) {
 		return this.idsByTask.get(task);
 	}
@@ -61,14 +63,17 @@ public class Tasks implements TasksView, TaskNames {
 
 	}
 
+	@Override
 	public synchronized List<TaskView> tasks() {
 		return new ArrayList<TaskView>(tasksList);
 	}
 
+	@Override
 	public synchronized List<String> taskNames() {
 		return names;
 	}
 
+	@Override
 	public synchronized Maybe<Task> byName(final NonEmptyString string) {
 		for (final Task task : tasksList) {
 			if (task.name().equals(string.unbox())) {

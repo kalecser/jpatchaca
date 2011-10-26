@@ -28,6 +28,7 @@ public class LabelsHomeImpl implements LabelsHome {
 		createLabel(LabelsHome.ALL_LABEL_NAME);
 	}
 
+	@Override
 	public List<TaskView> getTasksInLabel(final String labelName) {		
 		if (!this.tasksByLabel.containsKey(labelName))
 			createLabel(labelName);
@@ -42,6 +43,7 @@ public class LabelsHomeImpl implements LabelsHome {
 		this.labelsListChangedAlert.fire();
 	}
 
+	@Override
 	public void setLabelToTask(final TaskView task, final String labelName) {
 		Validate.notNull(task);
 		Validate.notNull(labelName);
@@ -55,6 +57,7 @@ public class LabelsHomeImpl implements LabelsHome {
 		tasksInLabelChangedAlert.fire();
 	}
 
+	@Override
 	public void removeTaskFromLabel(final TaskView task, final String labelName) {
 		Validate.notNull(task);
 		Validate.notNull(labelName);
@@ -68,6 +71,7 @@ public class LabelsHomeImpl implements LabelsHome {
 		tasksInLabelChangedAlert.fire();
 	}
 
+	@Override
 	public List<String> labels() {
 		final List<String> labels = new ArrayList<String>(this.tasksByLabel.keySet());
 		labels.remove(LabelsHome.ALL_LABEL_NAME);
@@ -76,16 +80,19 @@ public class LabelsHomeImpl implements LabelsHome {
 		return labels;
 	}
 
+	@Override
 	public Alert labelsListChangedAlert() {
 		return this.labelsListChangedAlert;
 	}
 
+	@Override
 	public List<String> assignableLabels() {
 		final List<String> labels = labels();
 		labels.remove(LabelsHome.ALL_LABEL_NAME);
 		return labels;
 	}
 
+	@Override
 	public List<String> getLabelsFor(final TaskView selectedTask) {
 		final List<String> result = new ArrayList<String>();
 		for(final String label : assignableLabels())
@@ -94,6 +101,7 @@ public class LabelsHomeImpl implements LabelsHome {
 		return result;		
 	}
 
+	@Override
 	public String allLabelName() {
 		return LabelsHome.ALL_LABEL_NAME;
 	}

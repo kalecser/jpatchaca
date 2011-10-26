@@ -161,10 +161,12 @@ public class EventListTest {
 	static class PersistenceManagerMock implements PersistenceManager {
 		private final List<EventTransaction> eventsWritten = new ArrayList<EventTransaction>();
 
+		@Override
 		public List<EventTransaction> getEventTransactions() {
 			return eventsWritten;
 		}
 
+		@Override
 		public void writeEvent(final EventTransaction event) {
 			eventsWritten.add(event);
 		}

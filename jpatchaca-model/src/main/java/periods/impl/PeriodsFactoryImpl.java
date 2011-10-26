@@ -11,6 +11,7 @@ public class PeriodsFactoryImpl implements PeriodsFactory {
 	public PeriodsFactoryImpl(){
 	}
 	
+	@Override
 	public Period createPeriod(Date start) {
 		return new Period( start);
 	}

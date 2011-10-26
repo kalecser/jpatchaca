@@ -64,10 +64,12 @@ public class EventsSystemTest {
 		
 		eventsSystem.addProcessor(new Processor<String>() {
 			
+			@Override
 			public Class<? extends Serializable> eventType() {
 				return String.class;
 			}
 			
+			@Override
 			public void execute(final String eventObj) {
 				log.append("executed\n");
 			}
@@ -75,10 +77,12 @@ public class EventsSystemTest {
 		
 		eventsSystem.addEventHook(new EventHook<String>(){
 			
+			@Override
 			public void hookEvent(final String event){
 				log.append("hooked - " + event);
 			}
 
+			@Override
 			public Class<? extends Serializable> getEventType() {
 				return String.class;
 			}

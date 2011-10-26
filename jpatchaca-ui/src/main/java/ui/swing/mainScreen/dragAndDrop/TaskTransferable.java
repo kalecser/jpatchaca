@@ -16,16 +16,19 @@ public class TaskTransferable implements Transferable {
 		this.taskId = taskId;
 	}
 
+	@Override
 	public DataFlavor[] getTransferDataFlavors() {
 		return new DataFlavor[]{DataFlavor.stringFlavor};
 	}
 
 
 
+	@Override
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		return ArrayUtils.contains(getTransferDataFlavors(), flavor);
 	}
 
+	@Override
 	public Object getTransferData(DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
 		return "task - " + taskId ;

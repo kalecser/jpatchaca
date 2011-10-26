@@ -20,6 +20,7 @@ public abstract class CloseableStreamTest extends TestCase {
 
 	public void testClose() throws IOException {
 		_subject.notifyOnClose(new Listener(){
+			@Override
 			public void streamClosed(Closeable stream) {
 				_lastClosedStream = stream;
 			}

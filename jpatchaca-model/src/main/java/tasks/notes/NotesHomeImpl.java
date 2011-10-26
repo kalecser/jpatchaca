@@ -10,6 +10,7 @@ public class NotesHomeImpl implements NotesHome {
 		this.clock = clock;
 	}
 
+	@Override
 	public NoteView createNote(final String text) {
 		return new NoteImpl(clock.getDate(), text);
 	}

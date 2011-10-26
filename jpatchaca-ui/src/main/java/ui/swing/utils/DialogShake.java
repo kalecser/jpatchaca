@@ -55,6 +55,7 @@ public class DialogShake {
 		naturalLocation = dialog.getLocation();
 		startTime = System.currentTimeMillis();
 		shakeTimer = new Timer(5, new ActionListener() {
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				final double TWO_PI = Math.PI * 2.0;
 				final double SHAKE_CYCLE = 50;

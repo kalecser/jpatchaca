@@ -21,6 +21,7 @@ public class SwingTasksUserImpl implements SwingTasksUser {
 		this.exclusionScreen = exclusionScreen;
 	}
 
+	@Override
 	public boolean isTaskExclusionConfirmed() {
 
 		final int answer = exclusionScreen.confirmExclusion();
@@ -28,16 +29,19 @@ public class SwingTasksUserImpl implements SwingTasksUser {
 		return answer == JOptionPane.YES_OPTION;
 	}
 
+	@Override
 	public TaskView getPeriodMovingTarget() {
 		return tasksList.dropTargetTask();
 	}
 
+	@Override
 	public boolean isPeriodExclusionConfirmed() {
 		return JOptionPane.showConfirmDialog(null,
 				"Do you realy want to remove the selected period?",
 				"Period Removal Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 	}
 
+	@Override
 	public String getTextForNote() throws UserOperationCancelledException {
 
 		final String noteText = JOptionPane.showInputDialog("Enter a note");

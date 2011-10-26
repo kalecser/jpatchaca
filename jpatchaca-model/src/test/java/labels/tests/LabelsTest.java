@@ -61,6 +61,7 @@ public class LabelsTest {
 		
 		final StringBuffer alertOut = new StringBuffer();
 		labelsSystem.labelsListChangedAlert().subscribe(new Subscriber() {
+			@Override
 			public void fire() {
 				alertOut.append("changed");		
 			}

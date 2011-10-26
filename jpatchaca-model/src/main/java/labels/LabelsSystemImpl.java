@@ -44,10 +44,12 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 		eventsSystem.addProcessor(new CreateTaskProcessor3(labelsHome, tasks));
 		
 		tasksSystem.addTasksListener(new TasksListener() {
+			@Override
 			public void createdTask(final TaskView task) {
 				labelsHome.setLabelToTask(task, allLabelName());
 			}
 
+			@Override
 			public void removedTask(final TaskView task) {
 				final List<String> assignedLabels = labelsHome.getLabelsFor(task);
 				for (final String label : assignedLabels){
@@ -59,6 +61,7 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 		
 	}
 
+	@Override
 	public void setNewLabelToTask(final TaskView task, final String newLabelName) {
 			Validate.notNull(task);
 			Validate.notNull(newLabelName);
@@ -67,6 +70,7 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 			this.eventsSystem.writeEvent(event);
 	}
 
+	@Override
 	public void setLabelToTask(final TaskView task, final String labeltoAssignTo) {
 			Validate.notNull(task);
 			Validate.notNull(labeltoAssignTo);
@@ -75,6 +79,7 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 			this.eventsSystem.writeEvent(event);
 	}
 
+	@Override
 	public void removeLabelFromTask(final TaskView task, final String labelToAssignTo) {
 		final RemoveTaskFromLabelEvent event = new RemoveTaskFromLabelEvent(tasks.idOf(task),
 				labelToAssignTo);
@@ -83,30 +88,36 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 
 
 
+	@Override
 	public List<TaskView> tasksInlabel(final String labelName) {
 		return labelsHomeView.getTasksInLabel(labelName);
 	}
 
 
 
+	@Override
 	public String allLabelName() {
 		return labelsHomeView.allLabelName();
 	}
 
 
+	@Override
 	public List<String> labels() {
 		return labelsHomeView.labels();
 	}
 
 
+	@Override
 	public List<String> getLabelsFor(final TaskView task) {
 		return labelsHomeView.getLabelsFor(task);
 	}
 
+	@Override
 	public Alert labelsListChangedAlert() {
 		return labelsHomeView.labelsListChangedAlert();
 	}
 
+	@Override
 	public List<String> assignableLabels() {
 		return labelsHomeView.assignableLabels();
 	}

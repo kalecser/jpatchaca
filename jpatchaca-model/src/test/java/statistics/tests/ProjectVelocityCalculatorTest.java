@@ -13,7 +13,7 @@ import statistics.ProjectVelocityCalculator;
 import statistics.ProjectVelocityCalculatorImpl;
 import tasks.TaskView;
 
-
+@SuppressWarnings("boxing")
 public class ProjectVelocityCalculatorTest {
 	
 	private final Mockery context = new JUnit4Mockery();

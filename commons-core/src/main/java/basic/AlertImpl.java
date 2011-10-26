@@ -14,6 +14,7 @@ public class AlertImpl implements Alert {
 		this.subscribers = new ArrayList<Subscriber>();
 	}
 	
+	@Override
 	public synchronized void subscribe(Subscriber subscriber) {
 		this.subscribers.add(subscriber);	
 	}

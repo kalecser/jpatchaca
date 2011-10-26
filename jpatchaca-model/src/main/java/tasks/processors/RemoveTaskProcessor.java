@@ -18,10 +18,12 @@ public class RemoveTaskProcessor implements Processor<RemoveTaskEvent> {
 		this.tasksHome = tasksHome;
 	}
 
+	@Override
 	public void execute(RemoveTaskEvent eventObj) throws MustBeCalledInsideATransaction {
 		this.tasksHome.remove(this.tasks.get(eventObj.getTaskId()));		
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return RemoveTaskEvent.class;
 	}

@@ -27,6 +27,7 @@ public class ObjectSocketImpl implements ObjectSocket {
 		_inputStream = new ObjectInputStream(_socket.getInputStream());
 	}
 
+	@Override
 	public void writeObject(Object object) throws IOException {
 		//TODO Consider eliminating the POBox and putting a buffer here.
 		_outputStream.writeObject(object);
@@ -35,10 +36,12 @@ public class ObjectSocketImpl implements ObjectSocket {
 		
 	}
 
+	@Override
 	public Object readObject() throws IOException, ClassNotFoundException {
 		return _inputStream.readObject();
 	}
 
+	@Override
 	public void close() throws IOException {
 		_outputStream.close();
 		_inputStream.close();

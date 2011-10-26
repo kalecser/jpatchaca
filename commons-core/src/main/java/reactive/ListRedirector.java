@@ -7,7 +7,7 @@ import lang.Maybe;
 
 import org.reactive.Signal;
 
-
+@SuppressWarnings("boxing")
 public class ListRedirector<T> {
 
 	Redirect<Integer> size = new Redirect<Integer>(0);

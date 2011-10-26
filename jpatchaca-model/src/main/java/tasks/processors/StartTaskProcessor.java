@@ -21,6 +21,7 @@ public class StartTaskProcessor implements Processor<StartTaskEvent> {
 		this.tasks = tasks;
 	}
 
+	@Override
 	public void execute(final StartTaskEvent event)
 			throws MustBeCalledInsideATransaction {
 		final TaskView task = tasks.get(event.getTaskId());
@@ -32,6 +33,7 @@ public class StartTaskProcessor implements Processor<StartTaskEvent> {
 		return new StartTaskEvent2(new NonEmptyString(task.name()), 0);
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return StartTaskEvent.class;
 	}

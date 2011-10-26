@@ -20,12 +20,14 @@ public class RemoveTaskFromLabelProcessor implements Processor<RemoveTaskFromLab
 		
 	}
 
+	@Override
 	public void execute(RemoveTaskFromLabelEvent eventObj) {
 		this.labelsHome.removeTaskFromLabel(
 				this.tasks.get(eventObj.getTaskId()),
 				eventObj.getLabelName());
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 
 		return RemoveTaskFromLabelEvent.class;

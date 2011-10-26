@@ -25,16 +25,21 @@ public interface Task extends TaskView {
 
 	public abstract void removePeriod(Period period);
 
+	@Override
 	public abstract void addPeriodsListener(PeriodsListener listener);
 
 	public abstract void addNote(NoteView note);
 
+	@Override
 	public abstract void addNotesListener(NotesListener listener);
 
+	@Override
 	public abstract void removeNotesListener(NotesListener listener);
 
+	@Override
 	public abstract void removePeriodListener(PeriodsListener listener);
 
+	@Override
 	public abstract Maybe<JiraIssue> getJiraIssue();
 
 	public abstract void setJiraIssue(JiraIssue jiraIssue);

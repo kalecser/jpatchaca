@@ -15,10 +15,12 @@ public class StopTaskProcessor implements Processor<StopTaskEvent> {
 		this.home = home;
 	}
 
+	@Override
 	public void execute(StopTaskEvent event) throws MustBeCalledInsideATransaction {
 		this.home.stop(event.getTaskId());
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return StopTaskEvent.class;
 	}

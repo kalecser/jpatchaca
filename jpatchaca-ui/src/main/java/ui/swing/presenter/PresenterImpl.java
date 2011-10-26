@@ -168,6 +168,7 @@ public class PresenterImpl implements Startable, Presenter {
 		isBlueTurn.supply(true);
 	}
 	
+	@Override
 	public Signal<Boolean> isBlueTurn(){
 		return isBlueTurn;
 	}

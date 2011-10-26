@@ -16,6 +16,7 @@ public class TransientDirectory extends AbstractDirectory {
 
 	private final Map<String, List<Byte>> _fileContentsByName = new HashMap<String, List<Byte>>();
 
+	@Override
 	public synchronized OutputStream createFile(String name) throws IOException {
 		assertNotClosed();
 
@@ -35,6 +36,7 @@ public class TransientDirectory extends AbstractDirectory {
 	}
 
 
+	@Override
 	public synchronized InputStream openFile(String name) throws FileNotFoundException {
 		assertNotClosed();
 
@@ -52,6 +54,7 @@ public class TransientDirectory extends AbstractDirectory {
 	}
 
 
+	@Override
 	public synchronized boolean fileExists(String fileName) {
 		assertNotClosed();
 		return _fileContentsByName.containsKey(fileName);
@@ -64,6 +67,7 @@ public class TransientDirectory extends AbstractDirectory {
 		_fileContentsByName.put(newName, contents);
 	}
 
+	@Override
 	public synchronized void deleteAllContents() throws IOException {
 		assertNotClosed();
 
@@ -74,6 +78,7 @@ public class TransientDirectory extends AbstractDirectory {
 		}
 	}
 
+	@Override
 	public synchronized String[] fileNames() {
 		assertNotClosed();
 		return _fileContentsByName.keySet().toArray(new String[0]);

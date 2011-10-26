@@ -8,17 +8,20 @@ public class BoundsLoggingPeristence implements BoundsPersistence {
 
 	private final BoundsPersistence persistence;
 
+	@Override
 	public Rectangle getStoredBounds(final String id) {
 		final Rectangle storedBounds = persistence.getStoredBounds(id);
 		JFrameBoundsKeeperLogger.getLogger().debug(" Reestoring " + storedBounds + " to " + id);
 		return storedBounds;
 	}
 
+	@Override
 	public void setBounds(final String id, final Rectangle bounds) {
 		JFrameBoundsKeeperLogger.getLogger().debug(" Storing " + bounds + " to " + id);
 		persistence.setBounds(id, bounds);
 	}
 
+	@Override
 	public void store() {
 		JFrameBoundsKeeperLogger.getLogger().debug("Storing to medium");
 		persistence.store();

@@ -32,6 +32,7 @@ public class TaskListSystemMediator implements Startable {
 
 		tasksSystem.taskListChangedAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				updateTasks();
 			}
@@ -40,6 +41,7 @@ public class TaskListSystemMediator implements Startable {
 		this.labelsSystem.tasksInLabelChangedAlert().subscribe(
 				new Subscriber() {
 
+					@Override
 					public void fire() {
 						updateTasks();
 					}
@@ -47,6 +49,7 @@ public class TaskListSystemMediator implements Startable {
 
 		this.labelsSystem.labelsListChangedAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				updateLabels();
 				updateTasks();
@@ -55,6 +58,7 @@ public class TaskListSystemMediator implements Startable {
 
 		this.list.selectedLabelChanged().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				updateTasks();
 			}
@@ -62,6 +66,7 @@ public class TaskListSystemMediator implements Startable {
 
 		this.list.movePeriodAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				final TaskView periodMovingTarget = tasksUser.getPeriodMovingTarget();
 				
@@ -132,6 +137,7 @@ public class TaskListSystemMediator implements Startable {
 		this.list.setTasks(this.labelsSystem.tasksInlabel(selectedLabel));
 	}
 
+	@Override
 	public void stop() {
 	}
 

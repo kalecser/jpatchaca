@@ -58,6 +58,7 @@ public final class TopBar extends JPanel {
 
 		this.createTaskItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireCreateTask();
 			}
@@ -66,6 +67,7 @@ public final class TopBar extends JPanel {
 
 		this.startTaskItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireStartTask();
 			}
@@ -73,6 +75,7 @@ public final class TopBar extends JPanel {
 
 		this.stopTaskItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireStopTask();
 			}
@@ -80,6 +83,7 @@ public final class TopBar extends JPanel {
 
 		this.editTaskItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireEditTask();
 			}
@@ -87,6 +91,7 @@ public final class TopBar extends JPanel {
 
 		this.removeTaskItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireRemoveTask();
 			}
@@ -94,6 +99,7 @@ public final class TopBar extends JPanel {
 
 		this.optionsItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireOptions();
 			}
@@ -101,6 +107,7 @@ public final class TopBar extends JPanel {
 		
 		this.errorLogItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				errorLogScreen.show();
 			}
@@ -108,6 +115,7 @@ public final class TopBar extends JPanel {
 
 		this.exitItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireExit();
 			}

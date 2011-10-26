@@ -17,10 +17,12 @@ public class SetLabelToTaskProcessor implements Processor<SetLabelToTaskEvent> {
 		this.labelsHome = labelsHome;
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return SetLabelToTaskEvent.class;
 	}
 
+	@Override
 	public void execute(SetLabelToTaskEvent eventObj) {
 		final String labelName = eventObj.labelName();
 		

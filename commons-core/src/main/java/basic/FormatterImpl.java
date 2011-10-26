@@ -26,6 +26,7 @@ public class FormatterImpl implements Formatter {
 		decimalFormat = new DecimalFormat();		
 	}
 	
+	@Override
 	public synchronized String formatNumber(Double number) {
 		return decimalFormat.format(number);
 	}

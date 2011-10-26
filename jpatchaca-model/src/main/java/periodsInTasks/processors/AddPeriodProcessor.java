@@ -21,12 +21,14 @@ public class AddPeriodProcessor implements Processor<AddPeriodEvent> {
 		this.periodsFactory = periodsFactory;		
 	}
 
+	@Override
 	public void execute(AddPeriodEvent event) throws MustBeCalledInsideATransaction {
 		final Period period = this.periodsFactory.createPeriod(event.getBegin());
 		period.setStop(event.getEnd());
 		this.periodsInTasksHome.addPeriodToTask(event.getTaskId(), period);
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return AddPeriodEvent.class;
 	}

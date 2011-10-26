@@ -64,10 +64,12 @@ class TaskImpl implements Task {
 		this.jiraIssue = null;
 	}
 
+	@Override
 	public synchronized void start() {
 		start(0);
 	}
 
+	@Override
 	public synchronized void stop() {
 		stop(0);
 	}
@@ -86,14 +88,17 @@ class TaskImpl implements Task {
 		this.changedAlert.fire();
 	}
 
+	@Override
 	public synchronized boolean isActive() {
 		return this._active;
 	}
 
+	@Override
 	public synchronized PeriodManager periodManager() {
 		return this.manager;
 	}
 
+	@Override
 	public synchronized void setName(final TaskName newNameForTask) {
 		Validate.notNull(newNameForTask);
 
@@ -102,16 +107,19 @@ class TaskImpl implements Task {
 		this.changedAlert.fire();
 	}
 
+	@Override
 	public synchronized void setBudgetInHours(final Double newBudget) {
 		this.budget = newBudget;
 		this.changedAlert.fire();
 	}
 
 	// refactor: make private
+	@Override
 	public synchronized List<Period> periods() {
 		return this.periodManager().periods();
 	}
 
+	@Override
 	public synchronized Alert changedAlert() {
 		return this.changedAlert;
 	}
@@ -135,10 +143,12 @@ class TaskImpl implements Task {
 		return _nameSource;
 	}
 
+	@Override
 	public synchronized Double budgetInHours() {
 		return this.budget;
 	}
 
+	@Override
 	public synchronized Double budgetBallanceInHours() {
 		if (budgetInHours() == null) {
 			return 0.0;
@@ -154,26 +164,32 @@ class TaskImpl implements Task {
 		return this.name;
 	}
 
+	@Override
 	public synchronized Double totalTimeInHours() {
 		return ((double) periodManager().totalTime() / (double) DateUtils.MILLIS_PER_HOUR);
 	}
 
+	@Override
 	public synchronized void addPeriod(final Period period) {
 		periodManager().addPeriod(period);
 	}
 
+	@Override
 	public synchronized void removePeriod(final Period period) {
 		periodManager().removePeriod(period);
 	}
 
+	@Override
 	public synchronized void addPeriodsListener(final PeriodsListener listener) {
 		periodManager().addListener(listener);
 	}
 
+	@Override
 	public synchronized long totalTimeInMillis() {
 		return periodManager().totalTime();
 	}
 
+	@Override
 	public synchronized void addNote(final NoteView note) {
 		notes.add(note);
 
@@ -182,14 +198,17 @@ class TaskImpl implements Task {
 		}
 	}
 
+	@Override
 	public synchronized void addNotesListener(final NotesListener listener) {
 		notesListeners.add(listener);
 	}
 
+	@Override
 	public synchronized List<NoteView> notes() {
 		return notes;
 	}
 
+	@Override
 	public synchronized void removeNotesListener(final NotesListener listener) {
 		notesListeners.remove(listener);
 

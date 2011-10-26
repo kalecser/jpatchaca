@@ -20,6 +20,7 @@ public class EditPeriodProcessor implements Processor<EditPeriodEvent> {
 	}
 
 
+	@Override
 	public void execute(EditPeriodEvent event) throws MustBeCalledInsideATransaction {
 		ObjectIdentity taskId = event.getTaskId();
 		final TaskView task = this.tasks.get(taskId);
@@ -31,6 +32,7 @@ public class EditPeriodProcessor implements Processor<EditPeriodEvent> {
 	}
 
 	
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return EditPeriodEvent.class;
 	}

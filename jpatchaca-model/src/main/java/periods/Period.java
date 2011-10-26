@@ -11,6 +11,7 @@ import org.reactive.Source;
 import basic.AlertImpl;
 import basic.Subscriber;
 
+@SuppressWarnings("boxing")
 public class Period {
 	private final Source<Integer> year;
 	private final AlertImpl changeAlert;

@@ -17,6 +17,7 @@ public class PatchacaTrayTasksFacadeMediator implements Startable {
 		this.tasksSystem = tasksSystem;
 
 		this.tray.stopTaskAlert().subscribe(new Subscriber() {
+			@Override
 			public void fire() {
 				PatchacaTrayTasksFacadeMediator.this.tasksSystem.stopTask();
 			}
@@ -24,6 +25,7 @@ public class PatchacaTrayTasksFacadeMediator implements Startable {
 
 	}
 
+	@Override
 	public void stop() {
 
 	}

@@ -16,6 +16,7 @@ public final class TaskListModelImpl implements TaskListModel {
 		this.tooltips = tooltips;
 	}
 
+	@Override
 	public void startTask() {
 		startTaskController.show();
 	}

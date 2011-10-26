@@ -29,14 +29,17 @@ public class SummaryItemImpl implements SummaryItem {
 		this.hours = hours;
 	}
 
+	@Override
 	public Date date() {
 		return this.date;
 	}
 
+	@Override
 	public String taskName() {
 		return this.taskName;
 	}
 
+	@Override
 	public Double hours() {
 		return this.hours;
 	}
@@ -92,6 +95,7 @@ public class SummaryItemImpl implements SummaryItem {
 		return "Task: " + taskName + " Date: " + date + " hours: " + hours;
 	}
 
+	@Override
 	public int compareTo(final SummaryItem otherObj) {
 		if (otherObj == null) {
 			return 1;
