@@ -23,9 +23,15 @@ public class OptionsScreenTest {
 	public void testOkNow_shouldYieldTheSameData() {
 		final Data data = newDataWithAllValuesSet();
 		expectScreenToWriteDataEqualToTheDataRead(data);
-		openOptionsScreen();
-		ok();
-		assertExpectationsSatisfied();
+		assertOpenOk();
+	}
+
+	@Test
+	public void testReadNullValues_shouldYieldEmptyStrings() {
+		final Data in = newDataWithNoValuesSet();
+		final Data out = newDataWithEmptyStrings();
+		expectScreenToReadAndWrite(in, out);
+		assertOpenOk();
 	}
 
 	@Ignore
@@ -51,14 +57,45 @@ public class OptionsScreenTest {
 		return data;
 	}
 
+	private Data newDataWithNoValuesSet() {
+		final Data data = new Data();
+		data.issueStatusManagementEnabled = false;
+		data.jiraUrl = null;
+		data.jiraUserName = null;
+		data.jiraPassword = null;
+		data.supressShakingDialog = false;
+		return data;
+	}
+
+	private Data newDataWithEmptyStrings() {
+		final Data data = new Data();
+		data.issueStatusManagementEnabled = false;
+		data.jiraUrl = Maybe.wrap("");
+		data.jiraUserName = Maybe.wrap("");
+		data.jiraPassword = Maybe.wrap("");
+		data.supressShakingDialog = false;
+		return data;
+	}
+
 	private void expectScreenToWriteDataEqualToTheDataRead(final Data data) {
+		final Data in = data;
+		final Data out = data;
+		expectScreenToReadAndWrite(in, out);
+	}
+
+	private void expectScreenToReadAndWrite(final Data in, final Data out) {
 		m.checking(new Expectations() {
 			{
-				oneOf(modelMock).readDataFromSystem();
-				will(returnValue(data));
-				oneOf(modelMock).writeDataIntoSystem(with(equal(data)));
+				oneOf(modelMock).readDataFromSystem(); will(returnValue(in));
+				oneOf(modelMock).writeDataIntoSystem(with(equal(out)));
 			}
 		});
+	}
+
+	private void assertOpenOk() {
+		openOptionsScreen();
+		ok();
+		assertExpectationsSatisfied();
 	}
 
 	private void openOptionsScreen() {
