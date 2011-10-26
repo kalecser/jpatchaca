@@ -35,7 +35,7 @@ public class OkCancelDialog extends JDialog {
 		panel.setBorder(BorderFactory.createEmptyBorder());
 
 		this.setLayout(new BorderLayout());
-		this.add(pane.getPanel(), BorderLayout.CENTER);
+		this.add(panel, BorderLayout.CENTER);
 		this.add(new BinaryButtonBar(new Runnable() {
 			@Override
 			public void run() {
