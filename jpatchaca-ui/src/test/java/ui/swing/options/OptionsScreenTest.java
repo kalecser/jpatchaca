@@ -1,5 +1,7 @@
 package ui.swing.options;
 
+import static org.junit.Assert.assertThat;
+import static ui.swing.options.ToStringIsEqual.toStringEqualTo;
 import lang.Maybe;
 
 import org.jmock.Expectations;
@@ -14,10 +16,6 @@ import ui.swing.presenter.PresenterImpl;
 import ui.swing.presenter.mock.UIEventsExecutorMock;
 
 public class OptionsScreenTest {
-
-	private final Mockery m = new JUnit4Mockery();
-	private final OptionsScreenModel modelMock = m.mock(OptionsScreenModel.class);
-	private final PresenterImpl presenter = new PresenterImpl(new UIEventsExecutorMock());
 
 	@Test
 	public void testOkNow_shouldYieldTheSameData() {
@@ -84,10 +82,12 @@ public class OptionsScreenTest {
 	}
 
 	private void expectScreenToReadAndWrite(final Data in, final Data out) {
+		this.outexpected = out;
+		this.capture = new Capture<Data>();
 		m.checking(new Expectations() {
 			{
 				oneOf(modelMock).readDataFromSystem(); will(returnValue(in));
-				oneOf(modelMock).writeDataIntoSystem(with(equal(out)));
+				oneOf(modelMock).writeDataIntoSystem(with(any(Data.class))); will(capture);
 			}
 		});
 	}
@@ -108,5 +108,13 @@ public class OptionsScreenTest {
 
 	private void assertExpectationsSatisfied() {
 		m.assertIsSatisfied();
+		assertThat(capture.get(), toStringEqualTo(outexpected));
 	}
+	
+	private final Mockery m = new JUnit4Mockery();
+	final OptionsScreenModel modelMock = m.mock(OptionsScreenModel.class);
+	private final PresenterImpl presenter = new PresenterImpl(new UIEventsExecutorMock());
+	Capture<Data> capture;
+	private Data outexpected;
+
 }

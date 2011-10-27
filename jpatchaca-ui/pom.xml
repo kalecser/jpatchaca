@@ -14,7 +14,7 @@
 	<name>JPatchaca UI</name>
 
 	<dependencies>
-		<dependency>		
+		<dependency>
 			<groupId>net.java.balloontip</groupId>
 			<artifactId>balloontip</artifactId>
 		</dependency>
@@ -47,23 +47,28 @@
 			<artifactId>miglayout</artifactId>
 		</dependency>
 		<dependency>
-		  <groupId>com.jgoodies</groupId>
-		  <artifactId>looks</artifactId>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>looks</artifactId>
 		</dependency>
 		<dependency>
-		  <groupId>org.swinglabs</groupId>
-		  <artifactId>swingx</artifactId>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swingx</artifactId>
 		</dependency>
 
 		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>	
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
-			<scope>test</scope>	
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
