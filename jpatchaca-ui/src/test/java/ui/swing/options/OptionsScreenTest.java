@@ -1,7 +1,7 @@
 package ui.swing.options;
 
-import static org.junit.Assert.assertThat;
-import static ui.swing.options.ToStringIsEqual.toStringEqualTo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static ui.swing.options.Assert.assertThat;
 import lang.Maybe;
 
 import org.jmock.Expectations;
@@ -83,7 +83,6 @@ public class OptionsScreenTest {
 
 	private void expectScreenToReadAndWrite(final Data in, final Data out) {
 		this.outexpected = out;
-		this.capture = new Capture<Data>();
 		m.checking(new Expectations() {
 			{
 				oneOf(modelMock).readDataFromSystem(); will(returnValue(in));
@@ -108,13 +107,13 @@ public class OptionsScreenTest {
 
 	private void assertExpectationsSatisfied() {
 		m.assertIsSatisfied();
-		assertThat(capture.get(), toStringEqualTo(outexpected));
+		assertThat(String.valueOf(capture.get()), equalTo(String.valueOf(outexpected)));
 	}
 	
 	private final Mockery m = new JUnit4Mockery();
 	final OptionsScreenModel modelMock = m.mock(OptionsScreenModel.class);
 	private final PresenterImpl presenter = new PresenterImpl(new UIEventsExecutorMock());
-	Capture<Data> capture;
+	Capture<Data> capture = new Capture<Data>();
 	private Data outexpected;
 
 }
