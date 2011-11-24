@@ -3,6 +3,8 @@ package model;
 
 import jira.JiraImpl;
 import jira.JiraOptions;
+import jira.JiraServiceFacade;
+import jira.JiraSoapServiceFactory;
 import jira.JiraSystemImpl;
 import jira.JiraWorklogOverride;
 import jira.SslManagerSetup;
@@ -104,10 +106,12 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(JiraOptions.class);
 		container.addComponent(SetJiraConfigProcessor.class);
 		container.addComponent(JiraImpl.class);
+		container.addComponent(JiraServiceFacade.class);
 		container.addComponent(SetJiraIssueToTaskProcessor.class);
 		container.addComponent(SendWorklogProcessor.class);
 		container.addComponent(JiraSystemImpl.class);
 		container.addComponent(JiraWorklogOverride.class);
+		container.addComponent(JiraSoapServiceFactory.class);
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);

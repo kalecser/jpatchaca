@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import jira.Jira;
 import jira.JiraIssue;
 import jira.JiraOptions;
-import jira.JiraUtils;
+import jira.JiraUtil;
 import jira.exception.JiraException;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDataParser;
@@ -67,7 +67,7 @@ public class StartTaskScreenModelImpl implements StartTaskScreenModel {
 				return;
 
 			taskData.taskData().setJiraIssue(issue);
-			taskData.taskData().setTaskName(JiraUtils.getIssueDescription(issue));
+			taskData.taskData().setTaskName(JiraUtil.getIssueDescription(issue));
 		}
 	}
 

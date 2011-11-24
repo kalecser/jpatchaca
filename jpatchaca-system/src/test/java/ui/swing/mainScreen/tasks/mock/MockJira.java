@@ -22,11 +22,6 @@ public class MockJira implements Jira {
 	}
 
 	@Override
-	public JiraIssue getIssueById(String id) throws JiraException {
-		throw new NotImplementedException();
-	}
-
-	@Override
 	public void newWorklog(String issueId, Calendar startDate, String timeSpent) {
 		throw new NotImplementedException();
 	}
