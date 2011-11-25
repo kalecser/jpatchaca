@@ -42,7 +42,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	private TaskView _task = null;
 
-	Map<Integer, Subscriber> periodSubscriberByRow = new LinkedHashMap<Integer, Subscriber>();
+	private Map<Integer, Subscriber> periodSubscriberByRow = new LinkedHashMap<Integer, Subscriber>();
 
 	private final AtomicInteger size = new AtomicInteger(0);
 
@@ -66,14 +66,17 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 	}
 
+	@Override
 	public int getRowCount() {
 		return this.selectedTaskperiods.currentSize();
 	}
 
+	@Override
 	public int getColumnCount() {
 		return PeriodsTableModel.columnNames.length;
 	}
 
+	@Override
 	public synchronized Object getValueAt(final int rowIndex,
 			final int columnIndex) {
 	
@@ -127,16 +130,11 @@ public class PeriodsTableModel extends AbstractTableModel {
 	}
 
 	private void updateTableSizehenPeriodsChange(
-			final SelectedTaskPeriods selectedTaskperiods) {
-		selectedTaskperiods.size().addReceiver(new Receiver<Integer>() {
+			final SelectedTaskPeriods periods) {
+		periods.size().addReceiver(new Receiver<Integer>() {
 			@Override
 			public void receive(final Integer value) {
-	
-				final int currentSize = size.intValue();
-	
-				updateTableSizeInSwingThread(value, currentSize);
-	
-				size.set(value);
+				changeTableSize(value);
 			}
 		});
 	}
@@ -146,13 +144,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				if (value > currentSize) {
-					fireTableRowsInserted(size.intValue(), value - 1);
-				}
-
-				if (value < currentSize) {
-					fireTableRowsDeleted(value + 1, size.intValue());
-				}
+				fireTableRowsEvent(value, currentSize);
 			}
 		});
 	}
@@ -167,41 +159,45 @@ public class PeriodsTableModel extends AbstractTableModel {
 
 		});
 	}
-	
 
 	private void subscribeToPeriod(final int rowIndex, final Period period) {
-		
-		if (!periodSubscriberByRow.containsKey(rowIndex)) {
-			periodSubscriberByRow.put(rowIndex, new Subscriber() {
-				@Override
-				public void fire() {
-	
-					final Runnable fireTablerowsUpdated = new Runnable() {
-						@Override
-						public void run() {
-							fireTableRowsUpdated(rowIndex, rowIndex);
-						}
-					};
-	
-					SwingUtilities.invokeLater(fireTablerowsUpdated);
-				}
-			});
-		}
-		
+		final Subscriber subscriber = subscribeByRow(rowIndex);
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
-				period.subscribe(periodSubscriberByRow.get(rowIndex));
+				period.subscribe(subscriber);
 			}
 		});
 	}
 
+	private Subscriber subscribeByRow(final int rowIndex) {
+		final Integer key = Integer.valueOf(rowIndex);
+		final Subscriber existing = periodSubscriberByRow.get(key); 
+		if (existing != null) return existing;
+		final Subscriber newcomer = newSubscriber(rowIndex);
+		periodSubscriberByRow.put(key, newcomer);
+		return newcomer;
+	}
+
+	Subscriber newSubscriber(final int rowIndex) {
+		return new Subscriber() {
+			@Override
+			public void fire() {
+
+				final Runnable fireTablerowsUpdated = new Runnable() {
+					@Override
+					public void run() {
+						fireTableRowsUpdated(rowIndex, rowIndex);
+					}
+				};
+				SwingUtilities.invokeLater(fireTablerowsUpdated);
+			}
+		};
+	}
+
 	private String formatEndTime(final Period period) {
-		if (period.endTime() != null) {
-			return formatter.formatShortTime(period.endTime());
-		} else {
-			return "";
-		}
+		if (period.endTime() == null) return "";
+		return formatter.formatShortTime(period.endTime());
 	}
 
 	private void enqueueSetValueAt(final Object value, final int row,
@@ -215,32 +211,35 @@ public class PeriodsTableModel extends AbstractTableModel {
 		executor.execute(setValueAtRowColumnRunnable);
 	}
 	
-	private final void setValueAtRowColumn(final Object value, final int row,
+	final void setValueAtRowColumn(final Object value, final int row,
 			final int column) {
-		if (column == 0) {
-			final Maybe<Date> parseDate = parseDate(value);
-			if (parseDate != null) {
-				periodsSystem.editPeriodDay(_task, row, parseDate
-						.unbox());
-			}
+		switch (column) {
+		case 0:
+			editPeriodDay(value, row); break;
+		case 1:
+			setPeriodStarting(value, row); break;
+		case 2:
+			setPeriodEnding(value, row); break;
 		}
+	}
 
-		if (column == 1) {
+	private void editPeriodDay(final Object value, final int row) {
+		final Maybe<Date> parseDate = parseDate(value);
+		if (parseDate == null) return;
+		periodsSystem.editPeriodDay(_task, row, parseDate.unbox());
+		
+	}
 
-			final Maybe<Date> parseEditTime = parseEditTime(value, row);
-			if (parseEditTime != null) {
-				tasksSystem.setPeriodStarting(_task, row, parseEditTime
-						.unbox());
-			}
-		}
+	private void setPeriodStarting(final Object value, final int row) {
+		final Maybe<Date> parseEditTime = parseEditTime(value, row);
+		if (parseEditTime == null) return;
+		tasksSystem.setPeriodStarting(_task, row, parseEditTime.unbox());
+	}
 
-		if (column == 2) {
-			final Maybe<Date> parseEditTime = parseEditTime(value, row);
-			if (parseEditTime != null) {
-				tasksSystem.setPeriodEnding(_task, row, parseEditTime
-						.unbox());
-			}
-		}
+	private void setPeriodEnding(final Object value, final int row) {
+		final Maybe<Date> parseEditTime = parseEditTime(value, row);
+		if (parseEditTime == null) return;
+		tasksSystem.setPeriodEnding(_task, row, parseEditTime.unbox());
 	}
 
 	private Maybe<Date> parseDate(final Object value) {
@@ -256,8 +255,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 	}
 
 	private String removeWeekDay(String dateString) {
-		dateString = dateString.replaceFirst("[A-Za-z]{3}", "");
-		return dateString;
+		return dateString.replaceFirst("[A-Za-z]{3}", "");
 	}
 
 	private Maybe<Date> parseEditTime(final Object value, final int row) {
@@ -275,7 +273,7 @@ public class PeriodsTableModel extends AbstractTableModel {
 		}
 	}
 
-	private final void setTask(final TaskView task) {
+	final void setTask(final TaskView task) {
 
 		this._task = task;
 		fireTableDataChanged();
@@ -284,6 +282,23 @@ public class PeriodsTableModel extends AbstractTableModel {
 			return;
 		}
 
+	}
+
+	void changeTableSize(final Integer value) {
+		final int currentSize = size.intValue();
+		updateTableSizeInSwingThread(value, currentSize);
+		size.set(value.intValue());
+	}
+
+	void fireTableRowsEvent(final Integer v, final int currentSize) {
+		final int value = v.intValue();
+		if (value > currentSize) {
+			fireTableRowsInserted(size.intValue(), value - 1);
+		}
+
+		if (value < currentSize) {
+			fireTableRowsDeleted(value + 1, size.intValue());
+		}
 	}
 
 }

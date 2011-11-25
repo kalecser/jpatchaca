@@ -6,6 +6,7 @@ public class CatcherMock implements Catcher {
 
 	private Throwable _lastThrowable;
 
+	@Override
 	public void catchThis(Throwable t) {
 		_lastThrowable = t;
 	}

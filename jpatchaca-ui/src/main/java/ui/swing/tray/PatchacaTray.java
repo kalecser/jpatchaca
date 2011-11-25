@@ -19,6 +19,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import keyboardRotation.KeyboardRotationOptions;
+
 import lang.Maybe;
 
 import org.apache.commons.lang.SystemUtils;
@@ -28,6 +30,7 @@ import org.reactive.Receiver;
 
 import tasks.TaskView;
 import tasks.taskName.TaskName;
+import ui.swing.presenter.Presenter;
 import wheel.io.ui.impl.SystemTrayNotSupported;
 import wheel.lang.Threads;
 import basic.Alert;
@@ -44,7 +47,9 @@ public class PatchacaTray implements Startable {
 	private static final String TRAY_ICON_INACTIVE_ROTATION_ON_PATH = "jpoffTimer32.png";
 	private static final Image INACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_INACTIVE_ROTATION_ON_PATH);
 	private static final String TRAY_ICON_ACTIVE_ROTATION_ON_PATH = "jponTimer32.png";
+	private static final String TRAY_ICON_ACTIVE_ROTATION_BLUE_TURN_ON_PATH = "jponTimerBlue32.png";
 	private static final Image ACTIVE_ROTATION_ON_ICON = iconImage(TRAY_ICON_ACTIVE_ROTATION_ON_PATH);
+	private static final Image ACTIVE_ROTATION_ON_ICON_BLUE = iconImage(TRAY_ICON_ACTIVE_ROTATION_BLUE_TURN_ON_PATH);
 
 	static final String STOP_TASK_SCPECIAL = "Stop task...";
 
@@ -53,45 +58,75 @@ public class PatchacaTray implements Startable {
 	static final String EXIT = "Exit";
 	static final String STOP_TASK = "Stop task";
 
-	private NotificationTimer timer;
+	private KeyboardRotationTimer timer;
 
 	protected static final long HALF_AN_HOUR = DateUtils.MILLIS_PER_MINUTE * 30;
 	protected static final long ONE_HOUR = DateUtils.MILLIS_PER_MINUTE * 60;
 
-	private final AlertImpl stopTaskAlert;
-	private final PatchacaTrayModel model;
+	final AlertImpl stopTaskAlert;
+	final PatchacaTrayModel model;
 
 	private PopupMenu timerMenu;
-	private TrayIcon trayIcon;
+	TrayIcon trayIcon;
 	
 	protected AtomicLong lastClicktime = new AtomicLong();
 	protected AtomicBoolean isprocessingClick = new AtomicBoolean(false);
 	public boolean test_mode = false;
+	private final Presenter presenter;
+	private final KeyboardRotationOptions preferences;
 
-	public PatchacaTray(final PatchacaTrayModel model) {
+	public PatchacaTray(final PatchacaTrayModel model, Presenter presenter, KeyboardRotationOptions preferences) {
 		this.model = model;
-
+		this.presenter = presenter;
+		this.preferences = preferences;
 		this.stopTaskAlert = new AlertImpl();
-
 	}
 
 	public void initialize() {
-
-		TrayIcon icon = null;
+		final TrayIcon icon;
 		try {
 			icon = createTrayIcon();
 		} catch (final SystemTrayNotSupported e) {
 			showMainScreen();
 			return;
 		}
+		
+		showNotifications();
+		bindToOrangeBlueTurn();
 
-		final PopupMenu timerMenu = createPopupMenu();
+		this.timerMenu = createPopupMenu();
+		findStopTaskMenuItem().setEnabled(false);
+		findStopTaskSpecialMenuItem().setEnabled(false);
 
 		bindToModel();
 		bindTrayicon();
 
 		icon.setPopupMenu(timerMenu);
 
+	}
+
+	private void showNotifications() {
+		presenter.notification().addReceiver(new Receiver<String>() {
+			@Override
+			public void receive(String notification) {
+				if (notification.equals(""))
+						return;
+				statusMessage(notification);
+			}
+		});
+	}
+
+	private void bindToOrangeBlueTurn() {
+		presenter.isBlueTurn().addReceiver(new Receiver<Boolean>() {
+			@Override
+			public void receive(Boolean isBlueTurn) {
+				if (isBlueTurn.booleanValue()){
+					setBlueTurnIcon();
+				} else {
+					setOrangeTurnIcon();
+				}
+			}
+		});
 	}
 
 	private void bindToModel() {
@@ -101,6 +136,7 @@ public class PatchacaTray implements Startable {
 	private void bindTooltip() {
 
 		model.tooltip().addReceiver(new Receiver<String>() {
+			@Override
 			public void receive(final String pulse) {
 				trayIcon.setToolTip(pulse);
 			}
@@ -109,36 +145,18 @@ public class PatchacaTray implements Startable {
 	}
 
 	protected void bindTrayicon() {
-		final MenuItem stopTaskItem = getMenuItemByText(STOP_TASK);
-		final MenuItem stopTaskSpecialItem = getMenuItemByText(STOP_TASK_SCPECIAL);
-
-		model.activeTaskName().addReceiver(new Receiver<Maybe<TaskName>>() {
-			@Override
-			public void receive(final Maybe<TaskName> taskName) {
-				if (taskName == null) {
-					if (timer == null)
-						trayIcon.setImage(INACTIVE_ICON);
-					else
-						trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);	
-					stopTaskItem.setLabel(STOP_TASK);
-					stopTaskItem.setEnabled(false);
-					stopTaskSpecialItem.setEnabled(false);
-				} else {
-					if (timer == null)
-						trayIcon.setImage(ACTIVE_ICON);
-					else
-						trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);	
-					stopTaskItem.setLabel(STOP_TASK + " ("
-							+ taskName.unbox().unbox() + ")");
-					stopTaskItem.setEnabled(true);
-					stopTaskSpecialItem.setEnabled(true);
-				}
-			}
-		});
-
+		model.activeTaskName().addReceiver(new ActiveTaskNameReceiver());
 	}
 
-	private void startTimer() {
+	private MenuItem findStopTaskSpecialMenuItem() {
+		return getMenuItemByText(this.timerMenu, STOP_TASK_SCPECIAL);
+	}
+
+	private MenuItem findStopTaskMenuItem() {
+		return getMenuItemByText(this.timerMenu, STOP_TASK);
+	}
+
+	void startTimer() {
 		final String tempoDigitado = JOptionPane.showInputDialog(
 				"Numero de Minutos para o Alerta?", "15");
 
@@ -154,26 +172,26 @@ public class PatchacaTray implements Startable {
 			}
 			
 			if (model.hasActiveTask()) {
-				trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);
+				setOrangeTurnIcon();
 			} else {
 				trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);
 			}
 			
 			
-			timer = new NotificationTimer(intTempoDigitado, trayIcon);
+			timer = new KeyboardRotationTimer(intTempoDigitado, presenter, preferences);
 			timer.start();
 
-			NotificationTimer.setStatus(TimerStatus.ON);
-			getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(
+			KeyboardRotationTimer.setStatus(TimerStatus.ON);
+			getMenuItemByText(this.timerMenu, "Turn On - Keyboard Rotation Alert").setEnabled(
 					false);
-			getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
+			getMenuItemByText(this.timerMenu, "Turn Off - Keyboard Rotation Alert").setEnabled(
 					true);
 		}
 
 	}
 
-	private void stopTimer() {
-		NotificationTimer.setStatus(TimerStatus.OFF);
+	void stopTimer() {
+		KeyboardRotationTimer.setStatus(TimerStatus.OFF);
 
 		timer.interrupt();
 		
@@ -184,14 +202,14 @@ public class PatchacaTray implements Startable {
 		}
 		
 		statusMessage("Timer has been stopped!");
-		NotificationTimer.setStatus(TimerStatus.OFF);
-		getMenuItemByText("Turn On - Keyboard Rotation Alert").setEnabled(true);
-		getMenuItemByText("Turn Off - Keyboard Rotation Alert").setEnabled(
+		KeyboardRotationTimer.setStatus(TimerStatus.OFF);
+		getMenuItemByText(this.timerMenu, "Turn On - Keyboard Rotation Alert").setEnabled(true);
+		getMenuItemByText(this.timerMenu, "Turn Off - Keyboard Rotation Alert").setEnabled(
 				false);
 		timer = null;
 	}
 
-	private void createTimerMenu() {
+	private void createTimerMenu(PopupMenu owner) {
 
 		final MenuItem menuItemStart = new MenuItem(
 				"Turn On - Keyboard Rotation Alert");
@@ -216,47 +234,88 @@ public class PatchacaTray implements Startable {
 		menuItemStop.addActionListener(actionStop);
 		menuItemStop.setEnabled(false);
 
-		this.timerMenu.add(menuItemStart);
-		this.timerMenu.add(menuItemStop);
+		owner.add(menuItemStart);
+		owner.add(menuItemStop);
 	}
 
 	private PopupMenu createPopupMenu() {
-		this.timerMenu = new PopupMenu("Patchaca");
-		this.timerMenu.add(new StartTaskMenu(model.selectedTaskSignal(), model
-				.selectedTaskName(), model).getMenu());
-		this.timerMenu.add(STOP_TASK);
-		this.timerMenu.addSeparator();
-		this.timerMenu.add(COPY_ACTIVE_TASK_NAME);
-		this.timerMenu.addSeparator();
-		this.timerMenu.add(buildSpecialStopTaskMenu());
-		this.timerMenu.addSeparator();
-		this.createTimerMenu();
-		this.timerMenu.addSeparator();
-		this.timerMenu.add(OPEN);
-		this.timerMenu.add(EXIT);
+		final PopupMenu menu = new PopupMenu("Patchaca");
+		final MenuItem menuitemStartTask = new StartTaskMenu(model.selectedTaskSignal(), model
+				.selectedTaskName(), model).getMenu();
+		menu.add(menuitemStartTask);
+		menu.add(STOP_TASK);
+		menu.addSeparator();
+		menu.add(COPY_ACTIVE_TASK_NAME);
+		menu.addSeparator();
+		final MenuItem menuItemSpecialStopTask = buildSpecialStopTaskMenu();
+		menu.add(menuItemSpecialStopTask);
+		menu.addSeparator();
+		this.createTimerMenu(menu);
+		menu.addSeparator();
+		menu.add(OPEN);
+		menu.add(EXIT);
 
-		this.timerMenu.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent event) {
-				String actionCommand = event.getActionCommand();
-				if (actionCommand.equals(OPEN)) {
-					showMainScreen();
-				} else if (actionCommand.equals(EXIT)) {
-					System.exit(0);
-				} else if (actionCommand.startsWith(STOP_TASK)) {
-					PatchacaTray.this.stopTaskAlert.fire();
-				} else if (actionCommand.equals(COPY_ACTIVE_TASK_NAME)) {
-					model.copyActiveTaskNameToClipboard();
-				}
+		menu.addActionListener(new TimerMenuActionListener());
 
-			}
-		});
-
-		getMenuItemByText(STOP_TASK).setEnabled(false);
-		getMenuItemByText(STOP_TASK_SCPECIAL).setEnabled(false);
-
-		return this.timerMenu;
+		return menu;
 	}
 
+	final class ActiveTaskNameReceiver implements
+			Receiver<Maybe<TaskName>> {
+		@Override
+		public void receive(final Maybe<TaskName> taskName) {
+			if (taskName == null) {
+				onActiveTaskNameCleared();
+			} else {
+				onActiveTaskNameReceived(taskName.unbox());
+			}
+		}
+
+	}
+
+	void onActiveTaskNameCleared() {
+		final MenuItem stopTaskItem = findStopTaskMenuItem();
+		final MenuItem stopTaskSpecialItem = findStopTaskSpecialMenuItem();
+		if (timer == null)
+			trayIcon.setImage(INACTIVE_ICON);
+		else
+			trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);	
+		stopTaskItem.setLabel(STOP_TASK);
+		stopTaskItem.setEnabled(false);
+		stopTaskSpecialItem.setEnabled(false);
+	}
+
+	void onActiveTaskNameReceived(final TaskName taskName) {
+		final MenuItem stopTaskItem = findStopTaskMenuItem();
+		final MenuItem stopTaskSpecialItem = findStopTaskSpecialMenuItem();
+		if (timer == null)
+			trayIcon.setImage(ACTIVE_ICON);
+		else
+			setOrangeTurnIcon();	
+		stopTaskItem.setLabel(STOP_TASK + " ("
+				+ taskName.unbox() + ")");
+		stopTaskItem.setEnabled(true);
+		stopTaskSpecialItem.setEnabled(true);
+	}
+
+	final class TimerMenuActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(final ActionEvent event) {
+			String actionCommand = event.getActionCommand();
+			if (actionCommand.equals(OPEN)) {
+				showMainScreen();
+			} else if (actionCommand.equals(EXIT)) {
+				System.exit(0);
+			} else if (actionCommand.startsWith(STOP_TASK)) {
+				PatchacaTray.this.stopTaskAlert.fire();
+			} else if (actionCommand.equals(COPY_ACTIVE_TASK_NAME)) {
+				model.copyActiveTaskNameToClipboard();
+			}
+
+		}
+	}
+	
 	private MenuItem buildSpecialStopTaskMenu() {
 		final IntervalMenu specialStopTaskMenu = new IntervalMenu(
 				PatchacaTray.STOP_TASK_SCPECIAL,
@@ -357,6 +416,7 @@ public class PatchacaTray implements Startable {
 		return SystemTray.getSystemTray();
 	}
 
+	@Override
 	public void start() {
 		initialize();
 		final SplashScreen splashScreen = SplashScreen.getSplashScreen();
@@ -365,6 +425,7 @@ public class PatchacaTray implements Startable {
 		}
 	}
 
+	@Override
 	public void stop() {
 
 		if (!SystemTray.isSupported()) {
@@ -375,17 +436,16 @@ public class PatchacaTray implements Startable {
 		tray().remove(trayIcon);
 	}
 
-	private void showMainScreen() {
+	void showMainScreen() {
 		model.showMainScreen();
 	}
 
-	private MenuItem getMenuItemByText(final String menuText) {
+	private static MenuItem getMenuItemByText(PopupMenu menu, final String text) {
 
-		for (int i = 0; i < timerMenu.getItemCount(); i++) {
-			if (timerMenu.getItem(i).getLabel().startsWith(menuText)) {
-				return timerMenu.getItem(i);
+		for (int i = 0; i < menu.getItemCount(); i++) {
+			if (menu.getItem(i).getLabel().startsWith(text)) {
+				return menu.getItem(i);
 			}
-
 		}
 
 		throw new IllegalArgumentException("menu not found");
@@ -407,7 +467,7 @@ public class PatchacaTray implements Startable {
 		return newTaskMenu;
 	}
 
-	private void startStopTaskOnSingleClick(final long lastClickTime) {
+	void startStopTaskOnSingleClick(final long lastClickTime) {
 		try {
 
 			Threads.sleepWithoutInterruptions(300);
@@ -437,13 +497,20 @@ public class PatchacaTray implements Startable {
 			return;
 		}
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
-				trayIcon.displayMessage("Message", string,
-						TrayIcon.MessageType.INFO);
+				displayMessageInSwingThread(string);
 			}
+
 		});
 	}
 
+	void displayMessageInSwingThread(final String message) {
+		trayIcon.displayMessage("Message", message,
+				TrayIcon.MessageType.INFO);
+	}
+	
+	
 	public void ensureTrayIconIsVisibleDueToWindowsBug() {
 		tray().remove(trayIcon);
 		addTrayIconOrCry();
@@ -457,4 +524,13 @@ public class PatchacaTray implements Startable {
 			throw new RuntimeException(e);
 		}
 	}
+
+	void setOrangeTurnIcon() {
+		trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);
+	}
+	
+	void setBlueTurnIcon() {
+		trayIcon.setImage(ACTIVE_ROTATION_ON_ICON_BLUE);
+	}
+	
 }

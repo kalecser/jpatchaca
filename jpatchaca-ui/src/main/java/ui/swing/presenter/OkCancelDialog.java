@@ -35,7 +35,7 @@ public class OkCancelDialog extends JDialog {
 		panel.setBorder(BorderFactory.createEmptyBorder());
 
 		this.setLayout(new BorderLayout());
-		this.add(pane.getPanel(), BorderLayout.CENTER);
+		this.add(panel, BorderLayout.CENTER);
 		this.add(new BinaryButtonBar(new Runnable() {
 			@Override
 			public void run() {
@@ -67,7 +67,7 @@ public class OkCancelDialog extends JDialog {
 		this.pack();
 	}
 
-	private void doAction(final ActionPane pane) {
+	void doAction(final ActionPane pane) {
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -77,7 +77,7 @@ public class OkCancelDialog extends JDialog {
 
 	}
 
-	private void internalDoAction(final ActionPane pane) {
+	void internalDoAction(final ActionPane pane) {
 		try {
 			pane.action().run();
 		} catch (final ValidationException e) {

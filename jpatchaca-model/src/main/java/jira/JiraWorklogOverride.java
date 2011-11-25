@@ -11,12 +11,10 @@ public class JiraWorklogOverride {
 	Map<Period, String> overrides = new HashMap<Period, String>();
 	
 	public void overrideTimeSpentForPeriod(String timeSpent, Period period) {
-		
 		String trimmedTimeSpent = timeSpent.trim();
 		if (trimmedTimeSpent.matches(TIME_SPENT_PATTERN)){
 			overrides.put(period, trimmedTimeSpent);					
 		}
-		
 	}
 
 	public String getDuration(Period period) {

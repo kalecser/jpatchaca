@@ -18,14 +18,17 @@ public class SummaryTableModel extends AbstractTableModel {
 
 	private List<SummaryItem> items = new ArrayList<SummaryItem>();
 
+	@Override
 	public int getRowCount() {
 		return this.items.size();
 	}
 
+	@Override
 	public int getColumnCount() {
 		return 3;
 	}
 
+	@Override
 	public Object getValueAt(final int rowIndex, final int columnIndex) {
 		final SummaryItem item = this.items.get(rowIndex);
 

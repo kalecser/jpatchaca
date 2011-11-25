@@ -14,7 +14,7 @@ import org.reactive.Source;
 
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
-import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import wheel.io.ui.JFrameBoundsKeeper;
 import wheel.io.ui.impl.JFrameBoundsKeeperImpl;
 
@@ -73,7 +73,7 @@ public class MainScreenImplTest {
 		container.addComponent(SummaryScreen.class);
 		container.addComponent(JFrameBoundsKeeper.class,
 				JFrameBoundsKeeperImpl.class);
-		container.addComponent(Presenter.class);
+		container.addComponent(PresenterImpl.class);
 
 		final MainScreenImpl impl = container
 				.getComponent(MainScreenImpl.class);

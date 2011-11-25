@@ -21,7 +21,7 @@ import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.WindowManager;
 import ui.swing.presenter.Presenter;
 import ui.swing.tasks.SelectedTaskSource;
-import ui.swing.tasks.StartTaskController;
+import ui.swing.tasks.StartTaskPresenter;
 
 public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
@@ -36,7 +36,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private Maybe<Listener> listener;
 	private final WindowManager windowManager;
 	private final TaskScreenController taskScreen;
-	private final StartTaskController startTaskController;
+	private final StartTaskPresenter startTaskController;
 	private final SelectedTaskName selectedTaskName;
 	private final ActiveTaskName activeTaskName;
 	private final Presenter presenter;
@@ -47,7 +47,7 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final SelectedTaskSource selectedTask,
 			final TaskScreenController taskScreen,
 			final WindowManager windowManager,
-			final StartTaskController startTaskController,
+			final StartTaskPresenter startTaskController,
 			final ActiveTaskName activeTaskName, 
 			final Presenter presenter) {
 
@@ -63,22 +63,23 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	}
 
+	@Override
 	public Source<Maybe<TaskName>> selectedTaskName() {
 		return this.selectedTaskName;
 	}
 
+	@Override
 	public void destroyMainScreen() {
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
-				mainScreen.hide();
-				mainScreen.setVisible(false);
-				mainScreen.dispose();
+				destroyMainScreenFromSwingThread();
 			}
 		});
 	}
 
+	@Override
 	public void showMainScreen() {
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -86,21 +87,13 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			@Override
 			public void run() {
 
-				windowManager.setMainWindow(mainScreen.getWindow());
-				mainScreen.setVisible(true);
-				mainScreen.toFront();
-
-				if (mainScreen.getExtendedState() == Frame.MAXIMIZED_BOTH) {
-					return;
-				}
-
-				final int state = Frame.NORMAL;
-				mainScreen.setExtendedState(state);
+				showMainScreenFromSwingThread();
 
 			}
 		});
 	}
 
+	@Override
 	public void stopTaskIn(final long time) {
 
 		new Thread() {
@@ -108,11 +101,16 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			@Override
 			public void run() {
 
-				tasksSystem.stopIn(time);
+				stopIn(time);
 			}
 		}.start();
 	}
 
+	void stopIn(final long time) {
+		tasksSystem.stopIn(time);
+	}
+	
+	@Override
 	public void setListener(final Listener listener) {
 		if (this.listener != null || listener == null) {
 			throw new IllegalArgumentException();
@@ -122,40 +120,47 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	}
 
+	@Override
 	public void startTask(final TaskView task, final long timeAgo) {
 		new Thread() {
 
 			@Override
 			public void run() {
-				tasksSystem.taskStarted(task, timeAgo);
+				taskStarted(task, timeAgo);
 			}
 		}.start();
 
 	}
 
+	@Override
 	public void createTaskStarted(final long time) {
 		taskScreen.createTaskStarted(time);
 	}
 
+	@Override
 	public Signal<Maybe<TaskName>> activeTaskName() {
 		return activeTaskName;
 
 	}
 
+	@Override
 	public TaskView selectedTask() {
 		return selectedTask.currentValue();
 	}
 
+	@Override
 	public Signal<String> tooltip() {
 		return new PatchacaTrayTooltip(activeTaskName(), selectedTaskName())
 				.output();
 	}
 
 
+	@Override
 	public Signal<TaskView> selectedTaskSignal() {
 		return selectedTask.output();
 	}
 
+	@Override
 	public boolean hasActiveTask() {
 		return activeTaskName.currentValue() != null;
 	}
@@ -176,6 +181,29 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		TaskName activeTaskNameNotNull = activeTaskName.currentValue().unbox();
 		StringSelection selection = new StringSelection(activeTaskNameNotNull.unbox());
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+	}
+
+	void destroyMainScreenFromSwingThread() {
+		mainScreen.hide();
+		mainScreen.setVisible(false);
+		mainScreen.dispose();
+	}
+
+	void showMainScreenFromSwingThread() {
+		windowManager.setMainWindow(mainScreen.getWindow());
+		mainScreen.setVisible(true);
+		mainScreen.toFront();
+
+		if (mainScreen.getExtendedState() == Frame.MAXIMIZED_BOTH) {
+			return;
+		}
+
+		final int state = Frame.NORMAL;
+		mainScreen.setExtendedState(state);
+	}
+
+	void taskStarted(final TaskView task, final long timeAgo) {
+		tasksSystem.taskStarted(task, timeAgo);
 	}
 
 }

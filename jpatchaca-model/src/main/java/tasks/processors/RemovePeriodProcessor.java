@@ -19,12 +19,14 @@ public class RemovePeriodProcessor implements Processor<RemovePeriodEvent> {
 		this.tasks = tasks;		
 	}
 	
+	@Override
 	public void execute(final RemovePeriodEvent eventObj) throws MustBeCalledInsideATransaction {
 		
 		final TaskView taskView = tasks.get(eventObj.getTaskId());
 		periodsInTaskHome.removePeriodFromTask(taskView, taskView.getPeriod(eventObj.getPeriodIndex()));
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return RemovePeriodEvent.class;
 	}

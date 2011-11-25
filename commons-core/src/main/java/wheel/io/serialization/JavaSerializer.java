@@ -21,12 +21,14 @@ public class JavaSerializer implements Serializer {
 		_loader = loader;
 	}
 
+	@Override
 	public void writeObject(OutputStream stream, Object object) throws IOException {
 		final ObjectOutputStream objects = new ObjectOutputStream(stream);
 		objects.writeObject(object);
 		objects.close();
 	}
 
+	@Override
 	public Object readObject(InputStream stream) throws IOException, ClassNotFoundException {
 		final ObjectInputStream objects = objectInputStreamFor(stream);
 		final Object object = objects.readObject();

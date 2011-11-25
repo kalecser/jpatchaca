@@ -23,7 +23,6 @@ import org.picocontainer.Startable;
 import statistics.SummaryItem;
 import statistics.TaskSummarizer;
 import tasks.tasks.TasksView;
-import ui.swing.mainScreen.TaskList;
 import ui.swing.utils.SimpleInternalFrame;
 import basic.Subscriber;
 
@@ -39,7 +38,7 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 	private JRadioButton groupByYearRadio;
 	private final SummaryHoursFormat summaryHoursFormat;
 
-	public SummaryScreen(final TaskList list, final TaskSummarizer summarizer,
+	public SummaryScreen(final TaskSummarizer summarizer,
 			final TasksView tasks, final SummaryHoursFormat sumaryHoursFormat,
 			final SummaryTableModel summaryTableModel) {
 		super(SummaryScreen.panelTitle);
@@ -61,7 +60,7 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 		summaryHoursFormat.addChangeListener(new Subscriber() {
 			@Override
 			public void fire() {
-				summaryModel.fireTableDataChanged();
+				redrawSummaryTableCompletely();
 			}
 		});
 	}
@@ -151,20 +150,25 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 		showSummaryPerMonth();
 	}
 
-	private void showSummaryPerDay() {
+	void showSummaryPerDay() {
 		setItems(summarizer.summarizePerDay(tasks.tasks()));
 	}
 
-	private void showSummaryPerMonth() {
+	void showSummaryPerMonth() {
 		setItems(summarizer.summarizePerMonth(tasks.tasks()));
 	}
 
 	@Override
 	public void stop() {
+		// Nothing to do
 	}
 
 	public void refrescate() {
 		groupByMonthRadio.setSelected(true);
 		showSummaryPerMonth();
+	}
+
+	void redrawSummaryTableCompletely() {
+		summaryModel.fireTableDataChanged();
 	}
 }

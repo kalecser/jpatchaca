@@ -5,8 +5,7 @@ import lang.Maybe;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.Validate;
 
-import periodsInTasks.MockTask;
-
+import tasks.Task;
 import tasks.TaskView;
 import tasks.home.TaskData;
 import ui.swing.mainScreen.tasks.TaskScreenModel;
@@ -15,7 +14,7 @@ import wheel.lang.Threads;
 public class MockTaskScreenModel implements TaskScreenModel {
 
 	public Maybe<TaskData> createdOrEditedTaskData;
-	private MockTask selectedTask;
+	private Task selectedTask;
 
 	@Override
 	public TaskView selectedTask() {
@@ -59,8 +58,8 @@ public class MockTaskScreenModel implements TaskScreenModel {
 		}
 	}
 
-	public void setSelectedTask(MockTask mockTask) {
-		selectedTask = mockTask;		
+	public void setSelectedTask(Task task) {
+		selectedTask = task;		
 	}
 
 }

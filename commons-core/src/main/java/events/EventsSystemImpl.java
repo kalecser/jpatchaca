@@ -21,6 +21,7 @@ public class EventsSystemImpl implements EventsSystem {
 		eventHooks = new ArrayList<EventHook<?>>();
 	}
 
+	@Override
 	public synchronized void writeEvent(Serializable event) {
 			eventList.add(event);
 			fireHooks(event);
@@ -35,6 +36,7 @@ public class EventsSystemImpl implements EventsSystem {
 		}
 	}
 
+	@Override
 	public synchronized void addProcessor(Processor<?> processor) {
 		if (started)
 			throw new RuntimeException("Can't add processors, system is already started");
@@ -43,6 +45,7 @@ public class EventsSystemImpl implements EventsSystem {
 		
 	}
 
+	@Override
 	public void start() {
 		if (started)
 			return;
@@ -57,14 +60,17 @@ public class EventsSystemImpl implements EventsSystem {
 		started = true;
 	}
 
+	@Override
 	public void stop() {
 		
 	}
 
+	@Override
 	public synchronized void addEventHook(EventHook<? extends Serializable> hook) {
 		eventHooks.add(hook);
 	}
 
+	@Override
 	public synchronized int getEventCount() {
 		return eventList.getEventCount();
 	}

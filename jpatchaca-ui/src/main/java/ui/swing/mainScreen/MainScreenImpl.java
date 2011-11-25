@@ -13,6 +13,7 @@ import org.picocontainer.Startable;
 import org.reactive.Receiver;
 
 import ui.swing.errorLog.ErrorLogScreen;
+import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyMenu;
 import ui.swing.mainScreen.periods.PeriodsList;
 import ui.swing.mainScreen.tasks.day.DayTasksList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
@@ -70,12 +71,12 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 			final PeriodsList periodsList, final SummaryScreen tasksSummary,
 			final DayTasksList dayList, final JFrameBoundsKeeper boundsKeeper,
 			final TopBarModel topBarModel, final ErrorLogScreen errorLogScreen,
-			final StatusBar statusBar) {
+			final StatusBar statusBar, NewAndNoteworthyMenu newAndNoteworthy) {
 
 		this.model = model;
 		this.taskList = taskList;
 		this.periodsList = periodsList;
-		this.topBar = new TopBar(executor, topBarModel, errorLogScreen);
+		this.topBar = new TopBar(executor, topBarModel, errorLogScreen, newAndNoteworthy);
 		this.tasksSummary = tasksSummary;
 		this.dayTasksList = dayList;
 		this.statusBar = statusBar;

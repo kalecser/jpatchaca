@@ -10,6 +10,7 @@ import periods.PeriodsListener;
 import reactive.ListSignal;
 import reactive.ListSource;
 
+@SuppressWarnings("boxing")
 public class PeriodManagerImpl implements PeriodManager {
 
 	private final List<Period> periods;
@@ -21,6 +22,7 @@ public class PeriodManagerImpl implements PeriodManager {
 		this.listeners = new ArrayList<PeriodsListener>();
 	}
 
+	@Override
 	public synchronized void addPeriod(final Period period) {
 
 		this.periods.add(period);
@@ -35,10 +37,12 @@ public class PeriodManagerImpl implements PeriodManager {
 
 	}
 
+	@Override
 	public synchronized List<Period> periods() {
 		return Collections.unmodifiableList(this.periods);
 	}
 
+	@Override
 	public synchronized void addListener(final PeriodsListener listener) {
 		this.listeners.add(listener);
 
@@ -47,6 +51,7 @@ public class PeriodManagerImpl implements PeriodManager {
 		}
 	}
 
+	@Override
 	public synchronized Long totalTime() {
 		Long totalTime = 0L;
 
@@ -57,6 +62,7 @@ public class PeriodManagerImpl implements PeriodManager {
 		return totalTime;
 	}
 
+	@Override
 	public synchronized void removePeriod(final Period period) {
 		this.periods.remove(period);
 		periodsList.remove(period);

@@ -16,6 +16,7 @@ public class LabelsListSystemMediator implements Startable {
 
 		list.assignTaskToLabelAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				labelsSystem.setLabelToTask(selectedTask.currentValue(),
 						labelsUser.getLabelToAssignTaskTo());
@@ -24,6 +25,7 @@ public class LabelsListSystemMediator implements Startable {
 
 	}
 
+	@Override
 	public void stop() {
 	}
 

@@ -10,7 +10,8 @@ import jira.RemoteJiraIssue;
 
 public class JiraIssueStatusManagement {
 
-	// #TODO a relacao entre as classes JiraIssueStatusManagement e JiraIssueStatusActionPane estranha 
+	// #TODO a relacao entre as classes JiraIssueStatusManagement e JiraIssueStatusActionPane estranha
+	// #TODO remover status "Chumbados"
 	
 	public static List<String> developmentStatusList;
 	public static List<String> impedimentStatusList;

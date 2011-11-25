@@ -1,13 +1,13 @@
-/**
- * 
- */
 package ui.swing.mainScreen;
 
 import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.DefaultListModel;
@@ -22,10 +22,10 @@ import basic.AlertImpl;
 @SuppressWarnings("serial")
 public class LabelsList extends JList {
 
-	private final DefaultListModel model;
+	final DefaultListModel model;
 
-	private final AlertImpl assignTaskToLabelAlert;
-	private String dropToLabel;
+	final AlertImpl assignTaskToLabelAlert;
+	String dropToLabel;
 	private final LabelTooltipProvider tipProvider;
 
 	private int preferredIndex;
@@ -40,55 +40,9 @@ public class LabelsList extends JList {
 		setModel(this.model);
 		setDropMode(DropMode.ON);
 
-		setTransferHandler(new TransferHandler() {
-
-			@Override
-			public boolean importData(final TransferSupport info) {
-				try {
-					final int dropIndex = getDropIndex(info);
-
-					dropToLabel = (String) model.get(dropIndex);
-					assignTaskToLabelAlert.fire();
-
-				} catch (final Exception e) {
-					Logger.getLogger(LabelsList.class.getName()).severe(
-							e.getMessage());
-				}
-				return super.importData(info);
-			}
-
-			@Override
-			public boolean canImport(final TransferSupport info) {
-
-				try {
-					final String transferData = (String) info.getTransferable()
-							.getTransferData(DataFlavor.stringFlavor);
-					final boolean isTaskDrop = transferData
-							.startsWith("task - ");
-
-					final int dropIndex = getDropIndex(info);
-
-					if (isTaskDrop && info.isDrop() && dropIndex != -1) {
-						return true;
-					}
-
-				} catch (final Exception ex) {
-				}
-
-				return false;
-			}
-
-			private int getDropIndex(final TransferSupport info) {
-				final DropLocation location = info.getDropLocation();
-				final Point pt = location.getDropPoint();
-				final int dropIndex = locationToIndex(pt);
-				return dropIndex;
-			}
-
-		});
-
+		setTransferHandler(new LabelsListTransferHandler());
 	}
-
+	
 	@Override
 	public String getToolTipText(final MouseEvent event) {
 		final int index = locationToIndex(event.getPoint());
@@ -115,7 +69,7 @@ public class LabelsList extends JList {
 		}
 	}
 
-	private void internalSetLabels(final List<String> labels) {
+	void internalSetLabels(final List<String> labels) {
 		int selectedLabel = preferredIndex;
 		this.model.clear();
 		int i = 0;
@@ -147,6 +101,71 @@ public class LabelsList extends JList {
 
 	public void setPreferredIndex(final int preferredIndex) {
 		this.preferredIndex = preferredIndex;
-
 	}
+	
+	final class LabelsListTransferHandler extends TransferHandler {
+
+		@Override
+		public boolean importData(final TransferSupport info) {
+			try {
+				final int dropIndex = getDropIndex(info);
+
+				dropToLabel = (String) model.get(dropIndex);
+				assignTaskToLabelAlert.fire();
+
+			} catch (final Exception ex) {
+				getLogger().log(Level.SEVERE, ex.getMessage(), ex);
+			}
+			return super.importData(info);
+		}
+
+		@Override
+		public boolean canImport(final TransferSupport info) {
+
+			final String transferData;
+			try {
+				transferData = transferData(info);
+			} catch (final TransferDataException ex) {
+				getLogger().log(Level.SEVERE, ex.getMessage(), ex);
+				return false;
+			}
+			
+			final boolean isTaskDrop = transferData
+						.startsWith("task - ");
+
+			final int dropIndex = getDropIndex(info);
+
+			return isTaskDrop && info.isDrop() && dropIndex != -1;
+		}
+
+		private Logger getLogger() {
+			return Logger.getLogger(LabelsList.class.getName());
+		}
+
+		private int getDropIndex(final TransferSupport info) {
+			final DropLocation location = info.getDropLocation();
+			final Point pt = location.getDropPoint();
+			final int dropIndex = locationToIndex(pt);
+			return dropIndex;
+		}
+		
+		private String transferData(final TransferSupport info) throws TransferDataException {
+			try {
+				return (String) info.getTransferable()
+						.getTransferData(DataFlavor.stringFlavor);
+			} catch (UnsupportedFlavorException e) {
+				throw new TransferDataException(e);
+			} catch (IOException e) {
+				throw new TransferDataException(e);
+			}
+		}
+	}
+	
+	static class TransferDataException extends Exception {
+
+		public TransferDataException(Throwable cause) {
+			super(cause);
+		}
+	}
+	
 }

@@ -37,9 +37,10 @@ public class PeriodsTable extends JXTable{
 	public List<Period> selectedPeriods() {
 		
 		final int[] selectedRows = this.getSelectedRows();
+		if (selectedRows == null) return new ArrayList<Period>();
 	
-		final boolean noneSelected = selectedRows == null
-				|| selectedRows.length == 0 || selectedRows[0] == -1;
+		final boolean noneSelected = 
+				selectedRows.length == 0 || selectedRows[0] == -1;
 		if (noneSelected) {
 			return new ArrayList<Period>();
 		}
@@ -54,18 +55,18 @@ public class PeriodsTable extends JXTable{
 	}
 
 	private void adjustColumnsAppearance() {
-		final TableColumnModel columnModel = getColumnModel();
+		final TableColumnModel model = getColumnModel();
 		final int smallSize = 100;
 		final int mediumSize = 200;
-		columnModel.getColumn(0).setPreferredWidth(mediumSize);
-		columnModel.getColumn(0).setMaxWidth(mediumSize);
-		columnModel.getColumn(1).setPreferredWidth(smallSize);
-		columnModel.getColumn(1).setMaxWidth(smallSize);
-		columnModel.getColumn(2).setPreferredWidth(smallSize);
-		columnModel.getColumn(2).setMaxWidth(smallSize);
-		columnModel.getColumn(3).setPreferredWidth(smallSize);
-		columnModel.getColumn(3).setMaxWidth(smallSize);
-		columnModel.getColumn(3).setCellRenderer(
+		model.getColumn(0).setPreferredWidth(mediumSize);
+		model.getColumn(0).setMaxWidth(mediumSize);
+		model.getColumn(1).setPreferredWidth(smallSize);
+		model.getColumn(1).setMaxWidth(smallSize);
+		model.getColumn(2).setPreferredWidth(smallSize);
+		model.getColumn(2).setMaxWidth(smallSize);
+		model.getColumn(3).setPreferredWidth(smallSize);
+		model.getColumn(3).setMaxWidth(smallSize);
+		model.getColumn(3).setCellRenderer(
 				new DefaultTableRenderer(StringValue.TO_STRING,
 						SwingConstants.RIGHT));
 	}

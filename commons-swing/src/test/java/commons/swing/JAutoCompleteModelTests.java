@@ -9,6 +9,7 @@ public class JAutoCompleteModelTests extends JAutoCompleteAbstractTests{
 	
 	private JAutoCompleteTextFieldModel autoCompleteTextFieldModel;
 	
+	@Override
 	@Before
 	public void setup(){
 		super.setup();

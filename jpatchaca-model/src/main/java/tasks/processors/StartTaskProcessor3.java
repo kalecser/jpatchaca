@@ -20,6 +20,7 @@ public class StartTaskProcessor3 implements Processor<StartTaskEvent3> {
 		this.activeTask = activeTask;
 	}
 
+	@Override
 	public void execute(final StartTaskEvent3 event)
 			throws MustBeCalledInsideATransaction {
 		final Maybe<Task> task = taskByNameOrCry(event);

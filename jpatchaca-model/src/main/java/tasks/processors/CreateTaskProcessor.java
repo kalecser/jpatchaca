@@ -19,12 +19,14 @@ public class CreateTaskProcessor implements Processor<CreateTaskEvent> {
 		this.taskNameFactory = taskNameFactory;
 	}
 
+	@Override
 	public void execute(final CreateTaskEvent event)
 			throws MustBeCalledInsideATransaction {
 		this.tasksHome.createTask(event.getIdentity(), taskNameFactory
 				.createTaskname(event.getTaskName()), null);
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return CreateTaskEvent.class;
 	}

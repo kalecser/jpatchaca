@@ -31,6 +31,7 @@ public class ByteListOutputStream extends OutputStream implements Closeable {
 	}
 
 
+	@Override
 	public void notifyOnClose(Listener listener) {
 		_closeListener = listener;		
 	}

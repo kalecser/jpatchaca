@@ -1,17 +1,8 @@
 package ui.swing.mainScreen;
 
-import ui.swing.events.EventsListPanePresenter;
 
-public class TopBarModel {
+public interface TopBarModel {
 
-	private final EventsListPanePresenter eventsListPresenter;
-
-	public TopBarModel(final EventsListPanePresenter eventsListPresenter) {
-		this.eventsListPresenter = eventsListPresenter;
-	}
-
-	public void openEventsList() {
-		eventsListPresenter.show();
-	}
+	public abstract void openEventsList();
 
 }

@@ -1,6 +1,7 @@
 package ui.swing.mainScreen;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -58,41 +59,6 @@ import basic.DeferredExecutor;
 
 @SuppressWarnings("serial")
 public class TaskList extends JPanel {
-
-	public class ActiveTaskChanged implements Receiver<Maybe<Task>> {
-
-		@Override
-		public void receive(final Maybe<Task> pulse) {
-			final Maybe<Task> maybeActiveTask = pulse;
-
-			if (maybeActiveTask == null) {
-				return;
-			}
-
-			setSelectedTask(maybeActiveTask.unbox());
-
-		}
-	}
-
-	class FireChangeListeners implements Runnable {
-
-		public void run() {
-			final TaskView selectedValueInSwingThread = (TaskView) SelectedValueGetter
-					.getSelectedValueInSwingThread(tasksList);
-			selectedTask.supply(selectedValueInSwingThread);
-
-			SwingUtilities.invokeLater(new Runnable() {
-
-				@Override
-				public void run() {
-					for (final TaskSelectionListener listener : listeners) {
-						listener.selectionChangedTo(selectedValueInSwingThread);
-					}
-				}
-			});
-		}
-
-	}
 
 	private final TaskListListModel tasksListModel;
 	private final JList tasksList;
@@ -191,6 +157,30 @@ public class TaskList extends JPanel {
 		bindToActiveTaskSignal();
 	}
 
+	class ActiveTaskChanged implements Receiver<Maybe<Task>> {
+
+		@Override
+		public void receive(final Maybe<Task> pulse) {
+			final Maybe<Task> maybeActiveTask = pulse;
+
+			if (maybeActiveTask == null) {
+				return;
+			}
+
+			setSelectedTask(maybeActiveTask.unbox());
+
+		}
+	}
+
+	class FireChangeListeners implements Runnable {
+
+		@Override
+		public void run() {
+			fireChangeListeners();
+		}
+
+	}
+	
 	private void hideLabelsIfPropertySet(final SimpleInternalFrame labels,
 			final JSplitPane split) {
 		if (System.getProperty("HIDE_LABELS") != null) {
@@ -206,26 +196,10 @@ public class TaskList extends JPanel {
 		this.labelsList.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 
+					@Override
 					public void valueChanged(final ListSelectionEvent e) {
 
-						try {
-							TaskList.this.labelsList.setCursor(new Cursor(
-									Cursor.WAIT_CURSOR));
-							TaskList.this.selectedLabelChanged.fire();
-							final int selectedIndex = labelsList
-									.getSelectedIndex();
-							screenData.setSelectedLabel(selectedIndex);
-							labelsList.setPreferredIndex(selectedIndex);
-							memory.mind(screenData);
-
-							if (labelsList.getSelectedValue() != null) {
-								selectedLabel.update((String) labelsList
-										.getSelectedValue());
-							}
-						} finally {
-							TaskList.this.labelsList.setCursor(new Cursor(
-									Cursor.DEFAULT_CURSOR));
-						}
+						changeSelectedLabel();
 
 					}
 				});
@@ -247,80 +221,56 @@ public class TaskList extends JPanel {
 
 		@Override
 		public void valueChanged(final ListSelectionEvent e) {
-			uiEventsExecutor.execute(new Runnable() {
-
-				@Override
-				public void run() {
-					selectedTaskChanged(tasksList.getSelectedIndex());
-				}
-
-			});
-		}
-
-		void selectedTaskChanged(final int selectedIndex) {
-			fireTaskChangeListeners();
-
-			if (selectedIndex > -1) {
-				screenData.setSelectedTask(tasksListModel.getElementAt(
-						selectedIndex).name());
-				memory.mind(screenData);
-			}
-
+			uiSelectedTaskChanged();
 		}
 	}
 
 	private JList newJList(final TaskListListModel listModel,
 			final TooltipForTask tooltip) {
-		final JList tasksList = new TasksJList(listModel, tooltip);
+		final JList jlist = new TasksJList(listModel, tooltip);
 
-		final ListSelectionModel selectionModel = tasksList.getSelectionModel();
+		final ListSelectionModel selectionModel = jlist.getSelectionModel();
 
 		selectionModel
 				.addListSelectionListener(new SelectedTaskChangedListSelectionListener());
 
-		tasksList.setCellRenderer(new TaskListCellRenderer());
+		jlist.setCellRenderer(new TaskListCellRenderer());
 
-		tasksList.addMouseListener(new MouseAdapter() {
+		jlist.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(final MouseEvent e) {
 
 				if (e.getButton() == MouseEvent.BUTTON1
 						&& e.getClickCount() == 2) {
-
-					final Maybe<JiraIssue> jiraIssue = ((TaskView) tasksList
-							.getSelectedValue()).getJiraIssue();
-
-					final Maybe<String> jiraUrl = jiraOptions.getURL();
-
-					if (jiraUrl != null && jiraIssue != null) {
-						final String url = "/browse/"
-								+ jiraIssue.unbox().getKey();
-						try {
-							final URI uri = new URI(jiraUrl.unbox() + url);
-							Desktop.getDesktop().browse(uri);
-						} catch (final IOException e1) {
-							throw new RuntimeException(e1);
-						} catch (final URISyntaxException e1) {
-							JOptionPane.showMessageDialog(TaskList.this,
-									"Invalid jira url: " + jiraUrl);
-						}
-					}
+					doubleClick();
 				}
 
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					final int index = tasksList.locationToIndex(e.getPoint());
-					selectionModel.setSelectionInterval(index, index);
-					final TaskView currentSelected = (TaskView) tasksList
-							.getSelectedValue();
-					TaskList.this.taskContextMenu.show(tasksList, e.getX(), e
-							.getY(), currentSelected);
+					middleClick(e);
 				}
 			}
 
+			private void doubleClick() {
+				final Maybe<JiraIssue> jiraIssueMaybe = ((TaskView) jlist
+						.getSelectedValue()).getJiraIssue();
+				if (jiraIssueMaybe != null) {
+					doubleClickJiraIssue(jiraIssueMaybe.unbox());
+				}
+			}
+
+			private void middleClick(final MouseEvent e) {
+				final int index = jlist.locationToIndex(e.getPoint());
+				selectionModel.setSelectionInterval(index, index);
+				final TaskView currentSelected = (TaskView) jlist
+						.getSelectedValue();
+				showTaskContextMenu(jlist, currentSelected, e.getX(), e
+								.getY());
+			}
+			
 		});
 
-		tasksList.setTransferHandler(new TransferHandler() {
+		jlist.setTransferHandler(new TransferHandler() {
 
 			@Override
 			public int getSourceActions(final JComponent c) {
@@ -335,21 +285,20 @@ public class TaskList extends JPanel {
 			@Override
 			public boolean canImport(final TransferSupport info) {
 				try {
-					final String data = (String) getTransferableStringOrCry(info);
+					final String data = getTransferableStringOrCry(info);
 					return data.startsWith("task");
 				} catch (final Exception e) {
+					// Premeditate excecide.
+					return false;
 				}
-
-				return false;
 			}
 
 			@Override
 			public boolean importData(final TransferSupport info) {
 				final Point point = info.getDropLocation().getDropPoint();
-				final int index = tasksList.locationToIndex(point);
-				dropTargetTask = tasksListModel.getElementAt(index);
-				movePerioData = getTransferableStringOrCry(info);
-				movePeriodAlert.fire();
+				final int index = jlist.locationToIndex(point);
+				final String data = getTransferableStringOrCry(info);
+				dropOntoJListElement(index, data);
 				return true;
 			}
 
@@ -365,10 +314,10 @@ public class TaskList extends JPanel {
 			}
 		});
 
-		tasksList.setDragEnabled(true);
-		tasksList.setDropMode(DropMode.ON);
+		jlist.setDragEnabled(true);
+		jlist.setDropMode(DropMode.ON);
 
-		return tasksList;
+		return jlist;
 	}
 
 	public void setTasks(final List<TaskView> tasks) {
@@ -385,7 +334,7 @@ public class TaskList extends JPanel {
 		}
 	}
 
-	private void internalSetTasks(final List<TaskView> tasks) {
+	void internalSetTasks(final List<TaskView> tasks) {
 		this.tasksListModel.setTasks(tasks);
 
 		final boolean hasElements = this.tasksListModel.getSize() > 0;
@@ -419,12 +368,16 @@ public class TaskList extends JPanel {
 
 			@Override
 			public void run() {
-				tasksList.setSelectedValue(task, true);
-				screenData.setSelectedTask(task.name());
+				setSelectedTaskFromSwingThread(task);
 			}
 
 		}
 		SwingUtilities.invokeLater(new SetSelectedValue());
+	}
+	
+	void setSelectedTaskFromSwingThread(final TaskView task) {
+		tasksList.setSelectedValue(task, true);
+		screenData.setSelectedTask(task.name());
 	}
 
 	public final Alert movePeriodAlert() {
@@ -443,4 +396,97 @@ public class TaskList extends JPanel {
 		return movePerioData;
 	}
 
+	void fireChangeListeners() {
+		final TaskView selectedValueInSwingThread = (TaskView) SelectedValueGetter
+				.getSelectedValueInSwingThread(tasksList);
+		selectedTask.supply(selectedValueInSwingThread);
+
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				fireChangeListenersFromSwingThread(selectedValueInSwingThread);
+			}
+		});
+	}
+
+	void changeSelectedLabel() {
+		labelsList.setCursor(new Cursor(
+				Cursor.WAIT_CURSOR));
+		try {
+			selectedLabelChanged.fire();
+			final int selectedIndex = labelsList
+					.getSelectedIndex();
+			screenData.setSelectedLabel(selectedIndex);
+			labelsList.setPreferredIndex(selectedIndex);
+			memory.mind(screenData);
+
+			if (labelsList.getSelectedValue() != null) {
+				selectedLabel.update((String) labelsList
+						.getSelectedValue());
+			}
+		} finally {
+			labelsList.setCursor(new Cursor(
+					Cursor.DEFAULT_CURSOR));
+		}
+	}
+
+	void uiSelectedTaskChanged() {
+		uiEventsExecutor.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				selectedTaskChangedFromTasksList();
+			}
+
+		});
+	}
+
+	void selectedTaskChangedFromTasksList() {
+		int selectedIndex = tasksList.getSelectedIndex();
+		fireTaskChangeListeners();
+		
+		if (selectedIndex > -1) {
+			screenData.setSelectedTask(tasksListModel.getElementAt(
+					selectedIndex).name());
+			memory.mind(screenData);
+		}
+	}
+
+	void doubleClickJiraIssue(JiraIssue jiraIssue) {
+		final Maybe<String> jiraUrl = jiraOptions.getURL();
+
+		if (jiraUrl != null) {
+			final String url = "/browse/"
+					+ jiraIssue.getKey();
+			try {
+				final URI uri = new URI(jiraUrl.unbox() + url);
+				Desktop.getDesktop().browse(uri);
+			} catch (final IOException e1) {
+				throw new RuntimeException(e1);
+			} catch (final URISyntaxException e1) {
+				JOptionPane.showMessageDialog(TaskList.this,
+						"Invalid jira url: " + jiraUrl);
+			}
+		}
+	}
+
+	void showTaskContextMenu(final Component invoker,
+			final TaskView currentSelected, int x, int y) {
+		this.taskContextMenu.show(invoker, x, y, currentSelected);
+	}
+
+	void dropOntoJListElement(final int index, final String data) {
+		dropTargetTask = tasksListModel.getElementAt(index);
+		movePerioData = data;
+		movePeriodAlert.fire();
+	}
+
+	void fireChangeListenersFromSwingThread(
+			final TaskView selectedValueInSwingThread) {
+		for (final TaskSelectionListener listener : listeners) {
+			listener.selectionChangedTo(selectedValueInSwingThread);
+		}
+	}
+	
 }

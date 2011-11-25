@@ -9,10 +9,12 @@ import java.io.IOException;
 
 public class OldNetworkImpl implements OldNetwork {
 
+	@Override
 	public ObjectSocket openSocket(String serverIpAddress, int serverPort) throws IOException {
 		return new ObjectSocketImpl(serverIpAddress, serverPort);
 	}
 
+	@Override
 	public ObjectServerSocket openObjectServerSocket(int port) throws IOException {
 		return new ObjectServerSocketImpl(port);
 	}

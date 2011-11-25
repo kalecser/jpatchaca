@@ -44,27 +44,33 @@ public final class PatchacaDirectory implements Directory {
 		return _subject.contentsAsString(fileName);
 	}
 
+	@Override
 	public void createFile(final String fileName, final String contents)
 			throws IOException {
 		_subject.createFile(fileName, contents);
 	}
 
+	@Override
 	public OutputStream createFile(final String name) throws IOException {
 		return _subject.createFile(name);
 	}
 
+	@Override
 	public void deleteAllContents() throws IOException {
 		_subject.deleteAllContents();
 	}
 
+	@Override
 	public void deleteFile(final String name) throws IOException {
 		_subject.deleteFile(name);
 	}
 
+	@Override
 	public boolean fileExists(final String fileName) {
 		return _subject.fileExists(fileName);
 	}
 
+	@Override
 	public String[] fileNames() {
 		return _subject.fileNames();
 	}
@@ -74,10 +80,12 @@ public final class PatchacaDirectory implements Directory {
 		return _subject.hashCode();
 	}
 
+	@Override
 	public InputStream openFile(final String name) throws IOException {
 		return _subject.openFile(name);
 	}
 
+	@Override
 	public void renameFile(final String oldName, final String newName)
 			throws IOException {
 		_subject.renameFile(oldName, newName);

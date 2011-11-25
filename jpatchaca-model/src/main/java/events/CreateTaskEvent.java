@@ -6,9 +6,6 @@ import org.apache.commons.lang.Validate;
 
 import core.ObjectIdentity;
 
-
-
-
 public class CreateTaskEvent implements Serializable{
 	private static final long serialVersionUID = 1L;
 	

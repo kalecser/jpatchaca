@@ -7,6 +7,7 @@ import basic.HardwareClock;
 
 public class HardwareClockImpl implements HardwareClock {
 
+	@Override
 	public Date getTime() {
 		return Calendar.getInstance().getTime();
 	}

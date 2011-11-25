@@ -15,6 +15,7 @@ import org.reactive.Receiver;
 import basic.ErrorLog;
 
 import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import ui.swing.utils.UIEventsExecutorImpl;
 
 public class ErrorLogScreen  {
@@ -74,7 +75,7 @@ public class ErrorLogScreen  {
 
 
 	public static void main(String[] args) {
-		Presenter presenter = new Presenter(new UIEventsExecutorImpl(null));
+		Presenter presenter = new PresenterImpl(new UIEventsExecutorImpl(null));
 		presenter.setMainScreen(new JFrame());
 		ErrorLogScreen errorLogScreen = new ErrorLogScreen(presenter, new ErrorLog());
 		

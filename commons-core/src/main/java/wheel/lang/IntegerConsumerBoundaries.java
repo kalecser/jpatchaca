@@ -16,6 +16,7 @@ public class IntegerConsumerBoundaries implements Consumer<Integer> {
 		_max = max;
 	}
 
+	@Override
 	public void consume(Integer value) throws IllegalParameter {
 		if (value < _min || value > _max) throw new IllegalParameter("" + _friendlyName + " must be no less than " + _min + " and no more than " + _max + ".");
 		_endConsumer.consume(value);

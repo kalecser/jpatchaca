@@ -29,6 +29,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 			final TaskScreenController taskScreen) {
 		taskContextMenu.addNoteAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				try {
 					tasksSystem.addNoteToTask(selectedTaskSource.currentValue(), tasksUser.getTextForNote());
@@ -40,6 +41,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.createLabelAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				try {
 					labelsSystem.setNewLabelToTask(selectedTaskSource.currentValue(), labelsUser.getNewLabelName(null));
@@ -50,6 +52,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.assignToLabelAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				labelsSystem.setLabelToTask(selectedTaskSource.currentValue(), labelsUser.getLabelToAssignTaskTo());
 			}
@@ -57,6 +60,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.removeFromLabelAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				labelsSystem.removeLabelFromTask(selectedTaskSource.currentValue(), labelsUser.selectedLabel());
 			}
@@ -64,6 +68,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.startCurrentTaskAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				new Thread() {
 
@@ -92,6 +97,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.stopCurrentTaskAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				new Thread() {
 
@@ -105,6 +111,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.removeTaskAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 				if (tasksUser.isTaskExclusionConfirmed()) {
 					tasksSystem.removeTask(selectedTaskSource.currentValue());
@@ -114,6 +121,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.editTaskAlert().subscribe(new Subscriber() {
 
+			@Override
 			public void fire() {
 
 				taskScreen.editSelectedTask();
@@ -123,10 +131,12 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 		taskContextMenu.setModel(new TaskContextMenuModel() {
 
+			@Override
 			public List<String> assignableLabels() {
 				return labelsSystem.assignableLabels();
 			}
 
+			@Override
 			public List<String> getLabelsFor(final TaskView selectedTask) {
 				return labelsSystem.getLabelsFor(selectedTask);
 			}

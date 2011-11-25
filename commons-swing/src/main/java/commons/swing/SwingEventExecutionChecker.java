@@ -19,10 +19,9 @@ public class SwingEventExecutionChecker {
 	private static final String JAVAX_SWING = "javax.swing";
 	private static final String JAVA_AWT = "java.awt";
 	
-		public boolean inSwingClass;
+	public boolean inSwingClass;
 
-		public final class SwingEventExecutionCheckerVisitor implements ClassVisitor {
-
+	public final class SwingEventExecutionCheckerVisitor implements ClassVisitor {
 		
 		private final List<String> swingInvocations;
 
@@ -291,7 +290,7 @@ public class SwingEventExecutionChecker {
 		}
 	}
 
-	private boolean isSwingClass(Class<?> clazz) {
+	static boolean isSwingClass(Class<?> clazz) {
 		for (Class<?> iface : clazz.getInterfaces()){
 			if (iface.getName().startsWith(JAVA_AWT) || iface.getName().startsWith(JAVAX_SWING))
 				return true;

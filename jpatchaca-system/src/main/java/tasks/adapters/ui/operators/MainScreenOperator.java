@@ -35,6 +35,7 @@ import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.util.RegExComparator;
 
+import tasks.Task;
 import ui.swing.utils.SwingUtils;
 
 public class MainScreenOperator {
@@ -64,7 +65,7 @@ public class MainScreenOperator {
 		}
 	}
 
-	private PopupMenu getTrayIconMenu() {
+	private static PopupMenu getTrayIconMenu() {
 		final TrayIcon trayIcon = SystemTray.getSystemTray().getTrayIcons()[0];
 		final PopupMenu menu = trayIcon.getPopupMenu();
 		return menu;
@@ -87,7 +88,7 @@ public class MainScreenOperator {
 	}
 
 	private void pushCreateTaskMenu() {
-		pushMenu("File/Create task");
+		pushMenu("Task/Create task");
 	}
 
 	private void pushMenu(final String path) {
@@ -153,10 +154,30 @@ public class MainScreenOperator {
 				tasksListOperator.selectItem(taskName);				
 		}});
 		
+		waitSelectedTask(taskName);
+	}
+
+	private void waitSelectedTask(final String taskName) {
+		tasksListOperator.waitState(new ComponentChooser() {
+			
+			@Override
+			public String getDescription() {
+				return "Waiting for task " + taskName + " to be selected";
+			}
+			
+			@Override
+			public boolean checkComponent(Component comp) {
+				Task task = (Task) tasksListOperator.getSelectedValue();
+				if (task == null){
+					return false;
+				}
+				return task.name().equals(taskName);
+			}
+		});
 	}
 
 	public void pushEditTaskMenu() {
-		pushMenu("File/Edit task");
+		pushMenu("Task/Edit task");
 	}
 
 	public void createTask(final String taskName) {
@@ -273,23 +294,21 @@ public class MainScreenOperator {
 	}
 
 	private void waitPeriodCreated(final int periodIndex) {
-		final long timeout = 8000;
-		final long currentTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - currentTime < timeout) {
-			try {
-				Thread.sleep(200);
-			} catch (final InterruptedException e) {
-				throw new RuntimeException(e);
+		periodsTableOperator.waitState(new ComponentChooser() {
+			
+			@Override
+			public String getDescription() {
+				return "Waiting for period to be created on index " + periodIndex;
 			}
-			if (periodsTableOperator.getRowCount() > periodIndex) {
-				return;
+			
+			@Override
+			public boolean checkComponent(Component comp) {
+				return (periodsTableOperator.getRowCount() > periodIndex);
 			}
-		}
-
-		throw new RuntimeException("no period in row " + periodIndex);
+		});
 	}
 
-	private String getTimeInScreenInputFormat(final String startHH_mm_a) {
+	private static String getTimeInScreenInputFormat(final String startHH_mm_a) {
 		final String pattern = "hh:mm a";
 		final SimpleDateFormat hh_mm_aFormater = new SimpleDateFormat(pattern);
 		final FastDateFormat screenFormater = FastDateFormat.getTimeInstance(
@@ -340,7 +359,7 @@ public class MainScreenOperator {
 		confirmPeriodsRemoval();
 	}
 
-	private void confirmPeriodsRemoval() {
+	private static void confirmPeriodsRemoval() {
 
 		final JDialogOperator dialogOperator = new JDialogOperator();
 		new JButtonOperator(dialogOperator, "Yes").doClick();
@@ -366,18 +385,18 @@ public class MainScreenOperator {
 
 	}
 
-	private String getDateInScreenInputFormat(final String dateMM_DD_YYYY) {
+	private static String getDateInScreenInputFormat(final String dateMM_DD_YYYY) {
 		return getDateString(dateMM_DD_YYYY, "MM_dd_yyyy", FastDateFormat
 				.getDateInstance(FastDateFormat.SHORT).getPattern());
 	}
 
-	private String getDateInScreenOutputFormat(final String dateMM_DD_YYYY) {
+	private static String getDateInScreenOutputFormat(final String dateMM_DD_YYYY) {
 		return getDateString(dateMM_DD_YYYY, "MM_dd_yyyy", "E "
 				+ FastDateFormat.getDateInstance(FastDateFormat.SHORT)
 						.getPattern());
 	}
 
-	private String getDateString(final String dateMM_DD_YYYY,
+	private static String getDateString(final String dateMM_DD_YYYY,
 			final String inputPattern, final String outputPattern) {
 		Date date = null;
 		try {
@@ -399,7 +418,7 @@ public class MainScreenOperator {
 	}
 
 	public void pushOptionsMenu() {
-		pushMenu("File/Options");
+		pushMenu("Task/Options");
 	}
 
 	public StartTaskScreenOperator openStartTaskScreen() {

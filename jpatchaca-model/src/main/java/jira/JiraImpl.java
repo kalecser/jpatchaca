@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import jira.exception.JiraException;
-import jira.exception.JiraIssueNotFoundException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -33,34 +31,9 @@ public class JiraImpl implements Jira {
 
 	@Override
 	public JiraIssue getIssueByKey(final String key) {
-		Validate.notEmpty(key);
-		Validate.notNull(key);
-
+		Validate.notEmpty(key);		
 		Logger.getLogger("org.apache.axis").setLevel(Level.OFF);
-
-		RemoteIssue[] issues = jiraService.getIssuesFromJqlSearch("key = "
-				+ key, 20);
-
-		if (issues.length == 1)
-			return createIssue(issues[0]);
-
-		if (issues.length > 1)
-			throw new IllegalArgumentException("Too many results for key '"
-					+ key + "'");
-
-		throw new JiraIssueNotFoundException(key);
-	}
-
-	private RemoteIssue getRemoteIssue(final String id) {
-		return jiraService.getIssueById(id);
-	}
-
-	private JiraIssue createIssue(final RemoteIssue issue) {
-		final JiraIssueData data = new JiraIssueData();
-		data.setId(issue.getId());
-		data.setKey(issue.getKey());
-		data.setSummary(issue.getSummary());
-		return new JiraIssue(data);
+		return createIssue(jiraService.getIssueByKey(key));
 	}
 
 	@Override
@@ -71,13 +44,13 @@ public class JiraImpl implements Jira {
 		workLog.setStartDate(startDate);
 		workLog.setTimeSpent(timeSpent);
 
-		jiraService.addWorklogAndAutoAdjustRemainingEstimate(issueId,
-				workLog);
+		jiraService.addWorklogAndAutoAdjustRemainingEstimate(issueId, workLog);
 	}
 
 	@Override
 	public List<JiraAction> getAvaiableActions(JiraIssue issue) {
-
+		Validate.notNull(issue);
+		
 		List<JiraAction> actions = new ArrayList<JiraAction>();
 		RemoteNamedObject[] availableActions = jiraService
 				.getAvailableActions(issue.getKey());
@@ -91,23 +64,6 @@ public class JiraImpl implements Jira {
 		return actions;
 	}
 
-	private JiraAction createAction(String key, RemoteNamedObject namedObject) {
-
-		JiraAction action = new JiraAction(namedObject.getId(),
-				namedObject.getName());
-
-		RemoteField[] fields = jiraService.getFieldsForAction(key,
-				namedObject.getId());
-
-		for (RemoteField remoteField : fields)
-			action.addField(createField(remoteField));
-		return action;
-	}
-
-	private JiraField createField(RemoteField remoteField) {
-		return new JiraField(remoteField.getId(), remoteField.getName());
-	}
-
 	@Override
 	public void progressWithAction(JiraIssue issue, JiraAction action,
 			String comment) {
@@ -118,8 +74,8 @@ public class JiraImpl implements Jira {
 		jiraService.progressWorkflowAction(issue.getKey(), action.getId(),
 				new RemoteFieldValue[0]);
 
-		jiraService.addComment(issue.getKey(), new RemoteComment(null,
-				comment, null, null, null, null, null, null));
+		jiraService.addComment(issue.getKey(), new RemoteComment(null, comment,
+				null, null, null, null, null, null));
 	}
 
 	@Override
@@ -132,19 +88,7 @@ public class JiraImpl implements Jira {
 		String statusId = getRemoteIssue(issue.getId()).getStatus();
 		return getStatuses().get(statusId);
 	}
-
-	private Map<String, String> getStatuses() {
-		if (statuses != null)
-			return statuses;
-
-		RemoteStatus[] remoteStatuses = jiraService.getStatuses();
-		statuses = new HashMap<String, String>();
-		for (RemoteStatus remoteStatus : remoteStatuses)
-			statuses.put(remoteStatus.getId(), remoteStatus.getName());
-
-		return statuses;
-	}
-
+	
 	@Override
 	public void assignIssueToCurrentUser(JiraIssue issue) {
 		String[] values = new String[] { jiraService.getJiraUsername() };
@@ -163,26 +107,55 @@ public class JiraImpl implements Jira {
 	public List<JiraIssue> getIssuesFromCurrentUserWithStatus(
 			List<String> statusList) {
 
-		if (statusList == null || statusList.isEmpty())
-			throw new IllegalArgumentException(
-					"Status list must be not null and not empty");
-
+		Validate.notEmpty(statusList);
+		
 		List<JiraIssue> issues = new ArrayList<JiraIssue>();
 
-		for (RemoteIssue remoteIssue : _getRemoteIssuesFromCurrentUserWithStatus(statusList))
+		for (RemoteIssue remoteIssue : jiraService
+				.getIssuesFromCurrentUserWithStatus(statusList))
 			issues.add(createIssue(remoteIssue));
 
 		return issues;
 	}
-
-	private RemoteIssue[] _getRemoteIssuesFromCurrentUserWithStatus(
-			List<String> statusList) {
-
-		String jql = String.format(
-				"assignee = currentUser() AND status in (%s)",
-				StringUtils.join(statusList, ", "));
-
-		return jiraService.getIssuesFromJqlSearch(jql, 30);
+	
+	private RemoteIssue getRemoteIssue(final String id) {
+		Validate.notEmpty(id);
+		return jiraService.getIssueById(id);
 	}
 
+	private JiraIssue createIssue(final RemoteIssue issue) {
+		final JiraIssueData data = new JiraIssueData();
+		data.setId(issue.getId());
+		data.setKey(issue.getKey());
+		data.setSummary(issue.getSummary());
+		return new JiraIssue(data);
+	}	
+
+	private JiraAction createAction(String key, RemoteNamedObject namedObject) {
+		JiraAction action = new JiraAction(namedObject.getId(),
+				namedObject.getName());
+
+		RemoteField[] fields = jiraService.getFieldsForAction(key,
+				namedObject.getId());
+
+		for (RemoteField remoteField : fields)
+			action.addField(createField(remoteField));
+		return action;
+	}
+
+	private JiraField createField(RemoteField remoteField) {
+		return new JiraField(remoteField.getId(), remoteField.getName());
+	}
+
+	private Map<String, String> getStatuses() {
+		if (statuses != null)
+			return statuses;
+
+		RemoteStatus[] remoteStatuses = jiraService.getStatuses();
+		statuses = new HashMap<String, String>();
+		for (RemoteStatus remoteStatus : remoteStatuses)
+			statuses.put(remoteStatus.getId(), remoteStatus.getName());
+
+		return statuses;
+	}
 }

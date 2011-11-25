@@ -17,6 +17,7 @@ public class TaskSummarizerImpl implements TaskSummarizer {
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
 			"MM/yyyy");
 
+	@Override
 	public List<SummaryItem> summarizePerDay(final List<TaskView> tasks) {
 
 		final List<SummaryItem> items = new ArrayList<SummaryItem>();

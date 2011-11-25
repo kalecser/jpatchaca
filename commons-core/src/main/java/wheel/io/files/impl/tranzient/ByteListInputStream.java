@@ -29,6 +29,7 @@ public class ByteListInputStream extends InputStream implements Closeable {
 		super.close();
 	}
 
+	@Override
 	public void notifyOnClose(Listener listener) {
 		_listener = listener;
 	}

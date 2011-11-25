@@ -22,6 +22,7 @@ public class ObjectServerSocketMock implements ObjectServerSocket {
 		_permit.addObjectToNotify(this);
 	}
 
+	@Override
 	public synchronized ObjectSocket accept() throws IOException {
 		_permit.check();
 		
@@ -47,6 +48,7 @@ public class ObjectServerSocketMock implements ObjectServerSocket {
         return result;
 	}
 
+	@Override
 	public void close() {
 		// TODO Auto-generated method stub
 	}

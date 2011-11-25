@@ -20,6 +20,7 @@ public class JFrameBoundsKeeperImpl implements JFrameBoundsKeeper {
 		_persistence = persistence;
 	}
 	
+	@Override
 	public void keepBoundsFor(final JFrame frame, final String id){
 		try {
 			
@@ -41,8 +42,7 @@ public class JFrameBoundsKeeperImpl implements JFrameBoundsKeeper {
 		
 			@Override
 			public void run() {
-				restorePreviousBounds(id, frame);
-				startKeepingBounds(id, frame);		
+				goKeepBoundsEngine(id, frame);		
 			}
 		
 		};
@@ -71,24 +71,33 @@ public class JFrameBoundsKeeperImpl implements JFrameBoundsKeeper {
 		
 			@Override
 			public void componentResized(final ComponentEvent e) {
-				boundsChanged(e);
+				boundsChanged();
 			}
 
-			private void boundsChanged(final ComponentEvent e) {
+			private void boundsChanged() {
 				final Rectangle bounds = frame.getBounds();
-				if (_persistence.getStoredBounds(id) == bounds)
-					return;
-				
-				_persistence.setBounds(id, bounds);
-				_persistence.store();
+				updateBoundsInPersistence(id, bounds);
 			}
 		
 			@Override
 			public void componentMoved(final ComponentEvent e) {
-				boundsChanged(e);
+				boundsChanged();
 			}
 		
 		});
+	}
+
+	void goKeepBoundsEngine(final String id, final JFrame frame) {
+		restorePreviousBounds(id, frame);
+		startKeepingBounds(id, frame);
+	}
+
+	void updateBoundsInPersistence(final String id, final Rectangle bounds) {
+		if (_persistence.getStoredBounds(id) == bounds)
+			return;
+		
+		_persistence.setBounds(id, bounds);
+		_persistence.store();
 	}
 	
 	

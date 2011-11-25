@@ -2,71 +2,44 @@ package ui.swing.options;
 
 import jira.JiraOptions;
 import jira.events.SetJiraConfig;
-import lang.Maybe;
-
-import org.reactive.Signal;
-
-import twitter.TwitterOptions;
-import twitter.events.SetTwitterConfig;
+import keyboardRotation.KeyboardRotationOptions;
 import events.EventsSystem;
+import events.SetKeyboardRotationOptions;
 
 public class OptionsScreenModelImpl implements OptionsScreenModel {
-	
+
 	private final EventsSystem eventsSystem;
-	private final TwitterOptions twitterOptions;
 	private final JiraOptions jiraOptions;
+	private final KeyboardRotationOptions keyboardRotationOptions;
 
 	public OptionsScreenModelImpl(final EventsSystem eventsSystem,
-			final TwitterOptions options, final JiraOptions jiraOptions) {
+			final JiraOptions jiraOptions,
+			KeyboardRotationOptions keyboardRotationOptions) {
 		this.eventsSystem = eventsSystem;
-		this.twitterOptions = options;
 		this.jiraOptions = jiraOptions;
-	}
-
-	public synchronized void setTwitterConfig(final boolean selected,
-			final String username, final String password) {
-		eventsSystem.writeEvent(new SetTwitterConfig(selected, username,
-				password));
-
+		this.keyboardRotationOptions = keyboardRotationOptions;
 	}
 
 	@Override
-	public void setJiraConfig(final String url, final String username,
-			final String password, boolean issueStatusManagementEnabled) {
-		eventsSystem.writeEvent(new SetJiraConfig(url, username, password, issueStatusManagementEnabled));
-		
-	}
-
-	public Signal<Boolean> twitterEnabled() {
-		return twitterOptions.isTwitterLoggingEnabled();
-	}
-
-	public Signal<String> twitterUserName() {
-		return twitterOptions.username();
-	}
-
-	public Signal<String> twitterPassword() {
-		return twitterOptions.password();
+	public Data readDataFromSystem() {
+		Data data = new Data();
+		data.jiraUrl = jiraOptions.getURL();
+		data.jiraUserName = jiraOptions.getUserName();
+		data.jiraPassword = jiraOptions.getPassword();
+		data.issueStatusManagementEnabled = jiraOptions
+				.isIssueStatusManagementEnabled();
+		data.supressShakingDialog = keyboardRotationOptions
+				.supressShakingDialog();
+		return data;
 	}
 
 	@Override
-	public Maybe<String> jiraUrl() {
-		return jiraOptions.getURL();
-	}
-
-	@Override
-	public Maybe<String> jiraUserName() {
-		return jiraOptions.getUserName();
-	}
-
-	@Override
-	public Maybe<String> jiraPassword() {
-		return jiraOptions.getPassword();
-	}
-	
-	@Override
-	public boolean isIssueStatusManagementEnabled() {
-		return jiraOptions.isIssueStatusManagementEnabled();
+	public void writeDataIntoSystem(Data data) {
+		eventsSystem.writeEvent(new SetJiraConfig(data.jiraUrl.unbox(),
+				data.jiraUserName.unbox(), data.jiraPassword.unbox(),
+				data.issueStatusManagementEnabled));
+		eventsSystem.writeEvent(new SetKeyboardRotationOptions(
+				data.supressShakingDialog));
 	}
 
 }

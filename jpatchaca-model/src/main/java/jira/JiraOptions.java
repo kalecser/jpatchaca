@@ -52,13 +52,6 @@ public class JiraOptions {
 			boolean issueStatusManagementEnabled) {
 		this.issueStatusManagementEnabled = issueStatusManagementEnabled;
 	}
-
-	protected String getServiceURL() {
-		if (url == null)
-			throw new JiraOptionsNotSetException();
-
-		return String.format("%s/rpc/soap/jirasoapservice-v2", url);
-	}
 	
 	public void validate(){
 		if(userName == null || password == null || url == null)

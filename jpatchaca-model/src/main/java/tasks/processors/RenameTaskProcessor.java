@@ -16,11 +16,13 @@ public class RenameTaskProcessor implements Processor<RenameTaskEvent> {
 		this.tasksHome = tasksHome;
 	}
 
+	@Override
 	public void execute(final RenameTaskEvent eventObj)
 			throws MustBeCalledInsideATransaction {
 		tasksHome.editTask(eventObj.getTaskId(), new NonEmptyString(eventObj.getNewNameForTask()), null);
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return RenameTaskEvent.class;
 	}

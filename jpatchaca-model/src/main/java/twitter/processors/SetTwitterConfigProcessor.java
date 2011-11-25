@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.picocontainer.Startable;
 
-import twitter.TwitterOptions;
 import twitter.events.SetTwitterConfig;
 import events.EventsSystem;
 import events.Processor;
@@ -13,11 +12,7 @@ import events.persistence.MustBeCalledInsideATransaction;
 public class SetTwitterConfigProcessor implements Processor<SetTwitterConfig>,
 		Startable {
 
-	private final TwitterOptions twitterOptions;
-
-	public SetTwitterConfigProcessor(final TwitterOptions twitterHome,
-			final EventsSystem eventsSystem) {
-		this.twitterOptions = twitterHome;
+	public SetTwitterConfigProcessor(final EventsSystem eventsSystem) {
 		eventsSystem.addProcessor(this);
 	}
 
@@ -29,8 +24,7 @@ public class SetTwitterConfigProcessor implements Processor<SetTwitterConfig>,
 	@Override
 	public void execute(final SetTwitterConfig eventObj)
 			throws MustBeCalledInsideATransaction {
-		twitterOptions.configure(eventObj.isTwitterLoggingEnabled(), eventObj
-				.userName(), eventObj.password());
+		
 	}
 
 	@Override

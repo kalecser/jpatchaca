@@ -11,7 +11,7 @@ import tasks.Task;
 
 public class ActiveTaskName implements Signal<Maybe<TaskName>> {
 
-	private final class ActiveTaskNameListener implements Receiver<TaskName> {
+	final class ActiveTaskNameListener implements Receiver<TaskName> {
 		@Override
 		public void receive(final TaskName pulse) {
 			supply(pulse);
@@ -20,14 +20,17 @@ public class ActiveTaskName implements Signal<Maybe<TaskName>> {
 
 	private final Source<Maybe<TaskName>> activeTaskName;
 
+	@Override
 	public Maybe<TaskName> addReceiver(final Receiver<Maybe<TaskName>> receiver) {
 		return activeTaskName.addReceiver(receiver);
 	}
 
+	@Override
 	public Maybe<TaskName> currentValue() {
 		return activeTaskName.currentValue();
 	}
 
+	@Override
 	public void removeReceiver(final Receiver<Maybe<TaskName>> receiver) {
 		activeTaskName.removeReceiver(receiver);
 	}

@@ -102,6 +102,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	}
 
+	@Override
 	public synchronized void editTask(final TaskView taskView,
 			final TaskData taskData) {
 
@@ -114,6 +115,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 		this.eventsSystem.writeEvent(new SetJiraIssueToTask(idOfTask, issue));
 	}
 
+	@Override
 	public synchronized void editPeriod(final TaskView selectedTask,
 			final int periodIndex, final Period newPeriod) {
 
@@ -124,17 +126,20 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	}
 
+	@Override
 	public synchronized void removeTask(final TaskView task) {
 		final RemoveTaskEvent event = new RemoveTaskEvent(tasks.idOf(task));
 		this.eventsSystem.writeEvent(event);
 	}
 
+	@Override
 	public synchronized void addNoteToTask(final TaskView task,
 			final String text) {
 		this.eventsSystem.writeEvent(new AddNoteToTaskEvent(tasks.idOf(task),
 				text));
 	}
 
+	@Override
 	public synchronized void movePeriod(final TaskView taskFrom,
 			final TaskView taskTo, final int periodFrom) {
 		
@@ -163,10 +168,12 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 		taskStarted(task, in);
 	}
 
+	@Override
 	public synchronized void addTasksListener(final TasksListener tasksListener) {
 		tasksHome.addTasksListener(tasksListener);
 	}
 
+	@Override
 	public synchronized Alert taskListChangedAlert() {
 		return tasksHome.taskListChangedAlert();
 	}

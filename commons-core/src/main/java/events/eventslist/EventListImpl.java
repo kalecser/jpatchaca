@@ -21,7 +21,6 @@ import events.persistence.MustBeCalledInsideATransaction;
 
 public class EventListImpl implements EventList{
 
-	private static final long serialVersionUID = 1L;
 	private final PersistenceManager persistenceManager;
 	private final HardwareClock machineClock;
 	private final SystemClock clock;
@@ -49,6 +48,7 @@ public class EventListImpl implements EventList{
 		transactionsQueue = new LinkedList<EventTransaction>();
 	}
 
+	@Override
 	public synchronized void add(final Serializable elementAdded) {		
 		final EventTransaction transaction = new EventTransaction(machineClock.getTime().getTime(), elementAdded);
 		transactionsQueue.add(transaction);
@@ -94,6 +94,7 @@ public class EventListImpl implements EventList{
 			throw new RuntimeException("No processor found for '" + transaction.getEvent().getClass().getName() + "' event.");
 	}
 	
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addProcessors(final Processor... processors) {
 		
@@ -115,6 +116,7 @@ public class EventListImpl implements EventList{
 		}
 	}
 
+	@Override
 	public int getEventCount() {
 		return persistenceManager.getEventTransactions().size();
 	}

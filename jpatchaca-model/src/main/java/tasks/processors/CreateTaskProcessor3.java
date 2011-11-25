@@ -20,6 +20,7 @@ public class CreateTaskProcessor3 implements Processor<CreateTaskEvent3> {
 		this.taskNameFactory = taskNameFactory;
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return CreateTaskEvent3.class;
 	}

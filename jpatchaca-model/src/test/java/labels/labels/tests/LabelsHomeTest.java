@@ -1,20 +1,27 @@
 package labels.labels.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import labels.labels.LabelsHome;
 import labels.labels.LabelsHomeImpl;
 
-import org.jmock.MockObjectTestCase;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Test;
 
 import tasks.TaskView;
 
-public class LabelsHomeTest extends MockObjectTestCase {
+public class LabelsHomeTest {
 
+	private final Mockery context = new JUnit4Mockery();
+	
+	@Test
 	public void testLabelAll(){
 
 		final LabelsHome home = new LabelsHomeImpl();
 		assertEquals("All", home.labels().get(0));
 		
-		final TaskView mockTask = (TaskView) mock(TaskView.class).proxy();
+		final TaskView mockTask = context.mock(TaskView.class);
 		home.setLabelToTask(mockTask, "label1");
 		
 		assertEquals("All", home.labels().get(0));
@@ -22,20 +29,22 @@ public class LabelsHomeTest extends MockObjectTestCase {
 
 	}
 	
+	@Test
 	public void testAddTheSameTaskTwiceToLabel() {		
 		final LabelsHome home = new LabelsHomeImpl();
 
-		final TaskView mockTask = (TaskView) mock(TaskView.class).proxy();
+		final TaskView mockTask = context.mock(TaskView.class);
 		home.setLabelToTask(mockTask, "label1");
 		home.setLabelToTask(mockTask, "label1");
 		
 		assertEquals(1, home.getTasksInLabel("label1").size());
 	}
 	
+	@Test
 	public void testALabelShouldBeRemovedWhenItsLastTasksHasBeenRemoved() {		
 		final LabelsHome home = new LabelsHomeImpl( );
 
-		final TaskView mockTask = (TaskView) mock(TaskView.class).proxy();
+		final TaskView mockTask = context.mock(TaskView.class);
 		home.setLabelToTask(mockTask, "label1");
 		home.removeTaskFromLabel(mockTask, "label1");
 		

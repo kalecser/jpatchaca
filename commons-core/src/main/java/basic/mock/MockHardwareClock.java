@@ -8,6 +8,7 @@ public class MockHardwareClock implements HardwareClock {
 
 	private Date time = new Date(0);
 	
+	@Override
 	public Date getTime() {
 		return (Date) time.clone() ;
 	}

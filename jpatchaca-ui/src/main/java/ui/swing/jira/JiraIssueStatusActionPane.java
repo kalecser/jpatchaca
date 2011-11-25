@@ -117,17 +117,7 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 
 			@Override
 			public void execute(StartTaskData startTaskData) {
-				JiraIssue jiraIssue = startTaskData.taskData().getJiraIssue();
-				
-				if (jiraIssue == null)
-					return;
-
-				if (!jiraOptions.isJiraEnabled() || !jiraOptions.isIssueStatusManagementEnabled())
-					return;
-				
-				List<RemoteJiraIssue> issuesForUpdate = jiraIssueStatus.issuesForUpdate(jiraIssue);
-				if(!issuesForUpdate.isEmpty())
-					show(issuesForUpdate);
+				showIssuesForUpdateIfAny(startTaskData);
 			}
 		});
 	}
@@ -140,5 +130,20 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 
 	@Override
 	public void stop() {
+		// Nothing to do.
+	}
+
+	void showIssuesForUpdateIfAny(StartTaskData startTaskData) {		
+		JiraIssue jiraIssue = startTaskData.taskData().getJiraIssue();
+		
+		if (jiraIssue == null)
+			return;
+
+		if (!jiraOptions.isJiraEnabled() || !jiraOptions.isIssueStatusManagementEnabled())
+			return;
+		
+		List<RemoteJiraIssue> issuesForUpdate = jiraIssueStatus.issuesForUpdate(jiraIssue);
+		if(!issuesForUpdate.isEmpty())
+			show(issuesForUpdate);
 	}
 }

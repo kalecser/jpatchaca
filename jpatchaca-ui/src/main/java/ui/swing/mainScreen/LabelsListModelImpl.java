@@ -11,6 +11,7 @@ public class LabelsListModelImpl implements LabelsListModel {
 		this.tooltips = tooltips;
 	}
 
+	@Override
 	public LabelTooltipProvider getTooltips() {
 		return tooltips;
 	}

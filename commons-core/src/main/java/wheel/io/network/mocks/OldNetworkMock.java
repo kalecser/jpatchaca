@@ -15,12 +15,14 @@ public class OldNetworkMock extends BaseNetworkMock
                          implements OldNetwork {
 
 	
+	@Override
 	public synchronized ObjectSocket openSocket(String serverIpAddress, int serverPort) throws IOException {
 	    crashIfNotLocal(serverIpAddress);
         return startClient(serverPort);
 		
 	}
 
+	@Override
 	public synchronized ObjectServerSocket openObjectServerSocket(int serverPort) throws IOException {
 	    return startServer(serverPort);
 	}

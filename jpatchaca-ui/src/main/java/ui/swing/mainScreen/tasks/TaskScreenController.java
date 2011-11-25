@@ -3,8 +3,8 @@ package ui.swing.mainScreen.tasks;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.Callable;
@@ -18,7 +18,7 @@ import javax.swing.SwingUtilities;
 
 import jira.Jira;
 import jira.JiraIssue;
-import jira.JiraUtils;
+import jira.JiraUtil;
 import jira.exception.JiraIssueNotFoundException;
 import jira.exception.JiraOptionsNotSetException;
 import lang.Maybe;
@@ -41,7 +41,6 @@ import com.jgoodies.forms.layout.FormLayout;
 
 public class TaskScreenController {
 
-	private static final long serialVersionUID = 1L;
 	public static final String TITLE = "Task edition";
 
 	private final Formatter formatter;
@@ -61,7 +60,7 @@ public class TaskScreenController {
 	}
 
 	public void createTaskStarted(final long time) {
-		internalShow(null, Maybe.wrap(time));
+		internalShow(null, Maybe.wrap(Long.valueOf(time)));
 	}
 
 	public void editSelectedTask() {
@@ -82,15 +81,17 @@ public class TaskScreenController {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				presenter.showOkCancelDialog(new TaskScreenDialog(task, start),
-						TITLE);
+				showOkCancelDialog(task, start);
 			}
 		});
 	}
 
-	class TaskScreenDialog implements ActionPane {
-		private static final long serialVersionUID = 1L;
+	void showOkCancelDialog(final Maybe<TaskView> task, final Maybe<Long> start) {
+		presenter.showOkCancelDialog(new TaskScreenDialog(task, start),
+				TITLE);
+	}
 
+	class TaskScreenDialog implements ActionPane {
 		private JTextField taskNameTextBox;
 		private JCheckBox budgetCheckBox;
 		private JTextField budgetHours;
@@ -112,7 +113,7 @@ public class TaskScreenController {
 
 		@Override
 		public JPanel getPanel() {
-			final JPanel dialog = createDialog(time);
+			final JPanel dialog = createDialog();
 		
 			taskNameTextBox.requestFocus();
 		
@@ -146,26 +147,12 @@ public class TaskScreenController {
 		
 				@Override
 				public void run() throws ValidationException {
-		
-					TaskData data = getDataInSwingThread();
-					if (data.getTaskName().equals("")) {
-						throw new ValidationException(
-								"Task name must not be empty");
-					}
-		
-					if (taskView != null) {
-						model.editTask(taskView, data);
-					} else if (time == null) {
-						model.createTask(data);
-					} else {
-						model.createTaskAndStart(data, time.unbox());
-					}
-					selectedTaskSource.supply(taskView);
+					runUIActionTaskScreenDialog();
 				}
 			};
 		}
 
-		private JPanel createDialog(final Maybe<Long> time) {
+		private JPanel createDialog() {
 
 			taskNameTextBox = new JTextField(30);
 			budgetCheckBox = new JCheckBox("Budget");
@@ -200,29 +187,20 @@ public class TaskScreenController {
 			jiraIssueKeyTextField.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyTyped(final KeyEvent e) {
-					if ('\n' != e.getKeyChar())
-						jiraIssueKeyTextField.setBackground(Color.WHITE);
+					if ('\n' != e.getKeyChar()) setBackgroundWhiteJiraIssueKeyTextField();
 				}
 			});
 
-			jiraIssueKeyTextField.addFocusListener(new FocusListener() {
+			jiraIssueKeyTextField.addFocusListener(new FocusAdapter() {
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					if (jiraIssue == null)
-						loadIssue();
-					else if (!jiraIssue.unbox().getKey().equals(
-							jiraIssueKeyTextField.getText()))
-						loadIssue();
-				}
-
-				@Override
-				public void focusGained(FocusEvent e) {
+					onFocusLostJiraIssueKeyTextField();
 				}
 			});
 		}
 
-		private void loadIssue() {
+		void loadIssue() {
 			final String key = jiraIssueKeyTextField.getText();
 			if (key.isEmpty()) {
 				jiraIssue = null;
@@ -232,7 +210,7 @@ public class TaskScreenController {
 			try {
 				jiraIssue = Maybe.wrap(jira.getIssueByKey(key));
 				if (maybeTaskView == null && taskNameTextBox.getText().equals("")) {
-					taskNameTextBox.setText(JiraUtils.getIssueDescription(jiraIssue
+					taskNameTextBox.setText(JiraUtil.getIssueDescription(jiraIssue
 										.unbox()));
 				}
 				jiraIssueKeyTextField.setBackground(new Color(0xAAFFAA));
@@ -270,7 +248,7 @@ public class TaskScreenController {
 			
 		}
 
-		private TaskData internalGettaskData() {
+		TaskData internalGettaskData() {
 			final String taskName = taskNameTextBox.getText();
 			TaskData data = new TaskData(new NonEmptyString(taskName));
 			data.setBudget(getBudget());
@@ -283,6 +261,35 @@ public class TaskScreenController {
 				data.setJiraIssue(jiraIssue.unbox());
 			
 			return data;
+		}
+
+		void runUIActionTaskScreenDialog() throws ValidationException {
+			TaskData data = getDataInSwingThread();
+			if (data.getTaskName().equals("")) {
+				throw new ValidationException(
+						"Task name must not be empty");
+			}
+
+			if (taskView != null) {
+				model.editTask(taskView, data);
+			} else if (time == null) {
+				model.createTask(data);
+			} else {
+				model.createTaskAndStart(data, time.unbox());
+			}
+			selectedTaskSource.supply(taskView);
+		}
+
+		void onFocusLostJiraIssueKeyTextField() {
+			if (jiraIssue == null)
+				loadIssue();
+			else if (!jiraIssue.unbox().getKey().equals(
+					jiraIssueKeyTextField.getText()))
+				loadIssue();
+		}
+
+		void setBackgroundWhiteJiraIssueKeyTextField() {
+			jiraIssueKeyTextField.setBackground(Color.WHITE);
 		}
 	}
 

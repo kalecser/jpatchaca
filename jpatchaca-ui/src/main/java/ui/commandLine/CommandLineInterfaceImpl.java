@@ -14,6 +14,7 @@ public class CommandLineInterfaceImpl implements CommandLineInterface {
 		this.copier = copier;
 	}
 
+	@Override
 	public String command(final String command){
 		
 		final String sendWorklog = "sendWorklog";

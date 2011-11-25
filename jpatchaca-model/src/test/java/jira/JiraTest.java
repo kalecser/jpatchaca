@@ -16,6 +16,7 @@ import basic.mock.MockHardwareClock;
 
 import com.dolby.jira.net.soap.jira.RemoteIssue;
 import com.dolby.jira.net.soap.jira.RemoteStatus;
+import com.dolby.jira.net.soap.jira.RemoteValidationException;
 import com.dolby.jira.net.soap.jira.RemoteWorklog;
 
 public class JiraTest {
@@ -82,7 +83,7 @@ public class JiraTest {
 		issues[0].setSummary(issueSummary);
 		return issues;
 	}
-	
+
 	@Test
 	public void testJiraGetIssueByKey() {
 		jiraMockHandler.addResult("getIssuesFromJqlSearch",
@@ -98,7 +99,8 @@ public class JiraTest {
 	@Test
 	public void testJiraGetIssueByKeyWithException() {
 
-		jiraMockHandler.addResult("getIssuesFromJqlSearch", new RemoteIssue[0]);
+		jiraMockHandler.addException("getIssuesFromJqlSearch",
+				new RemoteValidationException());
 
 		try {
 			jira.getIssueByKey("ISSUE-1");
@@ -154,18 +156,18 @@ public class JiraTest {
 	public void testTokenCache() {
 		jiraMockHandler.addResult("getIssuesFromJqlSearch",
 				createIssueResult("NULL", "an issue"));
-		
+
 		jira.getIssueByKey("NULL");
 		assertServiceLog("login [user, password]",
 				"getIssuesFromJqlSearch [token, key = NULL, 20]");
-		
+
 		setClockOneSecondBeforeTokenTimeout();
 		jiraMockHandler.addResult("login", "newtoken");
 		jira.getIssueByKey("NULL");
 		assertServiceLog("login [user, password]",
 				"getIssuesFromJqlSearch [token, key = NULL, 20]",
 				"getIssuesFromJqlSearch [token, key = NULL, 20]");
-		
+
 		addOneSecond();
 		jira.getIssueByKey("NULL");
 		assertServiceLog("login [user, password]",
@@ -173,5 +175,5 @@ public class JiraTest {
 				"getIssuesFromJqlSearch [token, key = NULL, 20]",
 				"login [user, password]",
 				"getIssuesFromJqlSearch [newtoken, key = NULL, 20]");
-	}	
+	}
 }

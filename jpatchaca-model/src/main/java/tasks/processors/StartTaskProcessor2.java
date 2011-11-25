@@ -22,6 +22,7 @@ public class StartTaskProcessor2 implements Processor<StartTaskEvent2> {
 		this.activeTask = activeTask;
 	}
 
+	@Override
 	public void execute(final StartTaskEvent2 event)
 			throws MustBeCalledInsideATransaction {
 		final Maybe<Task> task = tasks.byName(event.getName());
@@ -41,6 +42,7 @@ public class StartTaskProcessor2 implements Processor<StartTaskEvent2> {
 
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return StartTaskEvent2.class;
 	}

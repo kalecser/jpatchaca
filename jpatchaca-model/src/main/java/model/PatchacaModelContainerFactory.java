@@ -11,10 +11,14 @@ import jira.SslManagerSetup;
 import jira.processors.SendWorklogProcessor;
 import jira.processors.SetJiraConfigProcessor;
 import jira.processors.SetJiraIssueToTaskProcessor;
+import keyboardRotation.KeyboardRotationOptions;
+import keyboardRotation.SetKeyboardRotationOptionsProcessor;
 import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
 import labels.labels.SelectedLabel;
 import main.singleInstance.AssureSingleInstance;
+import newAndNoteworthy.NewAndNoteworthyConsumptionProcessor;
+import newAndNoteworthy.NewAndNoteworthyImpl;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
@@ -42,8 +46,6 @@ import tasks.processors.StartTaskProcessor3;
 import tasks.taskName.ActiveTaskName;
 import tasks.taskName.TaskNameFactory;
 import tasks.tasks.Tasks;
-import twitter.TwitterLogger;
-import twitter.TwitterOptions;
 import twitter.processors.SetTwitterConfigProcessor;
 import basic.ErrorLog;
 import basic.HardwareClock;
@@ -59,6 +61,11 @@ import events.persistence.XmlPersistenceManager;
 
 public class PatchacaModelContainerFactory {
 
+	public static MutablePicoContainer createNonUIContainer(
+			final HardwareClock hardwareClock) {
+		return new PatchacaModelContainerFactory().create(hardwareClock);
+	}
+	
 	public MutablePicoContainer create(final HardwareClock hardwareClock) {
 		final MutablePicoContainer container = new PicoBuilder()
 				.withLifecycle().withCaching().build();
@@ -98,10 +105,13 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(StartTaskProcessor2.class);
 		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(CreateTaskPersistence.class);
+		
+		container.addComponent(NewAndNoteworthyImpl.class);
+		container.addComponent(NewAndNoteworthyConsumptionProcessor.class);
 
-		container.addComponent(TwitterOptions.class);
-		container.addComponent(TwitterLogger.class);
+		container.addComponent(KeyboardRotationOptions.class);
 		container.addComponent(SetTwitterConfigProcessor.class);
+		container.addComponent(SetKeyboardRotationOptionsProcessor.class);
 
 		container.addComponent(JiraOptions.class);
 		container.addComponent(SetJiraConfigProcessor.class);

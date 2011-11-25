@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 import org.netbeans.jemmy.ComponentChooser;
@@ -34,9 +35,7 @@ public class PeriodsListOperator {
 			
 			@Override
 			public boolean checkComponent(Component comp) {
-				
-				boolean buttonBorderEqualsTo = isButtonBorderEqualsTo(comp, BorderFactory.createEmptyBorder());
-				return buttonBorderEqualsTo;
+				return isButtonBorderEqualsTo(comp, BorderFactory.createEmptyBorder());
 			}
 		});
 	}
@@ -51,28 +50,23 @@ public class PeriodsListOperator {
 			
 			@Override
 			public boolean checkComponent(Component comp) {
-				Border expectedBorder = new JButton().getBorder();
-				boolean buttonBorderEqualsTo = isButtonBorderEqualsTo(comp,
-						expectedBorder);
-				return buttonBorderEqualsTo;
+				final Border expectedBorder = new JButton().getBorder();
+				return isButtonBorderEqualsTo(comp, expectedBorder);
 			}
 		});
 		
 	}
 
 	public void selectRows(List<Integer> rowsToselect) {
-		
 		Integer car = rowsToselect.get(0);
 		Integer last = rowsToselect.get(rowsToselect.size() - 1);
-		
-		periodsTable.getSelectionModel().setSelectionInterval(car, last);		
+		periodsTable.getSelectionModel().setSelectionInterval(car.intValue(), last.intValue());		
 	}
 
-	private boolean isButtonBorderEqualsTo(Component comp,
+	boolean isButtonBorderEqualsTo(Component comp,
 			Border expectedBorder) {
-		Border buttonBorder = ((JButton)comp).getBorder();
-		boolean equalTo = buttonBorder.equals(expectedBorder);
-		return equalTo;
+		final Border actualBorder = ((JComponent)comp).getBorder();
+		return actualBorder.equals(expectedBorder);
 	}
 
 

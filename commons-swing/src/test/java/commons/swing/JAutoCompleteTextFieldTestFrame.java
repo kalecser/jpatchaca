@@ -38,6 +38,7 @@ public class JAutoCompleteTextFieldTestFrame extends JFrame{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	@Override
 	public void dispose(){
 		comp.dispose();
 	}

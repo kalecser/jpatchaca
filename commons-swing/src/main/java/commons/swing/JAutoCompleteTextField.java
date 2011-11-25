@@ -1,14 +1,15 @@
 package commons.swing;
 
 import java.awt.AWTEvent;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -28,14 +29,14 @@ import javax.swing.event.DocumentListener;
 
 public class JAutoCompleteTextField extends JTextField{
 	
-	private JWindow window;
+	private final JWindow window;
 	
 	public JAutoCompleteTextField(int length, final JAutoCompleteTextFieldModel model) {
 		super(length);
 		
 		final DefaultListModel listModel = new DefaultListModel();
-		list = new JList(listModel);
-		createWindow(list);
+		this.list = new JList(listModel);
+		this.window = createWindow(list, this);
 		autoCompleteWindowFollowAncestor();
 		updateListOnDocumentChange(model, listModel);
 		hideWindowOnFocusLost();
@@ -48,23 +49,32 @@ public class JAutoCompleteTextField extends JTextField{
 	}
 
 	private void hideWindowOnMouseClickOutsideItsArea() {
-		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-		
-			@Override
-			public void eventDispatched(AWTEvent event) {
-				if (!(event instanceof MouseEvent))
-					return;
-					
-				MouseEvent mouseEvent = (MouseEvent) event;
+		Toolkit.getDefaultToolkit().addAWTEventListener(
+				new HideOnMouseClickOutsideAWTEventListener(window), AWTEvent.MOUSE_EVENT_MASK);
+	}
+	
+	static final class HideOnMouseClickOutsideAWTEventListener implements
+		AWTEventListener {
+
+		private final Component component;
+
+		public HideOnMouseClickOutsideAWTEventListener(Component component) {
+			this.component = component;
+		}
+
+		@Override
+		public void eventDispatched(AWTEvent event) {
+			if (!(event instanceof MouseEvent))
+				return;
 				
-				if (mouseEvent.getClickCount() == 0)
-					return;
-				
-				if (!window.getBounds().contains(mouseEvent.getLocationOnScreen()))
-					window.setVisible(false);
-		
-			}
-		}, AWTEvent.MOUSE_EVENT_MASK);
+			final MouseEvent mouseEvent = (MouseEvent) event;
+			
+			if (mouseEvent.getClickCount() == 0)
+				return;
+			
+			if (!component.getBounds().contains(mouseEvent.getLocationOnScreen()))
+				component.setVisible(false);
+		}
 	}
 
 	private void doubleClickSelectsValue() {
@@ -82,14 +92,10 @@ public class JAutoCompleteTextField extends JTextField{
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER){
-					
-					if (!window.isVisible())
-						return;
-					if (list.getSelectedValue() == null)
-						return;
-					
-					e.consume();					
-					selectValue();
+					if (isWindowVisibleWithSelectedValue()) {
+						selectValue();
+						e.consume();
+					}
 				}
 			}
 		});		
@@ -100,7 +106,7 @@ public class JAutoCompleteTextField extends JTextField{
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)
-					list.dispatchEvent(e);
+					dispatchEventToList(e);
 			}
 		});
 	}
@@ -111,8 +117,8 @@ public class JAutoCompleteTextField extends JTextField{
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
-					if (window.isVisible()){						
-						window.setVisible(false);
+					if (isWindowVisible()){						
+						hideWindow();
 						e.consume();
 					}
 				}
@@ -124,15 +130,12 @@ public class JAutoCompleteTextField extends JTextField{
 	}
 
 	private void hideWindowOnFocusLost() {
-		this.addFocusListener(new FocusListener() {
+		this.addFocusListener(new FocusAdapter() {
 		
 			@Override
 			public void focusLost(FocusEvent e) {
-				window.setVisible(false);		
+				hideWindow();		
 			}
-		
-			@Override
-			public void focusGained(FocusEvent e) {	}
 		});
 	}
 
@@ -158,13 +161,14 @@ public class JAutoCompleteTextField extends JTextField{
 		});
 	}
 
-	private void createWindow(JList list) {
-		window = new JWindow();
+	private static JWindow createWindow(JList list, Component owner) {
+		final JWindow window = new JWindow();
 		window.add(new JScrollPane(list));
-		Point p = new Point();
-		SwingUtilities.convertPointToScreen(p, this);
+		final Point p = new Point();
+		SwingUtilities.convertPointToScreen(p, owner);
 		window.setLocation(p);
 		window.pack();
+		return window;
 	}
 
 	private void autoCompleteWindowFollowAncestor() {
@@ -180,9 +184,9 @@ public class JAutoCompleteTextField extends JTextField{
 
 			@Override
 			public void ancestorAdded(AncestorEvent event) {
-				
+				// Nothing to do
 			}
-
+			
 			@Override
 			public void ancestorMoved(AncestorEvent event) {
 				adjustWindowToTextField();
@@ -190,14 +194,13 @@ public class JAutoCompleteTextField extends JTextField{
 
 			@Override
 			public void ancestorRemoved(AncestorEvent event) {
-				window.setVisible(false);
-				
+				hideWindow();
 			}
 			
 		});
 	}
 	
-	private void updateList(final JAutoCompleteTextFieldModel model,
+	void updateList(final JAutoCompleteTextFieldModel model,
 			final DefaultListModel listModel) {
 		listModel.clear();
 		List<? extends Object> possibilities = model.possibilitiesFor(getText());
@@ -212,23 +215,39 @@ public class JAutoCompleteTextField extends JTextField{
 		window.setVisible(windowVisible);
 	}
 	
-	private void selectValue() {
-		JAutoCompleteTextField.this.setText(list.getSelectedValue().toString());
-		window.setVisible(false);
+	void selectValue() {
+		this.setText(list.getSelectedValue().toString());
+		hideWindow();
 	}
 	
 	public void dispose(){
-		window.setVisible(false);
+		hideWindow();
 		window.dispose();
 	}
 
-	private void adjustWindowToTextField() {
+	void adjustWindowToTextField() {
 		Point p = new Point();
-		SwingUtilities.convertPointToScreen(p, JAutoCompleteTextField.this);
-		p.setLocation(p.getX(), p.getY()+JAutoCompleteTextField.this.getHeight());
+		SwingUtilities.convertPointToScreen(p, this);
+		p.setLocation(p.getX(), p.getY()+this.getHeight());
 		window.setLocation(p);
-		window.setPreferredSize(new Dimension(JAutoCompleteTextField.this.getWidth(),window.getHeight()));
+		window.setPreferredSize(new Dimension(this.getWidth(),window.getHeight()));
 		window.pack();
+	}
+
+	boolean isWindowVisibleWithSelectedValue() {
+		return isWindowVisible() && list.getSelectedValue() != null;
+	}
+
+	void dispatchEventToList(AWTEvent e) {
+		list.dispatchEvent(e);
+	}
+
+	boolean isWindowVisible() {
+		return window.isVisible();
+	}
+
+	void hideWindow() {
+		window.setVisible(false);
 	}
 
 	private static final long serialVersionUID = 1L;

@@ -16,6 +16,7 @@ import periods.impl.PeriodsFactoryImpl;
 public class PeriodTest extends TestCase {
 
 	
+	@SuppressWarnings("boxing")
 	public void testPeriod() throws ParseException{
 		final DateFormat format = new SimpleDateFormat("yyyy-MM-d hh:mm");
 		

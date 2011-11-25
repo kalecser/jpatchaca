@@ -1,160 +1,122 @@
 package ui.swing.options;
 
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import lang.Maybe;
+
 import net.miginfocom.swing.MigLayout;
+import ui.swing.options.OptionsScreenModel.Data;
 import ui.swing.presenter.ActionPane;
-import ui.swing.presenter.Presenter;
 import ui.swing.presenter.UIAction;
-import wheel.swing.CheckboxSignalBinder;
-import wheel.swing.TextFieldBinder;
 
-public class OptionsScreen {
+public class OptionsScreen implements ActionPane {
 
-	public class OptionsScreenOkCancelPane implements ActionPane {
+	private JCheckBox showLabels;
 
-		private JCheckBox twitterEnabled;
-		private JCheckBox showLabels;
-		private JTextField twitterUsername;
-		private JTextField twitterPassword;
-
-		private JTextField jiraUsername;
-		private JTextField jiraPassword;
-		private JTextField jiraUrl;
-		private JCheckBox issueStatusManagementEnabled;
-
-		@Override
-		public JPanel getPanel() {
-			
-			final JTabbedPane tab = new JTabbedPane();
-			
-			addMainPreferences(tab);
-			addTwitterPreferences(tab);
-			addJiraPreferences(tab);
-
-			twitterEnabled.requestFocus();
-
-			JPanel jPanel = new JPanel();
-			jPanel.add(tab);
-			return jPanel;
-		}
-
-		private void addJiraPreferences(JTabbedPane tab) {
-			final JPanel optionsPanel = new JPanel();
-			optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));
-
-			// Nao estava sendo usado
-			//JCheckBox jiraEnabled = new JCheckBox("Jira enabled");
-			//optionsPanel.add(jiraEnabled, "span 4");
-			
-			issueStatusManagementEnabled = new JCheckBox("Issue Status Management");
-			issueStatusManagementEnabled.setSelected(optionsScreenModel.isIssueStatusManagementEnabled());
-			optionsPanel.add(issueStatusManagementEnabled, "span 4");
-			
-			optionsPanel.add(new JLabel("Jira url"));
-			jiraUrl = new JTextField();
-			if (optionsScreenModel.jiraUrl() != null) {
-				jiraUrl.setText(optionsScreenModel.jiraUrl().unbox());
-			}
-			optionsPanel.add(jiraUrl, "growx,span 3");
-
-			optionsPanel.add(new JLabel("Jira username"));
-			jiraUsername = new JTextField(30);
-			if (optionsScreenModel.jiraUserName() != null) {
-				jiraUsername.setText(optionsScreenModel.jiraUserName().unbox());
-			}
-			optionsPanel.add(jiraUsername, "growx,span 3");
-
-			optionsPanel.add(new JLabel("Jira password"));
-			jiraPassword = new JPasswordField(30);
-			if (optionsScreenModel.jiraPassword() != null) {
-				jiraPassword.setText(optionsScreenModel.jiraPassword().unbox());
-			}
-			optionsPanel.add(jiraPassword, "growx,span 3");
-			
-			tab.add("Jira",optionsPanel);
-		}
-
-		private void addTwitterPreferences(JTabbedPane tab) {
-			final JPanel optionsPanel = new JPanel();
-			optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));			
-			
-			twitterEnabled = new JCheckBox("Twitter logging enabled");
-			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
-					.twitterEnabled());
-			optionsPanel.add(twitterEnabled, "span 4");
-
-			optionsPanel.add(new JLabel("Twitter username"));
-			twitterUsername = new JTextField(30);
-			TextFieldBinder.bind(twitterUsername, optionsScreenModel
-					.twitterUserName());
-			optionsPanel.add(twitterUsername, "growx,span 3");
-
-			optionsPanel.add(new JLabel("Twitter Password"));
-			twitterPassword = new JPasswordField(30);
-			
-			TextFieldBinder.bind(twitterPassword, optionsScreenModel
-					.twitterPassword());
-			optionsPanel.add(twitterPassword, "growx,span 3");
-
-			CheckboxSignalBinder.bind(twitterEnabled, optionsScreenModel
-					.twitterEnabled());
-			
-			tab.add("Twitter",optionsPanel);
-		}
-
-		private void addMainPreferences(JTabbedPane tab) {
-			showLabels = new JCheckBox("Show labels");
-			tab.add("Preferences",showLabels);
-		}
-
-		@Override
-		public UIAction action() {
-			return new UIAction() {
-				@Override
-				public void run() {
-					optionsScreenModel.setTwitterConfig(twitterEnabled
-							.isSelected(), twitterUsername.getText(),
-							twitterPassword.getText());
-					
-					optionsScreenModel.setJiraConfig(jiraUrl.getText(),
-							jiraUsername.getText(), jiraPassword.getText(), issueStatusManagementEnabled.isSelected());
-				}
-			};
-		}
-
-	}
-
-	private JDialog optionsScreen;
+	private JTextField jiraUsername;
+	private JTextField jiraPassword;
+	private JTextField jiraUrl;
+	private JCheckBox issueStatusManagementEnabled;
+	private JCheckBox supressShakingDialog;
 	private final OptionsScreenModel optionsScreenModel;
-	private final Presenter presenter;
 
-	public OptionsScreen(final OptionsScreenModel optionsScreenModel,
-			final Presenter presenter) {
+	public OptionsScreen(OptionsScreenModel optionsScreenModel) {
 		this.optionsScreenModel = optionsScreenModel;
-		this.presenter = presenter;
 	}
 
-	public synchronized void show() {
+	@Override
+	public JPanel getPanel() {
 
-		if (optionsScreen != null) {
-			optionsScreen.setVisible(false);
-			optionsScreen.dispose();
+		final JTabbedPane tab = new JTabbedPane();
+
+		addMainPreferences(tab);
+		addJiraPreferences(tab);
+		addKeyboardRotationPreferences(tab);
+		JPanel jPanel = new JPanel();
+		jPanel.add(tab);
+
+		populateControlsFromData();
+
+		return jPanel;
+	}
+
+	private void populateControlsFromData() {
+		Data data = optionsScreenModel.readDataFromSystem();
+
+		supressShakingDialog.setSelected(data.supressShakingDialog);
+
+		issueStatusManagementEnabled
+				.setSelected(data.issueStatusManagementEnabled);
+		if (data.jiraUrl != null) {
+			jiraUrl.setText(data.jiraUrl.unbox());
 		}
-
-		optionsScreen = presenter.showOkCancelDialog(
-				new OptionsScreenOkCancelPane(), "Options");
-
+		if (data.jiraUserName != null) {
+			jiraUsername.setText(data.jiraUserName.unbox());
+		}
+		if (data.jiraPassword != null) {
+			jiraPassword.setText(data.jiraPassword.unbox());
+		}
 	}
 
-	public static void main(final String[] args) {
-		new OptionsScreen(new OptionsScreenMock(), new Presenter(null)).show();
+	private void addKeyboardRotationPreferences(JTabbedPane tab) {
+		final JPanel optionsPanel = new JPanel();
+		optionsPanel.setLayout(new MigLayout("wrap 1,fillx"));
+		supressShakingDialog = new JCheckBox("Supress shaking dialog");
+		optionsPanel.add(supressShakingDialog);
+		tab.add("Keyboard Rotation", optionsPanel);
+	}
+
+	private void addJiraPreferences(JTabbedPane tab) {
+		final JPanel optionsPanel = new JPanel();
+		optionsPanel.setLayout(new MigLayout("wrap 4,fillx"));
+
+		issueStatusManagementEnabled = new JCheckBox("Issue Status Management");
+		optionsPanel.add(issueStatusManagementEnabled, "span 4");
+
+		optionsPanel.add(new JLabel("Jira url"));
+		jiraUrl = new JTextField();
+		optionsPanel.add(jiraUrl, "growx,span 3");
+
+		optionsPanel.add(new JLabel("Jira username"));
+		jiraUsername = new JTextField(30);
+		optionsPanel.add(jiraUsername, "growx,span 3");
+
+		optionsPanel.add(new JLabel("Jira password"));
+		jiraPassword = new JPasswordField(30);
+		optionsPanel.add(jiraPassword, "growx,span 3");
+
+		tab.add("Jira", optionsPanel);
+	}
+
+	private void addMainPreferences(JTabbedPane tab) {
+		showLabels = new JCheckBox("Show labels");
+		tab.add("Preferences", showLabels);
+	}
+
+	@Override
+	public UIAction action() {
+		return new UIAction() {
+			@Override
+			public void run() {
+				doAction();
+			}
+		};
+	}
+
+	void doAction() {
+		Data data = new Data();
+		data.jiraUrl = Maybe.wrap(jiraUrl.getText());
+		data.jiraUserName = Maybe.wrap(jiraUsername.getText());
+		data.jiraPassword = Maybe.wrap(jiraPassword.getText());
+		data.issueStatusManagementEnabled = issueStatusManagementEnabled
+				.isSelected();
+		data.supressShakingDialog = supressShakingDialog.isSelected();
+		optionsScreenModel.writeDataIntoSystem(data);
 	}
 
 }

@@ -9,16 +9,14 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jpatchaca</groupId>
 	<artifactId>jpatchaca-system</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
 	<name>JPatchaca System</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.jpatchaca</groupId>
-			<artifactId>commons-core</artifactId>
+			<artifactId>jpatchaca-commons-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jpatchaca</groupId>
@@ -39,6 +37,11 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

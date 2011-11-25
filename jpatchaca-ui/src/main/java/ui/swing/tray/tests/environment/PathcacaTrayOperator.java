@@ -52,6 +52,7 @@ public class PathcacaTrayOperator {
 		for (final java.awt.event.ActionListener listener : targetMenu
 				.getActionListeners()) {
 			new Thread(new Runnable() {
+				@Override
 				public void run() {
 					listener.actionPerformed(new ActionEvent(new Button(), 0,
 							pathElements[pathElements.length - 1]));

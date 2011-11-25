@@ -29,6 +29,7 @@ public class DoubleIdProvider implements IdProvider {
 		
 	}
 
+	@Override
 	public synchronized ObjectIdentity provideId() {
 		try {
 			return new ObjectIdentity(((Long)sequence.nextSequenceValueBottom("id",1)).toString());

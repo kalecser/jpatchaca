@@ -17,7 +17,7 @@ public class OkCancelDialogTest {
 	@Before
 	public void setup() {
 
-		presenter = new Presenter(new UIEventsExecutor() {
+		presenter = new PresenterImpl(new UIEventsExecutor() {
 			@Override
 			public void execute(final Runnable command) {
 				command.run();

@@ -98,7 +98,7 @@ public class PeriodsList extends SimpleInternalFrame {
 		
 	}
 
-	private void initialize() {
+	void initialize() {
 		final JScrollPane scrollPane = getPeriodsTable();
 		scrollPane.setPreferredSize(new Dimension(100, 0));
 		add(scrollPane, BorderLayout.CENTER);
@@ -126,6 +126,7 @@ public class PeriodsList extends SimpleInternalFrame {
 
 		addPeriodButton.addActionListener(new java.awt.event.ActionListener() {
 
+			@Override
 			public void actionPerformed(final ActionEvent e) {
 				addPeriod();
 			}
@@ -134,6 +135,7 @@ public class PeriodsList extends SimpleInternalFrame {
 		removePeriodButton
 				.addActionListener(new java.awt.event.ActionListener() {
 
+					@Override
 					public void actionPerformed(final ActionEvent e) {
 						removePeriods();
 					}
@@ -209,7 +211,7 @@ public class PeriodsList extends SimpleInternalFrame {
 
 								final int fiveSeconds = 5000;
 								TimingUtils.showTimedBalloon(tableBalloon,
-										fiveSeconds);
+										Integer.valueOf(fiveSeconds));
 
 								return tableBalloon;
 							}
@@ -229,6 +231,7 @@ public class PeriodsList extends SimpleInternalFrame {
 			private void hideTableCellBalloonTipInSwingThread() {
 
 				final Runnable hide = new Runnable() {
+					@Override
 					public void run() {
 						tablecellBalloonTip.setVisible(false);
 					}
@@ -251,14 +254,13 @@ public class PeriodsList extends SimpleInternalFrame {
 
 			@Override
 			protected Transferable createTransferable(final JComponent arg0) {
-				String idOfSelectedTask = tasks.idOf(selectedTaskSource.currentValue()).getId();
-				return new PeriodTransferable(idOfSelectedTask,  selectedPeriodIndex());
+				return createPeriodTransferable();
 			}
 
 		});
 	}	
 
-	private void addPeriod() {
+	void addPeriod() {
 		try {
 			addPeriodButton.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			enqueueAddPeriod();
@@ -273,16 +275,12 @@ public class PeriodsList extends SimpleInternalFrame {
 
 			@Override
 			public void run() {
-				final TaskView selectedTask = selectedTaskSource.currentValue();
-
-				final Period newPeriod = new Period(machineClock.getTime());
-				periodsSystem.addPeriod(selectedTask, newPeriod);
-
+				addPeriodToSelectedTask();
 			}
 		});
 	}
 
-	private void removePeriods() {
+	void removePeriods() {
 		final List<Period> selectedPeriods = periodsTable.selectedPeriods();
 
 		if (selectedPeriods.isEmpty()) {
@@ -292,6 +290,17 @@ public class PeriodsList extends SimpleInternalFrame {
 		}
 
 		removePeriodsDialogController.confirmPeriodsRemoval(selectedPeriods);
+	}
+
+	void addPeriodToSelectedTask() {
+		final TaskView selectedTask = selectedTaskSource.waitForSelectedTask();
+		final Period newPeriod = new Period(machineClock.getTime());
+		periodsSystem.addPeriod(selectedTask, newPeriod);
+	}
+
+	Transferable createPeriodTransferable() {
+		final String idOfSelectedTask = tasks.idOf(selectedTaskSource.currentValue()).getId();
+		return new PeriodTransferable(idOfSelectedTask,  selectedPeriodIndex());
 	}
 
 }

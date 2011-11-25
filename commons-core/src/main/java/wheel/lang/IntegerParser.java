@@ -11,6 +11,7 @@ public class IntegerParser implements Consumer<String> {
 	}
 
 	
+	@Override
 	public void consume(String string) throws IllegalParameter {
 		int result = 0;
 		

@@ -2,28 +2,28 @@ package ui.swing.options;
 
 import lang.Maybe;
 
-import org.reactive.Signal;
-
 public interface OptionsScreenModel {
 
-	public abstract void setTwitterConfig(boolean selected, String username,
-			String password);
+	Data readDataFromSystem();
 
-	public abstract void setJiraConfig(String url, String username,
-			String password, boolean issueStatusManagementEnabled);
+	void writeDataIntoSystem(Data data);
 
-	public abstract Signal<Boolean> twitterEnabled();
+	public static class Data {
+		public boolean supressShakingDialog;
+		public boolean issueStatusManagementEnabled;
+		public Maybe<String> jiraUrl;
+		public Maybe<String> jiraUserName;
+		public Maybe<String> jiraPassword;
+		public boolean isToUseOldIcons;
 
-	public abstract Signal<String> twitterUserName();
-
-	public abstract Signal<String> twitterPassword();
-
-	public abstract Maybe<String> jiraUrl();
-
-	public abstract Maybe<String> jiraUserName();
-
-	public abstract Maybe<String> jiraPassword();
-	
-	public abstract boolean isIssueStatusManagementEnabled();
-
+		@Override
+		public String toString() {
+			return "Data [supressShakingDialog=" + supressShakingDialog
+					+ ", issueStatusManagementEnabled="
+					+ issueStatusManagementEnabled + ", jiraUrl=" + jiraUrl
+					+ ", jiraUserName=" + jiraUserName + ", jiraPassword="
+					+ jiraPassword + ", isToUseOldIcons=" + isToUseOldIcons
+					+ "]";
+		}
+	}
 }

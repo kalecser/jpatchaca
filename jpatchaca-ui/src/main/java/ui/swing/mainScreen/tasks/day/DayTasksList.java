@@ -40,7 +40,6 @@ import periods.Period;
 import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.tasks.TasksView;
-import ui.swing.presenter.Presenter;
 import ui.swing.utils.SimpleInternalFrame;
 import basic.Formatter;
 import basic.HardwareClock;
@@ -65,7 +64,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 
 	public DayTasksList(final TasksView tasks, final Formatter formatter,
 			final TasksSystem tasksSystem, final JiraOptions jiraOptions,
-			final JiraSystem jiraSystem, final Presenter presenter,
+			final JiraSystem jiraSystem,
 			HardwareClock clock, JiraWorklogOverride worklogOverride) {
 		
 		super(DayTasksList.panelTitle);
@@ -85,7 +84,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 		updateTotalHours();
 	}
 
-	private void updateTotalHours() {
+	void updateTotalHours() {
 		totalHoursTextField.setText(getDayTotalHours(items));
 	}
 
@@ -187,7 +186,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 		showTasksByDay(new Date());
 	}
 
-	private void showTasksByDay(final Date data) {
+	void showTasksByDay(final Date data) {
 		final List<Pair> lista = new ArrayList<Pair>();
 		
 		for (final TaskView task : tasks.tasks())
@@ -199,7 +198,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 		setItems(lista);
 	}
 
-	private void sendWorklog() {
+	void sendWorklog() {
 		final List<Pair> tasksPeriods = new LinkedList<Pair>();
 
 		if (dayTasksTable.getSelectedRowCount() == 0) {
@@ -264,6 +263,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 
 	@Override
 	public void stop() {
+		// Do nothing
 	}
 
 	public void refrescate() {

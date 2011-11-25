@@ -6,11 +6,11 @@ import jira.JiraIssueData;
 import org.junit.After;
 import org.junit.Test;
 
-import periodsInTasks.MockTask;
 import tasks.adapters.ui.operators.TaskScreenOperator;
 import ui.swing.mainScreen.tasks.mock.MockJira;
+import ui.swing.mainScreen.tasks.mock.MockTask;
 import ui.swing.mainScreen.tasks.mock.MockTaskScreenModel;
-import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import ui.swing.utils.UIEventsExecutorImpl;
 import basic.FormatterImpl;
 
@@ -18,7 +18,7 @@ public class TaskScreenTest {
 
 	MockJira mockJira = new MockJira();
 	MockTaskScreenModel mockModel = new MockTaskScreenModel();
-	Presenter presenter = new Presenter(new UIEventsExecutorImpl(null));
+	PresenterImpl presenter = new PresenterImpl(new UIEventsExecutorImpl(null));
 	TaskScreenController controller = new TaskScreenController(new FormatterImpl(), mockModel, presenter, mockJira, null);
 
 	@Test
@@ -74,7 +74,7 @@ public class TaskScreenTest {
 
 	}
 
-	private MockTask createMockTaskWithJiraKey(String jiraKey) {
+	private static MockTask createMockTaskWithJiraKey(String jiraKey) {
 		MockTask mockTask = new MockTask();
 		JiraIssueData data = new JiraIssueData();
 		data.setKey(jiraKey);

@@ -38,6 +38,7 @@ public class FileAppenderPersistence implements PersistenceManager {
 		}
 	}
 
+	@Override
 	public List<EventTransaction> getEventsFromFile() {
 		boolean dataFileStillDoesNotExist = !directory.fileExists(serializer.fileName());
 		if (dataFileStillDoesNotExist)

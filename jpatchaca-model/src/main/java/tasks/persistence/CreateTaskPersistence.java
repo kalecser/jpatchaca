@@ -30,21 +30,25 @@ public class CreateTaskPersistence implements Startable{
 		delegate.addListener(new Delegate.Listener<TaskData>() {
 			@Override
 			public void execute(final TaskData object) {
-				final ObjectIdentity taskId = provider.provideId();
-				consumer.consume(new CreateTaskEvent3(taskId, object
-						.getTaskName(), object.getBudget(), object.getLabel()));
-
-				if (object.getJiraIssue() != null) {
-					consumer.consume(new SetJiraIssueToTask(taskId,
-							object.getJiraIssue()));
-				}
+				onTaskData(object);
 			}
 		});
 	}
 
 	@Override
 	public void stop() {
-		
+		// Nothing to do.
+	}
+
+	void onTaskData(final TaskData object) {
+		final ObjectIdentity taskId = provider.provideId();
+		consumer.consume(new CreateTaskEvent3(taskId, object
+				.getTaskName(), object.getBudget(), object.getLabel()));
+
+		if (object.getJiraIssue() != null) {
+			consumer.consume(new SetJiraIssueToTask(taskId,
+					object.getJiraIssue()));
+		}
 	}
 
 }

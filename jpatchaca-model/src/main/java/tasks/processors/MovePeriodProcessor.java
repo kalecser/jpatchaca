@@ -15,11 +15,13 @@ public final class MovePeriodProcessor implements Processor<MovePeriodEvent> {
 		this.tasksHome = homeMock;
 	}
 
+	@Override
 	public void execute(MovePeriodEvent event) throws MustBeCalledInsideATransaction {
 		tasksHome.transferPeriod(event.getSelectedTask(), event.getSelectedPeriod(), event.getTargetTask());
 		
 	}
 
+	@Override
 	public Class<? extends Serializable> eventType() {
 		return MovePeriodEvent.class;
 	}

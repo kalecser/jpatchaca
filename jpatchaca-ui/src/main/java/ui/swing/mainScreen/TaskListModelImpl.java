@@ -3,19 +3,20 @@
  */
 package ui.swing.mainScreen;
 
-import ui.swing.tasks.StartTaskController;
+import ui.swing.tasks.StartTaskPresenter;
 
 public final class TaskListModelImpl implements TaskListModel {
 
-	private final StartTaskController startTaskController;
+	private final StartTaskPresenter startTaskController;
 	private final TooltipForTask tooltips;
 
-	public TaskListModelImpl(final StartTaskController startTaskController,
+	public TaskListModelImpl(final StartTaskPresenter startTaskController,
 			final TooltipForTask tooltips) {
 		this.startTaskController = startTaskController;
 		this.tooltips = tooltips;
 	}
 
+	@Override
 	public void startTask() {
 		startTaskController.show();
 	}

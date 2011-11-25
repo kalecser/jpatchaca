@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.Presenter;
+import ui.swing.presenter.PresenterImpl;
 import ui.swing.presenter.UIAction;
 import ui.swing.presenter.ValidationException;
 import ui.swing.utils.SwingUtils;
@@ -16,7 +17,6 @@ import commons.swing.JAutoCompleteTextField;
 import commons.swing.JAutoCompleteTextFieldModel;
 
 public class StartTaskScreen implements ActionPane {
-	private static final long serialVersionUID = 1L;
 
 	private final JPanel panel;
 	private final StartTaskScreenModel model;
@@ -63,7 +63,7 @@ public class StartTaskScreen implements ActionPane {
 	}
 
 	public static void main(final String[] args) {
-		final Presenter presenter = new Presenter(null);
+		final Presenter presenter = new PresenterImpl(null);
 		final StartTaskScreen screen = new StartTaskScreen(
 				new MockStartTaskScreenModel());
 		presenter.showOkCancelDialog(screen, "Start Task");

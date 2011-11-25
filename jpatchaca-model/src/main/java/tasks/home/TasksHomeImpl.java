@@ -50,6 +50,7 @@ public class TasksHomeImpl implements TasksHome {
 
 	}
 
+	@Override
 	public void createTask(final ObjectIdentity taskId, final TaskName name,
 			final Double budget) throws MustBeCalledInsideATransaction {
 		final Task task = new TaskImpl(name, this.clock, budget,
@@ -76,6 +77,7 @@ public class TasksHomeImpl implements TasksHome {
 
 	}
 
+	@Override
 	public void remove(final TaskView task) {
 		tasks.remove(task);
 		this.taskListChangedAlert.fire();
@@ -86,14 +88,17 @@ public class TasksHomeImpl implements TasksHome {
 
 	}
 
+	@Override
 	public Alert taskListChangedAlert() {
 		return this.taskListChangedAlert;
 	}
 
+	@Override
 	public void addPeriodToTask(final ObjectIdentity taskId, final Period period) {
 		tasks.get(taskId).addPeriod(period);
 	}
 
+	@Override
 	public void editTask(final ObjectIdentity taskId, final NonEmptyString newName,
 			final Double newBudget) {
 		final Task task = tasks.get(taskId);
@@ -107,6 +112,7 @@ public class TasksHomeImpl implements TasksHome {
 
 	}
 
+	@Override
 	public void transferPeriod(final ObjectIdentity selectedTaskId,
 			final int selectedPeriod, final ObjectIdentity targetTaskId) {
 		final Task selectedTask = tasks.get(selectedTaskId);
@@ -118,14 +124,17 @@ public class TasksHomeImpl implements TasksHome {
 
 	}
 
+	@Override
 	public void addTasksListener(final TasksListener tasksListener) {
 		tasksListeners.add(tasksListener);
 	}
 
+	@Override
 	public void removePeriodFromTask(final TaskView task, final Period period) {
 		((Task) task).removePeriod(period);
 	}
 
+	@Override
 	public void addNoteToTask(final ObjectIdentity idOfTask, final NoteView note) {
 		final Task task = tasks.get(idOfTask);
 		task.addNote(note);

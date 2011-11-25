@@ -18,16 +18,19 @@ public class PeriodTransferable implements Transferable {
 		this.periodIndex = periodIndex;
 	}
 
+	@Override
 	public DataFlavor[] getTransferDataFlavors() {
 		return new DataFlavor[]{DataFlavor.stringFlavor};
 	}
 
 
 
+	@Override
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		return ArrayUtils.contains(getTransferDataFlavors(), flavor);
 	}
 
+	@Override
 	public Object getTransferData(DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
 		return String.format("task: %s period: %s", taskId, periodIndex) ;

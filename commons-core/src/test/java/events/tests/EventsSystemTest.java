@@ -2,7 +2,12 @@ package events.tests;
 
 import java.io.Serializable;
 
-import org.jmock.integration.junit3.MockObjectTestCase;
+import static org.junit.Assert.*;
+
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Before;
+import org.junit.Test;
 
 import basic.SystemClockImpl;
 import basic.mock.MockHardwareClock;
@@ -12,32 +17,35 @@ import events.EventsSystem;
 import events.EventsSystemImpl;
 import events.Processor;
 
-public class EventsSystemTest extends MockObjectTestCase {
+public class EventsSystemTest {
 	
-		
+	private final Mockery context = new JUnit4Mockery();
 	
 	private EventsSystem eventsSystem;
-	@Override
-	protected void setUp() throws Exception {
+	
+	@Before
+	public void setUp() {
 		eventsSystem = new EventsSystemImpl(new TransientEventList(new MockHardwareClock(), new SystemClockImpl()));
 		
 	}
 
+	@Test
 	public void testOnlyAddProcessorToNonStartedSystem(){
-		eventsSystem.addProcessor(mock(Processor.class));
+		eventsSystem.addProcessor(context.mock(Processor.class));
 		eventsSystem.start();
 
 		try{
-			eventsSystem.addProcessor(mock(Processor.class, "processor2"));
+			eventsSystem.addProcessor(context.mock(Processor.class, "processor2"));
 			fail("Must raise...");
-		}catch (final RuntimeException ex){
+		} catch (final RuntimeException ex){
 			assertEquals("Can't add processors, system is already started", ex.getMessage());
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCantAddSameProcessorTwice(){
-		final Processor<Serializable> processor = mock(Processor.class);
+		final Processor<Serializable> processor = context.mock(Processor.class);
 		eventsSystem.addProcessor(processor);
 		eventsSystem.addProcessor(processor);
 		
@@ -50,16 +58,18 @@ public class EventsSystemTest extends MockObjectTestCase {
 		
 	}
 
-	
+	@Test
 	public void testEventHooks(){
 		final StringBuilder log = new StringBuilder();
 		
 		eventsSystem.addProcessor(new Processor<String>() {
 			
+			@Override
 			public Class<? extends Serializable> eventType() {
 				return String.class;
 			}
 			
+			@Override
 			public void execute(final String eventObj) {
 				log.append("executed\n");
 			}
@@ -67,10 +77,12 @@ public class EventsSystemTest extends MockObjectTestCase {
 		
 		eventsSystem.addEventHook(new EventHook<String>(){
 			
+			@Override
 			public void hookEvent(final String event){
 				log.append("hooked - " + event);
 			}
 
+			@Override
 			public Class<? extends Serializable> getEventType() {
 				return String.class;
 			}
