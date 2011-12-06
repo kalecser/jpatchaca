@@ -214,7 +214,8 @@ public class TaskScreenController {
 					taskNameTextBox.setText(JiraUtil.getIssueDescription(jiraIssue
 										.unbox()));
 				}
-				jiraIssueKeyTextField.setBackground(new Color(0xAAFFAA));
+				Color green = new Color(0xAAFFAA);
+				jiraIssueKeyTextField.setBackground(green);
 
 			} catch (final JiraIssueNotFoundException ex) {
 				jiraIssue = null;
@@ -223,7 +224,8 @@ public class TaskScreenController {
 				if (maybeTaskView == null) {
 					taskNameTextBox.setText("");
 				}
-				jiraIssueKeyTextField.setBackground(new Color(0xFFAAAA));
+				Color red = new Color(0xFFAAAA);
+				jiraIssueKeyTextField.setBackground(red);
 			} catch (final JiraOptionsNotSetException ex) {
 				JOptionPane.showMessageDialog(taskNameTextBox,
 						"Jira options not set");
