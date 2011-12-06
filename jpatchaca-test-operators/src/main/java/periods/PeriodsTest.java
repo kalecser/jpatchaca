@@ -1,7 +1,5 @@
 package periods;
 
-import org.junit.Ignore;
-
 import junit.framework.TestCase;
 import tasks.PatchacaTasksOperator;
 
@@ -81,7 +79,6 @@ public abstract class PeriodsTest extends TestCase{
 		
 	}
 	
-	@Ignore
 	public void testPeriodsIntervalRemoval(){
 		periodsOperator.addPeriod(taskName);
 		periodsOperator.addPeriod(taskName);
