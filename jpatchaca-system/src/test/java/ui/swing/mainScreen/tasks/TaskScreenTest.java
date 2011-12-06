@@ -29,7 +29,7 @@ public class TaskScreenTest {
 
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.setJiraKey("jira-issue-key");
-		operator.assertName("[jira-issue-key] jira-issue-summary");
+		operator.waitName("[jira-issue-key] jira-issue-summary");
 
 	}
 
@@ -41,7 +41,7 @@ public class TaskScreenTest {
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.setTaskName("foobar");
 		operator.setJiraKey("test");
-		operator.assertName("foobar");
+		operator.waitName("foobar");
 
 	}
 
@@ -72,6 +72,20 @@ public class TaskScreenTest {
 		operator.setJiraKey("foobarbaz");
 		operator.clickOk();
 		mockModel.waitCreatedTaskWithJiraId("foobarbaz");
+
+	}
+	
+	@Test
+	public void addJiraIssueToExistingTask_ShouldUpdateNameIfEmpty() {
+
+		MockTask mockTask = createMockTaskWithJiraKey("foobar");
+		mockModel.setSelectedTask(mockTask);
+		controller.editSelectedTask();
+
+		TaskScreenOperator operator = new TaskScreenOperator();
+		operator.setTaskName("");
+		operator.setJiraKey("foobarbaz");
+		operator.waitName("[foobarbaz] jira-issue-summary");
 
 	}
 	

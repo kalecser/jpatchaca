@@ -210,7 +210,7 @@ public class TaskScreenController {
 
 			try {
 				jiraIssue = Maybe.wrap(jira.getIssueByKey(key));
-				if (maybeTaskView == null && taskNameTextBox.getText().equals("")) {
+				if (taskNameTextBox.getText().equals("")) {
 					taskNameTextBox.setText(JiraUtil.getIssueDescription(jiraIssue
 										.unbox()));
 				}
