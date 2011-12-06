@@ -5,6 +5,7 @@ import jira.JiraIssueData;
 
 import org.junit.After;
 import org.junit.Test;
+import org.netbeans.jemmy.operators.JDialogOperator;
 
 import tasks.adapters.ui.operators.TaskScreenOperator;
 import ui.swing.mainScreen.tasks.mock.MockJira;
@@ -72,6 +73,15 @@ public class TaskScreenTest {
 		operator.clickOk();
 		mockModel.waitCreatedTaskWithJiraId("foobarbaz");
 
+	}
+	
+	@Test
+	public void onEmptyTaskname_ShouldNotSaveTask(){
+		controller.createTask();
+		TaskScreenOperator operator = new TaskScreenOperator();
+		operator.clickOk();
+		JDialogOperator dialog = new JDialogOperator("Message");
+		dialog.close();
 	}
 
 	private static MockTask createMockTaskWithJiraKey(String jiraKey) {

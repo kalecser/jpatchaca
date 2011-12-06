@@ -102,6 +102,7 @@ public class TaskScreenController {
 		private final Maybe<TaskView> maybeTaskView;
 
 		private final Maybe<Long> time;
+		private String errorMessage;
 
 		public TaskScreenDialog(final Maybe<TaskView> maybeTaskView,
 				final Maybe<Long> time) {
@@ -238,18 +239,24 @@ public class TaskScreenController {
 			return null;
 		}
 		
-		private TaskData getDataInSwingThread(){
-			return SwingUtils.getOrCry(new Callable<TaskData>() {
+		private Maybe<TaskData> getDataInSwingThread(){
+			return SwingUtils.getOrCry(new Callable<Maybe<TaskData>>() {
 				@Override
-				public TaskData call() throws Exception {
-					return internalGettaskData();
+				public Maybe<TaskData> call() throws Exception {
+					return internalGetTaskData();
 				}
 			});
 			
 		}
 
-		TaskData internalGettaskData() {
+		Maybe<TaskData> internalGetTaskData(){
 			final String taskName = taskNameTextBox.getText();
+			if (taskName.isEmpty()){
+				errorMessage = 
+						"Task name must not be blank";
+				return null;
+			}
+			
 			TaskData data = new TaskData(new NonEmptyString(taskName));
 			data.setBudget(getBudget());
 			
@@ -260,15 +267,15 @@ public class TaskScreenController {
 			if(jiraIssue != null)
 				data.setJiraIssue(jiraIssue.unbox());
 			
-			return data;
+			return Maybe.wrap(data);
 		}
 
 		void runUIActionTaskScreenDialog() throws ValidationException {
-			TaskData data = getDataInSwingThread();
-			if (data.getTaskName().equals("")) {
-				throw new ValidationException(
-						"Task name must not be empty");
-			}
+			Maybe<TaskData> maybeData = getDataInSwingThread();
+			if (maybeData == null)
+				throw new ValidationException(errorMessage);
+			
+			TaskData data = maybeData.unbox();
 
 			if (taskView != null) {
 				model.editTask(taskView, data);
