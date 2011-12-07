@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import tasks.delegates.CreateTaskdelegate;
 import tasks.home.TaskData;
 import ui.swing.mainScreen.tasks.mock.CreateTaskDelegateMock;
 import ui.swing.mainScreen.tasks.mock.MockTask;
@@ -14,7 +15,9 @@ import basic.NonEmptyString;
 public class TaskScreenModelTest {
 
 	SelectedTaskSource selectedTask = new SelectedTaskSource();
-	TaskScreenModelImpl subject = new TaskScreenModelImpl(new MockTasksSystem(), selectedTask, new CreateTaskDelegateMock(), null);
+	private CreateTaskdelegate createTaskMock = new CreateTaskDelegateMock();
+	TaskScreenModelImpl subject = 
+			new TaskScreenModelImpl(new MockTasksSystem(), selectedTask, createTaskMock);
 	MockTask taskView = new MockTask("test");
 	TaskData data = new TaskData(new NonEmptyString("newName"));
 	
