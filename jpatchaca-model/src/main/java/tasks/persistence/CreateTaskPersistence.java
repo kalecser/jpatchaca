@@ -6,7 +6,7 @@ import org.picocontainer.Startable;
 import basic.Delegate;
 import basic.IdProvider;
 
-import tasks.delegates.CreateTaskDelegate;
+import tasks.delegates.CreateTaskdelegate;
 import tasks.home.TaskData;
 import core.ObjectIdentity;
 import events.CreateTaskEvent3;
@@ -14,11 +14,11 @@ import events.EventsConsumer;
 
 public class CreateTaskPersistence implements Startable{
 
-	private final CreateTaskDelegate delegate;
+	private final CreateTaskdelegate delegate;
 	private final EventsConsumer consumer;
 	private final IdProvider provider;
 
-	public CreateTaskPersistence(final CreateTaskDelegate delegate,
+	public CreateTaskPersistence(final CreateTaskdelegate delegate,
 			final EventsConsumer consumer, final IdProvider provider) {
 		this.delegate = delegate;
 		this.consumer = consumer;

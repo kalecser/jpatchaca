@@ -15,7 +15,8 @@ import org.junit.Test;
 
 import tasks.TaskView;
 import tasks.TasksSystem;
-import tasks.delegates.CreateTaskDelegate;
+import tasks.delegates.CreateTaskDelegateImpl;
+import tasks.delegates.CreateTaskdelegate;
 import tasks.home.TaskData;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;
@@ -32,7 +33,7 @@ public class LabelsTest {
 	private TasksSystem tasksSystem;
 	private EventsSystem eventsSystem;
 	private TasksView tasks;
-	private CreateTaskDelegate createTaskDelegate;
+	private CreateTaskdelegate createTaskDelegate;
 	private MockIdProvider mockidProvider;
 	
 
@@ -44,7 +45,7 @@ public class LabelsTest {
 		
 		labelsSystem = container.getComponent(LabelsSystem.class);
 		tasksSystem = container.getComponent(TasksSystem.class);
-		createTaskDelegate = container.getComponent(CreateTaskDelegate.class);
+		createTaskDelegate = container.getComponent(CreateTaskDelegateImpl.class);
 		tasks = container.getComponent(TasksView.class);
 		mockidProvider = container.getComponent(MockIdProvider.class);
 		eventsSystem = container.getComponent(EventsSystem.class);

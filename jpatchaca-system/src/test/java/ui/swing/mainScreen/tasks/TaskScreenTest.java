@@ -20,7 +20,7 @@ public class TaskScreenTest {
 	MockJira mockJira = new MockJira();
 	MockTaskScreenModel mockModel = new MockTaskScreenModel();
 	PresenterImpl presenter = new PresenterImpl(new UIEventsExecutorImpl(null));
-	TaskScreenController controller = new TaskScreenController(new FormatterImpl(), mockModel, presenter, mockJira, null);
+	TaskScreenController controller = new TaskScreenController(new FormatterImpl(), mockModel, presenter, mockJira);
 
 	@Test
 	public void testTaskNameAutoCompleteFromJira() {

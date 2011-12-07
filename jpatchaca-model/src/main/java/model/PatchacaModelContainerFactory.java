@@ -27,7 +27,7 @@ import periods.impl.PeriodsFactoryImpl;
 import periodsInTasks.impl.PeriodsInTasksSystemImpl;
 import tasks.ActiveTask;
 import tasks.TasksSystemImpl;
-import tasks.delegates.CreateTaskDelegate;
+import tasks.delegates.CreateTaskDelegateImpl;
 import tasks.delegates.StartTaskDataParser;
 import tasks.delegates.StartTaskDelegate;
 import tasks.home.TasksHomeImpl;
@@ -101,7 +101,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(TasksHomeImpl.class);
 		container.addComponent(TasksSystemImpl.class);
 		container.addComponent(StartTaskDelegate.class);
-		container.addComponent(CreateTaskDelegate.class);
+		container.addComponent(CreateTaskDelegateImpl.class);
 		container.addComponent(StartTaskProcessor2.class);
 		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(CreateTaskPersistence.class);

@@ -7,7 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import tasks.delegates.CreateTaskDelegate;
+import tasks.delegates.CreateTaskDelegateImpl;
+import tasks.delegates.CreateTaskdelegate;
 import tasks.home.TaskData;
 import basic.IdProvider;
 import basic.NonEmptyString;
@@ -17,12 +18,12 @@ import events.CreateTaskEvent3;
 
 public class CreateTaskPersistenceTest {
 
-	private CreateTaskDelegate delegate;
+	private CreateTaskdelegate delegate;
 	private MockEventsConsumer consumer;
 
 	@Before
 	public void setup() {
-		delegate = new CreateTaskDelegate(new SelectedLabel());
+		delegate = new CreateTaskDelegateImpl(new SelectedLabel());
 		consumer = new MockEventsConsumer();
 		final IdProvider mockIdProvider = new MockIdProvider();
 

@@ -29,7 +29,6 @@ import tasks.home.TaskData;
 import ui.swing.presenter.ActionPane;
 import ui.swing.presenter.UIAction;
 import ui.swing.presenter.ValidationException;
-import ui.swing.tasks.SelectedTaskSource;
 import ui.swing.utils.SwingUtils;
 import basic.Formatter;
 import basic.NonEmptyString;
@@ -52,15 +51,12 @@ class TaskScreen implements ActionPane {
 	private final Formatter formatter;
 	private final TaskScreenModel model;
 	private final Jira jira;
-	private final SelectedTaskSource selectedTaskSource;
 
 	public TaskScreen(TaskScreenModel model, Formatter formatter, 
-							Jira jira, SelectedTaskSource selectedTaskSource, 
-							final Maybe<TaskView> maybeTaskView, final Maybe<Long> time) {
+							Jira jira, final Maybe<TaskView> maybeTaskView, final Maybe<Long> time) {
 		this.model = model;
 		this.formatter = formatter;
 		this.jira = jira;
-		this.selectedTaskSource = selectedTaskSource;
 		this.maybeTaskView = maybeTaskView;
 		this.time = time;
 		if (maybeTaskView != null)
@@ -241,7 +237,6 @@ class TaskScreen implements ActionPane {
 		} else {
 			model.createTaskAndStart(data, time.unbox());
 		}
-		selectedTaskSource.supply(taskView);
 	}
 
 	void onFocusLostJiraIssueKeyTextField() {
