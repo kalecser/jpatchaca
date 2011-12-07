@@ -26,11 +26,6 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	}
 
 	@Override
-	public void createTaskStarted(final long time) {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
 	public void destroyMainScreen() {
 		// Nothing special
 	}

@@ -28,35 +28,30 @@ public class TaskScreenController {
 		this.jira = jira;
 	}
 
-	public void createTaskStarted(final long time) {
-		internalShow(null, Maybe.wrap(Long.valueOf(time)));
-	}
-
 	public void editSelectedTask() {
 		final TaskView selectedTask = model.selectedTask();
 		if (selectedTask == null) {
-			internalShow(((Maybe<TaskView>) null), null);
+			internalShow(((Maybe<TaskView>) null));
 		} else {
-			internalShow(Maybe.wrap(selectedTask), null);
+			internalShow(Maybe.wrap(selectedTask));
 		}
 	}
 
 	public void createTask() {
-		internalShow(null, null);
+		internalShow(null);
 	}
 
-	private void internalShow(final Maybe<TaskView> task,
-			final Maybe<Long> start) {
+	private void internalShow(final Maybe<TaskView> task) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				showOkCancelDialog(task, start);
+				showOkCancelDialog(task);
 			}
 		});
 	}
 
-	void showOkCancelDialog(final Maybe<TaskView> task, final Maybe<Long> start) {
-		presenter.showOkCancelDialog(new TaskScreen(model, formatter, jira, task, start),
+	void showOkCancelDialog(final Maybe<TaskView> task) {
+		presenter.showOkCancelDialog(new TaskScreen(model, formatter, jira, task),
 				TITLE);
 	}
 

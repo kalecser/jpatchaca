@@ -46,19 +46,17 @@ class TaskScreen implements ActionPane {
 
 	private final Maybe<TaskView> maybeTaskView;
 
-	private final Maybe<Long> time;
 	private String errorMessage;
 	private final Formatter formatter;
 	private final TaskScreenModel model;
 	private final Jira jira;
 
 	public TaskScreen(TaskScreenModel model, Formatter formatter, 
-							Jira jira, final Maybe<TaskView> maybeTaskView, final Maybe<Long> time) {
+							Jira jira, final Maybe<TaskView> maybeTaskView) {
 		this.model = model;
 		this.formatter = formatter;
 		this.jira = jira;
 		this.maybeTaskView = maybeTaskView;
-		this.time = time;
 		if (maybeTaskView != null)
 			this.jiraIssue = maybeTaskView.unbox().getJiraIssue();
 	}
@@ -232,10 +230,8 @@ class TaskScreen implements ActionPane {
 
 		if (taskView != null) {
 			model.editTask(taskView, data);
-		} else if (time == null) {
-			model.createTask(data);
 		} else {
-			model.createTaskAndStart(data, time.unbox());
+			model.createTask(data);
 		}
 	}
 

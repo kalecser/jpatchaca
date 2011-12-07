@@ -455,18 +455,6 @@ public class PatchacaTray implements Startable {
 		return this.stopTaskAlert;
 	}
 
-	protected PopupMenu createNewTaskMenu() {
-		final IntervalMenu newTaskMenu = new IntervalMenu(NEW_TASK,
-				new IntervalMenu.IntervalSelectedListener() {
-					@Override
-					public void intervalClicked(final long millis) {
-						model.createTaskStarted(millis);
-					}
-				}, true);
-
-		return newTaskMenu;
-	}
-
 	void startStopTaskOnSingleClick(final long lastClickTime) {
 		try {
 
