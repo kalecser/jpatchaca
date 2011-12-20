@@ -3,8 +3,8 @@ package ui.swing.mainScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import jira.JiraAction;
-import jira.RemoteJiraIssue;
+import jira.issue.JiraAction;
+import jira.issue.RemoteJiraIssue;
 
 public class JiraActionFiredListener implements ActionListener {
 	

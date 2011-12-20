@@ -3,6 +3,7 @@ package jira;
 import java.util.Calendar;
 
 import jira.events.SendWorklog;
+import jira.service.Jira;
 import periods.Period;
 import tasks.TaskView;
 import tasks.tasks.Tasks;

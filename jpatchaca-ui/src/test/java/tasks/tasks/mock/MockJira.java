@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jira.Jira;
-import jira.JiraAction;
-import jira.JiraIssue;
-import jira.JiraIssueData;
 import jira.JiraOptions;
 import jira.exception.JiraException;
+import jira.issue.JiraAction;
+import jira.issue.JiraIssue;
+import jira.issue.JiraIssueData;
+import jira.service.Jira;
 
 import org.apache.commons.lang.NotImplementedException;
 
@@ -131,5 +131,10 @@ public class MockJira implements Jira {
 	public boolean isAssignedToCurrentUser(JiraIssue issue) {
 		String assignee = assigneeByKey.get(issue.getKey());		
 		return isAssignedToUser(assignee);
+	}
+
+	@Override
+	public Map<String, String> getMetaAttributes(JiraIssue issue) {
+		throw new NotImplementedException();
 	}
 }

@@ -2,7 +2,7 @@ package tasks;
 
 import java.util.List;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import lang.Maybe;
 
 import org.reactive.Signal;

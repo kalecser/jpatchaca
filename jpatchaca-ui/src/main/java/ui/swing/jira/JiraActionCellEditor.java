@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import jira.JiraAction;
+import jira.issue.JiraAction;
 
 @SuppressWarnings("serial")
 public class JiraActionCellEditor extends AbstractCellEditor implements TableCellEditor {

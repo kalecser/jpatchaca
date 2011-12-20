@@ -35,8 +35,8 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import jira.JiraIssue;
 import jira.JiraOptions;
+import jira.issue.JiraIssue;
 import labels.labels.SelectedLabel;
 import lang.Maybe;
 

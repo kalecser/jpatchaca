@@ -1,13 +1,13 @@
 package tasks.persistence;
 
-import jira.events.SetJiraIssueToTask;
+import jira.events.JiraEventFactory;
 
 import org.picocontainer.Startable;
-import basic.Delegate;
-import basic.IdProvider;
 
 import tasks.delegates.CreateTaskDelegate;
 import tasks.home.TaskData;
+import basic.Delegate;
+import basic.IdProvider;
 import core.ObjectIdentity;
 import events.CreateTaskEvent3;
 import events.EventsConsumer;

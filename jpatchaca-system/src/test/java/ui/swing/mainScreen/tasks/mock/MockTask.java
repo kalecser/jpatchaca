@@ -2,7 +2,7 @@ package ui.swing.mainScreen.tasks.mock;
 
 import java.util.List;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import lang.Maybe;
 
 import org.junit.Assert;

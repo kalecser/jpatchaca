@@ -1,10 +1,12 @@
 package tasks;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-import jira.JiraIssue;
+import jira.events.JiraEventFactory;
 import jira.events.SetJiraIssueToTask;
+import jira.issue.JiraIssue;
 import lang.Maybe;
 
 import org.apache.commons.lang.Validate;

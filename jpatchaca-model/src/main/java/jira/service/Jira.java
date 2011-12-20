@@ -1,9 +1,12 @@
-package jira;
+package jira.service;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import jira.exception.JiraException;
+import jira.issue.JiraAction;
+import jira.issue.JiraIssue;
 
 public interface Jira {
 
@@ -24,5 +27,6 @@ public interface Jira {
 	boolean isAssignedToCurrentUser(JiraIssue issue);
 
 	List<JiraIssue> getIssuesFromCurrentUserWithStatus(List<String> statusList);
-	
+
+	Map<String, String> getMetaAttributes(JiraIssue issue);	
 }

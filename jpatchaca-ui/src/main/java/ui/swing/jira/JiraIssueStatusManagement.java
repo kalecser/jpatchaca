@@ -3,10 +3,10 @@ package ui.swing.jira;
 import java.util.ArrayList;
 import java.util.List;
 
-import jira.Jira;
-import jira.JiraAction;
-import jira.JiraIssue;
-import jira.RemoteJiraIssue;
+import jira.issue.JiraAction;
+import jira.issue.JiraIssue;
+import jira.issue.RemoteJiraIssue;
+import jira.service.Jira;
 
 public class JiraIssueStatusManagement {
 

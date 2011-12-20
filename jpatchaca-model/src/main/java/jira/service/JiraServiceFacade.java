@@ -1,21 +1,20 @@
-package jira;
+package jira.service;
 
 import java.rmi.RemoteException;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.xml.rpc.ServiceException;
 
+import jira.JiraOptions;
 import jira.exception.JiraAuthenticationException;
 import jira.exception.JiraIssueNotFoundException;
 import jira.exception.JiraOptionsNotSetException;
 import jira.exception.JiraPermissionException;
 import jira.exception.JiraValidationException;
-import lang.Maybe;
 
 import org.apache.commons.lang.StringUtils;
-
-import basic.HardwareClock;
+import org.jpatchaca.jira.ws.JPatchacaSoapService;
+import org.jpatchaca.jira.ws.RemoteMetaAttribute;
 
 import com.dolby.jira.net.soap.jira.JiraSoapService;
 import com.dolby.jira.net.soap.jira.RemoteAuthenticationException;
@@ -33,71 +32,31 @@ public class JiraServiceFacade {
 
 	public static final int TOKEN_TIMEOUT_MINUTES = 10;
 
+	// TODO tentar remover jiraOptions
 	private final JiraOptions jiraOptions;
 	private final JiraServiceFactory serviceFactory;
-	private final HardwareClock hardwareClock;
-	private String _token;
-	private Calendar tokenTimeout;
+
+	private final ClientTokenManager tokenManager;
 
 	public JiraServiceFacade(JiraOptions jiraOptions,
-			JiraServiceFactory serviceFactory, HardwareClock hardwareClock) {
+			JiraServiceFactory serviceFactory, ClientTokenManager tokenManager) {
 		this.jiraOptions = jiraOptions;
 		this.serviceFactory = serviceFactory;
-		this.hardwareClock = hardwareClock;
+		this.tokenManager = tokenManager;
 	}
 
 	private JiraSoapService getService() {
 		try {
-			Maybe<String> maybeURL = jiraOptions.getURL();
-			String url = String.format("%s/rpc/soap/jirasoapservice-v2", maybeURL.unbox());			
-			return serviceFactory.createService(url);
+			return serviceFactory.createJiraSoapService();
 		} catch (ServiceException e) {
 			throw _handleException(e);
 		}
 	}
-
-	private String getToken() {
-		jiraOptions.validate();
-
-		if (_token != null && !tokenExpired())
-			return _token;
-
-		_login(jiraOptions.getUserName().unbox(), jiraOptions.getPassword()
-				.unbox());
-
-		return _token;
-	}
-
-	private void _login(final String username, final String password) {
-		try {
-			_token = getService().login(username, password);
-			setTokenTimeout();
-		} catch (RemoteAuthenticationException e) {
-			throw _handleException(e);
-		} catch (java.rmi.RemoteException e) {
-			throw _handleException(e);
-		}
-	}
-
-	private void setTokenTimeout() {
-		tokenTimeout = now();
-		tokenTimeout.add(Calendar.MINUTE, TOKEN_TIMEOUT_MINUTES);
-	}
-
-	private Calendar now() {
-		Calendar tokenTimeout = Calendar.getInstance();
-		tokenTimeout.setTime(hardwareClock.getTime());
-		return tokenTimeout;
-	}
-
-	private boolean tokenExpired() {
-		return tokenTimeout == null || tokenTimeout.before(now());
-	}
-
+	
 	public RemoteIssue getIssueByKey(String key) {
 		try {
 			RemoteIssue[] remoteIssues = getService().getIssuesFromJqlSearch(
-					getToken(), "key = " + key, 20);
+					tokenManager.getToken(), "key = " + key, 20);
 			return remoteIssues[0];
 		} catch (RemoteValidationException e) {
 			throw new JiraIssueNotFoundException(key);
@@ -111,8 +70,8 @@ public class JiraServiceFacade {
 	}
 
 	public RemoteIssue getIssueById(String id) {
-		try {
-			return getService().getIssueById(getToken(), id);
+		try {			
+			return getService().getIssueById(tokenManager.getToken(), id);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -127,8 +86,8 @@ public class JiraServiceFacade {
 	public void addWorklogAndAutoAdjustRemainingEstimate(String issueId,
 			RemoteWorklog workLog) {
 		try {
-			getService().addWorklogAndAutoAdjustRemainingEstimate(getToken(),
-					issueId, workLog);
+			getService().addWorklogAndAutoAdjustRemainingEstimate(
+					tokenManager.getToken(), issueId, workLog);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -142,7 +101,8 @@ public class JiraServiceFacade {
 
 	public RemoteNamedObject[] getAvailableActions(String key) {
 		try {
-			return getService().getAvailableActions(getToken(), key);
+			return getService().getAvailableActions(tokenManager.getToken(),
+					key);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -156,7 +116,8 @@ public class JiraServiceFacade {
 
 	public RemoteField[] getFieldsForAction(String key, String id) {
 		try {
-			return getService().getFieldsForAction(getToken(), key, id);
+			return getService().getFieldsForAction(tokenManager.getToken(),
+					key, id);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -171,8 +132,8 @@ public class JiraServiceFacade {
 	public void progressWorkflowAction(String key, String id,
 			RemoteFieldValue[] remoteFieldValues) {
 		try {
-			getService().progressWorkflowAction(getToken(), key, id,
-					remoteFieldValues);
+			getService().progressWorkflowAction(tokenManager.getToken(), key,
+					id, remoteFieldValues);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -186,7 +147,8 @@ public class JiraServiceFacade {
 
 	public void addComment(String key, RemoteComment remoteComment) {
 		try {
-			getService().addComment(getToken(), key, remoteComment);
+			getService()
+					.addComment(tokenManager.getToken(), key, remoteComment);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -200,7 +162,7 @@ public class JiraServiceFacade {
 
 	public RemoteStatus[] getStatuses() {
 		try {
-			return getService().getStatuses(getToken());
+			return getService().getStatuses(tokenManager.getToken());
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -214,7 +176,27 @@ public class JiraServiceFacade {
 
 	public void updateIssue(String key, RemoteFieldValue[] fieldValues) {
 		try {
-			getService().updateIssue(getToken(), key, fieldValues);
+			getService().updateIssue(tokenManager.getToken(), key, fieldValues);
+		} catch (RemoteValidationException e) {
+			throw _handleException(e);
+		} catch (RemoteAuthenticationException e) {
+			throw _handleException(e);
+		} catch (RemotePermissionException e) {
+			throw _handleException(e);
+		} catch (RemoteException e) {
+			throw _handleException(e);
+		}
+	}
+
+	public RemoteIssue[] getIssuesFromCurrentUserWithStatus(
+			List<String> statusList) {
+		String jql = String.format(
+				"assignee = currentUser() AND status in (%s)",
+				StringUtils.join(statusList, ", "));
+
+		try {
+			return getService().getIssuesFromJqlSearch(tokenManager.getToken(),
+					jql, 30);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -226,22 +208,15 @@ public class JiraServiceFacade {
 		}
 	}
 	
-	public RemoteIssue[] getIssuesFromCurrentUserWithStatus(List<String> statusList) {
-		String jql = String.format(
-				"assignee = currentUser() AND status in (%s)",
-				StringUtils.join(statusList, ", "));
-
+	public RemoteMetaAttribute[] getMetaAttributes(String issueKey){
 		try {
-			return getService().getIssuesFromJqlSearch(getToken(), jql, 30);
-		} catch (RemoteValidationException e) {
-			throw _handleException(e);
-		} catch (RemoteAuthenticationException e) {
-			throw _handleException(e);
-		} catch (RemotePermissionException e) {
+			JPatchacaSoapService jpatchacaService = serviceFactory.createJPatchacaService();
+			return jpatchacaService.getMetaAttributesForIssue(tokenManager.getToken(), issueKey);			
+		} catch (ServiceException e) {
 			throw _handleException(e);
 		} catch (RemoteException e) {
 			throw _handleException(e);
-		}		
+		}
 	}
 
 	public String getJiraUsername() {
@@ -253,7 +228,7 @@ public class JiraServiceFacade {
 	}
 
 	private RuntimeException _handleException(RemoteException e) {
-		_resetTokenTimeout();
+		tokenManager.resetTokenTimeout();
 		return new RuntimeException(e.getMessage());
 	}
 
@@ -262,7 +237,7 @@ public class JiraServiceFacade {
 	}
 
 	private RuntimeException _handleException(RemoteAuthenticationException e) {
-		_resetTokenTimeout();
+		tokenManager.resetTokenTimeout();
 		return new JiraAuthenticationException(e);
 	}
 
@@ -273,10 +248,5 @@ public class JiraServiceFacade {
 	private RuntimeException _handleException(ServiceException e) {
 		return new RuntimeException(e);
 	}
-
-	private void _resetTokenTimeout() {
-		tokenTimeout = null;
-	}
-
 
 }

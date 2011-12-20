@@ -2,14 +2,15 @@ package ui.swing.mainScreen.tasks.mock;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import jira.Jira;
-import jira.JiraAction;
-import jira.JiraIssue;
-import jira.JiraIssueData;
 import jira.exception.JiraException;
+import jira.issue.JiraAction;
+import jira.issue.JiraIssue;
+import jira.issue.JiraIssueData;
+import jira.service.Jira;
 
 public class MockJira implements Jira {
 
@@ -58,6 +59,11 @@ public class MockJira implements Jira {
 
 	@Override
 	public boolean isAssignedToCurrentUser(JiraIssue issue) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public Map<String, String> getMetaAttributes(JiraIssue issue) {
 		throw new NotImplementedException();
 	}
 }

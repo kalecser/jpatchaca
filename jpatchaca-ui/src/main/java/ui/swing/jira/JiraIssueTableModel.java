@@ -5,8 +5,8 @@ import java.util.List;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
-import jira.JiraAction;
-import jira.RemoteJiraIssue;
+import jira.issue.JiraAction;
+import jira.issue.RemoteJiraIssue;
 
 @SuppressWarnings("serial")
 public class JiraIssueTableModel extends AbstractTableModel {

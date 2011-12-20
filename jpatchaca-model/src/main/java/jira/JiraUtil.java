@@ -1,5 +1,7 @@
 package jira;
 
+import jira.issue.JiraIssue;
+
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.time.DateUtils;
 

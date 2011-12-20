@@ -2,9 +2,9 @@ package ui.swing.jira;
 
 import java.util.List;
 
-import jira.JiraIssue;
 import jira.JiraOptions;
-import jira.RemoteJiraIssue;
+import jira.issue.JiraIssue;
+import jira.issue.RemoteJiraIssue;
 import junit.framework.Assert;
 
 import org.junit.Before;

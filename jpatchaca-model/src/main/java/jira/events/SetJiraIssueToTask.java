@@ -2,7 +2,7 @@ package jira.events;
 
 import java.io.Serializable;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import core.ObjectIdentity;
 
 public class SetJiraIssueToTask implements Serializable {

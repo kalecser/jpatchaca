@@ -1,4 +1,4 @@
-package jira;
+package jira.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,10 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 import jira.exception.JiraException;
+import jira.issue.JiraAction;
+import jira.issue.JiraField;
+import jira.issue.JiraIssue;
+import jira.issue.JiraIssueData;
 
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.jpatchaca.jira.ws.RemoteMetaAttribute;
 
 import com.dolby.jira.net.soap.jira.RemoteComment;
 import com.dolby.jira.net.soap.jira.RemoteField;
@@ -31,7 +36,7 @@ public class JiraImpl implements Jira {
 
 	@Override
 	public JiraIssue getIssueByKey(final String key) {
-		Validate.notEmpty(key);		
+		Validate.notEmpty(key);
 		Logger.getLogger("org.apache.axis").setLevel(Level.OFF);
 		return createIssue(jiraService.getIssueByKey(key));
 	}
@@ -50,7 +55,7 @@ public class JiraImpl implements Jira {
 	@Override
 	public List<JiraAction> getAvaiableActions(JiraIssue issue) {
 		Validate.notNull(issue);
-		
+
 		List<JiraAction> actions = new ArrayList<JiraAction>();
 		RemoteNamedObject[] availableActions = jiraService
 				.getAvailableActions(issue.getKey());
@@ -88,7 +93,7 @@ public class JiraImpl implements Jira {
 		String statusId = getRemoteIssue(issue.getId()).getStatus();
 		return getStatuses().get(statusId);
 	}
-	
+
 	@Override
 	public void assignIssueToCurrentUser(JiraIssue issue) {
 		String[] values = new String[] { jiraService.getJiraUsername() };
@@ -108,7 +113,7 @@ public class JiraImpl implements Jira {
 			List<String> statusList) {
 
 		Validate.notEmpty(statusList);
-		
+
 		List<JiraIssue> issues = new ArrayList<JiraIssue>();
 
 		for (RemoteIssue remoteIssue : jiraService
@@ -117,7 +122,7 @@ public class JiraImpl implements Jira {
 
 		return issues;
 	}
-	
+
 	private RemoteIssue getRemoteIssue(final String id) {
 		Validate.notEmpty(id);
 		return jiraService.getIssueById(id);
@@ -129,7 +134,7 @@ public class JiraImpl implements Jira {
 		data.setKey(issue.getKey());
 		data.setSummary(issue.getSummary());
 		return new JiraIssue(data);
-	}	
+	}
 
 	private JiraAction createAction(String key, RemoteNamedObject namedObject) {
 		JiraAction action = new JiraAction(namedObject.getId(),
@@ -155,7 +160,16 @@ public class JiraImpl implements Jira {
 		statuses = new HashMap<String, String>();
 		for (RemoteStatus remoteStatus : remoteStatuses)
 			statuses.put(remoteStatus.getId(), remoteStatus.getName());
-
+ 
 		return statuses;
+	}
+	
+	@Override
+	public Map<String, String> getMetaAttributes(JiraIssue issue) {
+		RemoteMetaAttribute[] metaAttributes = jiraService.getMetaAttributes(issue.getKey());
+		Map<String, String> attributeMap = new HashMap<String, String>();
+		for(RemoteMetaAttribute ra: metaAttributes)
+			attributeMap.put(ra.getName(), ra.getValue());
+		return attributeMap;
 	}
 }

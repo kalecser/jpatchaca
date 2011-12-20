@@ -8,10 +8,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import jira.JiraAction;
-import jira.JiraIssue;
 import jira.JiraOptions;
-import jira.RemoteJiraIssue;
+import jira.issue.JiraAction;
+import jira.issue.JiraIssue;
+import jira.issue.RemoteJiraIssue;
 
 import org.jdesktop.swingx.JXTable;
 import org.picocontainer.Startable;

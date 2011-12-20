@@ -1,7 +1,7 @@
 package main;
 
-import jira.JiraImpl;
-import jira.JiraMock;
+import jira.service.JiraImpl;
+import jira.service.JiraMock;
 import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
 

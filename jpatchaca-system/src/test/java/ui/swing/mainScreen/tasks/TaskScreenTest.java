@@ -1,7 +1,7 @@
 package ui.swing.mainScreen.tasks;
 
-import jira.JiraIssue;
-import jira.JiraIssueData;
+import jira.issue.JiraIssue;
+import jira.issue.JiraIssueData;
 
 import org.junit.After;
 import org.junit.Test;

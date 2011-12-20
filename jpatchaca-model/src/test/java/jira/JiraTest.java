@@ -3,9 +3,15 @@ package jira;
 import java.util.Calendar;
 
 import jira.exception.JiraIssueNotFoundException;
+import jira.issue.JiraIssue;
+import jira.issue.JiraIssueData;
 import jira.mock.JiraMockInvocationHandler;
 import jira.mock.JiraServiceMockFactory;
 import jira.mock.MethodCall;
+import jira.service.ClientTokenManager;
+import jira.service.Jira;
+import jira.service.JiraImpl;
+import jira.service.JiraServiceFacade;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +39,8 @@ public class JiraTest {
 		picoContainer.addComponent(_jiraOptions());
 		picoContainer.addComponent(_serviceFactory());
 		picoContainer.addComponent(JiraServiceFacade.class);
-
+		picoContainer.addComponent(ClientTokenManager.class);
+		
 		clock = new MockHardwareClock();
 		clock.setTime(0);
 		picoContainer.addComponent(clock);

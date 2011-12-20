@@ -2,7 +2,7 @@ package ui.swing.mainScreen;
 
 import java.util.List;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 
 import labels.LabelsSystem;
 

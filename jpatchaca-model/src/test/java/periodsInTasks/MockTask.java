@@ -2,7 +2,7 @@ package periodsInTasks;
 
 import java.util.List;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import lang.Maybe;
 
 import org.junit.Assert;

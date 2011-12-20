@@ -16,11 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import jira.Jira;
-import jira.JiraIssue;
 import jira.JiraUtil;
 import jira.exception.JiraIssueNotFoundException;
 import jira.exception.JiraOptionsNotSetException;
+import jira.issue.JiraIssue;
+import jira.service.Jira;
 import lang.Maybe;
 
 import org.apache.commons.lang.StringUtils;

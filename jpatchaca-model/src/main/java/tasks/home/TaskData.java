@@ -1,6 +1,6 @@
 package tasks.home;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import basic.NonEmptyString;
 
 public class TaskData {

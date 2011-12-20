@@ -1,4 +1,4 @@
-package jira;
+package jira.service;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import jira.exception.JiraException;
+import jira.issue.JiraAction;
+import jira.issue.JiraIssue;
+import jira.issue.JiraIssueData;
 
 import org.apache.commons.lang.NotImplementedException;
 
@@ -64,6 +67,11 @@ public class JiraMock implements Jira {
 	@Override
 	public boolean isAssignedToCurrentUser(JiraIssue issue) {
 		return true;
+	}
+
+	@Override
+	public Map<String, String> getMetaAttributes(JiraIssue issue) {
+		throw new NotImplementedException();
 	}
 	
 }
