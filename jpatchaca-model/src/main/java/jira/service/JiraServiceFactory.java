@@ -8,7 +8,7 @@ import com.dolby.jira.net.soap.jira.JiraSoapService;
 
 public interface JiraServiceFactory {
 
-	JPatchacaSoapService createJPatchacaService() throws ServiceException;
-	JiraSoapService createJiraSoapService() throws ServiceException;
+	JPatchacaSoapService createJPatchacaService(String address) throws ServiceException;
+	JiraSoapService createJiraSoapService(String address) throws ServiceException;
 
 }

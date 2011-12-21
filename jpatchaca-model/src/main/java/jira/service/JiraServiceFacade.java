@@ -28,7 +28,7 @@ import com.dolby.jira.net.soap.jira.RemoteStatus;
 import com.dolby.jira.net.soap.jira.RemoteValidationException;
 import com.dolby.jira.net.soap.jira.RemoteWorklog;
 
-public class JiraServiceFacade {
+public class JiraServiceFacade implements TokenFactory {
 
 	public static final int TOKEN_TIMEOUT_MINUTES = 10;
 
@@ -36,23 +36,44 @@ public class JiraServiceFacade {
 	private final JiraOptions jiraOptions;
 	private final JiraServiceFactory serviceFactory;
 
-	private final ClientTokenManager tokenManager;
+	private final TokenManager tokenManager;
 
 	public JiraServiceFacade(JiraOptions jiraOptions,
-			JiraServiceFactory serviceFactory, ClientTokenManager tokenManager) {
+			JiraServiceFactory serviceFactory, TokenManager tokenManager) {
 		this.jiraOptions = jiraOptions;
 		this.serviceFactory = serviceFactory;
 		this.tokenManager = tokenManager;
+		tokenManager.setTokenFactory(this);
 	}
 
 	private JiraSoapService getService() {
 		try {
-			return serviceFactory.createJiraSoapService();
+			return serviceFactory.createJiraSoapService(jiraOptions.getURL()
+					.unbox());
 		} catch (ServiceException e) {
 			throw _handleException(e);
 		}
 	}
-	
+
+	@Override
+	public String createToken() {
+		return login();
+	}
+
+	private String login() {
+		try {
+			jiraOptions.validate();
+			return getService().login(jiraOptions.getUserName().unbox(),
+					jiraOptions.getPassword().unbox());
+		} catch (RemoteAuthenticationException e) {
+			throw _handleException(e);
+		} catch (com.dolby.jira.net.soap.jira.RemoteException e) {
+			throw _handleException(e);
+		} catch (RemoteException e) {
+			throw _handleException(e);
+		}
+	}
+
 	public RemoteIssue getIssueByKey(String key) {
 		try {
 			RemoteIssue[] remoteIssues = getService().getIssuesFromJqlSearch(
@@ -70,7 +91,7 @@ public class JiraServiceFacade {
 	}
 
 	public RemoteIssue getIssueById(String id) {
-		try {			
+		try {
 			return getService().getIssueById(tokenManager.getToken(), id);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
@@ -207,11 +228,13 @@ public class JiraServiceFacade {
 			throw _handleException(e);
 		}
 	}
-	
-	public RemoteMetaAttribute[] getMetaAttributes(String issueKey){
+
+	public RemoteMetaAttribute[] getMetaAttributes(String issueKey) {
 		try {
-			JPatchacaSoapService jpatchacaService = serviceFactory.createJPatchacaService();
-			return jpatchacaService.getMetaAttributesForIssue(tokenManager.getToken(), issueKey);			
+			JPatchacaSoapService jpatchacaService = serviceFactory
+					.createJPatchacaService(jiraOptions.getURL().unbox());
+			return jpatchacaService.getMetaAttributesForIssue(
+					tokenManager.getToken(), issueKey);
 		} catch (ServiceException e) {
 			throw _handleException(e);
 		} catch (RemoteException e) {
@@ -248,5 +271,4 @@ public class JiraServiceFacade {
 	private RuntimeException _handleException(ServiceException e) {
 		return new RuntimeException(e);
 	}
-
 }

@@ -22,13 +22,13 @@ public class JiraServiceMockFactory implements JiraServiceFactory {
 	}
 
 	@Override
-	public JPatchacaSoapService createJPatchacaService()
+	public JPatchacaSoapService createJPatchacaService(String address)
 			throws ServiceException {
 		return null;
 	}
 
 	@Override
-	public JiraSoapService createJiraSoapService() throws ServiceException {
+	public JiraSoapService createJiraSoapService(String address) throws ServiceException {
 		return serviceMock;
 	}
 

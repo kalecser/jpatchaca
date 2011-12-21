@@ -8,7 +8,7 @@ import jira.issue.JiraIssueData;
 import jira.mock.JiraMockInvocationHandler;
 import jira.mock.JiraServiceMockFactory;
 import jira.mock.MethodCall;
-import jira.service.ClientTokenManager;
+import jira.service.TokenManager;
 import jira.service.Jira;
 import jira.service.JiraImpl;
 import jira.service.JiraServiceFacade;
@@ -39,7 +39,7 @@ public class JiraTest {
 		picoContainer.addComponent(_jiraOptions());
 		picoContainer.addComponent(_serviceFactory());
 		picoContainer.addComponent(JiraServiceFacade.class);
-		picoContainer.addComponent(ClientTokenManager.class);
+		picoContainer.addComponent(TokenManager.class);
 		
 		clock = new MockHardwareClock();
 		clock.setTime(0);
@@ -66,7 +66,7 @@ public class JiraTest {
 	}
 
 	private void assertServiceLog(String... calls) {
-		Assert.assertArrayEquals(jiraMockHandler.getLogAsStrings(), calls);
+		Assert.assertArrayEquals(calls, jiraMockHandler.getLogAsStrings());
 	}
 
 	private void addOneSecond() {
