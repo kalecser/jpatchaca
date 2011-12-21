@@ -26,12 +26,6 @@ public class TaskScreenModelImpl implements TaskScreenModel {
 	}
 
 	@Override
-	public void createTaskAndStart(final TaskData data, final Long unbox) {
-		taskSystem.createAndStartTaskIn(data, unbox);
-
-	}
-
-	@Override
 	public TaskView selectedTask() {
 		return selectedTask.currentValue();
 	}

@@ -3,21 +3,15 @@ package ui.swing.mainScreen.tasks.mock;
 import java.util.Date;
 
 import periods.Period;
-import basic.Alert;
-import core.ObjectIdentity;
-import events.persistence.MustBeCalledInsideATransaction;
 import tasks.TaskView;
 import tasks.TasksListener;
 import tasks.TasksSystem;
 import tasks.home.TaskData;
-import tasks.home.TasksHome;
+import basic.Alert;
+import core.ObjectIdentity;
+import events.persistence.MustBeCalledInsideATransaction;
 
 public class MockTasksSystem implements TasksSystem {
-
-	@Override
-	public void createAndStartTaskIn(TaskData newTaskData, long in) {
-		throw new java.lang.RuntimeException("Not implemented");
-	}
 
 	@Override
 	public void editTask(TaskView ignored, TaskData doNothing) {}
@@ -91,11 +85,6 @@ public class MockTasksSystem implements TasksSystem {
 
 	@Override
 	public Alert taskListChangedAlert() {
-		throw new java.lang.RuntimeException("Not implemented");
-	}
-
-	@Override
-	public TasksHome tasksHome() {
 		throw new java.lang.RuntimeException("Not implemented");
 	}
 

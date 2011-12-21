@@ -4,14 +4,11 @@ import java.util.Date;
 
 import periods.Period;
 import tasks.home.TaskData;
-import tasks.home.TasksHome;
 import basic.Alert;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
 
 public interface TasksSystem {
-
-	public void createAndStartTaskIn(TaskData newTaskData, long in);
 
 	public void editTask(TaskView task, TaskData taskData);
 
@@ -44,7 +41,5 @@ public interface TasksSystem {
 	public void addTasksListener(TasksListener tasksListener);
 
 	public Alert taskListChangedAlert();
-
-	public TasksHome tasksHome();
 
 }

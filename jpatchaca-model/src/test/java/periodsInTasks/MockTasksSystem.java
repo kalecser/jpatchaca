@@ -7,7 +7,6 @@ import tasks.TaskView;
 import tasks.TasksListener;
 import tasks.TasksSystem;
 import tasks.home.TaskData;
-import tasks.home.TasksHome;
 import basic.Alert;
 import core.ObjectIdentity;
 import events.persistence.MustBeCalledInsideATransaction;
@@ -27,11 +26,6 @@ public class MockTasksSystem implements TasksSystem {
 
 	@Override
 	public void addTasksListener(final TasksListener tasksListener) {
-		throw new RuntimeException("not implemented");
-	}
-
-	@Override
-	public void createAndStartTaskIn(final TaskData newTaskData, final long in) {
 		throw new RuntimeException("not implemented");
 	}
 
@@ -94,16 +88,10 @@ public class MockTasksSystem implements TasksSystem {
 	public void taskStarted(final TaskView selectedTask, final long millisAgo) {
 		throw new RuntimeException("not implemented");
 	}
-
-	@Override
-	public TasksHome tasksHome() {
-		throw new RuntimeException("not implemented");
-	}
-
+	
 	@Override
 	public void stopTask() {
 		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -2,7 +2,6 @@ package ui.swing.mainScreen.tasks.mock;
 
 import lang.Maybe;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.Validate;
 
 import tasks.Task;
@@ -24,11 +23,6 @@ public class MockTaskScreenModel implements TaskScreenModel {
 	@Override
 	public void createTask(TaskData data) {
 		createdOrEditedTaskData = Maybe.wrap(data);
-	}
-
-	@Override
-	public void createTaskAndStart(TaskData data, Long unbox) {
-		throw new NotImplementedException();
 	}
 
 	@Override
