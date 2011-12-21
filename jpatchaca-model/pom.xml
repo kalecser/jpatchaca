@@ -37,5 +37,9 @@
 			<groupId>com.dolby.jira.net</groupId>
 			<artifactId>jira-soap</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jpatchaca</groupId>
+			<artifactId>jpatchaca-jira-plugin-ws-stub</artifactId>
+		</dependency>
 	</dependencies>
 </project>

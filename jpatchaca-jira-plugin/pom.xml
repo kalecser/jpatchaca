@@ -10,12 +10,10 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>org.jpathcaca</groupId>
 	<artifactId>jpatchaca-jira-plugin</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>atlassian-plugin</packaging>
-	<name>jpatchaca-jira-plugin</name>
-	<description>This is the org.jpathcaca:jpatchaca-jira-plugin plugin for Atlassian JIRA.</description>
+	<name>JPatchaca Jira Plugin</name>
+	<description>This is the jpatchaca-jira plugin for Atlassian JIRA.</description>
 	
 	<organization>
 		<name>Objective Solutions</name>		

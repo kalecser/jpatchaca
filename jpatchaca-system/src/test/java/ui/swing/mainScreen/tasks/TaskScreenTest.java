@@ -5,6 +5,7 @@ import jira.issue.JiraIssueData;
 
 import org.junit.After;
 import org.junit.Test;
+import org.netbeans.jemmy.operators.JDialogOperator;
 
 import tasks.adapters.ui.operators.TaskScreenOperator;
 import ui.swing.mainScreen.tasks.mock.MockJira;
@@ -19,7 +20,7 @@ public class TaskScreenTest {
 	MockJira mockJira = new MockJira();
 	MockTaskScreenModel mockModel = new MockTaskScreenModel();
 	PresenterImpl presenter = new PresenterImpl(new UIEventsExecutorImpl(null));
-	TaskScreenController controller = new TaskScreenController(new FormatterImpl(), mockModel, presenter, mockJira, null);
+	TaskScreenController controller = new TaskScreenController(new FormatterImpl(), mockModel, presenter, mockJira);
 
 	@Test
 	public void testTaskNameAutoCompleteFromJira() {
@@ -28,7 +29,7 @@ public class TaskScreenTest {
 
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.setJiraKey("jira-issue-key");
-		operator.assertName("[jira-issue-key] jira-issue-summary");
+		operator.waitName("[jira-issue-key] jira-issue-summary");
 
 	}
 
@@ -40,7 +41,7 @@ public class TaskScreenTest {
 		TaskScreenOperator operator = new TaskScreenOperator();
 		operator.setTaskName("foobar");
 		operator.setJiraKey("test");
-		operator.assertName("foobar");
+		operator.waitName("foobar");
 
 	}
 
@@ -72,6 +73,29 @@ public class TaskScreenTest {
 		operator.clickOk();
 		mockModel.waitCreatedTaskWithJiraId("foobarbaz");
 
+	}
+	
+	@Test
+	public void addJiraIssueToExistingTask_ShouldUpdateNameIfEmpty() {
+
+		MockTask mockTask = createMockTaskWithJiraKey("foobar");
+		mockModel.setSelectedTask(mockTask);
+		controller.editSelectedTask();
+
+		TaskScreenOperator operator = new TaskScreenOperator();
+		operator.setTaskName("");
+		operator.setJiraKey("foobarbaz");
+		operator.waitName("[foobarbaz] jira-issue-summary");
+
+	}
+	
+	@Test
+	public void onEmptyTaskname_ShouldNotSaveTask(){
+		controller.createTask();
+		TaskScreenOperator operator = new TaskScreenOperator();
+		operator.clickOk();
+		JDialogOperator dialog = new JDialogOperator("Message");
+		dialog.close();
 	}
 
 	private static MockTask createMockTaskWithJiraKey(String jiraKey) {

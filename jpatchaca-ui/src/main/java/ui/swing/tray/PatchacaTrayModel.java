@@ -24,8 +24,6 @@ public interface PatchacaTrayModel extends ActiveTaskNameCopier {
 
 	public abstract void startTask(final TaskView task, final long timeAgo);
 
-	public abstract void createTaskStarted(final long time);
-
 	public abstract Signal<Maybe<TaskName>> activeTaskName();
 
 	public abstract TaskView selectedTask();

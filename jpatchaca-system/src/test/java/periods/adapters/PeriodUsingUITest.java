@@ -11,7 +11,6 @@ import tasks.PatchacaTasksOperator;
 import tasks.adapters.ui.operators.PatchacaTasksOperatorUsingUI;
 import basic.mock.MockHardwareClock;
 
-//bug move to ui
 public class PeriodUsingUITest extends periods.PeriodsTest {
 
 	private MockHardwareClock mockHardwareClock;

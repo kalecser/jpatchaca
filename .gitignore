@@ -4,3 +4,4 @@ target
 .settings
 *.seq
 velocity.log
+.metadata
