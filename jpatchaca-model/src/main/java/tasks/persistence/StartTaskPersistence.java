@@ -4,7 +4,7 @@ import labels.labels.SelectedLabel;
 
 import org.picocontainer.Startable;
 
-import tasks.delegates.CreateTaskdelegate;
+import tasks.delegates.CreateTaskDelegate;
 import tasks.delegates.StartTaskData;
 import tasks.delegates.StartTaskDelegate;
 import tasks.home.TaskData;
@@ -19,12 +19,12 @@ public class StartTaskPersistence implements Startable {
 	private final StartTaskDelegate startTaskDelegate;
 	private final EventsConsumer eventsConsumer;
 	private final Tasks tasks;
-	private final CreateTaskdelegate createTask;
+	private final CreateTaskDelegate createTask;
 	private final SelectedLabel selectedLabel;
 
 	public StartTaskPersistence(final EventsConsumer eventsConsumer,
 			final StartTaskDelegate startTaskDelegate, final Tasks tasks,
-			final CreateTaskdelegate createTask, SelectedLabel selectedLabel) {
+			final CreateTaskDelegate createTask, SelectedLabel selectedLabel) {
 		this.eventsConsumer = eventsConsumer;
 		this.startTaskDelegate = startTaskDelegate;
 		this.tasks = tasks;

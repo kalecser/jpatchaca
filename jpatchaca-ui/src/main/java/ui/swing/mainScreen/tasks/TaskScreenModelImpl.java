@@ -2,7 +2,7 @@ package ui.swing.mainScreen.tasks;
 
 import tasks.TaskView;
 import tasks.TasksSystem;
-import tasks.delegates.CreateTaskdelegate;
+import tasks.delegates.CreateTaskDelegate;
 import tasks.home.TaskData;
 import ui.swing.tasks.SelectedTaskSource;
 
@@ -10,11 +10,11 @@ public class TaskScreenModelImpl implements TaskScreenModel {
 
 	private final TasksSystem taskSystem;
 	private final SelectedTaskSource selectedTask;
-	private final CreateTaskdelegate createTaskDelegate;
+	private final CreateTaskDelegate createTaskDelegate;
 
 	public TaskScreenModelImpl(final TasksSystem taskSystem,
 			final SelectedTaskSource selectedTask,
-			final CreateTaskdelegate createTaskDelegate) {
+			final CreateTaskDelegate createTaskDelegate) {
 		this.taskSystem = taskSystem;
 		this.selectedTask = selectedTask;
 		this.createTaskDelegate = createTaskDelegate;

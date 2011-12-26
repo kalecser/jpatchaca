@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tasks.delegates.CreateTaskDelegateImpl;
-import tasks.delegates.CreateTaskdelegate;
+import tasks.delegates.CreateTaskDelegate;
 import tasks.home.TaskData;
 import basic.IdProvider;
 import basic.NonEmptyString;
@@ -18,7 +18,7 @@ import events.CreateTaskEvent3;
 
 public class CreateTaskPersistenceTest {
 
-	private CreateTaskdelegate delegate;
+	private CreateTaskDelegate delegate;
 	private MockEventsConsumer consumer;
 
 	@Before

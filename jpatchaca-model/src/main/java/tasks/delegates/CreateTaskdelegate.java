@@ -3,7 +3,7 @@ package tasks.delegates;
 import tasks.home.TaskData;
 import basic.Delegate.Listener;
 
-public interface CreateTaskdelegate {
+public interface CreateTaskDelegate {
 
 	public abstract void createTask(TaskData taskData);
 

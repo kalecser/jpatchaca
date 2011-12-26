@@ -5,7 +5,7 @@ import basic.Delegate;
 import basic.Delegate.Listener;
 import tasks.home.TaskData;
 
-public class CreateTaskDelegateImpl implements CreateTaskdelegate{
+public class CreateTaskDelegateImpl implements CreateTaskDelegate{
 
 	private Delegate<TaskData> _subject;
 	private final SelectedLabel selectedLabel;

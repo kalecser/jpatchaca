@@ -16,7 +16,7 @@ import org.junit.Test;
 import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.delegates.CreateTaskDelegateImpl;
-import tasks.delegates.CreateTaskdelegate;
+import tasks.delegates.CreateTaskDelegate;
 import tasks.home.TaskData;
 import tasks.tasks.TasksView;
 import basic.NonEmptyString;
@@ -33,7 +33,7 @@ public class LabelsTest {
 	private TasksSystem tasksSystem;
 	private EventsSystem eventsSystem;
 	private TasksView tasks;
-	private CreateTaskdelegate createTaskDelegate;
+	private CreateTaskDelegate createTaskDelegate;
 	private MockIdProvider mockidProvider;
 	
 
