@@ -3,8 +3,8 @@ package tasks;
 import java.util.Calendar;
 import java.util.Date;
 
+import jira.events.JiraEventFactory;
 import jira.events.SetJiraIssueToTask;
-import jira.issue.JiraIssue;
 import lang.Maybe;
 
 import org.apache.commons.lang.Validate;
@@ -50,18 +50,21 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	private final StartTaskDelegate startTaskDelegate;
 	private final Tasks tasks;
 	private final ActiveTask activeTask;
+	private final JiraEventFactory jiraEventFactory;
 
 	public TasksSystemImpl(final TasksHome tasksHome,
 			final EventsSystem eventsSystem,
 			final PeriodsFactory periodsFactory,
 			final StartTaskDelegate startTaskDelegate, final Tasks tasks,
 			final SystemClock clock, final ActiveTask activeTask,
-			final TaskNameFactory taskNameFactory) {
+			final TaskNameFactory taskNameFactory,
+			JiraEventFactory jiraEventFactory) {
 		this.eventsSystem = eventsSystem;
 		this.tasksHome = tasksHome;
 		this.startTaskDelegate = startTaskDelegate;
 		this.tasks = tasks;
 		this.activeTask = activeTask;
+		this.jiraEventFactory = jiraEventFactory;
 
 		final NotesHome notesHome = new NotesHomeImpl(clock);
 
@@ -85,13 +88,15 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	public synchronized void editTask(final TaskView taskView,
 			final TaskData taskData) {
 
-		final ObjectIdentity idOfTask = tasks.idOf(taskView);
-		final EditTaskEvent event = new EditTaskEvent(idOfTask,
+		final ObjectIdentity taskId = tasks.idOf(taskView);
+		final EditTaskEvent event = new EditTaskEvent(taskId,
 				taskData.getTaskName(), taskData.getBudget());
 
+		SetJiraIssueToTask setIssueEvent = jiraEventFactory
+				.createSetIssueToTaskEvent(taskId, taskData.getJiraIssue());
+		
+		this.eventsSystem.writeEvent(setIssueEvent);
 		this.eventsSystem.writeEvent(event);
-		final JiraIssue issue = taskData.getJiraIssue();
-		this.eventsSystem.writeEvent(new SetJiraIssueToTask(idOfTask, issue));
 	}
 
 	@Override

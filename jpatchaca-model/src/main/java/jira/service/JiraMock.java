@@ -16,6 +16,7 @@ import org.apache.commons.lang.NotImplementedException;
 public class JiraMock implements Jira {
 
 	private Map<String, String> worklogsByKey = new HashMap<String, String>();
+	private boolean isIssueWorkable = true;	
 
 	@Override
 	public JiraIssue getIssueByKey(String key) throws JiraException {
@@ -70,8 +71,12 @@ public class JiraMock implements Jira {
 	}
 
 	@Override
-	public Map<String, String> getMetaAttributes(JiraIssue issue) {
-		throw new NotImplementedException();
+	public boolean isWorkable(JiraIssue issue) {
+		return isIssueWorkable;
+	}
+	
+	public void setIssueWorkable(boolean isIssueWorkable) {
+		this.isIssueWorkable = isIssueWorkable;
 	}
 	
 }
