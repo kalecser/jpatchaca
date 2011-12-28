@@ -74,14 +74,14 @@ public class TaskList extends JPanel {
 	private final UIEventsExecutor uiEventsExecutor;
 	private final SelectedLabel selectedLabel;
 	protected String movePerioData;
-	private final JiraBrowserIntegration jiraBrowserIntegration;
+	private final JiraBrowserIntegrationImpl jiraBrowserIntegration;
 
 	public TaskList(final TaskListModel model,
 			final UIEventsExecutor uiEventsExecutor,
 			final LabelsList labelsList, final Directory directory,
 			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask, final ActiveTask activeTask,
-			final SelectedLabel selectedLabel, JiraBrowserIntegration jiraBrowserIntegration) {
+			final SelectedLabel selectedLabel, JiraBrowserIntegrationImpl jiraBrowserIntegration) {
 
 		this.selectedLabel = selectedLabel;
 		this.jiraBrowserIntegration = jiraBrowserIntegration;

@@ -14,7 +14,7 @@ import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
 import ui.swing.jira.JiraIssueStatusActionPane;
 import ui.swing.jira.JiraIssueStatusManagement;
-import ui.swing.mainScreen.JiraBrowserIntegration;
+import ui.swing.mainScreen.JiraBrowserIntegrationImpl;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
 import ui.swing.mainScreen.LabelsList;
@@ -166,7 +166,7 @@ final class UIStuffBuilder {
 		container.addComponent(JiraIssueStatusManagement.class);
 		container.addComponent(StatusBar.class);
 		container.addComponent(JiraIssueStatusActionPane.class);
-		container.addComponent(JiraBrowserIntegration.class);
+		container.addComponent(JiraBrowserIntegrationImpl.class);
 	}
 
 }
