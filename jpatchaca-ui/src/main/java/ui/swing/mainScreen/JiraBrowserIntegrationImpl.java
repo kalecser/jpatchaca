@@ -15,11 +15,9 @@ public class JiraBrowserIntegrationImpl implements IssueTrackerBrowserIntegratio
 	
 	private final JiraOptions jiraOptions;
 
-
 	public JiraBrowserIntegrationImpl(JiraOptions jiraOptions){
 		this.jiraOptions = jiraOptions;
 	}
-	
 	
 	@Override
 	public void openJiraIssueOnBrowser(TaskView task) {
@@ -28,7 +26,6 @@ public class JiraBrowserIntegrationImpl implements IssueTrackerBrowserIntegratio
 		JiraIssue jiraIssue = task.getJiraIssue().unbox();
 		openInBrowser(jiraIssue);
 	}
-
 
 	private void openInBrowser(JiraIssue jiraIssue) {
 		final Maybe<String> jiraUrl = jiraOptions.getURL();
