@@ -31,7 +31,6 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import jira.issue.JiraIssue;
 import labels.labels.SelectedLabel;
 import lang.Maybe;
 
@@ -247,11 +246,9 @@ public class TaskList extends JPanel {
 			}
 
 			private void doubleClick() {
-				final Maybe<JiraIssue> jiraIssueMaybe = ((TaskView) jlist
-						.getSelectedValue()).getJiraIssue();
-				if (jiraIssueMaybe != null) {
-					jiraBrowserIntegration.openJiraIssueOnBrowser(jiraIssueMaybe.unbox());
-				}
+				TaskView taskView = (TaskView) jlist
+						.getSelectedValue();
+				jiraBrowserIntegration.openJiraIssueOnBrowser(taskView);
 			}
 
 			private void middleClick(final MouseEvent e) {

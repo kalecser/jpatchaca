@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import tasks.TaskView;
+
 import jira.JiraOptions;
 import jira.issue.JiraIssue;
 import lang.Maybe;
 
-public class JiraBrowserIntegrationImpl implements JiraBrowserIntegration {
+public class JiraBrowserIntegrationImpl implements IssueTrackerBrowserIntegration {
 	
 	private final JiraOptions jiraOptions;
 
@@ -19,7 +21,16 @@ public class JiraBrowserIntegrationImpl implements JiraBrowserIntegration {
 	}
 	
 	
-	void openJiraIssueOnBrowser(JiraIssue jiraIssue) {
+	@Override
+	public void openJiraIssueOnBrowser(TaskView task) {
+		if (task.getJiraIssue() == null)
+			return;
+		JiraIssue jiraIssue = task.getJiraIssue().unbox();
+		openInBrowser(jiraIssue);
+	}
+
+
+	private void openInBrowser(JiraIssue jiraIssue) {
 		final Maybe<String> jiraUrl = jiraOptions.getURL();
 
 		if (jiraUrl == null) {

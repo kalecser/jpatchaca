@@ -3,7 +3,6 @@ package ui.swing.mainScreen;
 import java.util.List;
 
 import jira.issue.JiraIssue;
-
 import labels.LabelsSystem;
 
 import org.picocontainer.Startable;
@@ -23,10 +22,17 @@ import basic.UserOperationCancelledException;
 
 public class TaskContextMenuSystemMediator implements Startable {
 
-	public TaskContextMenuSystemMediator(final TaskContextMenu taskContextMenu, final LabelsSystem labelsSystem,
-			final TasksSystem tasksSystem, final SelectedTaskSource selectedTaskSource, final SwingTasksUser tasksUser,
-			final LabelsUser labelsUser, final StartTaskDelegate startTaskDelegate,
-			final TaskScreenController taskScreen) {
+
+	public TaskContextMenuSystemMediator(
+			final TaskContextMenu taskContextMenu, 
+			final LabelsSystem labelsSystem,
+			final TasksSystem tasksSystem, 
+			final SelectedTaskSource selectedTaskSource, 
+			final SwingTasksUser tasksUser,
+			final LabelsUser labelsUser, 
+			final StartTaskDelegate startTaskDelegate,
+			final TaskScreenController taskScreen,
+			final IssueTrackerBrowserIntegration jiraBrowser) {
 		taskContextMenu.addNoteAlert().subscribe(new Subscriber() {
 
 			@Override
@@ -139,6 +145,11 @@ public class TaskContextMenuSystemMediator implements Startable {
 			@Override
 			public List<String> getLabelsFor(final TaskView selectedTask) {
 				return labelsSystem.getLabelsFor(selectedTask);
+			}
+
+			@Override
+			public void openInBrowser(TaskView task) {
+				jiraBrowser.openJiraIssueOnBrowser(task);
 			}
 		});
 	}
