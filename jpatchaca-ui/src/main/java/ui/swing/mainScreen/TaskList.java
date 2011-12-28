@@ -3,7 +3,6 @@ package ui.swing.mainScreen;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -15,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,6 @@ import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -35,7 +31,6 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import jira.JiraOptions;
 import jira.issue.JiraIssue;
 import labels.labels.SelectedLabel;
 import lang.Maybe;
@@ -77,24 +72,24 @@ public class TaskList extends JPanel {
 	private final SelectedTaskSource selectedTask;
 	private final ActiveTask activeTaskSignal;
 	private final UIEventsExecutor uiEventsExecutor;
-	private final JiraOptions jiraOptions;
 	private final SelectedLabel selectedLabel;
 	protected String movePerioData;
+	private final JiraBrowserIntegration jiraBrowserIntegration;
 
 	public TaskList(final TaskListModel model,
 			final UIEventsExecutor uiEventsExecutor,
 			final LabelsList labelsList, final Directory directory,
 			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask, final ActiveTask activeTask,
-			final SelectedLabel selectedLabel, final JiraOptions jiraOptions) {
+			final SelectedLabel selectedLabel, JiraBrowserIntegration jiraBrowserIntegration) {
 
 		this.selectedLabel = selectedLabel;
+		this.jiraBrowserIntegration = jiraBrowserIntegration;
 		this.executor = new DeferredExecutor(200, new FireChangeListeners());
 
 		this.uiEventsExecutor = uiEventsExecutor;
 		this.selectedTask = selectedTask;
 		this.activeTaskSignal = activeTask;
-		this.jiraOptions = jiraOptions;
 		this.memory = new DeferredTaskListMemory(directory);
 		this.screenData = memory.retrieve();
 		this.taskContextMenu = taskContextMenu;
@@ -255,7 +250,7 @@ public class TaskList extends JPanel {
 				final Maybe<JiraIssue> jiraIssueMaybe = ((TaskView) jlist
 						.getSelectedValue()).getJiraIssue();
 				if (jiraIssueMaybe != null) {
-					doubleClickJiraIssue(jiraIssueMaybe.unbox());
+					jiraBrowserIntegration.openJiraIssueOnBrowser(jiraIssueMaybe.unbox());
 				}
 			}
 
@@ -450,24 +445,6 @@ public class TaskList extends JPanel {
 			screenData.setSelectedTask(tasksListModel.getElementAt(
 					selectedIndex).name());
 			memory.mind(screenData);
-		}
-	}
-
-	void doubleClickJiraIssue(JiraIssue jiraIssue) {
-		final Maybe<String> jiraUrl = jiraOptions.getURL();
-
-		if (jiraUrl != null) {
-			final String url = "/browse/"
-					+ jiraIssue.getKey();
-			try {
-				final URI uri = new URI(jiraUrl.unbox() + url);
-				Desktop.getDesktop().browse(uri);
-			} catch (final IOException e1) {
-				throw new RuntimeException(e1);
-			} catch (final URISyntaxException e1) {
-				JOptionPane.showMessageDialog(TaskList.this,
-						"Invalid jira url: " + jiraUrl);
-			}
 		}
 	}
 
