@@ -30,7 +30,10 @@ public class PatchacaTrayTest {
 		modelMock = new PatchacaTrayModelMock();
 		Presenter presenter = new PresenterMock();
 		KeyboardRotationOptions keyboardRotationPreferences = null;
-		tray = new PatchacaTray(modelMock, presenter, keyboardRotationPreferences);
+		tray = new PatchacaTray(
+				modelMock, 
+				presenter, 
+				keyboardRotationPreferences);
 
 		tray.start();
 	}
@@ -44,15 +47,18 @@ public class PatchacaTrayTest {
 
 	@Test
 	public void testPatchacaTray() {
-
-		if (!SystemTray.isSupported()) {
-			return;
-		}
-
 		final PathcacaTrayOperator operator = new PathcacaTrayOperator();
 		modelMock.setActiveTask(new MockTaskName("test task"));
 		operator.assertActiveTask("test task");
 
+	}
+	
+	@Test
+	public void testOpenActiveTaskOnBrowser() throws InterruptedException {
+		final PathcacaTrayOperator operator = new PathcacaTrayOperator();
+		modelMock.setActiveTask(new MockTaskName("test task"));
+		operator.openTaskInBrowser();
+		modelMock.waitOpenedInBrowser("test task");
 	}
 
 }

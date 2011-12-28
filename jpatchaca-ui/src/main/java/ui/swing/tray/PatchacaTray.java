@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import keyboardRotation.KeyboardRotationOptions;
-
 import lang.Maybe;
 
 import org.apache.commons.lang.SystemUtils;
@@ -57,6 +56,7 @@ public class PatchacaTray implements Startable {
 	static final String NEW_TASK = "New task";
 	static final String EXIT = "Exit";
 	static final String STOP_TASK = "Stop task";
+	static final String OPEN_ACTIVE_TASK_ON_ISSUE_TRACKER = "Open task in Issuetracker";
 
 	private KeyboardRotationTimer timer;
 
@@ -75,7 +75,9 @@ public class PatchacaTray implements Startable {
 	private final Presenter presenter;
 	private final KeyboardRotationOptions preferences;
 
-	public PatchacaTray(final PatchacaTrayModel model, Presenter presenter, KeyboardRotationOptions preferences) {
+	public PatchacaTray(final PatchacaTrayModel model, 
+			Presenter presenter, 
+			KeyboardRotationOptions preferences) {
 		this.model = model;
 		this.presenter = presenter;
 		this.preferences = preferences;
@@ -246,6 +248,7 @@ public class PatchacaTray implements Startable {
 		menu.add(STOP_TASK);
 		menu.addSeparator();
 		menu.add(COPY_ACTIVE_TASK_NAME);
+		menu.add(OPEN_ACTIVE_TASK_ON_ISSUE_TRACKER);
 		menu.addSeparator();
 		final MenuItem menuItemSpecialStopTask = buildSpecialStopTaskMenu();
 		menu.add(menuItemSpecialStopTask);
@@ -311,6 +314,8 @@ public class PatchacaTray implements Startable {
 				PatchacaTray.this.stopTaskAlert.fire();
 			} else if (actionCommand.equals(COPY_ACTIVE_TASK_NAME)) {
 				model.copyActiveTaskNameToClipboard();
+			} else if (actionCommand.equals(OPEN_ACTIVE_TASK_ON_ISSUE_TRACKER)){
+				model.openActiveTaskOnBrowser();
 			}
 
 		}
