@@ -137,4 +137,9 @@ public class MockJira implements Jira {
 	public Map<String, String> getMetaAttributes(JiraIssue issue) {
 		throw new NotImplementedException();
 	}
+
+	@Override
+	public void assignIssueTo(JiraIssue issue, String user) {
+		throw new NotImplementedException();		
+	}
 }

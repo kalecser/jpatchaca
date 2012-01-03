@@ -39,13 +39,14 @@ public class RemoteJiraIssue {
 		return jira.getAvaiableActions(issue);
 	}
 
-	public boolean isWorkable(){
+	public boolean isWorkable() {
 		Map<String, String> metaAttributes = jira.getMetaAttributes(issue);
-		if(metaAttributes.containsKey("minyaa.jira.issue.workable"))
-			return "true".equals(metaAttributes.get("minyaa.jira.issue.workable"));
+		if (metaAttributes.containsKey("minyaa.jira.issue.workable"))
+			return "true".equals(metaAttributes
+					.get("minyaa.jira.issue.workable"));
 		return true;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof RemoteJiraIssue))
@@ -56,6 +57,11 @@ public class RemoteJiraIssue {
 
 	public void assignToCurrentUser() {
 		jira.assignIssueToCurrentUser(issue);
+	}
+
+	public void assignTo(String user) {
+		if (!user.equals(getAssignee()))
+			jira.assignIssueTo(issue, user);
 	}
 
 	public boolean isAssignedToCurrentUser() {

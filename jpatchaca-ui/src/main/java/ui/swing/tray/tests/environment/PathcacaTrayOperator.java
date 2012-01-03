@@ -188,4 +188,8 @@ public class PathcacaTrayOperator {
 		clickMenuByName("Start task.../New task/Now");
 	}
 
+	public void openTaskInBrowser() {
+		clickMenuByName("Open task in Issuetracker");
+	}
+
 }

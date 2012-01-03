@@ -166,8 +166,10 @@ public class JiraServiceFacade implements TokenFactory {
 		}
 	}
 
-	public void addComment(String key, RemoteComment remoteComment) {
+	public void addComment(String key, String commentText) {
 		try {
+			RemoteComment remoteComment = new RemoteComment(null, commentText,
+					null, null, null, null, null, null);
 			getService()
 					.addComment(tokenManager.getToken(), key, remoteComment);
 		} catch (RemoteValidationException e) {

@@ -39,4 +39,6 @@ public interface PatchacaTrayModel extends ActiveTaskNameCopier {
 	@Override
 	public abstract void copyActiveTaskNameToClipboard();
 
+	public abstract void openActiveTaskOnBrowser();
+
 }
