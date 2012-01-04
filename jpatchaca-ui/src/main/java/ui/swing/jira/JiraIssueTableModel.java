@@ -57,7 +57,7 @@ public class JiraIssueTableModel extends AbstractTableModel {
 			datas[x][0] = issue.getKey();
 			datas[x][1] = issue.getSummary();
 			datas[x][2] = issue.getStatus();
-			datas[x][COLUMN_ACTIONS] = "";
+			datas[x][COLUMN_ACTIONS] = null;
 			datas[x][COLUMN_ASSIGN_TO] = issue.getAssignee();
 			datas[x][COLUMN_COMMENT] = "";
 		}
