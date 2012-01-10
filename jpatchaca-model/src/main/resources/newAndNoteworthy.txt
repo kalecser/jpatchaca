@@ -1,3 +1,9 @@
+2012/01/03 - Version 1.3
+- Jira issue assignment can be changed on status management screen
+
+2011/12/28 - Version 1.3
+- Open task in issue tracker context menu on tray icon
+
 2011/10/25 - Version 1.2
 - Twitter integration RIP 
 

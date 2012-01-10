@@ -63,19 +63,31 @@ public class TaskContextMenu extends JPopupMenu {
 		addLabelsMenu();
 		addRemoveFromLabelMenu(selectedTask);
 		addSeparator();
+		addShowInBrowser(selectedTask);
 
 		super.show(invoker, x, y);
 	}
 
+	private void addShowInBrowser(final TaskView selectedTask) {
+		final JMenuItem item = new JMenuItem("open in browser");
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.openInBrowser(selectedTask);
+			}
+		});
+		add(item);
+	}
+
 	private void addNoteItem() {
 		final JMenuItem item = new JMenuItem("add note");
+		add(item);
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				fireAddNoteAlert();
 			}
 		});
-		add(item);
 	}
 
 	private void addEditTaskItem() {

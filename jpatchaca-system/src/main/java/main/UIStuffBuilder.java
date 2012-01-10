@@ -1,5 +1,7 @@
 package main;
 
+import jira.JiraIssueStatusManagement;
+
 import org.picocontainer.MutablePicoContainer;
 
 import statistics.ProjectVelocityCalculator;
@@ -13,7 +15,7 @@ import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
 import ui.swing.jira.JiraIssueStatusActionPane;
-import ui.swing.jira.JiraIssueStatusManagement;
+import ui.swing.mainScreen.JiraBrowserIntegrationImpl;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
 import ui.swing.mainScreen.LabelsList;
@@ -57,8 +59,8 @@ import ui.swing.mainScreen.tasks.day.DayTasksTopPanel;
 import ui.swing.mainScreen.tasks.summary.SummaryHoursFormat;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
-import ui.swing.options.OptionsScreenPresenter;
 import ui.swing.options.OptionsScreenModelImpl;
+import ui.swing.options.OptionsScreenPresenter;
 import ui.swing.presenter.PresenterImpl;
 import ui.swing.singleInstance.ShowMainScreenOnSecondRun;
 import ui.swing.tasks.SelectedTaskPeriodsImpl;
@@ -174,6 +176,7 @@ final class UIStuffBuilder {
 		container.addComponent(JiraIssueStatusManagement.class);
 		container.addComponent(StatusBar.class);
 		container.addComponent(JiraIssueStatusActionPane.class);
+		container.addComponent(JiraBrowserIntegrationImpl.class);
 	}
 
 }

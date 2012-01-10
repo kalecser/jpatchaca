@@ -1,4 +1,4 @@
-package ui.swing.jira;
+package jira;
 
 import java.util.ArrayList;
 import java.util.List;

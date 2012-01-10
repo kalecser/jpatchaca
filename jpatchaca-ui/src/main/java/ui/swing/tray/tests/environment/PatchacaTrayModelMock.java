@@ -12,8 +12,10 @@ import ui.swing.tray.PatchacaTrayModelImpl.Listener;
 
 public class PatchacaTrayModelMock implements PatchacaTrayModel {
 
+	private static final long TIMEOUT = 2000;
 	private final Source<Maybe<TaskName>> _activeTask;
 	private final Source<Maybe<TaskName>> selectedTaskName;
+	private String openedInBrowser = "";
 
 	public PatchacaTrayModelMock() {
 		_activeTask = new Source<Maybe<TaskName>>(null);
@@ -91,6 +93,26 @@ public class PatchacaTrayModelMock implements PatchacaTrayModel {
 	@Override
 	public void copyActiveTaskNameToClipboard() {
 		throw new RuntimeException("not implemented");		
+	}
+
+	@Override
+	public void openActiveTaskOnBrowser() {
+		openedInBrowser  += activeTaskName().currentValue().unbox();
+	}
+
+	public String getOpenedInBrowserTasks() {
+		return openedInBrowser;
+	}
+
+	public void waitOpenedInBrowser(String taskName) {
+			final long startTime = System.currentTimeMillis();
+			while ((System.currentTimeMillis() - startTime) < TIMEOUT) {
+				if (openedInBrowser.contains(taskName)) {
+					return;
+				}
+			}
+
+			throw new IllegalArgumentException("task " + taskName + " was not opened in browser");
 	}
 
 }

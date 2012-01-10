@@ -11,10 +11,13 @@ import lang.Maybe;
 import org.reactive.Signal;
 import org.reactive.Source;
 
+import tasks.ActiveTask;
+import tasks.Task;
 import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.taskName.ActiveTaskName;
 import tasks.taskName.TaskName;
+import ui.swing.mainScreen.IssueTrackerBrowserIntegration;
 import ui.swing.mainScreen.MainScreen;
 import ui.swing.mainScreen.SelectedTaskName;
 import ui.swing.mainScreen.tasks.WindowManager;
@@ -38,6 +41,8 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 	private final SelectedTaskName selectedTaskName;
 	private final ActiveTaskName activeTaskName;
 	private final Presenter presenter;
+	private final ActiveTask activeTask;
+	private final IssueTrackerBrowserIntegration issueTracker;
 
 	public PatchacaTrayModelImpl(final MainScreen mainScreen,
 			final TasksSystem tasksSystem,
@@ -46,7 +51,9 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 			final WindowManager windowManager,
 			final StartTaskPresenter startTaskController,
 			final ActiveTaskName activeTaskName, 
-			final Presenter presenter) {
+			final Presenter presenter,
+			ActiveTask activeTask,
+			IssueTrackerBrowserIntegration issueTracker) {
 
 		this.mainScreen = mainScreen;
 		this.tasksSystem = tasksSystem;
@@ -56,6 +63,8 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 		this.startTaskController = startTaskController;
 		this.activeTaskName = activeTaskName;
 		this.presenter = presenter;
+		this.activeTask = activeTask;
+		this.issueTracker = issueTracker;
 
 	}
 
@@ -195,6 +204,14 @@ public class PatchacaTrayModelImpl implements PatchacaTrayModel {
 
 	void taskStarted(final TaskView task, final long timeAgo) {
 		tasksSystem.taskStarted(task, timeAgo);
+	}
+
+	@Override
+	public void openActiveTaskOnBrowser() {
+		Maybe<Task> maybeActiveTask = activeTask.currentValue();
+		if (maybeActiveTask == null)
+			return;
+		issueTracker.openJiraIssueOnBrowser(maybeActiveTask.unbox());
 	}
 
 }
