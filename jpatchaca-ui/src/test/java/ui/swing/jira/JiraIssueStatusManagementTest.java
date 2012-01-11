@@ -2,6 +2,7 @@ package ui.swing.jira;
 
 import java.util.List;
 
+import jira.JiraIssueStatusManagement;
 import jira.JiraOptions;
 import jira.issue.JiraIssue;
 import jira.issue.RemoteJiraIssue;

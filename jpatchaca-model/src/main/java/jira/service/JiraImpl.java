@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jira.exception.JiraException;
+import jira.exception.JiraUserNotFound;
+import jira.exception.JiraValidationException;
 import jira.issue.JiraAction;
 import jira.issue.JiraField;
 import jira.issue.JiraIssue;
@@ -17,7 +18,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jpatchaca.jira.ws.RemoteMetaAttribute;
 
-import com.dolby.jira.net.soap.jira.RemoteComment;
 import com.dolby.jira.net.soap.jira.RemoteField;
 import com.dolby.jira.net.soap.jira.RemoteFieldValue;
 import com.dolby.jira.net.soap.jira.RemoteIssue;
@@ -74,13 +74,12 @@ public class JiraImpl implements Jira {
 			String comment) {
 
 		if (comment == null || comment.isEmpty())
-			throw new JiraException("Comment body can not be empty!");
+			throw new JiraValidationException("Comment body can not be empty!");
 
 		jiraService.progressWorkflowAction(issue.getKey(), action.getId(),
 				new RemoteFieldValue[0]);
 
-		jiraService.addComment(issue.getKey(), new RemoteComment(null, comment,
-				null, null, null, null, null, null));
+		jiraService.addComment(issue.getKey(), comment);
 	}
 
 	@Override
@@ -96,7 +95,20 @@ public class JiraImpl implements Jira {
 
 	@Override
 	public void assignIssueToCurrentUser(JiraIssue issue) {
-		String[] values = new String[] { jiraService.getJiraUsername() };
+		assignIssueTo(issue, jiraService.getJiraUsername());
+	}
+
+	@Override
+	public void assignIssueTo(JiraIssue issue, String user) {
+		try{
+			internalAssignIssueTo(issue, user);
+		}catch(JiraValidationException e){
+			throw new JiraUserNotFound(user);
+		}
+	}
+
+	private void internalAssignIssueTo(JiraIssue issue, String user) {
+		String[] values = new String[] { user };
 		RemoteFieldValue fieldValue = new RemoteFieldValue("assignee", values);
 		RemoteFieldValue[] fieldValues = new RemoteFieldValue[] { fieldValue };
 		jiraService.updateIssue(issue.getKey(), fieldValues);

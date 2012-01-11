@@ -65,4 +65,9 @@ public class MockJira implements Jira {
 	public boolean isWorkable(JiraIssue issue) {
 		return true;
 	}
+
+	@Override
+	public void assignIssueTo(JiraIssue issue, String user) {
+		throw new NotImplementedException();
+	}
 }
