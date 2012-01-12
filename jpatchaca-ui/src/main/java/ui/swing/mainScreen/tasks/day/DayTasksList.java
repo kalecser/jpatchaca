@@ -35,9 +35,4 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	@Override
 	public void stop() {
 	}
-
-	public void refrescate() {
-		// datePicker.setDate(clock.getTime());
-		// showTasks();
-	}
 }
