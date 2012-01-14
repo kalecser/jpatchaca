@@ -1,36 +1,44 @@
 package ui.swing.mainScreen.tasks.day;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import jira.JiraWorklogOverride;
 import tasks.TasksSystem;
 import basic.Formatter;
+import basic.Subscriber;
 
 public class DayTasksTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
-	private List<Pair> items = new ArrayList<Pair>();
+	//private List<Pair> items = new ArrayList<Pair>();
 	private final Formatter formatter;
 	private final TasksSystem tasksSystem;
 	private final DayTaskTableModelCellValue[] cellValues;
 	private final JiraWorklogOverride worklogOverride;
+	private final DayTasksListModel dayTaskListModel;
 
 	public DayTasksTableModel(final Formatter formatter,
-			final TasksSystem tasksSystem, JiraWorklogOverride worklogOverride) {
+			final TasksSystem tasksSystem, JiraWorklogOverride worklogOverride,
+			DayTasksListModel dayTaskListModel) {
 		this.formatter = formatter;
 		this.tasksSystem = tasksSystem;
 		this.worklogOverride = worklogOverride;
+		this.dayTaskListModel = dayTaskListModel;
 		cellValues = DayTaskTableModelCellValue.values();
+		dayTaskListModel.addChangeSubscriber(new Subscriber() {
+			@Override
+			public void fire() {
+				fireTableDataChanged();
+			}
+		});
 	}
-
+	
 	@Override
 	public int getRowCount() {
-		return this.items.size();
+		return dayTaskListModel.getWorklogList().size();
 	}
 
 	@Override
@@ -40,18 +48,13 @@ public class DayTasksTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(final int rowIndex, final int columnIndex) {
-		final Pair item = this.items.get(rowIndex);
+		final Pair item = dayTaskListModel.getWorklogList().get(rowIndex);
 		return cellValues[columnIndex].getValue(item);
 	}
 
 	@Override
 	public String getColumnName(final int column) {
 		return cellValues[column].getLabel();
-	}
-
-	public final void setItems(final List<Pair> items) {
-		this.items = items;
-		fireTableDataChanged();
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class DayTasksTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(final Object aValue, final int rowIndex,
 			final int columnIndex) {
-		final Pair item = this.items.get(rowIndex);
+		final Pair item = dayTaskListModel.getWorklogList().get(rowIndex);
 		enqueueSetValueAt(aValue, cellValues[columnIndex], item);
 	}
 
@@ -92,14 +95,14 @@ public class DayTasksTableModel extends AbstractTableModel {
 		dateParsed = editDate(item.period().startTime(), (String) value);
 
 		if (dateParsed != null) {
-			tasksSystem.setPeriodStarting(item.task(),
-					item.periodIndex(), dateParsed);
+			tasksSystem.setPeriodStarting(item.task(), item.periodIndex(),
+					dateParsed);
 		}
 	}
 
 	private void editWorklogOverride(Object value, Pair item) {
-		worklogOverride.overrideTimeSpentForPeriod(value.toString(), item
-				.period());
+		worklogOverride.overrideTimeSpentForPeriod(value.toString(),
+				item.period());
 	}
 
 	private Date editDate(final Date date, final String newHour) {
@@ -116,6 +119,7 @@ public class DayTasksTableModel extends AbstractTableModel {
 
 	void editCell(final DayTaskTableModelCellValue column, final Object value,
 			final Pair item) {
+		
 		switch (column) {
 		case Start:
 			editPeriodStart(value, item);
@@ -128,11 +132,11 @@ public class DayTasksTableModel extends AbstractTableModel {
 		case ToSend:
 			editWorklogOverride(value, item);
 			break;
-			
+
 		default:
 			// Nothing to do
 		}
 
-		fireTableDataChanged();
+		dayTaskListModel.fireChange();
 	}
 }

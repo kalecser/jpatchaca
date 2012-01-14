@@ -1,5 +1,7 @@
 package main;
 
+import jira.JiraIssueStatusManagement;
+
 import org.picocontainer.MutablePicoContainer;
 
 import statistics.ProjectVelocityCalculator;
@@ -13,7 +15,6 @@ import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
 import ui.swing.jira.JiraIssueStatusActionPane;
-import ui.swing.jira.JiraIssueStatusManagement;
 import ui.swing.mainScreen.JiraBrowserIntegrationImpl;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
@@ -50,12 +51,16 @@ import ui.swing.mainScreen.tasks.TaskExclusionScreen;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.TaskScreenModelImpl;
 import ui.swing.mainScreen.tasks.WindowManager;
+import ui.swing.mainScreen.tasks.day.DayTasksListModel;
 import ui.swing.mainScreen.tasks.day.DayTasksList;
+import ui.swing.mainScreen.tasks.day.DayTasksTable;
+import ui.swing.mainScreen.tasks.day.DayTasksTableModel;
+import ui.swing.mainScreen.tasks.day.DayTasksTopPanel;
 import ui.swing.mainScreen.tasks.summary.SummaryHoursFormat;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
-import ui.swing.options.OptionsScreenPresenter;
 import ui.swing.options.OptionsScreenModelImpl;
+import ui.swing.options.OptionsScreenPresenter;
 import ui.swing.presenter.PresenterImpl;
 import ui.swing.singleInstance.ShowMainScreenOnSecondRun;
 import ui.swing.tasks.SelectedTaskPeriodsImpl;
@@ -157,7 +162,12 @@ final class UIStuffBuilder {
 				.addComponent(LabelsListModel.class, LabelsListModelImpl.class);
 		container.addComponent(LabelsListSystemMediator.class);
 		container.addComponent(TaskExclusionScreen.class);
-		container.addComponent(DayTasksList.class);
+		
+		container.addComponent(DayTasksTopPanel.class);
+		container.addComponent(DayTasksTable.class);
+		container.addComponent(DayTasksTableModel.class);
+		container.addComponent(DayTasksListModel.class);
+		container.addComponent(DayTasksList.class);		
 
 		container.addComponent(CommandLineInterfaceImpl.class);
 		container.addComponent(WorkLoggerUsingSwing.class);

@@ -12,6 +12,10 @@ public class JiraValidationException extends JiraException {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public JiraValidationException(String message){
+		super(message);
+	}
+	
 	public JiraValidationException(RemoteValidationException e) {
 		super(dumpErrorMessage(e), e);		
 	}
