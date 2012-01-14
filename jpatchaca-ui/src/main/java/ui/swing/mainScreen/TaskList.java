@@ -241,7 +241,7 @@ public class TaskList extends JPanel {
 				}
 
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					middleClick(e);
+					rightClick(e);
 				}
 			}
 
@@ -251,7 +251,7 @@ public class TaskList extends JPanel {
 				jiraBrowserIntegration.openJiraIssueOnBrowser(taskView);
 			}
 
-			private void middleClick(final MouseEvent e) {
+			private void rightClick(final MouseEvent e) {
 				final int index = jlist.locationToIndex(e.getPoint());
 				selectionModel.setSelectionInterval(index, index);
 				final TaskView currentSelected = (TaskView) jlist
