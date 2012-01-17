@@ -34,6 +34,7 @@ import javax.swing.event.ListSelectionListener;
 import labels.labels.SelectedLabel;
 import lang.Maybe;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.UnhandledException;
 import org.reactive.Receiver;
 
@@ -253,11 +254,17 @@ public class TaskList extends JPanel {
 
 			private void rightClick(final MouseEvent e) {
 				final int index = jlist.locationToIndex(e.getPoint());
-				selectionModel.setSelectionInterval(index, index);
 				final TaskView currentSelected = (TaskView) jlist
-						.getSelectedValue();
+						.getModel().getElementAt(index);
+				
+				boolean clickedOnUnselectedTask = !ArrayUtils.contains(tasksList.getSelectedValues(), currentSelected);
+				if (clickedOnUnselectedTask){
+					selectionModel.setSelectionInterval(index, index);
+				}
+				
 				showTaskContextMenu(jlist, currentSelected, e.getX(), e
 								.getY());
+				e.consume();
 			}
 			
 		});
@@ -389,9 +396,11 @@ public class TaskList extends JPanel {
 	}
 
 	void fireChangeListeners() {
-		final TaskView selectedValueInSwingThread = (TaskView) SelectedValueGetter
+		Object[] selectedValues = SelectedValueGetter
 				.getSelectedValueInSwingThread(tasksList);
+		final TaskView selectedValueInSwingThread = selectedValues.length ==0 ? null : (TaskView) selectedValues[0];
 		selectedTask.supply(selectedValueInSwingThread);
+		selectedTask.supplySelectedValues(selectedValues);
 
 		SwingUtilities.invokeLater(new Runnable() {
 

@@ -226,4 +226,11 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 		selectedLabel.update(label);
 	}
 
+	@Override
+	public void assignTasksToLabel(String[] tasks, String labelName) {
+		for (String taskName : tasks){
+			labelsSystem.setLabelToTask(taskByName(taskName), labelName);			
+		}
+	}
+
 }

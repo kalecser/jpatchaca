@@ -50,7 +50,13 @@ public class TaskContextMenuSystemMediator implements Startable {
 			@Override
 			public void fire() {
 				try {
-					labelsSystem.setNewLabelToTask(selectedTaskSource.currentValue(), labelsUser.getNewLabelName(null));
+					
+					String labelToAssignTaskTo =  labelsUser.getNewLabelName(null);
+					Object[] selectedTasks = selectedTaskSource.selectedTasks();
+					labelsSystem.setNewLabelToTask((TaskView) selectedTasks[0], labelToAssignTaskTo);
+					for (Object task : selectedTasks){
+						labelsSystem.setLabelToTask((TaskView) task, labelToAssignTaskTo);					
+					}
 				} catch (final UserOperationCancelledException e) {
 				}
 			}
@@ -60,7 +66,12 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 			@Override
 			public void fire() {
-				labelsSystem.setLabelToTask(selectedTaskSource.currentValue(), labelsUser.getLabelToAssignTaskTo());
+				
+				String labelToAssignTaskTo = labelsUser.getLabelToAssignTaskTo();
+				Object[] selectedTasks = selectedTaskSource.selectedTasks();
+				for (Object task : selectedTasks){
+					labelsSystem.setLabelToTask((TaskView) task, labelToAssignTaskTo);					
+				}
 			}
 		});
 

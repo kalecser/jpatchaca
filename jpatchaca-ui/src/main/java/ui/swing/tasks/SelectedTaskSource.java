@@ -9,6 +9,7 @@ import tasks.TaskView;
 public class SelectedTaskSource {
 
 	private Source<TaskView> _subject;
+	private Object[] selectedValues = new Object[0];
 
 	public SelectedTaskSource() {
 		_subject = new Source<TaskView>(null);
@@ -48,6 +49,14 @@ public class SelectedTaskSource {
 		try {
 			this.wait(200);
 		} catch (InterruptedException expected) {	}
+	}
+
+	public void supplySelectedValues(Object[] selectedValues) {
+		this.selectedValues = selectedValues;
+	}
+
+	public Object[] selectedTasks() {
+		return selectedValues;
 	}
 
 }
