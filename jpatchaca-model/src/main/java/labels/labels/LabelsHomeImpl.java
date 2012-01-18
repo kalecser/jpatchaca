@@ -67,10 +67,15 @@ public class LabelsHomeImpl implements LabelsHome {
 
 	@Override
 	public void removeTaskFromLabel(final TaskView task, final String labelName) {
-		Validate.notNull(task);
-		Validate.notNull(labelName);
-		
-		getTasksInLabel(labelName).remove(task);
+		LinkedHashSet<TaskView> set = new LinkedHashSet<TaskView>();
+		set.add(task);
+		removeMultipleTasks(labelName, set);
+	}
+	
+	@Override
+	public void removeMultipleTasks(String labelName,
+			Set<TaskView> tasks) {
+		getTasksInLabel(labelName).removeAll(tasks);
 		if (getTasksInLabel(labelName).size() == 0) {
 			this.tasksByLabel.remove(labelName);
 			this.labelsListChangedAlert.fire();

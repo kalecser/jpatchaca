@@ -76,7 +76,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 			@Override
 			public void fire() {
-				labelsSystem.removeLabelFromTask(selectedTaskSource.currentValue(), labelsUser.selectedLabel());
+				removeTasksFromLabel();
 			}
 		});
 
@@ -173,14 +173,20 @@ public class TaskContextMenuSystemMediator implements Startable {
 		setLabelToSelectedTasks(labelToAssignTaskTo);
 	}
 
+	
 	private void assignTasksToLabel() {
 		String labelToAssignTaskTo = labelsUser.getLabelToAssignTaskTo();
 		setLabelToSelectedTasks(labelToAssignTaskTo);
 	}
 
+	private void removeTasksFromLabel() {
+		labelsSystem.removeMultipleTasksFromLabel(labelsUser.selectedLabel(), selectedTaskSource.selectedTasks());
+	}
+	
 	private void setLabelToSelectedTasks(String labelToAssignTaskTo) {
 		Set<TaskView> selectedTasks = selectedTaskSource.selectedTasks();
 		labelsSystem.setLabelToMultipleTasks(labelToAssignTaskTo, selectedTasks);
 	}
+
 
 }

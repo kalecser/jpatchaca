@@ -146,7 +146,7 @@ public class TaskList extends JPanel {
 
 		this.add(createTaskPannel, BorderLayout.NORTH);
 		this.add(split, BorderLayout.CENTER);
-		this.setMinimumSize(new Dimension(180, 0));
+		this.setMinimumSize(new Dimension(300, 0));
 
 		bindToLabelsList();
 		bindToActiveTaskSignal();

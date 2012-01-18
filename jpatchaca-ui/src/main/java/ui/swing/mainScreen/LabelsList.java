@@ -83,6 +83,10 @@ public class LabelsList extends JList {
 			selectedLabel = 0;
 		}
 		setSelectedIndex(selectedLabel);
+		
+		if (getSelectedIndex() == -1){
+			setSelectedIndex(0);
+		}
 	}
 
 	public Alert assignTaskToLabelAlert() {

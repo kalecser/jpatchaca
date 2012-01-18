@@ -8,7 +8,6 @@ import basic.Alert;
 
 public interface LabelsSystem{
 	
-	
 	public void setLabelToTask(TaskView task, String labelToAssignTo);
 	public void removeLabelFromTask(TaskView task, String labelToRemoveFrom);
 	public List<TaskView> tasksInlabel(String labelName);
@@ -20,6 +19,8 @@ public interface LabelsSystem{
 	public List<String> assignableLabels();
 	public void setLabelToMultipleTasks(String labelToAssignTaskTo,
 			Set<TaskView> selectedTasks);
+	public void removeMultipleTasksFromLabel(String label,
+			Set<TaskView> tasks);
 
 	
 }

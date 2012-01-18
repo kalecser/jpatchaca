@@ -9,5 +9,6 @@ public interface LabelsHome extends LabelsHomeView {
 	void setLabelToTask(TaskView mockTask, String labelName);
 	void removeTaskFromLabel(TaskView task, String labelName);
 	void setLabelToMultipleTasks(String labelName, Set<TaskView> tasksTosetLabelTo);
+	void removeMultipleTasks(String label, Set<TaskView> tasks);
 
 }

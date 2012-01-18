@@ -8,6 +8,7 @@ import labels.labels.LabelsHome;
 import labels.labels.LabelsHomeImpl;
 import labels.labels.LabelsHomeView;
 import labels.processors.CreateTaskProcessor3;
+import labels.processors.RemoveLabelFromMultipleTasksProcessor;
 import labels.processors.RemoveTaskFromLabelProcessor;
 import labels.processors.SetLabelToMultipleTasksProcessor;
 import labels.processors.SetLabelToTaskProcessor;
@@ -22,6 +23,7 @@ import tasks.TasksSystem;
 import tasks.tasks.TasksView;
 import basic.Alert;
 import events.EventsSystem;
+import events.RemoveLabelFromMultipleTasks;
 import events.RemoveTaskFromLabelEvent;
 import events.SetLabelToMultipleTasks;
 import events.SetLabelToTaskEvent;
@@ -45,6 +47,7 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 		eventsSystem.addProcessor(new SetSelectedLabelProcessor());
 		eventsSystem.addProcessor(new CreateTaskProcessor3(labelsHome, tasks));
 		eventsSystem.addProcessor(new SetLabelToMultipleTasksProcessor(labelsHome, tasks));
+		eventsSystem.addProcessor(new RemoveLabelFromMultipleTasksProcessor(labelsHome, tasks));
 		
 		tasksSystem.addTasksListener(new TasksListener() {
 			@Override
@@ -84,7 +87,14 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	public void removeLabelFromTask(final TaskView task, final String labelToAssignTo) {
 		final RemoveTaskFromLabelEvent event = new RemoveTaskFromLabelEvent(tasks.idOf(task),
 				labelToAssignTo);
-		this.eventsSystem.writeEvent(event);		
+		this.eventsSystem.writeEvent(event);	
+	}
+	
+	@Override
+	public void removeMultipleTasksFromLabel(String label,
+			Set<TaskView> tasks) {
+		final RemoveLabelFromMultipleTasks event = new RemoveLabelFromMultipleTasks(label, tasks);
+		this.eventsSystem.writeEvent(event);	
 	}
 
 

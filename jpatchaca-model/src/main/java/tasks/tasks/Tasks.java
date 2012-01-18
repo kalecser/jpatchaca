@@ -2,8 +2,10 @@ package tasks.tasks;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import lang.Maybe;
 import tasks.Task;
@@ -95,6 +97,19 @@ public class Tasks implements TasksView, TaskNames {
 		return false;
 	}
 
-	
+	@Override
+	public Set<TaskView> getTasksByName(Set<String> taskNames) {
+		Set<TaskView> tasksTosetLabelTo = new LinkedHashSet<TaskView>();
+		for (String name : taskNames){
+			tasksTosetLabelTo.add(taskByNameOrCry(name));
+		}
+		return tasksTosetLabelTo;
+	}
+
+	private TaskView taskByNameOrCry(String name) {
+		Maybe<Task> maybeTask = byName(new NonEmptyString(name));
+		TaskView task = maybeTask.unbox();
+		return task;
+	}
 
 }

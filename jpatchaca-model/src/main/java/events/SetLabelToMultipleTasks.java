@@ -13,10 +13,10 @@ public class SetLabelToMultipleTasks implements Serializable{
 
 	public SetLabelToMultipleTasks(String labelName, TaskView... tasks) {
 		this.labelName = labelName;
-		this.tasknames = getaskNames(tasks);
+		this.tasknames = geTaskNames(tasks);
 	}
 
-	private Set<String> getaskNames(TaskView... tasks) {
+	public static Set<String> geTaskNames(TaskView... tasks) {
 		Set<String> taskNames = new LinkedHashSet<String>();
 		for (TaskView t : tasks){
 			taskNames.add(t.name());
