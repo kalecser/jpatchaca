@@ -6,9 +6,8 @@ import java.util.Set;
 
 import labels.labels.LabelsHome;
 import lang.Maybe;
-import tasks.Task;
 import tasks.TaskView;
-import tasks.tasks.Tasks;
+import tasks.tasks.TasksView;
 import basic.NonEmptyString;
 import events.Processor;
 import events.SetLabelToMultipleTasks;
@@ -17,9 +16,9 @@ import events.persistence.MustBeCalledInsideATransaction;
 public class SetLabelToMultipleTasksProcessor implements Processor<SetLabelToMultipleTasks> {
 
 	private final LabelsHome labelsHome;
-	private final Tasks tasks;
+	private final TasksView tasks;
 
-	public SetLabelToMultipleTasksProcessor(LabelsHome labelsHome, Tasks tasks) {
+	public SetLabelToMultipleTasksProcessor(LabelsHome labelsHome, TasksView tasks) {
 		this.labelsHome = labelsHome;
 		this.tasks = tasks;
 	}
@@ -39,9 +38,10 @@ public class SetLabelToMultipleTasksProcessor implements Processor<SetLabelToMul
 		return tasksTosetLabelTo;
 	}
 
-	private Task taskByNameOrCry(String name) {
-		Maybe<Task> maybeTask = tasks.byName(new NonEmptyString(name));
-		Task task = maybeTask.unbox();
+	private TaskView taskByNameOrCry(String name) {
+		@SuppressWarnings("unchecked")
+		Maybe<TaskView> maybeTask = (Maybe<TaskView>) tasks.byName(new NonEmptyString(name));
+		TaskView task = maybeTask.unbox();
 		return task;
 	}
 

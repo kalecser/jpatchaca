@@ -75,7 +75,7 @@ public class LabelsTest {
 		assertEquals(1, labelsSystem.tasksInlabel(firstLabelName).size());
 		assertEquals(1, labelsSystem.assignableLabels().size());
 		assertEquals(firstLabelName, labelsSystem.assignableLabels().get(0));
-		assertEquals("changedchangedchanged", alertOut.toString());
+		assertEquals("changedchanged", alertOut.toString());
 		
 		
 		final ObjectIdentity taskTwoId = new ObjectIdentity("2");

@@ -2,12 +2,14 @@ package labels;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import labels.labels.LabelsHome;
 import labels.labels.LabelsHomeImpl;
 import labels.labels.LabelsHomeView;
 import labels.processors.CreateTaskProcessor3;
 import labels.processors.RemoveTaskFromLabelProcessor;
+import labels.processors.SetLabelToMultipleTasksProcessor;
 import labels.processors.SetLabelToTaskProcessor;
 import labels.processors.SetSelectedLabelProcessor;
 
@@ -21,6 +23,7 @@ import tasks.tasks.TasksView;
 import basic.Alert;
 import events.EventsSystem;
 import events.RemoveTaskFromLabelEvent;
+import events.SetLabelToMultipleTasks;
 import events.SetLabelToTaskEvent;
 
 public class LabelsSystemImpl implements LabelsSystem, Startable {
@@ -41,6 +44,7 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 		eventsSystem.addProcessor(new RemoveTaskFromLabelProcessor(labelsHome, tasks));
 		eventsSystem.addProcessor(new SetSelectedLabelProcessor());
 		eventsSystem.addProcessor(new CreateTaskProcessor3(labelsHome, tasks));
+		eventsSystem.addProcessor(new SetLabelToMultipleTasksProcessor(labelsHome, tasks));
 		
 		tasksSystem.addTasksListener(new TasksListener() {
 			@Override
@@ -76,6 +80,13 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 			final SetLabelToTaskEvent event = new SetLabelToTaskEvent(tasks.idOf(task), 
 					labeltoAssignTo);
 			this.eventsSystem.writeEvent(event);
+	}
+	
+	@Override
+	public void setLabelToMultipleTasks(String labelToAssignTaskTo,
+			Set<TaskView> selectedTasks) {
+		SetLabelToMultipleTasks event = new SetLabelToMultipleTasks(labelToAssignTaskTo, selectedTasks.toArray(new TaskView[0]));
+		this.eventsSystem.writeEvent(event);
 	}
 
 	@Override
@@ -127,19 +138,9 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	}
 
 	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void start() {}
 
 	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-
-	
+	public void stop() {}
 
 }

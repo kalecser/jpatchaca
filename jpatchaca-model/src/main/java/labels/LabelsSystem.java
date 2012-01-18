@@ -1,6 +1,7 @@
 package labels;
 
 import java.util.List;
+import java.util.Set;
 
 import tasks.TaskView;
 import basic.Alert;
@@ -18,6 +19,8 @@ public interface LabelsSystem{
 	public Alert labelsListChangedAlert();
 	public Alert tasksInLabelChangedAlert();
 	public List<String> assignableLabels();
+	public void setLabelToMultipleTasks(String labelToAssignTaskTo,
+			Set<TaskView> selectedTasks);
 
 	
 }

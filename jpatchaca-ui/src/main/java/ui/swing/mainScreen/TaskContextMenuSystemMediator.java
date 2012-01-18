@@ -1,6 +1,7 @@
 package ui.swing.mainScreen;
 
 import java.util.List;
+import java.util.Set;
 
 import jira.issue.JiraIssue;
 import labels.LabelsSystem;
@@ -180,10 +181,8 @@ public class TaskContextMenuSystemMediator implements Startable {
 	}
 
 	private void setLabelToSelectedTasks(String labelToAssignTaskTo) {
-		Object[] selectedTasks = selectedTaskSource.selectedTasks();
-		for (Object task : selectedTasks){
-			labelsSystem.setLabelToTask((TaskView) task, labelToAssignTaskTo);					
-		}
+		Set<TaskView> selectedTasks = selectedTaskSource.selectedTasks();
+		labelsSystem.setLabelToMultipleTasks(labelToAssignTaskTo, selectedTasks);
 	}
 
 }

@@ -32,8 +32,10 @@ public class LabelsHomeImpl implements LabelsHome {
 
 	@Override
 	public Set<TaskView> getTasksInLabel(final String labelName) {		
-		if (!this.tasksByLabel.containsKey(labelName))
+		if (!this.tasksByLabel.containsKey(labelName)){
 			createLabel(labelName);
+			labelsListChangedAlert.fire();
+		}
 		
 		return this.tasksByLabel.get(labelName);
 	}
@@ -47,15 +49,19 @@ public class LabelsHomeImpl implements LabelsHome {
 
 	@Override
 	public void setLabelToTask(final TaskView task, final String labelName) {
-		Validate.notNull(task);
-		Validate.notNull(labelName);
-		
-		final Set<TaskView> tasksInLabel = getTasksInLabel(labelName);
-		if (!tasksInLabel.contains(task)) {
-			tasksInLabel.add(task);
-			labelsListChangedAlert.fire();
-		}
+		LinkedHashSet<TaskView> set = new LinkedHashSet<TaskView>();
+		set.add(task);
+		setLabelToMultipleTasks(labelName, set)	;
+	}
 	
+	@Override
+	public void setLabelToMultipleTasks(String labelName,
+			Set<TaskView> tasksTosetLabelTo) {
+		final Set<TaskView> tasksInLabel = getTasksInLabel(labelName);
+		if (tasksInLabel.containsAll(tasksTosetLabelTo)){
+			return;
+		}
+		tasksInLabel.addAll(tasksTosetLabelTo);
 		tasksInLabelChangedAlert.fire();
 	}
 
@@ -113,16 +119,4 @@ public class LabelsHomeImpl implements LabelsHome {
 	public Alert tasksInLabelChangedAlert() {
 		return tasksInLabelChangedAlert;
 	}
-
-	@Override
-	public void setLabelToMultipleTasks(String labelName,
-			Set<TaskView> tasksTosetLabelTo) {
-		final Set<TaskView> tasksInLabel = getTasksInLabel(labelName);
-		if (tasksInLabel.containsAll(tasksTosetLabelTo)){
-			return;
-		}
-		tasksInLabel.addAll(tasksTosetLabelTo);
-		tasksInLabelChangedAlert.fire();
-	}
-
 }
