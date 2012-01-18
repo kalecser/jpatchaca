@@ -1,3 +1,7 @@
+2012/01/18 - Version 1.4
+- Multiple selection support to add and remove tasks from Labels.
+ Thanks to taksan for reporting:  https://github.com/kalecser/jpatchaca/issues/5
+
 2012/01/03 - Version 1.3
 - Jira issue assignment can be changed on status management screen
 
