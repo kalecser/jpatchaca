@@ -23,6 +23,10 @@ import basic.UserOperationCancelledException;
 public class TaskContextMenuSystemMediator implements Startable {
 
 
+	private final LabelsUser labelsUser;
+	private final LabelsSystem labelsSystem;
+	private final SelectedTaskSource selectedTaskSource;
+
 	public TaskContextMenuSystemMediator(
 			final TaskContextMenu taskContextMenu, 
 			final LabelsSystem labelsSystem,
@@ -33,6 +37,9 @@ public class TaskContextMenuSystemMediator implements Startable {
 			final StartTaskDelegate startTaskDelegate,
 			final TaskScreenController taskScreen,
 			final IssueTrackerBrowserIntegration jiraBrowser) {
+		this.labelsSystem = labelsSystem;
+		this.selectedTaskSource = selectedTaskSource;
+		this.labelsUser = labelsUser;
 		taskContextMenu.addNoteAlert().subscribe(new Subscriber() {
 
 			@Override
@@ -50,13 +57,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 			@Override
 			public void fire() {
 				try {
-					
-					String labelToAssignTaskTo =  labelsUser.getNewLabelName(null);
-					Object[] selectedTasks = selectedTaskSource.selectedTasks();
-					labelsSystem.setNewLabelToTask((TaskView) selectedTasks[0], labelToAssignTaskTo);
-					for (Object task : selectedTasks){
-						labelsSystem.setLabelToTask((TaskView) task, labelToAssignTaskTo);					
-					}
+					assignSelectedTasksToNewLabel();
 				} catch (final UserOperationCancelledException e) {
 				}
 			}
@@ -66,12 +67,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 			@Override
 			public void fire() {
-				
-				String labelToAssignTaskTo = labelsUser.getLabelToAssignTaskTo();
-				Object[] selectedTasks = selectedTaskSource.selectedTasks();
-				for (Object task : selectedTasks){
-					labelsSystem.setLabelToTask((TaskView) task, labelToAssignTaskTo);					
-				}
+				assignTasksToLabel();
 			}
 		});
 
@@ -175,6 +171,25 @@ public class TaskContextMenuSystemMediator implements Startable {
 	public void stop() {
 		// TODO Auto-generated method stub
 
+	}
+
+	private void assignSelectedTasksToNewLabel() throws UserOperationCancelledException {
+		String labelToAssignTaskTo =  labelsUser.getNewLabelName(null);
+		labelsSystem.setNewLabelToTask(selectedTaskSource.currentValue(), labelToAssignTaskTo);
+		setLabelToSelectedTasks(labelToAssignTaskTo);
+	}
+
+
+	private void assignTasksToLabel() {
+		String labelToAssignTaskTo = labelsUser.getLabelToAssignTaskTo();
+		setLabelToSelectedTasks(labelToAssignTaskTo);
+	}
+
+	private void setLabelToSelectedTasks(String labelToAssignTaskTo) {
+		Object[] selectedTasks = selectedTaskSource.selectedTasks();
+		for (Object task : selectedTasks){
+			labelsSystem.setLabelToTask((TaskView) task, labelToAssignTaskTo);					
+		}
 	}
 
 }

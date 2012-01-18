@@ -27,8 +27,6 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	private final LabelsHomeView labelsHomeView;
 	private final EventsSystem eventsSystem;
 	private final TasksView tasks;
-	
-
 
 	public LabelsSystemImpl(final EventsSystem eventsSystem, final TasksSystem tasksSystem, TasksView tasks) {
 
