@@ -3,8 +3,10 @@ package labels.labels;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 
@@ -14,14 +16,14 @@ import basic.AlertImpl;
 
 public class LabelsHomeImpl implements LabelsHome {
 
-	private final Map<String, List<TaskView>> tasksByLabel;
+	private final Map<String, Set<TaskView>> tasksByLabel;
 	private final AlertImpl labelsListChangedAlert;
 	private final AlertImpl tasksInLabelChangedAlert;
 	
 	
 	public LabelsHomeImpl() {
 	
-		this.tasksByLabel = new HashMap<String, List<TaskView>>();
+		this.tasksByLabel = new HashMap<String, Set<TaskView>>();
 		this.labelsListChangedAlert = new AlertImpl();
 		tasksInLabelChangedAlert = new AlertImpl();
 		
@@ -29,7 +31,7 @@ public class LabelsHomeImpl implements LabelsHome {
 	}
 
 	@Override
-	public List<TaskView> getTasksInLabel(final String labelName) {		
+	public Set<TaskView> getTasksInLabel(final String labelName) {		
 		if (!this.tasksByLabel.containsKey(labelName))
 			createLabel(labelName);
 		
@@ -39,7 +41,7 @@ public class LabelsHomeImpl implements LabelsHome {
 	private void createLabel(final String labelName) {
 		Validate.notNull(labelName);
 		
-		this.tasksByLabel.put(labelName, new ArrayList<TaskView>());
+		this.tasksByLabel.put(labelName, new LinkedHashSet<TaskView>());
 		this.labelsListChangedAlert.fire();
 	}
 
@@ -48,7 +50,7 @@ public class LabelsHomeImpl implements LabelsHome {
 		Validate.notNull(task);
 		Validate.notNull(labelName);
 		
-		final List<TaskView> tasksInLabel = getTasksInLabel(labelName);
+		final Set<TaskView> tasksInLabel = getTasksInLabel(labelName);
 		if (!tasksInLabel.contains(task)) {
 			tasksInLabel.add(task);
 			labelsListChangedAlert.fire();
@@ -110,6 +112,17 @@ public class LabelsHomeImpl implements LabelsHome {
 	@Override
 	public Alert tasksInLabelChangedAlert() {
 		return tasksInLabelChangedAlert;
+	}
+
+	@Override
+	public void setLabelToMultipleTasks(String labelName,
+			Set<TaskView> tasksTosetLabelTo) {
+		final Set<TaskView> tasksInLabel = getTasksInLabel(labelName);
+		if (tasksInLabel.containsAll(tasksTosetLabelTo)){
+			return;
+		}
+		tasksInLabel.addAll(tasksTosetLabelTo);
+		tasksInLabelChangedAlert.fire();
 	}
 
 }

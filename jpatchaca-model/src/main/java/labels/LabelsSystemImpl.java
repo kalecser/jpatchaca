@@ -1,5 +1,6 @@
 package labels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import labels.labels.LabelsHome;
@@ -88,7 +89,7 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 
 	@Override
 	public List<TaskView> tasksInlabel(final String labelName) {
-		return labelsHomeView.getTasksInLabel(labelName);
+		return new ArrayList<TaskView>(labelsHomeView.getTasksInLabel(labelName));
 	}
 
 

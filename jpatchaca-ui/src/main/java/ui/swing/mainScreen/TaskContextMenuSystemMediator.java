@@ -162,16 +162,10 @@ public class TaskContextMenuSystemMediator implements Startable {
 	}
 
 	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-
-	}
+	public void start() {}
 
 	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
-
-	}
+	public void stop() {}
 
 	private void assignSelectedTasksToNewLabel() throws UserOperationCancelledException {
 		String labelToAssignTaskTo =  labelsUser.getNewLabelName(null);

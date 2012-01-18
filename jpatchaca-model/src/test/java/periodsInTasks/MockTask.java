@@ -23,6 +23,11 @@ import basic.Alert;
 
 public class MockTask implements Task {
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 	private String name;
 	private Long startedMillisecondsAgo = null;
 	private boolean stopped;
