@@ -65,15 +65,6 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	}
 
 	@Override
-	public void setNewLabelToTask(final TaskView task, final String newLabelName) {
-			Validate.notNull(task);
-			Validate.notNull(newLabelName);
-			final SetLabelToTaskEvent event = new SetLabelToTaskEvent(tasks.idOf(task), 
-					newLabelName);
-			this.eventsSystem.writeEvent(event);
-	}
-
-	@Override
 	public void setLabelToTask(final TaskView task, final String labeltoAssignTo) {
 			Validate.notNull(task);
 			Validate.notNull(labeltoAssignTo);

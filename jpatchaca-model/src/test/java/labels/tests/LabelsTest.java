@@ -70,7 +70,7 @@ public class LabelsTest {
 		
 		final ObjectIdentity taskId = new ObjectIdentity("1");
 		final TaskView task = createTask("task name", taskId.getId());
-		labelsSystem.setNewLabelToTask(tasks.get(taskId), firstLabelName);
+		labelsSystem.setLabelToTask(tasks.get(taskId), firstLabelName);
 		assertEquals(task, labelsSystem.tasksInlabel(firstLabelName).get(0));
 		assertEquals(1, labelsSystem.tasksInlabel(firstLabelName).size());
 		assertEquals(1, labelsSystem.assignableLabels().size());
@@ -87,7 +87,7 @@ public class LabelsTest {
 		assertEquals(2, labelsSystem.tasksInlabel(firstLabelName).size());
 		
 		final String secondLabelName = "test 2";
-		labelsSystem.setNewLabelToTask(tasks.get(taskTwoId), secondLabelName);
+		labelsSystem.setLabelToTask(tasks.get(taskTwoId), secondLabelName);
 		final List<String> taskTwoLabels = labelsSystem.getLabelsFor(taskTwo);
 		assertEquals(firstLabelName, taskTwoLabels.get(0));
 		assertEquals(secondLabelName, taskTwoLabels.get(1));
@@ -100,7 +100,7 @@ public class LabelsTest {
 		final ObjectIdentity taskId = new ObjectIdentity("1");
 		final TaskView task = createTask("task name", taskId.getId());
 		
-		labelsSystem.setNewLabelToTask(tasks.get(taskId), labelName);
+		labelsSystem.setLabelToTask(tasks.get(taskId), labelName);
 		
 		labelsSystem.removeLabelFromTask(task, labelName);
 		assertEquals(0, labelsSystem.assignableLabels().size());

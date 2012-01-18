@@ -170,10 +170,8 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 	private void assignSelectedTasksToNewLabel() throws UserOperationCancelledException {
 		String labelToAssignTaskTo =  labelsUser.getNewLabelName(null);
-		labelsSystem.setNewLabelToTask(selectedTaskSource.currentValue(), labelToAssignTaskTo);
 		setLabelToSelectedTasks(labelToAssignTaskTo);
 	}
-
 
 	private void assignTasksToLabel() {
 		String labelToAssignTaskTo = labelsUser.getLabelToAssignTaskTo();

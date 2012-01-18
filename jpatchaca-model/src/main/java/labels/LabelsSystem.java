@@ -9,7 +9,6 @@ import basic.Alert;
 public interface LabelsSystem{
 	
 	
-	public void setNewLabelToTask(TaskView task, String newLabelName);
 	public void setLabelToTask(TaskView task, String labelToAssignTo);
 	public void removeLabelFromTask(TaskView task, String labelToRemoveFrom);
 	public List<TaskView> tasksInlabel(String labelName);
