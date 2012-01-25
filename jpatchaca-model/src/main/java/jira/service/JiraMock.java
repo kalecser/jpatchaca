@@ -78,5 +78,10 @@ public class JiraMock implements Jira {
 	public void setIssueWorkable(boolean isIssueWorkable) {
 		this.isIssueWorkable = isIssueWorkable;
 	}
+
+	@Override
+	public void assignIssueTo(JiraIssue issue, String user) {
+		throw new NotImplementedException();
+	}
 	
 }

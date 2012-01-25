@@ -2,14 +2,17 @@ package ui.swing.jira;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
+import jira.JiraIssueStatusManagement;
 import jira.JiraOptions;
-import jira.issue.JiraAction;
+import jira.exception.JiraException;
 import jira.issue.JiraIssue;
 import jira.issue.RemoteJiraIssue;
 
@@ -24,7 +27,8 @@ import ui.swing.presenter.UIAction;
 import ui.swing.presenter.ValidationException;
 import basic.Delegate;
 
-public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startable {
+public class JiraIssueStatusActionPane implements ActionPane, UIAction,
+		Startable {
 
 	private final StartTaskDelegate startTaskDelegate;
 	private final JiraIssueStatusManagement jiraIssueStatus;
@@ -32,10 +36,10 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 	private final Presenter presenter;
 	private List<RemoteJiraIssue> issues;
 	private JXTable table;
-	private HashSet<RemoteJiraIssue> processedIssues;
 
-	public JiraIssueStatusActionPane(StartTaskDelegate startTaskDelegate, JiraIssueStatusManagement jiraIssueStatus,
-			JiraOptions jiraOptions, Presenter presenter) {
+	public JiraIssueStatusActionPane(StartTaskDelegate startTaskDelegate,
+			JiraIssueStatusManagement jiraIssueStatus, JiraOptions jiraOptions,
+			Presenter presenter) {
 		this.startTaskDelegate = startTaskDelegate;
 		this.jiraIssueStatus = jiraIssueStatus;
 		this.jiraOptions = jiraOptions;
@@ -50,23 +54,17 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 	@Override
 	public void run() throws ValidationException {
 		JiraIssueTableModel model = (JiraIssueTableModel) table.getModel();
-		
-		for (int row = 0; row < model.getRowCount(); row++) {
-			RemoteJiraIssue issue = model.getIssueAt(row);
-			if(processedIssues.contains(issue))
-				continue;
-			
-			JiraAction action = model.getActionAt(row);
-			String comment = model.getCommentAt(row);
-			
-			if (action != null)
-				jiraIssueStatus.progressIssue(issue, action, comment);
 
-			if (model.isChangeAssignmentChecked(row))
-				jiraIssueStatus.assignToCurrentUser(issue);
-			
-			processedIssues.add(issue);
-		}		
+		for (int row = 0; row < model.getRowCount(); row++) {
+			if (model.hasPendencies(row))
+				try {
+					model.processRow(row);
+				} catch (JiraException e) {
+					// TODO arrumar isso!!
+					table.repaint();
+					throw new ValidationException(e.getMessage());
+				}
+		}
 	}
 
 	@Override
@@ -74,36 +72,53 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(getScrollPane(), BorderLayout.CENTER);
-
 		return panel;
 	}
 
 	private JScrollPane getScrollPane() {
-		table = new JXTable(new JiraIssueTableModel(issues));
+		JiraIssueTableModel tableModel = new JiraIssueTableModel(issues,
+				jiraIssueStatus);
+		table = new JXTable(tableModel);
 
 		int lineHeight = 20;
 		int keyWidth = 60;
 		int summaryWidth = 230;
 		int actionsWidth = 100;
 		int assignToMeWidth = 100;
-		int scrollWidth = keyWidth + summaryWidth + actionsWidth + actionsWidth + assignToMeWidth + summaryWidth + 10;
+		int scrollWidth = keyWidth + summaryWidth + actionsWidth + actionsWidth
+				+ assignToMeWidth + summaryWidth + 10;
 
 		table.setRowHeight(lineHeight);
 		table.setIntercellSpacing(new Dimension(5, 1));
 
-		table.getColumnModel().getColumn(JiraIssueTableModel.COLUMN_ACTIONS).setCellEditor(new JiraActionCellEditor());
-		table.getColumnModel().getColumn(0).setPreferredWidth(keyWidth);
-		table.getColumnModel().getColumn(0).setMaxWidth(keyWidth);
-		table.getColumnModel().getColumn(1).setPreferredWidth(summaryWidth);
-		table.getColumnModel().getColumn(2).setPreferredWidth(actionsWidth);
-		table.getColumnModel().getColumn(2).setMaxWidth(actionsWidth);
-		table.getColumnModel().getColumn(4).setPreferredWidth(actionsWidth);
-		table.getColumnModel().getColumn(4).setMaxWidth(actionsWidth);
-		table.getColumnModel().getColumn(JiraIssueTableModel.COLUMN_ACTIONS).setPreferredWidth(actionsWidth);
-		table.getColumnModel().getColumn(JiraIssueTableModel.COLUMN_ACTIONS).setMaxWidth(actionsWidth);
-		table.getColumnModel().getColumn(JiraIssueTableModel.COLUMN_ASSIGN_TO_ME).setPreferredWidth(assignToMeWidth);
-		table.getColumnModel().getColumn(JiraIssueTableModel.COLUMN_ASSIGN_TO_ME).setMaxWidth(assignToMeWidth);
-		table.getColumnModel().getColumn(JiraIssueTableModel.COLUMN_COMMENT).setPreferredWidth(summaryWidth);
+		TableColumnModel columnModel = table.getColumnModel();
+
+		columnModel.getColumn(0).setPreferredWidth(keyWidth);
+		columnModel.getColumn(0).setMaxWidth(keyWidth);
+		columnModel.getColumn(1).setPreferredWidth(summaryWidth);
+		columnModel.getColumn(2).setPreferredWidth(actionsWidth);
+		columnModel.getColumn(2).setMaxWidth(actionsWidth);
+		columnModel.getColumn(4).setPreferredWidth(actionsWidth);
+		columnModel.getColumn(4).setMaxWidth(actionsWidth);
+
+		TableColumn columnActions = columnModel
+				.getColumn(JiraIssueTableModel.COLUMN_ACTIONS);
+		columnActions.setCellEditor(new JiraActionCellEditor());
+		columnActions.setPreferredWidth(actionsWidth);
+		columnActions.setMaxWidth(actionsWidth);
+
+		TableCellRenderer decorateCellRenderer = tableModel
+				.decorateCellRenderer(table.getDefaultRenderer(String.class));
+		columnActions.setCellRenderer(decorateCellRenderer);
+
+		columnModel.getColumn(JiraIssueTableModel.COLUMN_COMMENT)
+				.setPreferredWidth(summaryWidth);
+
+		TableColumn columnAssign = columnModel
+				.getColumn(JiraIssueTableModel.COLUMN_ASSIGN_TO);
+		columnAssign.setPreferredWidth(assignToMeWidth);
+		columnAssign.setMaxWidth(assignToMeWidth);
+		columnAssign.setCellRenderer(decorateCellRenderer);
 
 		JScrollPane scroll = new JScrollPane(table);
 		Dimension scrollDimension = new Dimension(scrollWidth, lineHeight * 4);
@@ -122,9 +137,8 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 		});
 	}
 
-	private void show(final List<RemoteJiraIssue> issuesForUpdate) {		
+	private void show(final List<RemoteJiraIssue> issuesForUpdate) {
 		issues = issuesForUpdate;
-		processedIssues = new HashSet<RemoteJiraIssue>();		
 		presenter.showOkCancelDialog(this, "Issue Actions");
 	}
 
@@ -133,17 +147,19 @@ public class JiraIssueStatusActionPane implements ActionPane, UIAction, Startabl
 		// Nothing to do.
 	}
 
-	void showIssuesForUpdateIfAny(StartTaskData startTaskData) {		
+	void showIssuesForUpdateIfAny(StartTaskData startTaskData) {
 		JiraIssue jiraIssue = startTaskData.taskData().getJiraIssue();
-		
+
 		if (jiraIssue == null)
 			return;
 
-		if (!jiraOptions.isJiraEnabled() || !jiraOptions.isIssueStatusManagementEnabled())
+		if (!jiraOptions.isJiraEnabled()
+				|| !jiraOptions.isIssueStatusManagementEnabled())
 			return;
-		
-		List<RemoteJiraIssue> issuesForUpdate = jiraIssueStatus.issuesForUpdate(jiraIssue);
-		if(!issuesForUpdate.isEmpty())
+
+		List<RemoteJiraIssue> issuesForUpdate = jiraIssueStatus
+				.issuesForUpdate(jiraIssue);
+		if (!issuesForUpdate.isEmpty())
 			show(issuesForUpdate);
 	}
 }

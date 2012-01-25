@@ -1,5 +1,8 @@
 package ui.swing.tasks;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.reactive.Receiver;
 import org.reactive.Signal;
 import org.reactive.Source;
@@ -9,6 +12,7 @@ import tasks.TaskView;
 public class SelectedTaskSource {
 
 	private Source<TaskView> _subject;
+	private Object[] selectedValues = new Object[0];
 
 	public SelectedTaskSource() {
 		_subject = new Source<TaskView>(null);
@@ -48,6 +52,18 @@ public class SelectedTaskSource {
 		try {
 			this.wait(200);
 		} catch (InterruptedException expected) {	}
+	}
+
+	public void supplySelectedValues(Object[] selectedValues) {
+		this.selectedValues = selectedValues;
+	}
+
+	public Set<TaskView> selectedTasks() {
+		Set<TaskView> result = new LinkedHashSet<TaskView>();
+		for (Object task : selectedValues){
+			result.add((TaskView) task);					
+		}
+		return result;
 	}
 
 }

@@ -1,23 +1,34 @@
 package ui.swing.mainScreen.tasks.day;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
+
+import basic.Subscriber;
 
 public class DayTasksTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
 	private List<TaskWorklog> items = new ArrayList<TaskWorklog>();
 	private final DayTaskTableModelCellValue[] cellValues;
+	private final DayTasksListModel dayTasksListModel;
 
-	public DayTasksTableModel() {
-		cellValues = DayTaskTableModelCellValue.values();
+	public DayTasksTableModel(DayTasksListModel dayTasksListModel) {
+		this.dayTasksListModel = dayTasksListModel;
+        cellValues = DayTaskTableModelCellValue.values();
+		dayTasksListModel.addChangeSubscriber(new Subscriber() {
+			@Override
+			public void fire() {
+				fireTableDataChanged();
+			}
+		});
 	}
-
+	
 	@Override
 	public int getRowCount() {
-		return this.items.size();
+		return dayTasksListModel.getWorklogList().size();
 	}
 
 	@Override
@@ -83,6 +94,6 @@ public class DayTasksTableModel extends AbstractTableModel {
 			// Nothing to do
 		}
 
-		fireTableDataChanged();
+		dayTasksListModel.fireChange();
 	}
 }

@@ -152,4 +152,10 @@ public final class PatchacaTasksOperatorUsingUI implements
 		mainScreen.selectLabel(label);
 	}
 
+	@Override
+	public void assignTasksToLabel(String[] tasks, String labelName) {
+		mainScreen.selectMultipleTasks(tasks);
+		mainScreen.assignSelectedTasksToLabel(labelName);
+	}
+
 }

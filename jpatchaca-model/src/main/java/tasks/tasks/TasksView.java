@@ -1,6 +1,7 @@
 package tasks.tasks;
 
 import java.util.List;
+import java.util.Set;
 
 import tasks.TaskView;
 
@@ -21,5 +22,7 @@ public interface TasksView {
 	public List<TaskView> tasks();
 
 	public List<String> taskNames();
+
+	public Set<TaskView> getTasksByName(Set<String> taskNames);
 
 }

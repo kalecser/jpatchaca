@@ -16,8 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import javax.swing.JList;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -35,8 +35,7 @@ import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.util.RegExComparator;
 
-import tasks.Task;
-import ui.swing.utils.SwingUtils;
+import tasks.TaskView;
 
 public class MainScreenOperator {
 
@@ -112,9 +111,15 @@ public class MainScreenOperator {
 
 	public void assignTaskToLabel(final String taskName, final String labelName) {
 
-		getLabelsListOperator().selectItem(0);
+		selectLabel(0);
+		selectTask(taskName);
 
-		clickForPopupInTask(taskName);
+		assignSelectedTasksToLabel(labelName);
+
+	}
+
+	public void assignSelectedTasksToLabel(final String labelName) {
+		clickForPopupInTask(tasksListOperator.getSelectedValue().toString());
 
 		final JPopupMenuOperator popup = new JPopupMenuOperator();
 
@@ -127,13 +132,11 @@ public class MainScreenOperator {
 			new JTextFieldOperator(dialogOperator).setText(labelName);
 			new JButtonOperator(dialogOperator).pushNoBlock();
 		}
-
 	}
 
 	private void clickForPopupInTask(final String taskName) {
 
 		final JListOperator tasksList = getTasksList();
-		tasksList.selectItem(taskName);
 
 		final int index = tasksList.getSelectedIndex();
 		final Point indexToLocation = tasksList.indexToLocation(index);
@@ -150,14 +153,14 @@ public class MainScreenOperator {
 		tasksListOperator
 			.waitState(new JListByItemTextFinder(taskName));
 		
-		SwingUtils.invokeAndWaitOrCry(new Runnable() {	@Override public void run() {
+		SwingUtilities.invokeLater(new Runnable() {	@Override public void run() {
 				tasksListOperator.selectItem(taskName);				
 		}});
 		
 		waitSelectedTask(taskName);
 	}
 
-	private void waitSelectedTask(final String taskName) {
+	public void waitSelectedTask(final String taskName) {
 		tasksListOperator.waitState(new ComponentChooser() {
 			
 			@Override
@@ -167,11 +170,15 @@ public class MainScreenOperator {
 			
 			@Override
 			public boolean checkComponent(Component comp) {
-				Task task = (Task) tasksListOperator.getSelectedValue();
-				if (task == null){
-					return false;
+				Object[] tasks = tasksListOperator.getSelectedValues();
+				
+				for (Object t : tasks){
+					if (((TaskView)t).name().equals(taskName)){
+						return true;
+					}
 				}
-				return task.name().equals(taskName);
+				
+				return false;
 			}
 		});
 	}
@@ -183,7 +190,7 @@ public class MainScreenOperator {
 	public void createTask(final String taskName) {
 		pushCreateTaskMenu();
 		new TaskScreenOperator().setTaskNameAndOk(taskName);
-		waitTaskCreated(taskName);
+		waitSelectedTask(taskName);
 	}
 	
 	public void createTaskWithJiraKey(String taskName, String jiraKey) {
@@ -196,28 +203,8 @@ public class MainScreenOperator {
 		
 	}
 
-	private void waitTaskCreated(final String taskName) {
-		tasksListOperator.waitState(new ComponentChooser() {
-			@Override
-			public String getDescription() {
-				return "Waiting for item with text " + taskName;
-			}
-
-			@Override
-			public boolean checkComponent(final Component taskListComp) {
-				final JList taskList = (JList) taskListComp;
-				for (int i = 0; i < taskList.getModel().getSize(); i++) {
-					if (taskList.getModel().getElementAt(i).toString().equals(
-							taskName)) {
-						return true;
-					}
-				}
-				return false;
-			}
-		});
-	}
-
 	public void startTask(final String taskName) {
+		selectTask(taskName);
 		clickForPopupInTask(taskName);
 
 		final JPopupMenuOperator popup = new JPopupMenuOperator();
@@ -235,6 +222,7 @@ public class MainScreenOperator {
 	}
 
 	public void stopTask() {
+		selectTask(activeTaskName());
 		clickForPopupInTask(activeTaskName());
 
 		final JPopupMenuOperator popup = new JPopupMenuOperator();
@@ -469,6 +457,18 @@ public class MainScreenOperator {
 		new JDialogOperator().pressKey(KeyEvent.VK_ENTER);
 	}
 
-	
+	public void selectMultipleTasks(String[] tasks) {
+		
+		
+		for (String t : tasks){
+			tasksListOperator
+				.waitState(new JListByItemTextFinder(t));
+		}
+		
+		tasksListOperator.selectItem(tasks);
 
+		for (String t : tasks){
+			waitSelectedTask(t);
+		}
+	}
 }

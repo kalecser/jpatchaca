@@ -1,9 +1,9 @@
 package ui.swing.mainScreen;
 
 import java.util.List;
+import java.util.Set;
 
 import jira.issue.JiraIssue;
-
 import labels.LabelsSystem;
 
 import org.picocontainer.Startable;
@@ -23,10 +23,24 @@ import basic.UserOperationCancelledException;
 
 public class TaskContextMenuSystemMediator implements Startable {
 
-	public TaskContextMenuSystemMediator(final TaskContextMenu taskContextMenu, final LabelsSystem labelsSystem,
-			final TasksSystem tasksSystem, final SelectedTaskSource selectedTaskSource, final SwingTasksUser tasksUser,
-			final LabelsUser labelsUser, final StartTaskDelegate startTaskDelegate,
-			final TaskScreenController taskScreen) {
+
+	private final LabelsUser labelsUser;
+	private final LabelsSystem labelsSystem;
+	private final SelectedTaskSource selectedTaskSource;
+
+	public TaskContextMenuSystemMediator(
+			final TaskContextMenu taskContextMenu, 
+			final LabelsSystem labelsSystem,
+			final TasksSystem tasksSystem, 
+			final SelectedTaskSource selectedTaskSource, 
+			final SwingTasksUser tasksUser,
+			final LabelsUser labelsUser, 
+			final StartTaskDelegate startTaskDelegate,
+			final TaskScreenController taskScreen,
+			final IssueTrackerBrowserIntegration jiraBrowser) {
+		this.labelsSystem = labelsSystem;
+		this.selectedTaskSource = selectedTaskSource;
+		this.labelsUser = labelsUser;
 		taskContextMenu.addNoteAlert().subscribe(new Subscriber() {
 
 			@Override
@@ -44,7 +58,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 			@Override
 			public void fire() {
 				try {
-					labelsSystem.setNewLabelToTask(selectedTaskSource.currentValue(), labelsUser.getNewLabelName(null));
+					assignSelectedTasksToNewLabel();
 				} catch (final UserOperationCancelledException e) {
 				}
 			}
@@ -54,7 +68,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 			@Override
 			public void fire() {
-				labelsSystem.setLabelToTask(selectedTaskSource.currentValue(), labelsUser.getLabelToAssignTaskTo());
+				assignTasksToLabel();
 			}
 		});
 
@@ -62,7 +76,7 @@ public class TaskContextMenuSystemMediator implements Startable {
 
 			@Override
 			public void fire() {
-				labelsSystem.removeLabelFromTask(selectedTaskSource.currentValue(), labelsUser.selectedLabel());
+				removeTasksFromLabel();
 			}
 		});
 
@@ -140,19 +154,39 @@ public class TaskContextMenuSystemMediator implements Startable {
 			public List<String> getLabelsFor(final TaskView selectedTask) {
 				return labelsSystem.getLabelsFor(selectedTask);
 			}
+
+			@Override
+			public void openInBrowser(TaskView task) {
+				jiraBrowser.openJiraIssueOnBrowser(task);
+			}
 		});
 	}
 
 	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-
-	}
+	public void start() {}
 
 	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
+	public void stop() {}
 
+	private void assignSelectedTasksToNewLabel() throws UserOperationCancelledException {
+		String labelToAssignTaskTo =  labelsUser.getNewLabelName(null);
+		setLabelToSelectedTasks(labelToAssignTaskTo);
 	}
+
+	
+	private void assignTasksToLabel() {
+		String labelToAssignTaskTo = labelsUser.getLabelToAssignTaskTo();
+		setLabelToSelectedTasks(labelToAssignTaskTo);
+	}
+
+	private void removeTasksFromLabel() {
+		labelsSystem.removeMultipleTasksFromLabel(labelsUser.selectedLabel(), selectedTaskSource.selectedTasks());
+	}
+	
+	private void setLabelToSelectedTasks(String labelToAssignTaskTo) {
+		Set<TaskView> selectedTasks = selectedTaskSource.selectedTasks();
+		labelsSystem.setLabelToMultipleTasks(labelToAssignTaskTo, selectedTasks);
+	}
+
 
 }

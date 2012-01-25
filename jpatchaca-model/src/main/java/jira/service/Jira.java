@@ -24,6 +24,8 @@ public interface Jira {
 	String getIssueAssignee(JiraIssue issue);
 
 	void assignIssueToCurrentUser(JiraIssue issue);
+	
+	void assignIssueTo(JiraIssue issue, String user);
 
 	boolean isAssignedToCurrentUser(JiraIssue issue);
 

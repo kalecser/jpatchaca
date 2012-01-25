@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 class SelectedValueGetter implements Runnable {
 
 	private final JList list;
-	private Object _selectedValue;
+	private Object[] _selectedValue;
 
 	private SelectedValueGetter(final JList list) {
 		this.list = list;
@@ -17,19 +17,19 @@ class SelectedValueGetter implements Runnable {
 
 	@Override
 	public void run() {
-		_selectedValue = list.getSelectedValue();
+		_selectedValue = list.getSelectedValues();
 	}
 
-	public Object selectedValue() {
+	public Object[] selectedValue() {
 		return _selectedValue;
 	}
 	
-	public static Object getSelectedValueInSwingThread(final JList tasksList) {
+	public static Object[] getSelectedValueInSwingThread(final JList tasksList) {
 		final SelectedValueGetter selectedValue = new SelectedValueGetter(tasksList);
 		
 		runGetter(selectedValue);
 		
-		final Object selectedValue2 = selectedValue.selectedValue();
+		final Object[] selectedValue2 = selectedValue.selectedValue();
 		return selectedValue2;
 	}
 

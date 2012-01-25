@@ -31,6 +31,15 @@ public abstract class TasksTest extends TestCase {
 		assertTrue(tasksOperator.isTaskInLabel(taskName, labelName));
 	}
 	
+	public void testAddMultipleTasksToLabel(){
+		tasksOperator.createTask("task 1");
+		tasksOperator.createTask("task 2");
+		tasksOperator.assignTasksToLabel("task 1,task 2".split(","), "myLabel" );
+		
+		assertTrue(tasksOperator.isTaskInLabel("task 1", "myLabel"));
+		assertTrue(tasksOperator.isTaskInLabel("task 2", "myLabel"));
+	}
+	
 	public void testCreatedTasksAssignedToSelectedLabel(){
 		tasksOperator.createTaskAndAssignToLabel("foo", "myLabel");
 		
