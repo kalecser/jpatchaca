@@ -2,15 +2,14 @@ package ui.swing.mainScreen.tasks.mock;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.NotImplementedException;
 
 import jira.exception.JiraException;
 import jira.issue.JiraAction;
 import jira.issue.JiraIssue;
 import jira.issue.JiraIssueData;
 import jira.service.Jira;
+
+import org.apache.commons.lang.NotImplementedException;
 
 public class MockJira implements Jira {
 
@@ -63,8 +62,8 @@ public class MockJira implements Jira {
 	}
 
 	@Override
-	public Map<String, String> getMetaAttributes(JiraIssue issue) {
-		throw new NotImplementedException();
+	public boolean isWorkable(JiraIssue issue) {
+		return true;
 	}
 
 	@Override

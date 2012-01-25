@@ -1,5 +1,7 @@
 package main;
 
+import jira.service.JiraImpl;
+import jira.service.JiraMock;
 import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
 
@@ -20,9 +22,10 @@ public class TransientNonUIContainer {
 
 		container.removeComponent(PatchacaDirectory.class);
 		container.removeComponent(DoubleIdProvider.class);
+		container.removeComponent(JiraImpl.class);
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
-		
+		container.addComponent(JiraMock.class);		
 		
 		container.removeComponent(AssureSingleInstance.class);
 		

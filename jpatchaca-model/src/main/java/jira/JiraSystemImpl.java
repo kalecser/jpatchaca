@@ -3,7 +3,9 @@ package jira;
 import java.util.Calendar;
 
 import jira.events.SendWorklog;
+import jira.issue.JiraIssue;
 import jira.service.Jira;
+import lang.Maybe;
 import periods.Period;
 import tasks.TaskView;
 import tasks.tasks.Tasks;
@@ -27,33 +29,37 @@ public class JiraSystemImpl implements JiraSystem {
 	@Override
 	public void addWorklog(final TaskView task, final Period period) {
 
-		if (task.getJiraIssue() == null) {
+		Maybe<JiraIssue> jiraIssue = task.getJiraIssue();
+		if (jiraIssue == null) 
 			throw new IllegalArgumentException("Task without issue: "
 					+ task.name());
-		}
 
-		final String issueKey = task.getJiraIssue().unbox().getKey();
-		logWorkOnIssue(period, issueKey);
+		logWorkOnIssue(period, jiraIssue.unbox().getKey());
 		markPeriodAsSent(task, period);
 
 	}
 
 	private void markPeriodAsSent(final TaskView task, final Period period) {
 		final int periodIndex = task.getPeriodIndex(period);
-		consumer.consume(new SendWorklog(tasks.idOf(task),
-				periodIndex));
+		consumer.consume(new SendWorklog(tasks.idOf(task), periodIndex));
 	}
 
 	void logWorkOnIssue(final Period period, final String issueKey) {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(period.startTime());
-		
 		final String duration = worklogOverride.getDuration(period);
-		
-		if (duration.equals("0h 0m")){
+
+		if (duration.equals("0h 0m"))
 			return;
-		}
-		
 		jira.newWorklog(issueKey, calendar, duration);
+	}
+	
+	@Override
+	public boolean canSendWorklogTo(TaskView task, Period period) {
+		Maybe<JiraIssue> jiraIssue = task.getJiraIssue();
+		
+		return jiraIssue != null
+				&& !period.isWorklogSent()
+				&& jira.isWorkable(jiraIssue.unbox()); 
 	}
 }

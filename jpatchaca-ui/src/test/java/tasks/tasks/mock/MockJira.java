@@ -134,8 +134,8 @@ public class MockJira implements Jira {
 	}
 
 	@Override
-	public Map<String, String> getMetaAttributes(JiraIssue issue) {
-		throw new NotImplementedException();
+	public boolean isWorkable(JiraIssue issue) {
+		return true;
 	}
 
 	@Override

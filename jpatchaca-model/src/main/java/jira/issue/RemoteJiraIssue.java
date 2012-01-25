@@ -1,7 +1,6 @@
 package jira.issue;
 
 import java.util.List;
-import java.util.Map;
 
 import jira.service.Jira;
 
@@ -40,11 +39,8 @@ public class RemoteJiraIssue {
 	}
 
 	public boolean isWorkable() {
-		Map<String, String> metaAttributes = jira.getMetaAttributes(issue);
-		if (metaAttributes.containsKey("minyaa.jira.issue.workable"))
-			return "true".equals(metaAttributes
-					.get("minyaa.jira.issue.workable"));
-		return true;
+		
+		return jira.isWorkable(issue);
 	}
 
 	@Override
