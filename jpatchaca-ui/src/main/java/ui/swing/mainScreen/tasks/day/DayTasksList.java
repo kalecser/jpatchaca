@@ -26,8 +26,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumnModel;
 
 import jira.JiraOptions;
-import jira.JiraSystem;
-import jira.JiraWorklogOverride;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.jdesktop.swingx.JXDatePicker;
@@ -41,7 +39,6 @@ import tasks.TaskView;
 import tasks.TasksSystem;
 import tasks.tasks.TasksView;
 import ui.swing.utils.SimpleInternalFrame;
-import basic.Formatter;
 import basic.HardwareClock;
 
 public class DayTasksList extends SimpleInternalFrame implements Startable {
@@ -52,33 +49,27 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	private DayTasksTableModel dayTasksTableModel;
 	private JTextField totalHoursTextField;
 	private JXDatePicker datePicker;
-	private final TasksSystem tasksSystem;
 	private final TasksView tasks;
-	private final Formatter formatter;
-	private List<Pair> items = new ArrayList<Pair>();
+	private List<TaskWorklog> items = new ArrayList<TaskWorklog>();
 	private final JiraOptions jiraOptions;
-	private final JiraSystem jiraSystem;
 	private JXTable dayTasksTable;
 	private final HardwareClock clock;
-	private final JiraWorklogOverride worklogOverride;
+	private final TaskWorklogFactory worklogFactory;
+	private final DayTaskListModel dayTaskListModel;
 
-	public DayTasksList(final TasksView tasks, final Formatter formatter,
-			final TasksSystem tasksSystem, final JiraOptions jiraOptions,
-			final JiraSystem jiraSystem,
-			HardwareClock clock, JiraWorklogOverride worklogOverride) {
-		
+	public DayTasksList(final TasksView tasks, final TasksSystem tasksSystem,
+			final JiraOptions jiraOptions, HardwareClock clock, TaskWorklogFactory worklogFactory, DayTaskListModel dayTaskListModel) {
+
 		super(DayTasksList.panelTitle);
 		this.tasks = tasks;
-		this.formatter = formatter;
-		this.tasksSystem = tasksSystem;
 		this.jiraOptions = jiraOptions;
-		this.jiraSystem = jiraSystem;
 		this.clock = clock;
-		this.worklogOverride = worklogOverride;
+		this.worklogFactory = worklogFactory;
+		this.dayTaskListModel = dayTaskListModel;
 		initialize();
 	}
 
-	public void setItems(final List<Pair> items) {
+	public void setItems(final List<TaskWorklog> items) {
 		this.items = items;
 		dayTasksTableModel.setItems(this.items);
 		updateTotalHours();
@@ -104,9 +95,10 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 			public void actionPerformed(final ActionEvent e) {
 				final JXDatePicker picker = (JXDatePicker) e.getSource();
 
-				showTasksByDay(picker.getDate());
+				setDay(picker.getDate());
+//				showTasksByDay(picker.getDate());
 
-			}
+			}			
 		});
 
 		pannel.add(datePicker);
@@ -126,7 +118,6 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 			public void actionPerformed(final ActionEvent e) {
 				sendWorklog();
 			}
-
 		});
 
 		final JPanel wlogPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -140,8 +131,7 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	}
 
 	private Component getSummaryTable() {
-		dayTasksTableModel = new DayTasksTableModel(formatter, tasksSystem,
-				worklogOverride);
+		dayTasksTableModel = new DayTasksTableModel();
 
 		dayTasksTableModel.addTableModelListener(new TableModelListener() {
 
@@ -183,41 +173,44 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 
 	@Override
 	public void start() {
-		showTasksByDay(new Date());
+		setDay(new Date());		
 	}
 
-	void showTasksByDay(final Date data) {
-		final List<Pair> lista = new ArrayList<Pair>();
-		
-		for (final TaskView task : tasks.tasks())
-			for (final Period period : task.periods())
-				if (periodoDentroDoDia(data, period))
-					lista.add(new Pair(task, period, formatter, worklogOverride));
-
+	void showTasks() {
+		final List<TaskWorklog> lista = dayTaskListModel.worklogs();
 		Collections.sort(lista);
 		setItems(lista);
 	}
-
+	
+	private void setDay(Date date) {
+		dayTaskListModel.setDay(date);
+		showTasks();
+	}
+	
 	void sendWorklog() {
-		final List<Pair> tasksPeriods = new LinkedList<Pair>();
-
-		if (dayTasksTable.getSelectedRowCount() == 0) {
+		final List<TaskWorklog> tasksPeriods = worklogsToSend();
+		if (tasksPeriods.size() == 0) {
 			JOptionPane.showMessageDialog(this, "No periods selected");
 			return;
 		}
 
-		for (final int i : dayTasksTable.getSelectedRows()) {
-			final Pair pair = items.get(i);
-			if (pair.task().getJiraIssue() != null
-					&& !pair.period().isWorklogSent()) {
-				tasksPeriods.add(pair);
-			}
-		}
+		if (confirmSendWorklog())
+			dayTaskListModel.sendWorklog();
+			for (final TaskWorklog worklog : tasksPeriods)
+				if (worklog.canSend()) {
+					worklog.send();
+					dayTasksTableModel.fireTableDataChanged();
+				}
+	}
 
-		if (tasksPeriods.size() == 0) {
-			return;
-		}
+	private List<TaskWorklog> worklogsToSend() {
+		final List<TaskWorklog> tasksPeriods = new LinkedList<TaskWorklog>();
+		for (final int i : dayTasksTable.getSelectedRows())
+			tasksPeriods.add(items.get(i));
+		return tasksPeriods;
+	}
 
+	private boolean confirmSendWorklog() {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("Sending worklog for selected periods as ");
 		builder.append("'");
@@ -228,37 +221,18 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 				"Send worklog", JOptionPane.YES_OPTION
 						| JOptionPane.CANCEL_OPTION);
 
-		if (opt == JOptionPane.YES_OPTION) {
-			for (final Pair pair : tasksPeriods) {
-				jiraSystem.addWorklog(pair.task(), pair.period());
-				dayTasksTableModel.fireTableDataChanged();
-			}
-		}
+		boolean confirmSendWorklog = opt == JOptionPane.YES_OPTION;
+		return confirmSendWorklog;
 	}
 
-	private String getDayTotalHours(final List<Pair> lista) {
+	private String getDayTotalHours(final List<TaskWorklog> lista) {
 		double totalHours = 0;
 
-		for (final Pair par : lista) 
-			totalHours += par.period().getMiliseconds();
+		for (final TaskWorklog worklog : lista)
+			totalHours += worklog.getMiliseconds();
 
 		final NumberFormat format = new DecimalFormat("#0.00");
 		return format.format(totalHours / DateUtils.MILLIS_PER_HOUR);
-	}
-
-	private boolean periodoDentroDoDia(final Date data, final Period period) {
-		return period.getDay().equals(getDay(data));
-	}
-
-	private Date getDay(final Date date) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.MILLISECOND, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-
-		return cal.getTime();
 	}
 
 	@Override
@@ -267,8 +241,8 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	}
 
 	public void refrescate() {
-		datePicker.setDate(clock.getTime());
-		showTasksByDay(datePicker.getDate());
+		datePicker.setDate(clock.getTime());		
+		//showTasksByDay(datePicker.getDate());
 	}
 
 }

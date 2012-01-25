@@ -28,7 +28,7 @@ import com.dolby.jira.net.soap.jira.RemoteWorklog;
 public class JiraImpl implements Jira {
 
 	private Map<String, String> statuses;
-	private JiraServiceFacade jiraService;
+	private JiraServiceFacade jiraService;	
 
 	public JiraImpl(JiraServiceFacade jiraService) {
 		this.jiraService = jiraService;
@@ -164,12 +164,17 @@ public class JiraImpl implements Jira {
 		return statuses;
 	}
 	
-	@Override
-	public Map<String, String> getMetaAttributes(JiraIssue issue) {
+	private Map<String, String> getMetaAttributes(JiraIssue issue) {
 		RemoteMetaAttribute[] metaAttributes = jiraService.getMetaAttributes(issue.getKey());
 		Map<String, String> attributeMap = new HashMap<String, String>();
 		for(RemoteMetaAttribute ra: metaAttributes)
 			attributeMap.put(ra.getName(), ra.getValue());
 		return attributeMap;
+	}
+	
+	@Override
+	public boolean isWorkable(JiraIssue issue) {
+		Map<String, String> metaAttributes = getMetaAttributes(issue);
+		return "true".equals(metaAttributes.get(WORKABLE_META_ATTRIBUTE));
 	}
 }
