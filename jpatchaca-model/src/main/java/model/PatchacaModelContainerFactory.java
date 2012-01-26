@@ -9,6 +9,7 @@ import jira.events.JiraEventFactory;
 import jira.processors.SendWorklogProcessor;
 import jira.processors.SetJiraConfigProcessor;
 import jira.processors.SetJiraIssueToTaskProcessor;
+import jira.service.HttpCheckerImpl;
 import jira.service.TokenManager;
 import jira.service.JiraImpl;
 import jira.service.JiraServiceFacade;
@@ -126,6 +127,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(JiraSoapServiceFactory.class);
 		container.addComponent(TokenManager.class);
 		container.addComponent(JiraEventFactory.class);
+		container.addComponent(HttpCheckerImpl.class);
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);
