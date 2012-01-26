@@ -187,6 +187,6 @@ public class JiraImpl implements Jira {
 	@Override
 	public boolean isWorkable(JiraIssue issue) {
 		Map<String, String> metaAttributes = getMetaAttributes(issue);
-		return "true".equals(metaAttributes.get(WORKABLE_META_ATTRIBUTE));
+		return !"false".equals(metaAttributes.get(WORKABLE_META_ATTRIBUTE));
 	}
 }
