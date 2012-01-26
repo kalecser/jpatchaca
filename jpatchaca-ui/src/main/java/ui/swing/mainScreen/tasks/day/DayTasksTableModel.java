@@ -1,9 +1,6 @@
 package ui.swing.mainScreen.tasks.day;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
 
 import basic.Subscriber;
@@ -11,7 +8,6 @@ import basic.Subscriber;
 public class DayTasksTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
-	private List<TaskWorklog> items = new ArrayList<TaskWorklog>();
 	private final DayTaskTableModelCellValue[] cellValues;
 	private final DayTasksListModel dayTasksListModel;
 
@@ -38,18 +34,13 @@ public class DayTasksTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(final int rowIndex, final int columnIndex) {
-		final TaskWorklog item = this.items.get(rowIndex);
+		final TaskWorklog item = dayTasksListModel.getWorklogList().get(rowIndex);
 		return cellValues[columnIndex].getValue(item);
 	}
 
 	@Override
 	public String getColumnName(final int column) {
 		return cellValues[column].getLabel();
-	}
-
-	public final void setItems(final List<TaskWorklog> items) {
-		this.items = items;
-		fireTableDataChanged();
 	}
 
 	@Override
@@ -60,7 +51,7 @@ public class DayTasksTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(final Object aValue, final int rowIndex,
 			final int columnIndex) {
-		final TaskWorklog item = this.items.get(rowIndex);
+		final TaskWorklog item = dayTasksListModel.getWorklogList().get(rowIndex);
 		enqueueSetValueAt(aValue, cellValues[columnIndex], item);
 	}
 
