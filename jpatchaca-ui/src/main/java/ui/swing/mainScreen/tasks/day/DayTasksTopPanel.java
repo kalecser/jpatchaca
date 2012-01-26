@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -53,12 +55,12 @@ public class DayTasksTopPanel extends JPanel {
 	}
 
 	private void addDatePickerListener() {
-		datePicker.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				dayTaskListModel.setDay(datePicker.getDate());
-			}
-		});
+	    datePicker.addPropertyChangeListener("date", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                dayTaskListModel.setDay(datePicker.getDate());
+            }
+        });
 	}
 
 	private void addSendWorklogListener() {
