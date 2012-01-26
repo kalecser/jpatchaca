@@ -122,4 +122,8 @@ public class DayTasksTopPanel extends JPanel {
 		final NumberFormat format = new DecimalFormat("#0.00");
 		totalHoursTextField.setText(format.format(totalHours));
 	}
+	
+	public void refrescate(){
+	    datePicker.setDate(new Date());
+	}
 }

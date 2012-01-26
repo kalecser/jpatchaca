@@ -35,4 +35,8 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	@Override
 	public void stop() {
 	}
+
+    public void refrescate() {
+        topPanel.refrescate();
+    }
 }

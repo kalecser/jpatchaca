@@ -123,6 +123,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 			@Override
 			public void stateChanged(final ChangeEvent e) {
 				refrescateTasksSummary();
+				refrescateDayTasks();
 			}
 		});
 
@@ -156,6 +157,10 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 
 	void refrescateTasksSummary() {
 		tasksSummary.refrescate();
+	}
+	
+	void refrescateDayTasks(){
+	    dayTasksList.refrescate();
 	}
 
 }
