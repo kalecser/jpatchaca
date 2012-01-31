@@ -6,6 +6,10 @@
 		<vendor name="${project.organization.name}" url="${project.organization.url}" />
 	</plugin-info>
 
+	<component key="getMetaAttributesService" name="Get MetaAttributes Service Component"
+		class="org.jpatchaca.jira.GetMetaAttributesService" public="true">
+	</component>
+
 	<component key="jpatchacaSoapServiceComponent" name="JPatchaca Soap Service Component"
 		class="org.jpatchaca.jira.JPatchacaSoapServiceImpl" public="true">
 		<interface>org.jpatchaca.jira.JPatchacaSoapService</interface>
@@ -14,8 +18,7 @@
 	<rpc-soap key="jpatchacaSoapService" name="JPatchaca SOAP Service"
 		class="org.jpatchaca.jira.JPatchacaSoapServiceImpl">
 		<description>JPatchaca SOAP Service</description>
-		<service-path>jpatchaca-service</service-path>
-		<published-interface>org.jpatchaca.jira.JPatchacaSoapService
-		</published-interface>
+		<service-path>jpatchacaservice-v1</service-path>
+		<published-interface>org.jpatchaca.jira.JPatchacaSoapService</published-interface>
 	</rpc-soap>
 </atlassian-plugin>

@@ -1,5 +1,5 @@
 /**
- * RemoteException.java
+ * RemoteValidationException.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
@@ -8,14 +8,14 @@
 package org.jpatchaca.jira.ws;
 
 @SuppressWarnings({"unused", "rawtypes", "serial" })
-public class RemoteException  extends org.apache.axis.AxisFault  implements java.io.Serializable {
-    public RemoteException() {
+public class RemoteValidationException  extends org.jpatchaca.jira.ws.RemoteException  implements java.io.Serializable {
+    public RemoteValidationException() {
     }
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof RemoteException)) return false;
-        RemoteException other = (RemoteException) obj;
+        if (!(obj instanceof RemoteValidationException)) return false;
+        RemoteValidationException other = (RemoteValidationException) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -23,7 +23,7 @@ public class RemoteException  extends org.apache.axis.AxisFault  implements java
         }
         __equalsCalc = obj;
         boolean _equals;
-        _equals = true;
+        _equals = super.equals(obj);
         __equalsCalc = null;
         return _equals;
     }
@@ -34,17 +34,17 @@ public class RemoteException  extends org.apache.axis.AxisFault  implements java
             return 0;
         }
         __hashCodeCalc = true;
-        int _hashCode = 1;
+        int _hashCode = super.hashCode();
         __hashCodeCalc = false;
         return _hashCode;
     }
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(RemoteException.class, true);
+        new org.apache.axis.description.TypeDesc(RemoteValidationException.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteException"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteValidationException"));
     }
 
     /**

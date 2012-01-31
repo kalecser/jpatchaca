@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" xmlns:intf="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns1="http://jira.jpatchaca.org" xmlns:tns2="http://exception.rpc.jira.atlassian.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1" xmlns:intf="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns1="http://jira.jpatchaca.org" xmlns:tns2="http://exception.rpc.jira.atlassian.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.3
 Built on Oct 05, 2005 (05:23:37 EDT)-->
  <wsdl:types>
   <schema targetNamespace="http://jira.jpatchaca.org" xmlns="http://www.w3.org/2001/XMLSchema">
    <import namespace="http://exception.rpc.jira.atlassian.com"/>
-   <import namespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service"/>
+   <import namespace="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1"/>
    <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
    <complexType name="RemoteMetaAttribute">
     <sequence>
@@ -14,7 +14,7 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
     </sequence>
    </complexType>
   </schema>
-  <schema targetNamespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" xmlns="http://www.w3.org/2001/XMLSchema">
+  <schema targetNamespace="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1" xmlns="http://www.w3.org/2001/XMLSchema">
    <import namespace="http://exception.rpc.jira.atlassian.com"/>
    <import namespace="http://jira.jpatchaca.org"/>
    <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
@@ -27,11 +27,32 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
    </complexType>
   </schema>
   <schema targetNamespace="http://exception.rpc.jira.atlassian.com" xmlns="http://www.w3.org/2001/XMLSchema">
-   <import namespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service"/>
+   <import namespace="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1"/>
    <import namespace="http://jira.jpatchaca.org"/>
    <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
    <complexType name="RemoteException">
     <sequence/>
+   </complexType>
+   <complexType name="RemotePermissionException">
+    <complexContent>
+     <extension base="tns2:RemoteException">
+      <sequence/>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="RemoteValidationException">
+    <complexContent>
+     <extension base="tns2:RemoteException">
+      <sequence/>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="RemoteAuthenticationException">
+    <complexContent>
+     <extension base="tns2:RemoteException">
+      <sequence/>
+     </extension>
+    </complexContent>
    </complexType>
   </schema>
  </wsdl:types>
@@ -56,17 +77,13 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
 
    </wsdl:message>
 
-   <wsdl:message name="getRemainingEstimateRequest">
-
-      <wsdl:part name="in0" type="xsd:string"/>
-
-      <wsdl:part name="in1" type="xsd:string"/>
+   <wsdl:message name="isAvailableRequest">
 
    </wsdl:message>
 
-   <wsdl:message name="getRemainingEstimateResponse">
+   <wsdl:message name="isAvailableResponse">
 
-      <wsdl:part name="getRemainingEstimateReturn" type="xsd:long"/>
+      <wsdl:part name="isAvailableReturn" type="xsd:boolean"/>
 
    </wsdl:message>
 
@@ -82,19 +99,17 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
 
       </wsdl:operation>
 
-      <wsdl:operation name="getRemainingEstimate" parameterOrder="in0 in1">
+      <wsdl:operation name="isAvailable">
 
-         <wsdl:input message="impl:getRemainingEstimateRequest" name="getRemainingEstimateRequest"/>
+         <wsdl:input message="impl:isAvailableRequest" name="isAvailableRequest"/>
 
-         <wsdl:output message="impl:getRemainingEstimateResponse" name="getRemainingEstimateResponse"/>
-
-         <wsdl:fault message="impl:RemoteException" name="RemoteException"/>
+         <wsdl:output message="impl:isAvailableResponse" name="isAvailableResponse"/>
 
       </wsdl:operation>
 
    </wsdl:portType>
 
-   <wsdl:binding name="jpatchaca-serviceSoapBinding" type="impl:JPatchacaSoapService">
+   <wsdl:binding name="jpatchacaservice-v1SoapBinding" type="impl:JPatchacaSoapService">
 
       <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
 
@@ -110,39 +125,33 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
 
          <wsdl:output name="getMetaAttributesForIssueResponse">
 
-            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" use="encoded"/>
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1" use="encoded"/>
 
          </wsdl:output>
 
          <wsdl:fault name="RemoteException">
 
-            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="RemoteException" namespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" use="encoded"/>
+            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="RemoteException" namespace="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1" use="encoded"/>
 
          </wsdl:fault>
 
       </wsdl:operation>
 
-      <wsdl:operation name="getRemainingEstimate">
+      <wsdl:operation name="isAvailable">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="getRemainingEstimateRequest">
+         <wsdl:input name="isAvailableRequest">
 
             <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://jira.jpatchaca.org" use="encoded"/>
 
          </wsdl:input>
 
-         <wsdl:output name="getRemainingEstimateResponse">
+         <wsdl:output name="isAvailableResponse">
 
-            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" use="encoded"/>
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1" use="encoded"/>
 
          </wsdl:output>
-
-         <wsdl:fault name="RemoteException">
-
-            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="RemoteException" namespace="https://10.42.12.15:8880/rpc/soap/jpatchaca-service" use="encoded"/>
-
-         </wsdl:fault>
 
       </wsdl:operation>
 
@@ -150,9 +159,9 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
 
    <wsdl:service name="JPatchacaSoapServiceService">
 
-      <wsdl:port binding="impl:jpatchaca-serviceSoapBinding" name="jpatchaca-service">
+      <wsdl:port binding="impl:jpatchacaservice-v1SoapBinding" name="jpatchacaservice-v1">
 
-         <wsdlsoap:address location="https://10.42.12.15:8880/rpc/soap/jpatchaca-service"/>
+         <wsdlsoap:address location="https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1"/>
 
       </wsdl:port>
 

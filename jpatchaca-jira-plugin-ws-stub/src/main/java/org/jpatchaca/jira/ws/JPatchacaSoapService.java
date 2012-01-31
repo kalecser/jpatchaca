@@ -9,5 +9,5 @@ package org.jpatchaca.jira.ws;
 
 public interface JPatchacaSoapService extends java.rmi.Remote {
     public org.jpatchaca.jira.ws.RemoteMetaAttribute[] getMetaAttributesForIssue(java.lang.String in0, java.lang.String in1) throws java.rmi.RemoteException, org.jpatchaca.jira.ws.RemoteException;
-    public long getRemainingEstimate(java.lang.String in0, java.lang.String in1) throws java.rmi.RemoteException, org.jpatchaca.jira.ws.RemoteException;
+    public boolean isAvailable() throws java.rmi.RemoteException;
 }

@@ -8,9 +8,9 @@
 package org.jpatchaca.jira.ws;
 
 public interface JPatchacaSoapServiceService extends javax.xml.rpc.Service {
-    public java.lang.String getJpatchacaServiceAddress();
+    public java.lang.String getJpatchacaserviceV1Address();
 
-    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaService() throws javax.xml.rpc.ServiceException;
+    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaserviceV1() throws javax.xml.rpc.ServiceException;
 
-    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaService(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
+    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaserviceV1(java.net.URL portAddress) throws javax.xml.rpc.ServiceException;
 }

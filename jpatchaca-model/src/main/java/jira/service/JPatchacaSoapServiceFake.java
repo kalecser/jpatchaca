@@ -14,9 +14,7 @@ public class JPatchacaSoapServiceFake implements JPatchacaSoapService {
     }
 
     @Override
-    public long getRemainingEstimate(String arg0, String arg1) throws RemoteException,
-            org.jpatchaca.jira.ws.RemoteException {
-        return 0;
-    }
-    
+    public boolean isAvailable() throws RemoteException {
+        return false;
+    }    
 }

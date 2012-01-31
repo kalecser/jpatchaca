@@ -11,13 +11,8 @@ import com.dolby.jira.net.soap.jira.JiraSoapServiceServiceLocator;
 public class JiraSoapServiceFactory implements JiraServiceFactory {
 
     public final String JIRASOAPSERVICE_ENDPOINT = "/rpc/soap/jirasoapservice-v2";
-    public final String JPATCHACASERVICE_ENDPOINT = "/rpc/soap/jpatchaca-service";
-    private final HttpChecker httpChecker;
+    public final String JPATCHACASERVICE_ENDPOINT = "/rpc/soap/jpatchacaservice-v1";
 
-    public JiraSoapServiceFactory(HttpChecker httpChecker){
-        this.httpChecker = httpChecker;        
-    }
-    
     @Override
     public JiraSoapService createJiraSoapService(String address) throws ServiceException {
         final JiraSoapServiceServiceLocator locator = new JiraSoapServiceServiceLocator();
@@ -28,16 +23,20 @@ public class JiraSoapServiceFactory implements JiraServiceFactory {
 
     @Override
     public JPatchacaSoapService createJPatchacaService(String address) throws ServiceException {
-        if (httpChecker.isAddressAvaiable(jpatchacaServiceAddress(address)))
-            return createJPatchacaSoapservice(jpatchacaServiceAddress(address));
-        return new JPatchacaSoapServiceFake();
+        try{
+            JPatchacaSoapService service = createJPatchacaSoapservice(jpatchacaServiceAddress(address));
+            service.isAvailable();
+            return service;
+        }catch (Exception e) {
+            return new JPatchacaSoapServiceFake();            
+        }
     }
 
     private JPatchacaSoapService createJPatchacaSoapservice(String address) throws ServiceException {
         final JPatchacaSoapServiceServiceLocator locator = new JPatchacaSoapServiceServiceLocator();
-        locator.setJpatchacaServiceEndpointAddress(address);
+        locator.setJpatchacaserviceV1EndpointAddress(address);
         locator.setMaintainSession(true);
-        return locator.getJpatchacaService();
+        return locator.getJpatchacaserviceV1();
     }
 
     private String jiraServiceAddress(String address) {

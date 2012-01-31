@@ -7,7 +7,7 @@
 
 package org.jpatchaca.jira.ws;
 
-@SuppressWarnings({"rawtypes", "serial", "unused"})
+@SuppressWarnings({"unused", "rawtypes", "serial" })
 public class RemoteMetaAttribute  implements java.io.Serializable {
     private java.lang.String name;
 

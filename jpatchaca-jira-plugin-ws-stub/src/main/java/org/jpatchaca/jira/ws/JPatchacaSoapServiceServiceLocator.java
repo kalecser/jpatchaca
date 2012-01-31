@@ -7,7 +7,7 @@
 
 package org.jpatchaca.jira.ws;
 
-@SuppressWarnings({"rawtypes", "unchecked", "serial"})
+@SuppressWarnings({"unchecked", "rawtypes", "serial" })
 public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.Service implements org.jpatchaca.jira.ws.JPatchacaSoapServiceService {
 
     public JPatchacaSoapServiceServiceLocator() {
@@ -22,39 +22,39 @@ public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.S
         super(wsdlLoc, sName);
     }
 
-    // Use to get a proxy class for JpatchacaService
-    private java.lang.String JpatchacaService_address = "https://10.42.12.15:8880/rpc/soap/jpatchaca-service";
+    // Use to get a proxy class for JpatchacaserviceV1
+    private java.lang.String JpatchacaserviceV1_address = "https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1";
 
-    public java.lang.String getJpatchacaServiceAddress() {
-        return JpatchacaService_address;
+    public java.lang.String getJpatchacaserviceV1Address() {
+        return JpatchacaserviceV1_address;
     }
 
     // The WSDD service name defaults to the port name.
-    private java.lang.String JpatchacaServiceWSDDServiceName = "jpatchaca-service";
+    private java.lang.String JpatchacaserviceV1WSDDServiceName = "jpatchacaservice-v1";
 
-    public java.lang.String getJpatchacaServiceWSDDServiceName() {
-        return JpatchacaServiceWSDDServiceName;
+    public java.lang.String getJpatchacaserviceV1WSDDServiceName() {
+        return JpatchacaserviceV1WSDDServiceName;
     }
 
-    public void setJpatchacaServiceWSDDServiceName(java.lang.String name) {
-        JpatchacaServiceWSDDServiceName = name;
+    public void setJpatchacaserviceV1WSDDServiceName(java.lang.String name) {
+        JpatchacaserviceV1WSDDServiceName = name;
     }
 
-    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaService() throws javax.xml.rpc.ServiceException {
+    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaserviceV1() throws javax.xml.rpc.ServiceException {
        java.net.URL endpoint;
         try {
-            endpoint = new java.net.URL(JpatchacaService_address);
+            endpoint = new java.net.URL(JpatchacaserviceV1_address);
         }
         catch (java.net.MalformedURLException e) {
             throw new javax.xml.rpc.ServiceException(e);
         }
-        return getJpatchacaService(endpoint);
+        return getJpatchacaserviceV1(endpoint);
     }
 
-    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaService(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
+    public org.jpatchaca.jira.ws.JPatchacaSoapService getJpatchacaserviceV1(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
         try {
-            org.jpatchaca.jira.ws.JpatchacaServiceSoapBindingStub _stub = new org.jpatchaca.jira.ws.JpatchacaServiceSoapBindingStub(portAddress, this);
-            _stub.setPortName(getJpatchacaServiceWSDDServiceName());
+            org.jpatchaca.jira.ws.JpatchacaserviceV1SoapBindingStub _stub = new org.jpatchaca.jira.ws.JpatchacaserviceV1SoapBindingStub(portAddress, this);
+            _stub.setPortName(getJpatchacaserviceV1WSDDServiceName());
             return _stub;
         }
         catch (org.apache.axis.AxisFault e) {
@@ -62,8 +62,8 @@ public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.S
         }
     }
 
-    public void setJpatchacaServiceEndpointAddress(java.lang.String address) {
-        JpatchacaService_address = address;
+    public void setJpatchacaserviceV1EndpointAddress(java.lang.String address) {
+        JpatchacaserviceV1_address = address;
     }
 
     /**
@@ -74,8 +74,8 @@ public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.S
     public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
         try {
             if (org.jpatchaca.jira.ws.JPatchacaSoapService.class.isAssignableFrom(serviceEndpointInterface)) {
-                org.jpatchaca.jira.ws.JpatchacaServiceSoapBindingStub _stub = new org.jpatchaca.jira.ws.JpatchacaServiceSoapBindingStub(new java.net.URL(JpatchacaService_address), this);
-                _stub.setPortName(getJpatchacaServiceWSDDServiceName());
+                org.jpatchaca.jira.ws.JpatchacaserviceV1SoapBindingStub _stub = new org.jpatchaca.jira.ws.JpatchacaserviceV1SoapBindingStub(new java.net.URL(JpatchacaserviceV1_address), this);
+                _stub.setPortName(getJpatchacaserviceV1WSDDServiceName());
                 return _stub;
             }
         }
@@ -95,8 +95,8 @@ public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.S
             return getPort(serviceEndpointInterface);
         }
         java.lang.String inputPortName = portName.getLocalPart();
-        if ("jpatchaca-service".equals(inputPortName)) {
-            return getJpatchacaService();
+        if ("jpatchacaservice-v1".equals(inputPortName)) {
+            return getJpatchacaserviceV1();
         }
         else  {
             java.rmi.Remote _stub = getPort(serviceEndpointInterface);
@@ -106,7 +106,7 @@ public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.S
     }
 
     public javax.xml.namespace.QName getServiceName() {
-        return new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchaca-service", "JPatchacaSoapServiceService");
+        return new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "JPatchacaSoapServiceService");
     }
 
     private java.util.HashSet ports = null;
@@ -114,7 +114,7 @@ public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.S
     public java.util.Iterator getPorts() {
         if (ports == null) {
             ports = new java.util.HashSet();
-            ports.add(new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchaca-service", "jpatchaca-service"));
+            ports.add(new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "jpatchacaservice-v1"));
         }
         return ports.iterator();
     }
@@ -124,8 +124,8 @@ public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.S
     */
     public void setEndpointAddress(java.lang.String portName, java.lang.String address) throws javax.xml.rpc.ServiceException {
         
-if ("JpatchacaService".equals(portName)) {
-            setJpatchacaServiceEndpointAddress(address);
+if ("JpatchacaserviceV1".equals(portName)) {
+            setJpatchacaserviceV1EndpointAddress(address);
         }
         else 
 { // Unknown Port Name

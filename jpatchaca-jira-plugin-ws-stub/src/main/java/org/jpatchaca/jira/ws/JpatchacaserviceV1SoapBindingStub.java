@@ -1,5 +1,5 @@
 /**
- * JpatchacaServiceSoapBindingStub.java
+ * JpatchacaserviceV1SoapBindingStub.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
@@ -7,8 +7,8 @@
 
 package org.jpatchaca.jira.ws;
 
-@SuppressWarnings({"rawtypes", "unchecked", "unused"})
-public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub implements org.jpatchaca.jira.ws.JPatchacaSoapService {
+@SuppressWarnings({ "unused", "unchecked", "rawtypes" })
+public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.Stub implements org.jpatchaca.jira.ws.JPatchacaSoapService {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();
@@ -30,13 +30,13 @@ public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "in1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchaca-service", "ArrayOf_tns1_RemoteMetaAttribute"));
+        oper.setReturnType(new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "ArrayOf_tns1_RemoteMetaAttribute"));
         oper.setReturnClass(org.jpatchaca.jira.ws.RemoteMetaAttribute[].class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "getMetaAttributesForIssueReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
         oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchaca-service", "fault"),
+                      new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "fault"),
                       "org.jpatchaca.jira.ws.RemoteException",
                       new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteException"), 
                       true
@@ -44,36 +44,26 @@ public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub
         _operations[0] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getRemainingEstimate");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "in0"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "in1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
-        oper.setReturnClass(long.class);
-        oper.setReturnQName(new javax.xml.namespace.QName("", "getRemainingEstimateReturn"));
+        oper.setName("isAvailable");
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        oper.setReturnClass(boolean.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "isAvailableReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
-        oper.addFault(new org.apache.axis.description.FaultDesc(
-                      new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchaca-service", "fault"),
-                      "org.jpatchaca.jira.ws.RemoteException",
-                      new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteException"), 
-                      true
-                     ));
         _operations[1] = oper;
 
     }
 
-    public JpatchacaServiceSoapBindingStub() throws org.apache.axis.AxisFault {
+    public JpatchacaserviceV1SoapBindingStub() throws org.apache.axis.AxisFault {
          this(null);
     }
 
-    public JpatchacaServiceSoapBindingStub(java.net.URL endpointURL, javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
+    public JpatchacaserviceV1SoapBindingStub(java.net.URL endpointURL, javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
          this(service);
          super.cachedEndpoint = endpointURL;
     }
 
-    public JpatchacaServiceSoapBindingStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
+    public JpatchacaserviceV1SoapBindingStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
         if (service == null) {
             super.service = new org.apache.axis.client.Service();
         } else {
@@ -93,9 +83,30 @@ public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
+            qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteAuthenticationException");
+            cachedSerQNames.add(qName);
+            cls = org.jpatchaca.jira.ws.RemoteAuthenticationException.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteException");
             cachedSerQNames.add(qName);
             cls = org.jpatchaca.jira.ws.RemoteException.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemotePermissionException");
+            cachedSerQNames.add(qName);
+            cls = org.jpatchaca.jira.ws.RemotePermissionException.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteValidationException");
+            cachedSerQNames.add(qName);
+            cls = org.jpatchaca.jira.ws.RemoteValidationException.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -107,7 +118,7 @@ public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchaca-service", "ArrayOf_tns1_RemoteMetaAttribute");
+            qName = new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "ArrayOf_tns1_RemoteMetaAttribute");
             cachedSerQNames.add(qName);
             cls = org.jpatchaca.jira.ws.RemoteMetaAttribute[].class;
             cachedSerClasses.add(cls);
@@ -222,7 +233,7 @@ public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub
 }
     }
 
-    public long getRemainingEstimate(java.lang.String in0, java.lang.String in1) throws java.rmi.RemoteException, org.jpatchaca.jira.ws.RemoteException {
+    public boolean isAvailable() throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -231,11 +242,11 @@ public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://jira.jpatchaca.org", "getRemainingEstimate"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://jira.jpatchaca.org", "isAvailable"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {in0, in1});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -243,20 +254,12 @@ public class JpatchacaServiceSoapBindingStub extends org.apache.axis.client.Stub
         else {
             extractAttachments(_call);
             try {
-                return ((java.lang.Long) _resp).longValue();
+                return ((java.lang.Boolean) _resp).booleanValue();
             } catch (java.lang.Exception _exception) {
-                return ((java.lang.Long) org.apache.axis.utils.JavaUtils.convert(_resp, long.class)).longValue();
+                return ((java.lang.Boolean) org.apache.axis.utils.JavaUtils.convert(_resp, boolean.class)).booleanValue();
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
-    if (axisFaultException.detail != null) {
-        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
-              throw (java.rmi.RemoteException) axisFaultException.detail;
-         }
-        if (axisFaultException.detail instanceof org.jpatchaca.jira.ws.RemoteException) {
-              throw (org.jpatchaca.jira.ws.RemoteException) axisFaultException.detail;
-         }
-   }
   throw axisFaultException;
 }
     }
