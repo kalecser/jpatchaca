@@ -8,7 +8,7 @@ public class TokenManager {
 
 	public static final int TOKEN_TIMEOUT_MINUTES = 10;
 
-	private String _token;
+	private String token;
 	private Calendar tokenTimeout;
 	private final HardwareClock hardwareClock;
 	private TokenFactory tokenFactory;
@@ -22,36 +22,35 @@ public class TokenManager {
 	}
 
 	String getToken() {
-		if (!tokenExpired())
-			return _token;
-		_login();
-		return _token;
+		return !tokenExpired() ? token: createTokenAndResetTimeout();
 	}
 
 	private boolean tokenExpired() {
 		return tokenTimeout == null || tokenTimeout.before(now());
 	}
 
-	private void _login() {
+	private String createTokenAndResetTimeout() {
 		if(tokenFactory == null)
 			throw new IllegalStateException("tokenFactory not initialized");
 		
-		_token = tokenFactory.createToken();
-		setTokenTimeout();
+		token = tokenFactory.createToken();
+		setTimeout();
+		return token;
 	}
 
-	private void setTokenTimeout() {
+	private void setTimeout() {
 		tokenTimeout = now();
 		tokenTimeout.add(Calendar.MINUTE, TOKEN_TIMEOUT_MINUTES);
 	}
 
 	private Calendar now() {
-		Calendar tokenTimeout = Calendar.getInstance();
-		tokenTimeout.setTime(hardwareClock.getTime());
-		return tokenTimeout;
+		Calendar now = Calendar.getInstance();
+		now.setTime(hardwareClock.getTime());
+		return now;
 	}
 
-	void resetTokenTimeout() {
-		tokenTimeout = null;
-	}
+    public void resetTokenTimeout() {
+        tokenTimeout = null;
+    }
+	
 }

@@ -271,6 +271,7 @@ public class JiraServiceFacade implements TokenFactory {
 	}
 
 	private RuntimeException _handleException(ServiceException e) {
+	    tokenManager.resetTokenTimeout();
 		return new RuntimeException(e);
 	}
 }
