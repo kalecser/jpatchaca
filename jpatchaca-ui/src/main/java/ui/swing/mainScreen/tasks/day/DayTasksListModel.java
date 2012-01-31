@@ -30,6 +30,7 @@ public class DayTasksListModel {
         this.taskWorklogFactory = taskWorklogFactory;
         this.changeAlert = new AlertImpl();
         this.day = Calendar.getInstance();
+        this.selectedWorklogs = new int[0];
 
         setDay(clock.getTime());
     }
@@ -79,9 +80,6 @@ public class DayTasksListModel {
     }
 
     public void sendWorklog() {
-        if (selectedWorklogs == null || selectedWorklogs.length == 0)
-            throw new RuntimeException();
-
         final List<TaskWorklog> worklogs = selectedTaskWorklogs();
         if (worklogs.size() == 0)
             return;
