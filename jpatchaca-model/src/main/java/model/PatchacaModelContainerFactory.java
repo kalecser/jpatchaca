@@ -9,10 +9,12 @@ import jira.events.JiraEventFactory;
 import jira.processors.SendWorklogProcessor;
 import jira.processors.SetJiraConfigProcessor;
 import jira.processors.SetJiraIssueToTaskProcessor;
-import jira.service.TokenManager;
+import jira.service.CachedJira;
+import jira.service.Jira;
 import jira.service.JiraImpl;
 import jira.service.JiraServiceFacade;
 import jira.service.JiraSoapServiceFactory;
+import jira.service.TokenManager;
 import keyboardRotation.KeyboardRotationOptions;
 import keyboardRotation.SetKeyboardRotationOptionsProcessor;
 import labels.LabelsSystem;
@@ -24,6 +26,7 @@ import newAndNoteworthy.NewAndNoteworthyImpl;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
+import org.picocontainer.parameters.ComponentParameter;
 
 import periods.impl.PeriodsFactoryImpl;
 import periodsInTasks.impl.PeriodsInTasksSystemImpl;
@@ -117,7 +120,8 @@ public class PatchacaModelContainerFactory {
 
 		container.addComponent(JiraOptions.class);
 		container.addComponent(SetJiraConfigProcessor.class);
-		container.addComponent(JiraImpl.class);
+		container.addComponent("JiraImpl", JiraImpl.class);
+		container.addComponent(Jira.class, CachedJira.class, new ComponentParameter("JiraImpl"));
 		container.addComponent(JiraServiceFacade.class);
 		container.addComponent(SetJiraIssueToTaskProcessor.class);
 		container.addComponent(SendWorklogProcessor.class);

@@ -1,6 +1,5 @@
 package main;
 
-import jira.service.JiraImpl;
 import jira.service.JiraMock;
 import main.singleInstance.AssureSingleInstance;
 import model.PatchacaModelContainerFactory;
@@ -33,8 +32,8 @@ public final class SWINGContainerForTestsBuilder {
         container.removeComponent(PatchacaDirectory.class);
         container.addComponent(new TransientDirectory());
 
-        container.removeComponent(JiraImpl.class);
-        container.addComponent(JiraMock.class);
+        container.removeComponent("JiraImpl");
+        container.addComponent("JiraImpl", JiraMock.class);
 
         container.removeComponent(AssureSingleInstance.class);
         container.removeComponent(ShowMainScreenOnSecondRun.class);

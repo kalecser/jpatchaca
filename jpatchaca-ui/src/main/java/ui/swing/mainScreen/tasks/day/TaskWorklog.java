@@ -54,8 +54,13 @@ public class TaskWorklog implements Comparable<TaskWorklog> {
 	public String worklogStatus() {
 		if (task.getJiraIssue() == null)
 			return "no issue";
+		
+		if(jira.isWorkable(task.getJiraIssue().unbox()))
+		    return "issue not workable";
+		
 		if (period.isWorklogSent())
 			return "sent";
+		
 		return "not sent";
 	}
 

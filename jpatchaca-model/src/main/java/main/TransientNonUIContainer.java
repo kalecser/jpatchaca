@@ -23,12 +23,13 @@ public class TransientNonUIContainer {
 		container.removeComponent(PatchacaDirectory.class);
 		container.removeComponent(DoubleIdProvider.class);
 		container.removeComponent(JiraImpl.class);
+		container.removeComponent("JiraImpl");
+		
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
-		container.addComponent(JiraMock.class);		
+		container.addComponent("JiraImpl", JiraMock.class);		
 		
-		container.removeComponent(AssureSingleInstance.class);
-		
+		container.removeComponent(AssureSingleInstance.class);		
 	}
 
 	public MockHardwareClock getMockHardwareClock() {

@@ -35,4 +35,9 @@ public class JiraIssue implements Serializable{
 		
 		return ((JiraIssue) obj).getKey().equals(this.getKey());
 	}	
+	
+	@Override
+	public int hashCode() {
+	    return key.hashCode() * 127;
+	}
 }
