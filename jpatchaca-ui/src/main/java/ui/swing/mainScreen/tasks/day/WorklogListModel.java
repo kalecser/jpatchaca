@@ -10,6 +10,7 @@ import java.util.List;
 import jira.JiraSystem;
 import jira.JiraWorklogOverride;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.time.DateUtils;
 
 import periods.Period;
@@ -20,7 +21,7 @@ import basic.Formatter;
 import basic.HardwareClock;
 import basic.Subscriber;
 
-public class DayTasksListModel {
+public class WorklogListModel {
 
 	private final JiraSystem jiraSystem;
 	private final JiraWorklogOverride jiraWorklogOverride;
@@ -28,9 +29,10 @@ public class DayTasksListModel {
 	private final TasksView tasks;
 	private final AlertImpl changeAlert;
 	private int[] selectedWorklogs;
-	private Calendar day;
+	private Calendar filter;
+	private WorklogInterval filterType;
 
-	public DayTasksListModel(JiraSystem jiraSystem, Formatter formatter,
+	public WorklogListModel(JiraSystem jiraSystem, Formatter formatter,
 			JiraWorklogOverride jiraWorklogOverride, TasksView tasks,
 			HardwareClock clock) {
 		this.jiraSystem = jiraSystem;
@@ -38,9 +40,9 @@ public class DayTasksListModel {
 		this.jiraWorklogOverride = jiraWorklogOverride;
 		this.tasks = tasks;
 		this.changeAlert = new AlertImpl();
-		this.day = Calendar.getInstance();
+		this.filter = Calendar.getInstance();
 
-		setDay(clock.getTime());
+		setFilter(clock.getTime(), WorklogInterval.Day);
 	}
 
 	public void sendWorklog(Pair pair) {
@@ -52,7 +54,7 @@ public class DayTasksListModel {
 
 		for (final TaskView task : tasks.tasks())
 			for (final Period period : task.periods())
-				if (periodoDentroDoDia(period))
+				if (filtraPeriodo(period))
 					lista.add(new Pair(task, period, formatter,
 							jiraWorklogOverride));
 
@@ -60,17 +62,49 @@ public class DayTasksListModel {
 		return lista;
 	}
 
-	private boolean periodoDentroDoDia(final Period period) {
-		return period.getDay().equals(day.getTime());
+	private boolean filtraPeriodo(final Period period) {
+		
+		switch (filterType){
+		case Day:
+			return period.getDay().equals(filter.getTime());
+		case Month:
+			Calendar periodDay = Calendar.getInstance();
+			periodDay.setTime(period.getDay());
+			periodDay.set(Calendar.DAY_OF_MONTH, 0);
+			return periodDay.equals(filter);
+		}
+
+		throw new NotImplementedException();
 	}
 
-	public void setDay(Date date) {
-		day.setTime(date);
-		day.set(Calendar.MILLISECOND, 0);
-		day.set(Calendar.SECOND, 0);
-		day.set(Calendar.MINUTE, 0);
-		day.set(Calendar.HOUR_OF_DAY, 0);
+	public void setFilter(Date date, WorklogInterval interval) {
+		resetFilter(date, interval);
+		filterType = interval;
 		changeAlert.fire();
+	}
+
+	private void resetFilter(Date date, WorklogInterval interval) {
+		filter.setTime(date);
+		switch (interval) {
+		case Day:
+			resetDay(date);
+			break;
+		case Month:
+			resetMonth(date);
+			break;
+		}
+	}
+
+	private void resetMonth(Date date) {
+		filter.set(Calendar.DAY_OF_MONTH, 0);
+		resetDay(date);
+	}
+
+	private void resetDay(Date date) {
+		filter.set(Calendar.MILLISECOND, 0);
+		filter.set(Calendar.SECOND, 0);
+		filter.set(Calendar.MINUTE, 0);
+		filter.set(Calendar.HOUR_OF_DAY, 0);
 	}
 
 	public double getDayTotalHours() {
@@ -121,4 +155,5 @@ public class DayTasksListModel {
 			changeAlert.fire();
 		}
 	}
+
 }

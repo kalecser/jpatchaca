@@ -14,7 +14,7 @@ public class DayTasksTable extends JXTable {
 	private static final long serialVersionUID = 1L;
 
 	public DayTasksTable(DayTasksTableModel model,
-			final DayTasksListModel dayTasksListModel) {
+			final WorklogListModel dayTasksListModel) {
 		super(model);
 		
 		adjustColumnsAppearance();

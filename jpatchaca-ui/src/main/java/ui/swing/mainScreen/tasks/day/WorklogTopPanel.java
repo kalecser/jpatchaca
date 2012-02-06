@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -17,21 +18,21 @@ import javax.swing.SwingConstants;
 import org.jdesktop.swingx.JXDatePicker;
 
 import ui.swing.utils.SwingUtils;
-
 import basic.Subscriber;
 
-public class DayTasksTopPanel extends JPanel {
+public class WorklogTopPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JXDatePicker datePicker;
 	private JTextField totalHoursTextField;
 	private JButton sendWorkLogButton;
-	private final DayTasksListModel dayTaskListModel;
+	private final WorklogListModel worklogListModel;
 	private JPanel pannel;
 	private JPanel worklogPanel;
+	private JComboBox selectedInterval;
 
-	public DayTasksTopPanel(final DayTasksListModel dayTaskListModel) {
-		this.dayTaskListModel = dayTaskListModel;
+	public WorklogTopPanel(final WorklogListModel dayTaskListModel) {
+		this.worklogListModel = dayTaskListModel;
 		initializeGUIComponents();
 		initializeEventListeners();
 		updateTotalHours();
@@ -44,7 +45,7 @@ public class DayTasksTopPanel extends JPanel {
 	}
 
 	private void addTaskListChangeListener() {
-		dayTaskListModel.addChangeSubscriber(new Subscriber() {
+		worklogListModel.addChangeSubscriber(new Subscriber() {
 			@Override
 			public void fire() {
 				updateTotalHours();
@@ -56,7 +57,7 @@ public class DayTasksTopPanel extends JPanel {
 		datePicker.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				dayTaskListModel.setDay(datePicker.getDate());
+				updateWorklogList();
 			}
 		});
 	}
@@ -65,7 +66,7 @@ public class DayTasksTopPanel extends JPanel {
 		sendWorkLogButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				dayTaskListModel.sendWorklog();
+				worklogListModel.sendWorklog();
 			}
 		});
 	}
@@ -80,9 +81,17 @@ public class DayTasksTopPanel extends JPanel {
 
 	private void initializePanel() {
 		pannel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pannel.add(new JLabel("Day: "));
+		pannel.add(getIntervalCombo());
 		addDatePicker();
 		addTotalHoursTextField();
+	}
+
+	private JComboBox getIntervalCombo() {
+		selectedInterval = new JComboBox(WorklogInterval.values());
+		selectedInterval.addActionListener(new ActionListener() {	@Override public void actionPerformed(ActionEvent e) {
+				updateWorklogList();
+		}});
+		return selectedInterval;
 	}
 
 	private void addTotalHoursTextField() {
@@ -118,8 +127,15 @@ public class DayTasksTopPanel extends JPanel {
 	}
 
 	private void internalUpdateHours() {
-		Double totalHours = dayTaskListModel.getDayTotalHours();
+		Double totalHours = worklogListModel.getDayTotalHours();
 		final NumberFormat format = new DecimalFormat("#0.00");
 		totalHoursTextField.setText(format.format(totalHours));
 	}
+
+	private void updateWorklogList() {
+		
+		WorklogInterval selected = (WorklogInterval) selectedInterval.getSelectedItem();
+		worklogListModel.setFilter(datePicker.getDate(), selected);
+	}
+
 }

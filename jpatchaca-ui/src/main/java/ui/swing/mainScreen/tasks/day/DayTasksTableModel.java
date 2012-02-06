@@ -18,11 +18,11 @@ public class DayTasksTableModel extends AbstractTableModel {
 	private final TasksSystem tasksSystem;
 	private final DayTaskTableModelCellValue[] cellValues;
 	private final JiraWorklogOverride worklogOverride;
-	private final DayTasksListModel dayTaskListModel;
+	private final WorklogListModel dayTaskListModel;
 
 	public DayTasksTableModel(final Formatter formatter,
 			final TasksSystem tasksSystem, JiraWorklogOverride worklogOverride,
-			DayTasksListModel dayTaskListModel) {
+			WorklogListModel dayTaskListModel) {
 		this.formatter = formatter;
 		this.tasksSystem = tasksSystem;
 		this.worklogOverride = worklogOverride;

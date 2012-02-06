@@ -14,9 +14,9 @@ public class DayTasksList extends SimpleInternalFrame implements Startable {
 	private static final String panelTitle = "Day Tasks List";
 
 	private final DayTasksTable dayTasksTable;
-	private final DayTasksTopPanel topPanel;
+	private final WorklogTopPanel topPanel;
 
-	public DayTasksList(DayTasksTable dayTasksTable, DayTasksTopPanel topPanel) {
+	public DayTasksList(DayTasksTable dayTasksTable, WorklogTopPanel topPanel) {
 		super(DayTasksList.panelTitle);
 		this.dayTasksTable = dayTasksTable;
 		this.topPanel = topPanel;
