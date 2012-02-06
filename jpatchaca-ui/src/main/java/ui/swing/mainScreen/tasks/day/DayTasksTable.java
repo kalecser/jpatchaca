@@ -12,22 +12,25 @@ import org.jdesktop.swingx.renderer.StringValue;
 public class DayTasksTable extends JXTable {
 
 	private static final long serialVersionUID = 1L;
+    private final DayTasksListModel dayTasksListModel;
 
 	public DayTasksTable(DayTasksTableModel model,
-			final DayTasksListModel dayTasksListModel) {
+			final DayTasksListModel dayTasksListMode) {
 		super(model);
-		
-		adjustColumnsAppearance();
-		
-		setSortable(false);
-		
-		getSelectionModel().addListSelectionListener(new ListSelectionListener() {			
+        this.dayTasksListModel = dayTasksListMode;		
+        setSelectionListener();
+		adjustColumnsAppearance();		
+		setSortable(false);		
+	}
+
+    private void setSelectionListener() {
+        getSelectionModel().addListSelectionListener(new ListSelectionListener() {			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				dayTasksListModel.setSelectedWorklogs(getSelectedRows());
 			}
 		});
-	}
+    }
 
 	private void adjustColumnsAppearance() {
 		final TableColumnModel columnModel = getColumnModel();
@@ -51,5 +54,9 @@ public class DayTasksTable extends JXTable {
 		columnModel.getColumn(5).setPreferredWidth(100);
 		columnModel.getColumn(5).setMaxWidth(150);
 		columnModel.getColumn(5).setCellRenderer(cellRenderer);
+	}
+	
+	void refrescate(){
+	    dayTasksListModel.refrescate();
 	}
 }

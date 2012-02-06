@@ -52,14 +52,15 @@ public class TaskWorklog implements Comparable<TaskWorklog> {
 	}
 
 	public String worklogStatus() {
-		if (task.getJiraIssue() == null)
+	    if (period.isWorklogSent())
+	        return "sent";
+	    
+		Maybe<JiraIssue> issue = task.getJiraIssue();
+        if (issue == null)
 			return "no issue";
 		
-		if(jira.isWorkable(task.getJiraIssue().unbox()))
+		if(!jira.isWorkable(issue.unbox()))
 		    return "issue not workable";
-		
-		if (period.isWorklogSent())
-			return "sent";
 		
 		return "not sent";
 	}

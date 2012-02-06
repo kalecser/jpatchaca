@@ -23,6 +23,7 @@ public class DayTasksListModel {
     private int[] selectedWorklogs;
     private Calendar day;
     private final TaskWorklogFactory taskWorklogFactory;
+    private List<TaskWorklog> lista;
 
     public DayTasksListModel(TasksView tasks, TaskWorklogFactory taskWorklogFactory,
             HardwareClock clock) {
@@ -31,20 +32,29 @@ public class DayTasksListModel {
         this.changeAlert = new AlertImpl();
         this.day = Calendar.getInstance();
         this.selectedWorklogs = new int[0];
-
+        this.lista = new ArrayList<TaskWorklog>();
         setDay(clock.getTime());
     }
 
     public List<TaskWorklog> getWorklogList() {
-        final List<TaskWorklog> lista = new ArrayList<TaskWorklog>();
-
-        for (final TaskView task : tasks.tasks())
-            for (final Period period : task.periods())
-                if (periodoDentroDoDia(period))
-                    lista.add(taskWorklogFactory.newTaskWorklog(task, period));
-
-        Collections.sort(lista);
         return lista;
+    }
+
+    void refrescate() {
+        lista.clear();
+        fillWorklogList();
+        Collections.sort(lista);
+    }
+
+    private void fillWorklogList() {
+        for (final TaskView task : tasks.tasks())
+            createWorklogsForTask(task);
+    }
+
+    private void createWorklogsForTask(final TaskView task) {
+        for (final Period period : task.periods())
+            if (periodoDentroDoDia(period))
+                lista.add(taskWorklogFactory.newTaskWorklog(task, period));
     }
 
     private boolean periodoDentroDoDia(final Period period) {
@@ -58,12 +68,13 @@ public class DayTasksListModel {
         day.set(Calendar.MINUTE, 0);
         day.set(Calendar.HOUR_OF_DAY, 0);
         changeAlert.fire();
+        refrescate();
     }
 
     public double getDayTotalHours() {
         double totalHours = 0;
-        for (final TaskWorklog par : getWorklogList())
-            totalHours += par.getMiliseconds();
+        for (final TaskWorklog worklog : getWorklogList())
+            totalHours += worklog.getMiliseconds();
         return totalHours / DateUtils.MILLIS_PER_HOUR;
     }
 

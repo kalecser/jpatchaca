@@ -66,7 +66,7 @@ public class DayTasksTableModel extends AbstractTableModel {
 		}.start();
 	}
 
-	void editCell(final DayTaskTableModelCellValue column, final Object value,
+   private void editCell(final DayTaskTableModelCellValue column, final Object value,
 			final TaskWorklog item) {
 		switch (column) {
 		case Start:
