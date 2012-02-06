@@ -1,7 +1,10 @@
 package jira.service;
 
+import java.rmi.RemoteException;
+
 import javax.xml.rpc.ServiceException;
 
+import org.apache.axis.AxisFault;
 import org.jpatchaca.jira.ws.JPatchacaSoapService;
 import org.jpatchaca.jira.ws.JPatchacaSoapServiceServiceLocator;
 
@@ -23,12 +26,14 @@ public class JiraSoapServiceFactory implements JiraServiceFactory {
 
     @Override
     public JPatchacaSoapService createJPatchacaService(String address) throws ServiceException {
-        try{
+        try {
             JPatchacaSoapService service = createJPatchacaSoapservice(jpatchacaServiceAddress(address));
             service.isAvailable();
             return service;
-        }catch (Exception e) {
-            return new JPatchacaSoapServiceFake();            
+        } catch (AxisFault e) {
+            return new JPatchacaSoapServiceFake();
+        } catch (RemoteException e) {
+            return new JPatchacaSoapServiceFake();
         }
     }
 
@@ -42,7 +47,7 @@ public class JiraSoapServiceFactory implements JiraServiceFactory {
     private String jiraServiceAddress(String address) {
         return address + JIRASOAPSERVICE_ENDPOINT;
     }
-    
+
     private String jpatchacaServiceAddress(String address) {
         return address + JPATCHACASERVICE_ENDPOINT;
     }
