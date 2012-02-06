@@ -443,7 +443,7 @@ public class MainScreenOperator {
 	}
 
 	public void sendTodaysWorkLog() {
-		new JTabbedPaneOperator(mainScreen).selectPage("Day");
+		new JTabbedPaneOperator(mainScreen).selectPage("Worklog");
 		JXDatePicker datePicker = new JXDatePicker();
 		DateFormat format = datePicker.getFormats()[0];
 		
