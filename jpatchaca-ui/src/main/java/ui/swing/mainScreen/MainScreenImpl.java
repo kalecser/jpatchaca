@@ -116,7 +116,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 		final JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.add("Periods", this.periodsList);
 		tabbedPane.add("Summary", this.tasksSummary);
-		tabbedPane.add("Day", this.dayTasksList);
+		tabbedPane.add("Worklog", this.dayTasksList);
 
 		tabbedPane.addChangeListener(new ChangeListener() {
 
