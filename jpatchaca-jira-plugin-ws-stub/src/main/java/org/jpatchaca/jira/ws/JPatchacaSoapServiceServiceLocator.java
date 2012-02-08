@@ -7,7 +7,7 @@
 
 package org.jpatchaca.jira.ws;
 
-@SuppressWarnings({"unchecked", "rawtypes", "serial" })
+@SuppressWarnings({"rawtypes", "unchecked", "serial"})
 public class JPatchacaSoapServiceServiceLocator extends org.apache.axis.client.Service implements org.jpatchaca.jira.ws.JPatchacaSoapServiceService {
 
     public JPatchacaSoapServiceServiceLocator() {

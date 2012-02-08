@@ -4,6 +4,6 @@ import com.atlassian.jira.rpc.exception.RemoteException;
 
 public interface JPatchacaSoapService
 {	
-	RemoteMetaAttribute[] getMetaAttributesForIssue(String token, String issueKey) throws RemoteException;
+	String[] getMetaAttributeForIssues(String token, String[] issues, String metaKey) throws RemoteException;
 	Boolean isAvailable();
 }

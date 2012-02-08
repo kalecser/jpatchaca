@@ -23,7 +23,8 @@
 							<noWrapped>true</noWrapped>
 							<sourceDirectory>src/main/wsdl</sourceDirectory>
 							<subPackageByFileName>false</subPackageByFileName>
-                    		<packageSpace>org.jpatchaca.jira.ws</packageSpace>							
+                    		<packageSpace>org.jpatchaca.jira.ws</packageSpace>
+                    		<outputDirectory>${basedir}/src/main/java</outputDirectory>s							
 						</configuration>
 					</execution>
 				</executions>

@@ -7,7 +7,7 @@
 
 package org.jpatchaca.jira.ws;
 
-@SuppressWarnings({"unused", "rawtypes", "serial" })
+@SuppressWarnings({"rawtypes", "unused", "serial"})
 public class RemoteException  extends org.apache.axis.AxisFault  implements java.io.Serializable {
     public RemoteException() {
     }

@@ -10,12 +10,15 @@ public class JPatchacaSoapServiceImpl implements JPatchacaSoapService {
         this.metaAttributesService = metaAttributeOperation;
     }
     
-    public RemoteMetaAttribute[] getMetaAttributesForIssue(String token, String issueKey)
+    @Override
+    public String[] getMetaAttributeForIssues(String token, String[] issues, String metaKey)
             throws RemoteException {
-        return metaAttributesService.getMetaAttributesForIssue(token, issueKey);
+        return metaAttributesService.getMetaAttributeForIssues(token, issues, metaKey);            
     }
-
+    
+    @Override
     public Boolean isAvailable() {
         return true;
     }
+
 }

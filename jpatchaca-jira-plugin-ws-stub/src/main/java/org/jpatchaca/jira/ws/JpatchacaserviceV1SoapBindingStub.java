@@ -7,7 +7,8 @@
 
 package org.jpatchaca.jira.ws;
 
-@SuppressWarnings({ "unused", "unchecked", "rawtypes" })
+
+@SuppressWarnings({"rawtypes", "unused", "unchecked"})
 public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.Stub implements org.jpatchaca.jira.ws.JPatchacaSoapService {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
@@ -25,14 +26,16 @@ public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.St
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getMetaAttributesForIssue");
+        oper.setName("getMetaAttributeForIssues");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "in0"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "in1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "in1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "ArrayOf_xsd_string"), java.lang.String[].class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "ArrayOf_tns1_RemoteMetaAttribute"));
-        oper.setReturnClass(org.jpatchaca.jira.ws.RemoteMetaAttribute[].class);
-        oper.setReturnQName(new javax.xml.namespace.QName("", "getMetaAttributesForIssueReturn"));
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "in2"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "ArrayOf_xsd_string"));
+        oper.setReturnClass(java.lang.String[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "getMetaAttributeForIssuesReturn"));
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
         oper.addFault(new org.apache.axis.description.FaultDesc(
@@ -83,13 +86,6 @@ public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.St
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
-            qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteAuthenticationException");
-            cachedSerQNames.add(qName);
-            cls = org.jpatchaca.jira.ws.RemoteAuthenticationException.class;
-            cachedSerClasses.add(cls);
-            cachedSerFactories.add(beansf);
-            cachedDeserFactories.add(beandf);
-
             qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteException");
             cachedSerQNames.add(qName);
             cls = org.jpatchaca.jira.ws.RemoteException.class;
@@ -97,32 +93,11 @@ public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.St
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemotePermissionException");
+            qName = new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "ArrayOf_xsd_string");
             cachedSerQNames.add(qName);
-            cls = org.jpatchaca.jira.ws.RemotePermissionException.class;
+            cls = java.lang.String[].class;
             cachedSerClasses.add(cls);
-            cachedSerFactories.add(beansf);
-            cachedDeserFactories.add(beandf);
-
-            qName = new javax.xml.namespace.QName("http://exception.rpc.jira.atlassian.com", "RemoteValidationException");
-            cachedSerQNames.add(qName);
-            cls = org.jpatchaca.jira.ws.RemoteValidationException.class;
-            cachedSerClasses.add(cls);
-            cachedSerFactories.add(beansf);
-            cachedDeserFactories.add(beandf);
-
-            qName = new javax.xml.namespace.QName("http://jira.jpatchaca.org", "RemoteMetaAttribute");
-            cachedSerQNames.add(qName);
-            cls = org.jpatchaca.jira.ws.RemoteMetaAttribute.class;
-            cachedSerClasses.add(cls);
-            cachedSerFactories.add(beansf);
-            cachedDeserFactories.add(beandf);
-
-            qName = new javax.xml.namespace.QName("https://10.42.12.15:8880/rpc/soap/jpatchacaservice-v1", "ArrayOf_tns1_RemoteMetaAttribute");
-            cachedSerQNames.add(qName);
-            cls = org.jpatchaca.jira.ws.RemoteMetaAttribute[].class;
-            cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("http://jira.jpatchaca.org", "RemoteMetaAttribute");
+            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string");
             qName2 = null;
             cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
             cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
@@ -194,7 +169,7 @@ public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.St
         }
     }
 
-    public org.jpatchaca.jira.ws.RemoteMetaAttribute[] getMetaAttributesForIssue(java.lang.String in0, java.lang.String in1) throws java.rmi.RemoteException, org.jpatchaca.jira.ws.RemoteException {
+    public java.lang.String[] getMetaAttributeForIssues(java.lang.String in0, java.lang.String[] in1, java.lang.String in2) throws java.rmi.RemoteException, org.jpatchaca.jira.ws.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -203,11 +178,11 @@ public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.St
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://jira.jpatchaca.org", "getMetaAttributesForIssue"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://jira.jpatchaca.org", "getMetaAttributeForIssues"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {in0, in1});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {in0, in1, in2});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -215,9 +190,9 @@ public class JpatchacaserviceV1SoapBindingStub extends org.apache.axis.client.St
         else {
             extractAttachments(_call);
             try {
-                return (org.jpatchaca.jira.ws.RemoteMetaAttribute[]) _resp;
+                return (java.lang.String[]) _resp;
             } catch (java.lang.Exception _exception) {
-                return (org.jpatchaca.jira.ws.RemoteMetaAttribute[]) org.apache.axis.utils.JavaUtils.convert(_resp, org.jpatchaca.jira.ws.RemoteMetaAttribute[].class);
+                return (java.lang.String[]) org.apache.axis.utils.JavaUtils.convert(_resp, java.lang.String[].class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
