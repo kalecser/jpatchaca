@@ -16,7 +16,6 @@ import jira.issue.JiraIssueData;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.jpatchaca.jira.ws.RemoteMetaAttribute;
 
 import com.dolby.jira.net.soap.jira.RemoteField;
 import com.dolby.jira.net.soap.jira.RemoteFieldValue;
@@ -176,17 +175,13 @@ public class JiraImpl implements Jira {
 		return statuses;
 	}
 	
-	private Map<String, String> getMetaAttributes(JiraIssue issue) {
-		RemoteMetaAttribute[] metaAttributes = jiraService.getMetaAttributes(issue.getKey());
-		Map<String, String> attributeMap = new HashMap<String, String>();
-		for(RemoteMetaAttribute ra: metaAttributes)
-			attributeMap.put(ra.getName(), ra.getValue());
-		return attributeMap;
-	}
-	
 	@Override
 	public boolean isWorkable(JiraIssue issue) {
-		Map<String, String> metaAttributes = getMetaAttributes(issue);
-		return !"false".equals(metaAttributes.get(WORKABLE_META_ATTRIBUTE));
+	    try{
+	        String metaAttribute = jiraService.getMetaAttribute(issue.getKey(), WORKABLE_META_ATTRIBUTE);
+	        return !"false".equals(metaAttribute);
+	    }catch(MetaAttributeNotFound e){
+	        return true;
+	    }
 	}
 }

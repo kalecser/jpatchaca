@@ -23,10 +23,11 @@ public class TaskWorklog implements Comparable<TaskWorklog> {
 	private final TasksSystem tasksSystem;
 	private final Jira jira;
 	private final JiraSystem jiraSystem;
+    private WorklogStatusLoader statusLoader;
 
 	public TaskWorklog(final TaskView task, final Period period,
 			final Formatter formatter, JiraWorklogOverride worklogOverride,
-			TasksSystem tasksSystem, Jira jira, JiraSystem jiraSystem) {
+			TasksSystem tasksSystem, Jira jira, JiraSystem jiraSystem, DayTasksListModel dayTasksListModel) {
 		this.task = task;
 		this.period = period;
 		this.formatter = formatter;
@@ -34,6 +35,7 @@ public class TaskWorklog implements Comparable<TaskWorklog> {
 		this.tasksSystem = tasksSystem;
 		this.jira = jira;
 		this.jiraSystem = jiraSystem;
+        statusLoader = new WorklogStatusLoader(this, dayTasksListModel);
 	}
 
 	@Override
@@ -51,8 +53,12 @@ public class TaskWorklog implements Comparable<TaskWorklog> {
 		return formatter.formatShortTime(period.endTime());
 	}
 
-	public String worklogStatus() {
-	    if (period.isWorklogSent())
+	public WorklogStatusLoader worklogStatus() {
+        return statusLoader;
+	}
+
+    String getStatus() {
+        if (period.isWorklogSent())
 	        return "sent";
 	    
 		Maybe<JiraIssue> issue = task.getJiraIssue();
@@ -63,7 +69,7 @@ public class TaskWorklog implements Comparable<TaskWorklog> {
 		    return "issue not workable";
 		
 		return "not sent";
-	}
+    }
 
 	public String formatedTotalTime() {
 		final NumberFormat format = new DecimalFormat("#0.00");

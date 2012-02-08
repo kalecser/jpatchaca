@@ -15,7 +15,12 @@ public class JiraSoapServiceFactory implements JiraServiceFactory {
 
     public final String JIRASOAPSERVICE_ENDPOINT = "/rpc/soap/jirasoapservice-v2";
     public final String JPATCHACASERVICE_ENDPOINT = "/rpc/soap/jpatchacaservice-v1";
+    private JPatchacaSoapServiceCache serviceCache;
 
+    public JiraSoapServiceFactory(){
+        serviceCache = new JPatchacaSoapServiceCache();
+    }
+    
     @Override
     public JiraSoapService createJiraSoapService(String address) throws ServiceException {
         final JiraSoapServiceServiceLocator locator = new JiraSoapServiceServiceLocator();
@@ -29,7 +34,7 @@ public class JiraSoapServiceFactory implements JiraServiceFactory {
         try {
             JPatchacaSoapService service = createJPatchacaSoapservice(jpatchacaServiceAddress(address));
             service.isAvailable();
-            return service;
+            return  serviceCache.decorate(service);
         } catch (AxisFault e) {
             return new JPatchacaSoapServiceFake();
         } catch (RemoteException e) {

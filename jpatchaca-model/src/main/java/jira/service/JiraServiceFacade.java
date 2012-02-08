@@ -8,13 +8,13 @@ import javax.xml.rpc.ServiceException;
 import jira.JiraOptions;
 import jira.exception.JiraAuthenticationException;
 import jira.exception.JiraIssueNotFoundException;
+import jira.exception.JiraNotAvailable;
 import jira.exception.JiraOptionsNotSetException;
 import jira.exception.JiraPermissionException;
 import jira.exception.JiraValidationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.jpatchaca.jira.ws.JPatchacaSoapService;
-import org.jpatchaca.jira.ws.RemoteMetaAttribute;
 
 import com.dolby.jira.net.soap.jira.JiraSoapService;
 import com.dolby.jira.net.soap.jira.RemoteAuthenticationException;
@@ -231,18 +231,27 @@ public class JiraServiceFacade implements TokenFactory {
 		}
 	}
 
-	public RemoteMetaAttribute[] getMetaAttributes(String issueKey) {
+	public String getMetaAttribute(String issueKey, String metaAttribute) {
 		try {
-			JPatchacaSoapService jpatchacaService = serviceFactory
-					.createJPatchacaService(jiraOptions.getURL().unbox());
-			return jpatchacaService.getMetaAttributesForIssue(
-					tokenManager.getToken(), issueKey);
+			return internalGetMetaAttribute(issueKey, metaAttribute);			
 		} catch (ServiceException e) {
 			throw _handleException(e);
 		} catch (RemoteException e) {
 			throw _handleException(e);
 		}
 	}
+
+    private String internalGetMetaAttribute(String issueKey, String metaAttribute) throws ServiceException, RemoteException{
+        JPatchacaSoapService jpatchacaService = serviceFactory
+        		.createJPatchacaService(jiraOptions.getURL().unbox());
+        String[] issues = new String[]{ issueKey };
+        String[] values = jpatchacaService.getMetaAttributeForIssues(tokenManager.getToken(), issues, metaAttribute);
+        
+        if(values.length == 0)
+            throw new MetaAttributeNotFound();
+        
+        return values[0];
+    }
 
 	public String getJiraUsername() {
 		String username = jiraOptions.getUserName().unbox();
@@ -254,7 +263,7 @@ public class JiraServiceFacade implements TokenFactory {
 
 	private RuntimeException _handleException(RemoteException e) {
 		tokenManager.resetTokenTimeout();
-		return new RuntimeException(e.getMessage());
+		return new JiraNotAvailable(e);
 	}
 
 	private RuntimeException _handleException(RemotePermissionException e) {

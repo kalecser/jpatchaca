@@ -3,18 +3,18 @@ package jira.service;
 import java.rmi.RemoteException;
 
 import org.jpatchaca.jira.ws.JPatchacaSoapService;
-import org.jpatchaca.jira.ws.RemoteMetaAttribute;
 
 public class JPatchacaSoapServiceFake implements JPatchacaSoapService {
 
-    @Override
-    public RemoteMetaAttribute[] getMetaAttributesForIssue(String arg0, String arg1)
-            throws RemoteException, org.jpatchaca.jira.ws.RemoteException {
-        return new RemoteMetaAttribute[0];
-    }
 
     @Override
     public boolean isAvailable() throws RemoteException {
         return false;
+    }
+
+    @Override
+    public String[] getMetaAttributeForIssues(String in0, String[] in1, String in2)
+            throws RemoteException, org.jpatchaca.jira.ws.RemoteException {
+        throw new MetaAttributeNotFound();
     }    
 }

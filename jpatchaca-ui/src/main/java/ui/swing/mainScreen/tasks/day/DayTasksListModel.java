@@ -54,7 +54,7 @@ public class DayTasksListModel {
     private void createWorklogsForTask(final TaskView task) {
         for (final Period period : task.periods())
             if (periodoDentroDoDia(period))
-                lista.add(taskWorklogFactory.newTaskWorklog(task, period));
+                lista.add(taskWorklogFactory.newTaskWorklog(task, period, this));
     }
 
     private boolean periodoDentroDoDia(final Period period) {
