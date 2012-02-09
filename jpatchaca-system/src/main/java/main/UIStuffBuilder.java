@@ -51,12 +51,12 @@ import ui.swing.mainScreen.tasks.TaskExclusionScreen;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.TaskScreenModelImpl;
 import ui.swing.mainScreen.tasks.WindowManager;
+import ui.swing.mainScreen.tasks.day.WorklogListModel;
 import ui.swing.mainScreen.tasks.day.DayTasksList;
-import ui.swing.mainScreen.tasks.day.DayTasksListModel;
 import ui.swing.mainScreen.tasks.day.DayTasksTable;
 import ui.swing.mainScreen.tasks.day.DayTasksTableModel;
-import ui.swing.mainScreen.tasks.day.DayTasksTopPanel;
 import ui.swing.mainScreen.tasks.day.TaskWorklogFactory;
+import ui.swing.mainScreen.tasks.day.WorklogTopPanel;
 import ui.swing.mainScreen.tasks.summary.SummaryHoursFormat;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
@@ -164,10 +164,10 @@ final class UIStuffBuilder {
 		container.addComponent(LabelsListSystemMediator.class);
 		container.addComponent(TaskExclusionScreen.class);
 		
-		container.addComponent(DayTasksTopPanel.class);
+		container.addComponent(WorklogTopPanel.class);
 		container.addComponent(DayTasksTable.class);
 		container.addComponent(DayTasksTableModel.class);
-		container.addComponent(DayTasksListModel.class);
+		container.addComponent(WorklogListModel.class);
 		container.addComponent(DayTasksList.class);
 		container.addComponent(TaskWorklogFactory.class);
 

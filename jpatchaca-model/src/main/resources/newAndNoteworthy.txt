@@ -1,3 +1,6 @@
+2012/01/18 - Version 1.5
+- Blocking task creation for non-workable issues 
+
 2012/01/18 - Version 1.4
 - Multiple selection support to add and remove tasks from Labels.
  Thanks to taksan for reporting:  https://github.com/kalecser/jpatchaca/issues/5

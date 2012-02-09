@@ -27,7 +27,7 @@ public class TaskWorklog implements Comparable<TaskWorklog> {
 
 	public TaskWorklog(final TaskView task, final Period period,
 			final Formatter formatter, JiraWorklogOverride worklogOverride,
-			TasksSystem tasksSystem, Jira jira, JiraSystem jiraSystem, DayTasksListModel dayTasksListModel) {
+			TasksSystem tasksSystem, Jira jira, JiraSystem jiraSystem, WorklogListModel dayTasksListModel) {
 		this.task = task;
 		this.period = period;
 		this.formatter = formatter;

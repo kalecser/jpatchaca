@@ -9,9 +9,9 @@ public class DayTasksTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
 	private final DayTaskTableModelCellValue[] cellValues;
-	private final DayTasksListModel dayTasksListModel;
+	private final WorklogListModel dayTasksListModel;
 
-	public DayTasksTableModel(DayTasksListModel dayTasksListModel) {
+	public DayTasksTableModel(WorklogListModel dayTasksListModel) {
 		this.dayTasksListModel = dayTasksListModel;
         cellValues = DayTaskTableModelCellValue.values();
 		dayTasksListModel.addChangeSubscriber(new Subscriber() {

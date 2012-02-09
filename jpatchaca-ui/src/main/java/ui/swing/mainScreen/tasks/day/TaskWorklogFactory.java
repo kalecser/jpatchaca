@@ -26,7 +26,7 @@ public class TaskWorklogFactory {
 		this.jiraSystem = jiraSystem;
 	}
 
-	public TaskWorklog newTaskWorklog(TaskView task, Period period, DayTasksListModel dayTasksListModel) {
+	public TaskWorklog newTaskWorklog(TaskView task, Period period, WorklogListModel dayTasksListModel) {
 		return new TaskWorklog(task, period, formatter, jiraWorklogOverride,
 				tasksSystem, jira, jiraSystem, dayTasksListModel);
 	}

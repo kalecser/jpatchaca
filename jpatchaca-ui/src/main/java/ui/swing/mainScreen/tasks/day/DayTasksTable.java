@@ -12,12 +12,12 @@ import org.jdesktop.swingx.renderer.StringValue;
 public class DayTasksTable extends JXTable {
 
 	private static final long serialVersionUID = 1L;
-    private final DayTasksListModel dayTasksListModel;
+    private final WorklogListModel dayTasksListModel;
 
 	public DayTasksTable(DayTasksTableModel model,
-			final DayTasksListModel dayTasksListMode) {
+			final WorklogListModel dayTasksListModel) {
 		super(model);
-        this.dayTasksListModel = dayTasksListMode;		
+        this.dayTasksListModel = dayTasksListModel;		
         setSelectionListener();
 		adjustColumnsAppearance();		
 		setSortable(false);		
