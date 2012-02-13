@@ -15,47 +15,50 @@ import events.EventsConsumer;
 
 public class CreateTaskPersistence implements Startable {
 
-	private final CreateTaskDelegate delegate;
-	private final EventsConsumer consumer;
-	private final IdProvider provider;
-	private final JiraEventFactory jiraEventFactory;
+    private final CreateTaskDelegate delegate;
+    private final EventsConsumer consumer;
+    private final IdProvider provider;
+    private final JiraEventFactory jiraEventFactory;
 
-	public CreateTaskPersistence(final CreateTaskDelegate delegate,
-			final EventsConsumer consumer, final IdProvider provider,
-			JiraEventFactory jiraEventFactory) {
-		this.delegate = delegate;
-		this.consumer = consumer;
-		this.provider = provider;
-		this.jiraEventFactory = jiraEventFactory;
-	}
+    public CreateTaskPersistence(final CreateTaskDelegate delegate, final EventsConsumer consumer,
+            final IdProvider provider, JiraEventFactory jiraEventFactory) {
+        this.delegate = delegate;
+        this.consumer = consumer;
+        this.provider = provider;
+        this.jiraEventFactory = jiraEventFactory;
+    }
 
-	@Override
-	public void start() {
-		delegate.addListener(new Delegate.Listener<TaskData>() {
-			@Override
-			public void execute(final TaskData object) {
-				onTaskData(object);
-			}
-		});
-	}
+    @Override
+    public void start() {
+        delegate.addListener(new Delegate.Listener<TaskData>() {
+            @Override
+            public void execute(final TaskData object) {
+                onTaskData(object);
+            }
+        });
+    }
 
-	@Override
-	public void stop() {
-		// Nothing to do.
-	}
+    @Override
+    public void stop() {
+        // Nothing to do.
+    }
 
-	void onTaskData(final TaskData object) {
+    void onTaskData(final TaskData object) {
 
-		final ObjectIdentity taskId = provider.provideId();
+        final ObjectIdentity taskId = provider.provideId();
 
-		CreateTaskEvent3 createTaskEvent = new CreateTaskEvent3(taskId,
-				object.getTaskName(), object.getBudget(), object.getLabel());
-		
-		SetJiraIssueToTask setIssueEvent = jiraEventFactory
-				.createSetIssueToTaskEvent(taskId, object.getJiraIssue());
+        CreateTaskEvent3 createTaskEvent = new CreateTaskEvent3(taskId, object.getTaskName(),
+                object.getBudget(), object.getLabel());
 
-		consumer.consume(createTaskEvent);
-		consumer.consume(setIssueEvent);
-	}
+        SetJiraIssueToTask setIssueEvent = null;
+        if (object.getJiraIssue() != null)
+            setIssueEvent = jiraEventFactory.createSetIssueToTaskEvent(taskId,
+                    object.getJiraIssue());
+
+        consumer.consume(createTaskEvent);
+        
+        if(setIssueEvent != null)
+            consumer.consume(setIssueEvent);
+    }
 
 }
