@@ -68,7 +68,7 @@ public class WorklogTopPanel extends JPanel {
         sendWorkLogButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                sendWorklog();
+                startSendWorklogThread();
             }
         });
     }
@@ -141,18 +141,26 @@ public class WorklogTopPanel extends JPanel {
         datePicker.setDate(new Date());
     }
 
-    private void sendWorklog() {
+    private void startSendWorklogThread() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                worklogListModel.sendWorklog();
+                sendWorklog();
             }
         }).start();
     }
 
+    private void sendWorklog() {
+        try{
+            sendWorkLogButton.setEnabled(false);
+            worklogListModel.sendWorklog();
+        }finally{
+            sendWorkLogButton.setEnabled(true);
+        }
+    }
+    
     private void updateWorklogList() {
         WorklogInterval selected = (WorklogInterval) selectedInterval.getSelectedItem();
         worklogListModel.setFilter(datePicker.getDate(), selected);
     }
-
 }

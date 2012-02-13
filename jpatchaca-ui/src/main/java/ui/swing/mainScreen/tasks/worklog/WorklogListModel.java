@@ -123,7 +123,7 @@ public class WorklogListModel {
         this.selectedWorklogs = selectedWorklogs;
     }
 
-    public void sendWorklog() {
+    public synchronized void sendWorklog() {
         final List<Worklog> worklogs = selectedTaskWorklogs();
         for (final Worklog worklog : worklogs) {
             worklog.send();
