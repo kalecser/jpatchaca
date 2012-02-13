@@ -15,8 +15,8 @@ import org.reactive.Receiver;
 import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.mainScreen.newAndNoteworthy.NewAndNoteworthyMenu;
 import ui.swing.mainScreen.periods.PeriodsList;
-import ui.swing.mainScreen.tasks.day.DayTasksList;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
+import ui.swing.mainScreen.tasks.worklog.WorklogList;
 import ui.swing.utils.UIEventsExecutor;
 import wheel.io.ui.JFrameBoundsKeeper;
 
@@ -61,7 +61,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	final MainScreenModel model;
 	private final TaskList taskList;
 	private final PeriodsList periodsList;
-	private final DayTasksList dayTasksList;
+	private final WorklogList dayTasksList;
 	private final SummaryScreen tasksSummary;
 	private final TopBar topBar;
 	private final StatusBar statusBar;
@@ -69,7 +69,7 @@ public class MainScreenImpl extends JFrame implements MainScreen, Startable {
 	public MainScreenImpl(final MainScreenModel model,
 			final UIEventsExecutor executor, final TaskList taskList,
 			final PeriodsList periodsList, final SummaryScreen tasksSummary,
-			final DayTasksList dayList, final JFrameBoundsKeeper boundsKeeper,
+			final WorklogList dayList, final JFrameBoundsKeeper boundsKeeper,
 			final TopBarModel topBarModel, final ErrorLogScreen errorLogScreen,
 			final StatusBar statusBar, NewAndNoteworthyMenu newAndNoteworthy) {
 
