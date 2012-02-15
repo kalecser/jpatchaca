@@ -146,6 +146,7 @@ public class WorklogTopPanel extends JPanel {
             @Override
             public void run() {
                 sendWorklog();
+                updateWorklogList();
             }
         }).start();
     }
