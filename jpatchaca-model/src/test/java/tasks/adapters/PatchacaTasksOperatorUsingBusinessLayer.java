@@ -3,13 +3,15 @@
  */
 package tasks.adapters;
 
+import jira.issue.JiraIssue;
+import jira.issue.JiraIssueData;
 import junit.framework.Assert;
 import labels.LabelsSystem;
 import labels.labels.LabelsHome;
 import labels.labels.SelectedLabel;
 import lang.Maybe;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.time.DateUtils;
 
 import tasks.ActiveTask;
@@ -35,7 +37,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	private final CreateTaskDelegate createTaskDelegate;
 	private final ActiveTask activeTask;
 	private final SelectedLabel selectedLabel;
-
+	
 	public PatchacaTasksOperatorUsingBusinessLayer(
 			final LabelsSystem labelsSystem,
 			final MockHardwareClock mockHardwareClock,
@@ -73,8 +75,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 		TaskData taskData = new TaskData(nonEmptyTaskName);
 		taskData.setBudget(0.0);
 		createTaskDelegate.createTask(taskData);
-		
-		
+
 		Maybe<? extends TaskView> byName = tasks.byName(nonEmptyTaskName);
 		labelsSystem.setLabelToTask(byName.unbox(), labelName);
 	}
@@ -82,7 +83,7 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	@Override
 	public void createTask(final String taskName) {
 		TaskData taskData = new TaskData(new NonEmptyString(taskName));
-		
+
 		createTaskDelegate.createTask(taskData);
 	}
 
@@ -128,7 +129,8 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 			return;
 		}
 
-		startTaskDelegate.starTask(new StartTaskData(new TaskData(new NonEmptyString(taskName)), 0));
+		startTaskDelegate.starTask(new StartTaskData(new TaskData(
+				new NonEmptyString(taskName)), 0));
 	}
 
 	@Override
@@ -157,7 +159,9 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 
 	@Override
 	public void startTaskHalfAnHourAgo(final String taskName) {
-		startTaskDelegate.starTask(new StartTaskData(new TaskData(new NonEmptyString(taskName)), (int) (DateUtils.MILLIS_PER_MINUTE * 30)));
+		startTaskDelegate.starTask(new StartTaskData(new TaskData(
+				new NonEmptyString(taskName)),
+				(int) (DateUtils.MILLIS_PER_MINUTE * 30)));
 	}
 
 	@Override
@@ -202,25 +206,49 @@ public final class PatchacaTasksOperatorUsingBusinessLayer implements
 	}
 
 	@Override
-	public void editTaskJiraKey(String string, String string2) {
-		throw new NotImplementedException();
-		
+	public void editTaskJiraKey(String taskName, String issueKey) {
+		tasksSystem.editTask(taskByName(taskName),
+				taskDataWithIssue(taskName, issueKey));
+	}
+
+	private TaskData taskDataWithIssue(String taskName, String issueKey) {
+		TaskData taskData = new TaskData(new NonEmptyString(taskName));
+		taskData.setJiraIssue(createJiraIssue(issueKey));
+		return taskData;
+	}
+
+	private JiraIssue createJiraIssue(String issueKey) {
+		JiraIssueData issueData = new JiraIssueData();
+		issueData.setKey(issueKey);
+		issueData.setSummary(issueKey);
+		JiraIssue issue = new JiraIssue(issueData);
+		return issue;
 	}
 
 	@Override
-	public void assertJiraKeyForTask(String string, String string2) {
-		throw new NotImplementedException();
-		
+	public void assertJiraKeyForTask(String issueKey, String taskName) {
+		Validate.notNull(issueKey);
+
+		Maybe<JiraIssue> maybeIssue = taskByName(taskName).getJiraIssue();
+		Assert.assertNotNull(maybeIssue);
+		Assert.assertEquals(issueKey, maybeIssue.unbox().getKey());
+	}
+
+	@Override
+	public void createTaskWithJiraIntegration(String taskName, String issueKey) {
+		createTaskDelegate.createTask(taskDataWithIssue(taskName, issueKey));
 	}
 	
 	@Override
-	public void createTaskWithJiraIntegration(String taskName, String jiraKey) {
-		throw new NotImplementedException();		
+	public void selectLabel(String label) {
+		selectedLabel.update(label);
 	}
 
 	@Override
-	public void selectLabel(String label) {
-		selectedLabel.update(label);
+	public void assignTasksToLabel(String[] tasks, String labelName) {
+		for (String taskName : tasks){
+			labelsSystem.setLabelToTask(taskByName(taskName), labelName);			
+		}
 	}
 
 }

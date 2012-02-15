@@ -1,12 +1,16 @@
 package labels;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import labels.labels.LabelsHome;
 import labels.labels.LabelsHomeImpl;
 import labels.labels.LabelsHomeView;
 import labels.processors.CreateTaskProcessor3;
+import labels.processors.RemoveLabelFromMultipleTasksProcessor;
 import labels.processors.RemoveTaskFromLabelProcessor;
+import labels.processors.SetLabelToMultipleTasksProcessor;
 import labels.processors.SetLabelToTaskProcessor;
 import labels.processors.SetSelectedLabelProcessor;
 
@@ -19,7 +23,9 @@ import tasks.TasksSystem;
 import tasks.tasks.TasksView;
 import basic.Alert;
 import events.EventsSystem;
+import events.RemoveLabelFromMultipleTasks;
 import events.RemoveTaskFromLabelEvent;
+import events.SetLabelToMultipleTasks;
 import events.SetLabelToTaskEvent;
 
 public class LabelsSystemImpl implements LabelsSystem, Startable {
@@ -27,8 +33,6 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	private final LabelsHomeView labelsHomeView;
 	private final EventsSystem eventsSystem;
 	private final TasksView tasks;
-	
-
 
 	public LabelsSystemImpl(final EventsSystem eventsSystem, final TasksSystem tasksSystem, TasksView tasks) {
 
@@ -42,6 +46,8 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 		eventsSystem.addProcessor(new RemoveTaskFromLabelProcessor(labelsHome, tasks));
 		eventsSystem.addProcessor(new SetSelectedLabelProcessor());
 		eventsSystem.addProcessor(new CreateTaskProcessor3(labelsHome, tasks));
+		eventsSystem.addProcessor(new SetLabelToMultipleTasksProcessor(labelsHome, tasks));
+		eventsSystem.addProcessor(new RemoveLabelFromMultipleTasksProcessor(labelsHome, tasks));
 		
 		tasksSystem.addTasksListener(new TasksListener() {
 			@Override
@@ -62,15 +68,6 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	}
 
 	@Override
-	public void setNewLabelToTask(final TaskView task, final String newLabelName) {
-			Validate.notNull(task);
-			Validate.notNull(newLabelName);
-			final SetLabelToTaskEvent event = new SetLabelToTaskEvent(tasks.idOf(task), 
-					newLabelName);
-			this.eventsSystem.writeEvent(event);
-	}
-
-	@Override
 	public void setLabelToTask(final TaskView task, final String labeltoAssignTo) {
 			Validate.notNull(task);
 			Validate.notNull(labeltoAssignTo);
@@ -78,19 +75,33 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 					labeltoAssignTo);
 			this.eventsSystem.writeEvent(event);
 	}
+	
+	@Override
+	public void setLabelToMultipleTasks(String labelToAssignTaskTo,
+			Set<TaskView> selectedTasks) {
+		SetLabelToMultipleTasks event = new SetLabelToMultipleTasks(labelToAssignTaskTo, selectedTasks.toArray(new TaskView[0]));
+		this.eventsSystem.writeEvent(event);
+	}
 
 	@Override
 	public void removeLabelFromTask(final TaskView task, final String labelToAssignTo) {
 		final RemoveTaskFromLabelEvent event = new RemoveTaskFromLabelEvent(tasks.idOf(task),
 				labelToAssignTo);
-		this.eventsSystem.writeEvent(event);		
+		this.eventsSystem.writeEvent(event);	
+	}
+	
+	@Override
+	public void removeMultipleTasksFromLabel(String label,
+			Set<TaskView> tasks) {
+		final RemoveLabelFromMultipleTasks event = new RemoveLabelFromMultipleTasks(label, tasks);
+		this.eventsSystem.writeEvent(event);	
 	}
 
 
 
 	@Override
 	public List<TaskView> tasksInlabel(final String labelName) {
-		return labelsHomeView.getTasksInLabel(labelName);
+		return new ArrayList<TaskView>(labelsHomeView.getTasksInLabel(labelName));
 	}
 
 
@@ -128,19 +139,9 @@ public class LabelsSystemImpl implements LabelsSystem, Startable {
 	}
 
 	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void start() {}
 
 	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-
-	
+	public void stop() {}
 
 }

@@ -2,7 +2,7 @@ package periodsInTasks;
 
 import java.util.List;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import lang.Maybe;
 
 import org.junit.Assert;
@@ -22,6 +22,11 @@ import tasks.tasks.tests.MockTaskName;
 import basic.Alert;
 
 public class MockTask implements Task {
+
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	private String name;
 	private Long startedMillisecondsAgo = null;

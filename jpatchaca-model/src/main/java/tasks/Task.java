@@ -1,6 +1,6 @@
 package tasks;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import lang.Maybe;
 import periods.Period;
 import periods.PeriodsListener;

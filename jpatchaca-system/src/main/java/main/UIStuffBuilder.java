@@ -1,5 +1,7 @@
 package main;
 
+import jira.JiraIssueStatusManagement;
+
 import org.picocontainer.MutablePicoContainer;
 
 import statistics.ProjectVelocityCalculator;
@@ -13,7 +15,7 @@ import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
 import ui.swing.jira.JiraIssueStatusActionPane;
-import ui.swing.jira.JiraIssueStatusManagement;
+import ui.swing.mainScreen.JiraBrowserIntegrationImpl;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
 import ui.swing.mainScreen.LabelsList;
@@ -49,12 +51,17 @@ import ui.swing.mainScreen.tasks.TaskExclusionScreen;
 import ui.swing.mainScreen.tasks.TaskScreenController;
 import ui.swing.mainScreen.tasks.TaskScreenModelImpl;
 import ui.swing.mainScreen.tasks.WindowManager;
-import ui.swing.mainScreen.tasks.day.DayTasksList;
 import ui.swing.mainScreen.tasks.summary.SummaryHoursFormat;
 import ui.swing.mainScreen.tasks.summary.SummaryScreen;
 import ui.swing.mainScreen.tasks.summary.SummaryTableModel;
-import ui.swing.options.OptionsScreenPresenter;
+import ui.swing.mainScreen.tasks.worklog.WorklogFactory;
+import ui.swing.mainScreen.tasks.worklog.WorklogList;
+import ui.swing.mainScreen.tasks.worklog.WorklogListModel;
+import ui.swing.mainScreen.tasks.worklog.WorklogTable;
+import ui.swing.mainScreen.tasks.worklog.WorklogTableModel;
+import ui.swing.mainScreen.tasks.worklog.WorklogTopPanel;
 import ui.swing.options.OptionsScreenModelImpl;
+import ui.swing.options.OptionsScreenPresenter;
 import ui.swing.presenter.PresenterImpl;
 import ui.swing.singleInstance.ShowMainScreenOnSecondRun;
 import ui.swing.tasks.SelectedTaskPeriodsImpl;
@@ -156,7 +163,13 @@ final class UIStuffBuilder {
 				.addComponent(LabelsListModel.class, LabelsListModelImpl.class);
 		container.addComponent(LabelsListSystemMediator.class);
 		container.addComponent(TaskExclusionScreen.class);
-		container.addComponent(DayTasksList.class);
+		
+		container.addComponent(WorklogTopPanel.class);
+		container.addComponent(WorklogTable.class);
+		container.addComponent(WorklogTableModel.class);
+		container.addComponent(WorklogListModel.class);
+		container.addComponent(WorklogList.class);
+		container.addComponent(WorklogFactory.class);
 
 		container.addComponent(CommandLineInterfaceImpl.class);
 		container.addComponent(WorkLoggerUsingSwing.class);
@@ -165,6 +178,7 @@ final class UIStuffBuilder {
 		container.addComponent(JiraIssueStatusManagement.class);
 		container.addComponent(StatusBar.class);
 		container.addComponent(JiraIssueStatusActionPane.class);
+		container.addComponent(JiraBrowserIntegrationImpl.class);
 	}
 
 }

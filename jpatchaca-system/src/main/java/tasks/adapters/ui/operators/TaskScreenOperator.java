@@ -44,7 +44,7 @@ public class TaskScreenOperator {
 		jiraKeyTextField.waitText(jiraKey);		
 	}
 
-	public void assertName(String name) {
+	public void waitName(String name) {
 		taskNameTextField.waitText(name);		
 	}
 	

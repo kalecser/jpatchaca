@@ -13,6 +13,7 @@ public interface PatchacaTasksOperator{
 	boolean isTaskInLabel(String taskName, String labelnName);
 	void createTask(String taskName);
 	void createTaskAndAssignToLabel(String taskName, String labelName);
+	void assignTasksToLabel(String[] tasks, String labelName);
 	void createTaskWithJiraIntegration(String taskName, String jiraKey);
 
 	void editTask(String taskName, String taskNewName);

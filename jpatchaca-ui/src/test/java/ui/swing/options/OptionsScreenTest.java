@@ -8,7 +8,6 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ui.swing.options.OptionsScreenModel.Data;
@@ -30,14 +29,6 @@ public class OptionsScreenTest {
 		final Data out = newDataWithEmptyStrings();
 		expectScreenToReadAndWrite(in, out);
 		assertOpenOk();
-	}
-
-	@Ignore
-	@Test
-	public void testUseOldIcons() {
-		openOptionsScreen();
-		@SuppressWarnings("unused")
-		OptionsScreenOperator op = new OptionsScreenOperator();
 	}
 
 	@After

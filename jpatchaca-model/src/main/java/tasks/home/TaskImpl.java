@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import jira.JiraIssue;
+import jira.issue.JiraIssue;
 import lang.Maybe;
 
 import org.apache.commons.lang.Validate;

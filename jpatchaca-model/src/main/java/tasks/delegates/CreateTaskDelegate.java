@@ -1,32 +1,12 @@
 package tasks.delegates;
 
-import labels.labels.SelectedLabel;
-import basic.Delegate;
-import basic.Delegate.Listener;
 import tasks.home.TaskData;
+import basic.Delegate.Listener;
 
-public class CreateTaskDelegate{
+public interface CreateTaskDelegate {
 
-	private Delegate<TaskData> _subject;
-	private final SelectedLabel selectedLabel;
+	public abstract void createTask(TaskData taskData);
 
+	public abstract void addListener(Listener<TaskData> listener);
 
-	public CreateTaskDelegate(SelectedLabel selectedLabel){
-		this.selectedLabel = selectedLabel;
-		_subject = new Delegate<TaskData>();
-	}
-	
-	
-	public void createTask(TaskData taskData) {
-		taskData.setLabel(selectedLabel.selectedLabelCurrentValue());
-		_subject.execute(taskData);
-	}
-
-
-	public void addListener(Listener<TaskData> listener) {
-		_subject.addListener(listener);		
-	}
-	
-	
-	
 }

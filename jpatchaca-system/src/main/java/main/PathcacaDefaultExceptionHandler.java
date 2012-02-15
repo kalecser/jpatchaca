@@ -16,12 +16,14 @@ import ui.swing.mainScreen.StatusBar;
 import ui.swing.utils.PatchacaUncaughtExceptionHandler;
 import wheel.io.files.Directory;
 
-public class PathcacaDefaultExceptionHandler implements Startable, PatchacaUncaughtExceptionHandler {
+public class PathcacaDefaultExceptionHandler implements Startable,
+		PatchacaUncaughtExceptionHandler {
 
 	private final Directory directory;
 	private final StatusBar statusBar;
 
-	public PathcacaDefaultExceptionHandler(final Directory directory, final StatusBar statusBar) {
+	public PathcacaDefaultExceptionHandler(final Directory directory,
+			final StatusBar statusBar) {
 		this.directory = directory;
 		this.statusBar = statusBar;
 	}
@@ -46,11 +48,14 @@ public class PathcacaDefaultExceptionHandler implements Startable, PatchacaUncau
 		e.printStackTrace();
 		if (e instanceof JiraException) {
 			statusBar.setErrorMessage(e.getMessage());
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Jira Error",
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
 		JOptionPane
-				.showMessageDialog(null,
+				.showMessageDialog(
+						null,
 						"An error has occured, see ~/.jpatchaca/error.log for further information. It's recomended to restart the application.");
 	}
 

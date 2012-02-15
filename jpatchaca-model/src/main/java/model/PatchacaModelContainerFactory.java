@@ -1,14 +1,20 @@
 package model;
 
 
-import jira.JiraImpl;
 import jira.JiraOptions;
 import jira.JiraSystemImpl;
 import jira.JiraWorklogOverride;
 import jira.SslManagerSetup;
+import jira.events.JiraEventFactory;
 import jira.processors.SendWorklogProcessor;
 import jira.processors.SetJiraConfigProcessor;
 import jira.processors.SetJiraIssueToTaskProcessor;
+import jira.service.CachedJira;
+import jira.service.Jira;
+import jira.service.JiraImpl;
+import jira.service.JiraServiceFacade;
+import jira.service.JiraSoapServiceFactory;
+import jira.service.TokenManager;
 import keyboardRotation.KeyboardRotationOptions;
 import keyboardRotation.SetKeyboardRotationOptionsProcessor;
 import labels.LabelsSystem;
@@ -20,12 +26,13 @@ import newAndNoteworthy.NewAndNoteworthyImpl;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
+import org.picocontainer.parameters.ComponentParameter;
 
 import periods.impl.PeriodsFactoryImpl;
 import periodsInTasks.impl.PeriodsInTasksSystemImpl;
 import tasks.ActiveTask;
 import tasks.TasksSystemImpl;
-import tasks.delegates.CreateTaskDelegate;
+import tasks.delegates.CreateTaskDelegateImpl;
 import tasks.delegates.StartTaskDataParser;
 import tasks.delegates.StartTaskDelegate;
 import tasks.home.TasksHomeImpl;
@@ -99,7 +106,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(TasksHomeImpl.class);
 		container.addComponent(TasksSystemImpl.class);
 		container.addComponent(StartTaskDelegate.class);
-		container.addComponent(CreateTaskDelegate.class);
+		container.addComponent(CreateTaskDelegateImpl.class);
 		container.addComponent(StartTaskProcessor2.class);
 		container.addComponent(StartTaskPersistence.class);
 		container.addComponent(CreateTaskPersistence.class);
@@ -113,11 +120,16 @@ public class PatchacaModelContainerFactory {
 
 		container.addComponent(JiraOptions.class);
 		container.addComponent(SetJiraConfigProcessor.class);
-		container.addComponent(JiraImpl.class);
+		container.addComponent("JiraImpl", JiraImpl.class);
+		container.addComponent(Jira.class, CachedJira.class, new ComponentParameter("JiraImpl"));
+		container.addComponent(JiraServiceFacade.class);
 		container.addComponent(SetJiraIssueToTaskProcessor.class);
 		container.addComponent(SendWorklogProcessor.class);
 		container.addComponent(JiraSystemImpl.class);
 		container.addComponent(JiraWorklogOverride.class);
+		container.addComponent(JiraSoapServiceFactory.class);
+		container.addComponent(TokenManager.class);
+		container.addComponent(JiraEventFactory.class);
 
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);

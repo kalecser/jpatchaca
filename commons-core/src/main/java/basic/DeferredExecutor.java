@@ -54,7 +54,7 @@ public class DeferredExecutor{
 	}
 	
 
-	public synchronized void execute() {
+	public  void execute() {
 		
 		if (synchronous){
 			runnable.run();

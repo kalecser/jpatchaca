@@ -3,7 +3,7 @@ package tasks;
 import java.util.Calendar;
 import java.util.Date;
 
-import jira.JiraIssue;
+import jira.events.JiraEventFactory;
 import jira.events.SetJiraIssueToTask;
 import lang.Maybe;
 
@@ -31,13 +31,10 @@ import tasks.processors.StopTaskProcessor;
 import tasks.taskName.TaskNameFactory;
 import tasks.tasks.Tasks;
 import basic.Alert;
-import basic.IdProvider;
 import basic.NonEmptyString;
 import basic.SystemClock;
 import core.ObjectIdentity;
 import events.AddNoteToTaskEvent;
-import events.AddPeriodEvent;
-import events.CreateTaskEvent3;
 import events.EditPeriodEvent2;
 import events.EditTaskEvent;
 import events.EventsSystem;
@@ -48,25 +45,26 @@ import events.persistence.MustBeCalledInsideATransaction;
 
 public class TasksSystemImpl implements TasksSystem, Startable {
 
-	private final IdProvider provider;
 	private final TasksHome tasksHome;
 	private final EventsSystem eventsSystem;
 	private final StartTaskDelegate startTaskDelegate;
 	private final Tasks tasks;
 	private final ActiveTask activeTask;
+	private final JiraEventFactory jiraEventFactory;
 
 	public TasksSystemImpl(final TasksHome tasksHome,
 			final EventsSystem eventsSystem,
 			final PeriodsFactory periodsFactory,
 			final StartTaskDelegate startTaskDelegate, final Tasks tasks,
-			final IdProvider provider, final SystemClock clock,
-			final ActiveTask activeTask, final TaskNameFactory taskNameFactory) {
+			final SystemClock clock, final ActiveTask activeTask,
+			final TaskNameFactory taskNameFactory,
+			JiraEventFactory jiraEventFactory) {
 		this.eventsSystem = eventsSystem;
 		this.tasksHome = tasksHome;
 		this.startTaskDelegate = startTaskDelegate;
 		this.tasks = tasks;
-		this.provider = provider;
 		this.activeTask = activeTask;
+		this.jiraEventFactory = jiraEventFactory;
 
 		final NotesHome notesHome = new NotesHomeImpl(clock);
 
@@ -86,41 +84,27 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	}
 
-	private CreateTaskEvent3 produceCreateTaskEvent(final TaskData data) {
-		final ObjectIdentity newTasksId = this.provider.provideId();
-		final CreateTaskEvent3 event = new CreateTaskEvent3(newTasksId, data
-				.getTaskName(), data.getBudget(), data.getLabel());
-		return event;
-	}
-
-	public synchronized void addPeriod(final TaskView selectedTask,
-			final Period period) {
-
-		final AddPeriodEvent event = new AddPeriodEvent(tasks
-				.idOf(selectedTask), period.startTime(), period.endTime());
-		this.eventsSystem.writeEvent(event);
-
-	}
-
 	@Override
 	public synchronized void editTask(final TaskView taskView,
 			final TaskData taskData) {
 
-		final ObjectIdentity idOfTask = tasks.idOf(taskView);
-		final EditTaskEvent event = new EditTaskEvent(idOfTask, taskData
-				.getTaskName(), taskData.getBudget());
+		final ObjectIdentity taskId = tasks.idOf(taskView);
+		final EditTaskEvent event = new EditTaskEvent(taskId,
+				taskData.getTaskName(), taskData.getBudget());
 
+		SetJiraIssueToTask setIssueEvent = jiraEventFactory
+				.createSetIssueToTaskEvent(taskId, taskData.getJiraIssue());
+		
+		this.eventsSystem.writeEvent(setIssueEvent);
 		this.eventsSystem.writeEvent(event);
-		final JiraIssue issue = taskData.getJiraIssue();
-		this.eventsSystem.writeEvent(new SetJiraIssueToTask(idOfTask, issue));
 	}
 
 	@Override
 	public synchronized void editPeriod(final TaskView selectedTask,
 			final int periodIndex, final Period newPeriod) {
 
-		final EditPeriodEvent2 event = new EditPeriodEvent2(tasks
-				.idOf(selectedTask), periodIndex, newPeriod.startTime(),
+		final EditPeriodEvent2 event = new EditPeriodEvent2(
+				tasks.idOf(selectedTask), periodIndex, newPeriod.startTime(),
 				newPeriod.endTime());
 		this.eventsSystem.writeEvent(event);
 
@@ -142,7 +126,7 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	@Override
 	public synchronized void movePeriod(final TaskView taskFrom,
 			final TaskView taskTo, final int periodFrom) {
-		
+
 		Validate.isTrue(periodFrom > -1);
 		final MovePeriodEvent event = new MovePeriodEvent(tasks.idOf(taskFrom),
 				periodFrom, tasks.idOf(taskTo));
@@ -151,21 +135,6 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 
 	public synchronized void stopTask(final TaskView task) {
 		this.eventsSystem.writeEvent(new StopTaskEvent(tasks.idOf(task)));
-	}
-
-	@Override
-	public synchronized void createAndStartTaskIn(final TaskData newTaskData,
-			final long in) {
-		final CreateTaskEvent3 createTaskEvent = produceCreateTaskEvent(newTaskData);
-		this.eventsSystem.writeEvent(createTaskEvent);
-		
-		if (newTaskData.getJiraIssue() != null) {
-			this.eventsSystem.writeEvent(new SetJiraIssueToTask(createTaskEvent
-					.getObjectIdentity(), newTaskData.getJiraIssue()));
-		}
-		
-		final TaskView task = tasks.get(createTaskEvent.getObjectIdentity());
-		taskStarted(task, in);
 	}
 
 	@Override
@@ -181,13 +150,11 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	@Override
 	public synchronized void start() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public synchronized void stop() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -219,8 +186,8 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 			return;
 		}
 
-		startTaskDelegate.starTask(new StartTaskData(new TaskData(new NonEmptyString(name)),
-				0));
+		startTaskDelegate.starTask(new StartTaskData(new TaskData(
+				new NonEmptyString(name)), 0));
 
 		final Period lastPeriod = task.lastPeriod();
 		final Period alteredPeriod = lastPeriod.createNewStarting(new Date(
@@ -286,14 +253,8 @@ public class TasksSystemImpl implements TasksSystem, Startable {
 	}
 
 	@Override
-	public TasksHome tasksHome() {
-		return tasksHome;
-	}
-
-	@Override
 	public void stopTask() {
 		this.stopIn(0);
-
 	}
 
 }

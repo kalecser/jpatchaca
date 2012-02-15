@@ -2,6 +2,8 @@ package jira;
 
 import java.util.Date;
 
+import jira.service.JiraMock;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,7 +41,6 @@ public class JiraSystemTest {
 		
 	}
 	
-
 	@Test
 	public void testAddWorklogZeroMinutes(){
 		Period period = new Period(date(0l), date(DateUtils.MILLIS_PER_HOUR));

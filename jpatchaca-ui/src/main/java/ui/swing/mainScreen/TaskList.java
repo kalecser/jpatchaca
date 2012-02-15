@@ -3,7 +3,6 @@ package ui.swing.mainScreen;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -15,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,6 @@ import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -35,11 +31,10 @@ import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import jira.JiraIssue;
-import jira.JiraOptions;
 import labels.labels.SelectedLabel;
 import lang.Maybe;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.UnhandledException;
 import org.reactive.Receiver;
 
@@ -77,24 +72,24 @@ public class TaskList extends JPanel {
 	private final SelectedTaskSource selectedTask;
 	private final ActiveTask activeTaskSignal;
 	private final UIEventsExecutor uiEventsExecutor;
-	private final JiraOptions jiraOptions;
 	private final SelectedLabel selectedLabel;
 	protected String movePerioData;
+	private final JiraBrowserIntegrationImpl jiraBrowserIntegration;
 
 	public TaskList(final TaskListModel model,
 			final UIEventsExecutor uiEventsExecutor,
 			final LabelsList labelsList, final Directory directory,
 			final TaskContextMenu taskContextMenu,
 			final SelectedTaskSource selectedTask, final ActiveTask activeTask,
-			final SelectedLabel selectedLabel, final JiraOptions jiraOptions) {
+			final SelectedLabel selectedLabel, JiraBrowserIntegrationImpl jiraBrowserIntegration) {
 
 		this.selectedLabel = selectedLabel;
+		this.jiraBrowserIntegration = jiraBrowserIntegration;
 		this.executor = new DeferredExecutor(200, new FireChangeListeners());
 
 		this.uiEventsExecutor = uiEventsExecutor;
 		this.selectedTask = selectedTask;
 		this.activeTaskSignal = activeTask;
-		this.jiraOptions = jiraOptions;
 		this.memory = new DeferredTaskListMemory(directory);
 		this.screenData = memory.retrieve();
 		this.taskContextMenu = taskContextMenu;
@@ -151,7 +146,7 @@ public class TaskList extends JPanel {
 
 		this.add(createTaskPannel, BorderLayout.NORTH);
 		this.add(split, BorderLayout.CENTER);
-		this.setMinimumSize(new Dimension(180, 0));
+		this.setMinimumSize(new Dimension(300, 0));
 
 		bindToLabelsList();
 		bindToActiveTaskSignal();
@@ -247,25 +242,29 @@ public class TaskList extends JPanel {
 				}
 
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					middleClick(e);
+					rightClick(e);
 				}
 			}
 
 			private void doubleClick() {
-				final Maybe<JiraIssue> jiraIssueMaybe = ((TaskView) jlist
-						.getSelectedValue()).getJiraIssue();
-				if (jiraIssueMaybe != null) {
-					doubleClickJiraIssue(jiraIssueMaybe.unbox());
-				}
+				TaskView taskView = (TaskView) jlist
+						.getSelectedValue();
+				jiraBrowserIntegration.openJiraIssueOnBrowser(taskView);
 			}
 
-			private void middleClick(final MouseEvent e) {
+			private void rightClick(final MouseEvent e) {
 				final int index = jlist.locationToIndex(e.getPoint());
-				selectionModel.setSelectionInterval(index, index);
 				final TaskView currentSelected = (TaskView) jlist
-						.getSelectedValue();
+						.getModel().getElementAt(index);
+				
+				boolean clickedOnUnselectedTask = !ArrayUtils.contains(tasksList.getSelectedValues(), currentSelected);
+				if (clickedOnUnselectedTask){
+					selectionModel.setSelectionInterval(index, index);
+				}
+				
 				showTaskContextMenu(jlist, currentSelected, e.getX(), e
 								.getY());
+				e.consume();
 			}
 			
 		});
@@ -397,9 +396,11 @@ public class TaskList extends JPanel {
 	}
 
 	void fireChangeListeners() {
-		final TaskView selectedValueInSwingThread = (TaskView) SelectedValueGetter
+		Object[] selectedValues = SelectedValueGetter
 				.getSelectedValueInSwingThread(tasksList);
+		final TaskView selectedValueInSwingThread = selectedValues.length ==0 ? null : (TaskView) selectedValues[0];
 		selectedTask.supply(selectedValueInSwingThread);
+		selectedTask.supplySelectedValues(selectedValues);
 
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -450,24 +451,6 @@ public class TaskList extends JPanel {
 			screenData.setSelectedTask(tasksListModel.getElementAt(
 					selectedIndex).name());
 			memory.mind(screenData);
-		}
-	}
-
-	void doubleClickJiraIssue(JiraIssue jiraIssue) {
-		final Maybe<String> jiraUrl = jiraOptions.getURL();
-
-		if (jiraUrl != null) {
-			final String url = "/browse/"
-					+ jiraIssue.getKey();
-			try {
-				final URI uri = new URI(jiraUrl.unbox() + url);
-				Desktop.getDesktop().browse(uri);
-			} catch (final IOException e1) {
-				throw new RuntimeException(e1);
-			} catch (final URISyntaxException e1) {
-				JOptionPane.showMessageDialog(TaskList.this,
-						"Invalid jira url: " + jiraUrl);
-			}
 		}
 	}
 

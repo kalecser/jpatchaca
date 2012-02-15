@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import tasks.TaskView;
 import tasks.TasksSystem;
+import tasks.delegates.CreateTaskDelegateImpl;
 import tasks.delegates.CreateTaskDelegate;
 import tasks.home.TaskData;
 import tasks.tasks.TasksView;
@@ -44,7 +45,7 @@ public class LabelsTest {
 		
 		labelsSystem = container.getComponent(LabelsSystem.class);
 		tasksSystem = container.getComponent(TasksSystem.class);
-		createTaskDelegate = container.getComponent(CreateTaskDelegate.class);
+		createTaskDelegate = container.getComponent(CreateTaskDelegateImpl.class);
 		tasks = container.getComponent(TasksView.class);
 		mockidProvider = container.getComponent(MockIdProvider.class);
 		eventsSystem = container.getComponent(EventsSystem.class);
@@ -69,12 +70,12 @@ public class LabelsTest {
 		
 		final ObjectIdentity taskId = new ObjectIdentity("1");
 		final TaskView task = createTask("task name", taskId.getId());
-		labelsSystem.setNewLabelToTask(tasks.get(taskId), firstLabelName);
+		labelsSystem.setLabelToTask(tasks.get(taskId), firstLabelName);
 		assertEquals(task, labelsSystem.tasksInlabel(firstLabelName).get(0));
 		assertEquals(1, labelsSystem.tasksInlabel(firstLabelName).size());
 		assertEquals(1, labelsSystem.assignableLabels().size());
 		assertEquals(firstLabelName, labelsSystem.assignableLabels().get(0));
-		assertEquals("changedchangedchanged", alertOut.toString());
+		assertEquals("changedchanged", alertOut.toString());
 		
 		
 		final ObjectIdentity taskTwoId = new ObjectIdentity("2");
@@ -86,7 +87,7 @@ public class LabelsTest {
 		assertEquals(2, labelsSystem.tasksInlabel(firstLabelName).size());
 		
 		final String secondLabelName = "test 2";
-		labelsSystem.setNewLabelToTask(tasks.get(taskTwoId), secondLabelName);
+		labelsSystem.setLabelToTask(tasks.get(taskTwoId), secondLabelName);
 		final List<String> taskTwoLabels = labelsSystem.getLabelsFor(taskTwo);
 		assertEquals(firstLabelName, taskTwoLabels.get(0));
 		assertEquals(secondLabelName, taskTwoLabels.get(1));
@@ -99,7 +100,7 @@ public class LabelsTest {
 		final ObjectIdentity taskId = new ObjectIdentity("1");
 		final TaskView task = createTask("task name", taskId.getId());
 		
-		labelsSystem.setNewLabelToTask(tasks.get(taskId), labelName);
+		labelsSystem.setLabelToTask(tasks.get(taskId), labelName);
 		
 		labelsSystem.removeLabelFromTask(task, labelName);
 		assertEquals(0, labelsSystem.assignableLabels().size());
