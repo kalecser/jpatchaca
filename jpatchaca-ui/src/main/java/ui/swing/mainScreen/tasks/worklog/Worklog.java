@@ -3,6 +3,7 @@ package ui.swing.mainScreen.tasks.worklog;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import jira.JiraSystem;
@@ -64,11 +65,24 @@ public class Worklog implements Comparable<Worklog> {
         Maybe<JiraIssue> issue = task.getJiraIssue();
         if (issue == null)
             return "no issue";
+        
+        //EMERGENCIAL!!!
+        if(!dentroDoPeriodoDeEnvio())
+            return "sending not allowed";
 
         if (!jira.isWorkable(issue.unbox()))
-            return "issue not workable";
-
+            return "not workable";
+        
         return "not sent";
+    }
+
+    //EMERGENCIAL 27/02/2012
+    private boolean dentroDoPeriodoDeEnvio() {
+        Calendar closeDate = Calendar.getInstance();
+        closeDate.setTime(period.getDay());
+        closeDate.add(Calendar.MONTH, 1);
+        closeDate.set(Calendar.DAY_OF_MONTH, 3);
+        return Calendar.getInstance().before(closeDate);
     }
 
     public String formatedTotalTime() {
@@ -94,6 +108,9 @@ public class Worklog implements Comparable<Worklog> {
             return false;
 
         if (period.isWorklogSent())
+            return false;
+        
+        if(!dentroDoPeriodoDeEnvio())
             return false;
 
         return jira.isWorkable(jiraIssue.unbox());
