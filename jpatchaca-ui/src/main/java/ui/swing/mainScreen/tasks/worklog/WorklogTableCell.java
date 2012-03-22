@@ -14,6 +14,12 @@ enum WorklogTableCell {
             return item.worklogStatus();
         }
     },
+    StartDate("Start Date", true) {
+        @Override
+        public Object getValue(final Worklog item) {
+            return item.formatedDateStart();
+        }
+    },
     Start("Start", true) {
         @Override
         public Object getValue(final Worklog item) {

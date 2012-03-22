@@ -44,6 +44,10 @@ public class Worklog implements Comparable<Worklog> {
         return period.startTime().compareTo(worklog.period.startTime());
     }
 
+    public String formatedDateStart() {
+        return formatter.formatShortDate(period.startTime());
+    }
+
     public String formatedStartTime() {
         return formatter.formatShortTime(period.startTime());
     }
