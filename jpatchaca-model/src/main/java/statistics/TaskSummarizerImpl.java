@@ -2,6 +2,7 @@ package statistics;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,7 +17,8 @@ public class TaskSummarizerImpl implements TaskSummarizer {
 
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
 			"MM/yyyy");
-
+	private static final SimpleDateFormat WEEK_YEAR_DATE_FORMAT = new SimpleDateFormat("w MM/yyyy");
+	
 	@Override
 	public List<SummaryItem> summarizePerDay(final List<TaskView> tasks) {
 
@@ -80,6 +82,27 @@ public class TaskSummarizerImpl implements TaskSummarizer {
 		return days;
 	}
 
+	public static List<Date> workWeeks(final List<Period> periods) {
+		
+		final List<Date> weeks = new ArrayList<Date>();
+		
+		for (final Period period : periods) {
+			int weekOfYearOfPeriod = period.getWeekOfYear();
+			
+			boolean addWeek = true;
+			for (Date week : weeks) {
+				if (weekOfYearOfPeriod == getWeekOfDate(week)) {
+					addWeek = false;
+					break;
+				}
+			}
+			
+			if (addWeek) weeks.add(period.getDay());
+		}
+		
+		return weeks;
+	}
+	
 	@Override
 	public List<SummaryItem> summarizePerMonth(final List<TaskView> tasks) {
 		final List<SummaryItem> items = new ArrayList<SummaryItem>();
@@ -95,6 +118,20 @@ public class TaskSummarizerImpl implements TaskSummarizer {
 		return sortItems(items);
 	}
 
+	@Override
+	public List<SummaryItem> summarizePerWeek(final List<TaskView> tasks) {
+	
+		final List<SummaryItem> items = new ArrayList<SummaryItem>();
+		for (final TaskView task : tasks) {
+			final List<Period> periods = task.periods();
+			for (final Date workWeek : workWeeks(periods)) {
+				items.add(new SummaryItemImpl(workWeek, task.name(), WEEK_YEAR_DATE_FORMAT.format(workWeek), getHoursInWeek(periods, workWeek)));
+			}
+		}
+		
+		return sortItems(items);
+	}
+	
 	private double getHoursInMonth(final List<Period> periods,
 			final Date workMonth) {
 		double hours = 0.0;
@@ -107,4 +144,25 @@ public class TaskSummarizerImpl implements TaskSummarizer {
 		return hours;
 	}
 
+	
+	
+	private double getHoursInWeek(final List<Period> periods, final Date workWeek) {
+		
+		double hours = 0.0;
+		for (final Period period : periods) {
+			if (getWeekOfDate(period.getDay()) == getWeekOfDate(workWeek)) {
+				hours += period.getMiliseconds() / DateUtils.MILLIS_PER_HOUR;
+			}
+		}
+		
+		return hours;
+	}
+	
+	private static int getWeekOfDate(Date date) {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.WEEK_OF_YEAR);
+	}
+	
 }

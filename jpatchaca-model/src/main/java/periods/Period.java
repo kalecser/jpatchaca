@@ -206,4 +206,11 @@ public class Period {
 	public void setWorklogSent(final boolean worklogSent) {
 		this.worklogSent = worklogSent;
 	}
+
+	public int getWeekOfYear() {
+    
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(this.getDay());
+		return cal.get(Calendar.WEEK_OF_YEAR);
+    }
 }

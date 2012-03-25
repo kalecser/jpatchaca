@@ -33,6 +33,7 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 	private final TaskSummarizer summarizer;
 
 	private final SummaryTableModel summaryModel;
+	private JRadioButton groupByWeekRadio;
 	private JRadioButton groupByMonthRadio;
 	private final TasksView tasks;
 	private JRadioButton groupByYearRadio;
@@ -86,11 +87,13 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 	private JPanel getGroupPannel() {
 		final JPanel pannel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
+		createGroupByWeekRadio();
 		createGroupByMonthRadio();
 		createGroupByDayRadio();
 		groupButtons();
 
 		pannel.add(new JLabel("Group by:"));
+		pannel.add(groupByWeekRadio);
 		pannel.add(groupByMonthRadio);
 		pannel.add(groupByYearRadio);
 		return pannel;
@@ -98,6 +101,7 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 
 	private void groupButtons() {
 		final ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(groupByWeekRadio);
 		buttonGroup.add(groupByMonthRadio);
 		buttonGroup.add(groupByYearRadio);
 	}
@@ -120,6 +124,17 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				showSummaryPerMonth();
+			}
+		});
+	}
+
+	private void createGroupByWeekRadio() {
+		groupByWeekRadio = new JRadioButton("week");
+		groupByWeekRadio.setSelected(true);
+		groupByWeekRadio.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				showSummaryPerWeek();
 			}
 		});
 	}
@@ -156,6 +171,10 @@ public class SummaryScreen extends SimpleInternalFrame implements Startable {
 
 	void showSummaryPerMonth() {
 		setItems(summarizer.summarizePerMonth(tasks.tasks()));
+	}
+
+	void showSummaryPerWeek() {
+		setItems(summarizer.summarizePerWeek(tasks.tasks()));
 	}
 
 	@Override

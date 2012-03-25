@@ -69,6 +69,30 @@ public class TaskSummarizerTest {
 		assertEquals(new SummaryItemImpl(toDate("01/11/2005"),"task1",1.0), items.get(2));
 	}
 
+	@Test
+	public void testSummarizeTaskPerWeek() throws ParseException{
+
+		final TaskView task1 = 
+			new FakeTask("task1")
+				.withWorkHoursDay(toDate("14/11/2005"), 1.0)
+				.withWorkHoursDay(toDate("17/12/2005"), 2.0)
+				.withWorkHoursDay(toDate("18/12/2005"), 2.0);
+		
+		final TaskView task2 = 
+			new FakeTask("task2")
+				.withWorkHoursDay(toDate("14/11/2005"), 2.0)
+				.withWorkHoursDay(toDate("15/11/2005"), 1.0);
+		
+		final TaskSummarizer taskSummarizer = new TaskSummarizerImpl();
+		final List<SummaryItem> items = taskSummarizer.summarizePerWeek(Arrays.asList(task2,task1));
+		
+		assertEquals(4, items.size());
+		assertEquals(new SummaryItemImpl(toDate("18/12/2005"),"task1",2.0), items.get(0));
+		assertEquals(new SummaryItemImpl(toDate("17/12/2005"),"task1",2.0), items.get(1));
+		assertEquals(new SummaryItemImpl(toDate("14/11/2005"),"task2",3.0), items.get(2));
+		assertEquals(new SummaryItemImpl(toDate("14/11/2005"),"task1",1.0), items.get(3));
+	}
+
 	private Date toDate(String date) throws ParseException {
 		return dateFormat.parse(date);
 	}
