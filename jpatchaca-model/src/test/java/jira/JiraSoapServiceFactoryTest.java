@@ -8,11 +8,13 @@ import jira.service.JPatchacaSoapServiceFake;
 import jira.service.JiraSoapServiceFactory;
 
 import org.jpatchaca.jira.ws.JPatchacaSoapService;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class JiraSoapServiceFactoryTest {
 
     @Test
+    @Ignore
     public void jpatchacaWebserviceUnavailable() throws ServiceException {
         assertTrue(createService() instanceof JPatchacaSoapServiceFake);
     }

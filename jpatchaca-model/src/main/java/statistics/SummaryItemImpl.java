@@ -92,7 +92,8 @@ public class SummaryItemImpl implements SummaryItem {
 
 	@Override
 	public String toString() {
-		return "Task: " + taskName + " Date: " + date + " hours: " + hours;
+		String formatedDate = new SimpleDateFormat("yyyy/MM/dd").format(date);
+		return "Task: " + taskName + " Date: " + formatedDate + " hours: " + hours;
 	}
 
 	@Override

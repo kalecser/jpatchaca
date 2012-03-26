@@ -5,9 +5,11 @@ import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
 import statistics.SummaryItem;
@@ -86,11 +88,11 @@ public class TaskSummarizerTest {
 		final TaskSummarizer taskSummarizer = new TaskSummarizerImpl();
 		final List<SummaryItem> items = taskSummarizer.summarizePerWeek(Arrays.asList(task2,task1));
 		
-		assertEquals(4, items.size());
-		assertEquals(new SummaryItemImpl(toDate("18/12/2005"),"task1",2.0), items.get(0));
-		assertEquals(new SummaryItemImpl(toDate("17/12/2005"),"task1",2.0), items.get(1));
-		assertEquals(new SummaryItemImpl(toDate("14/11/2005"),"task2",3.0), items.get(2));
-		assertEquals(new SummaryItemImpl(toDate("14/11/2005"),"task1",1.0), items.get(3));
+		assertEquals(
+				"Task: task1 Date: 2005/12/18 hours: 2.0\n" + 
+				"Task: task1 Date: 2005/12/17 hours: 2.0\n" + 
+				"Task: task2 Date: 2005/11/14 hours: 3.0\n" + 
+				"Task: task1 Date: 2005/11/14 hours: 1.0", StringUtils.join(items, "\n"));
 	}
 
 	private Date toDate(String date) throws ParseException {
