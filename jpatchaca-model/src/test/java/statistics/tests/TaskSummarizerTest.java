@@ -5,15 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
 import org.junit.Test;
 
 import statistics.SummaryItem;
@@ -78,13 +73,11 @@ public class TaskSummarizerTest {
 	@Test
 	public void testSummarizeTaskPerWeek() throws ParseException{
 
-		assertEquals(Calendar.SUNDAY, Calendar.getInstance().getFirstDayOfWeek());
-		
 		final TaskView task1 = 
 			new FakeTask("task1")
 				.withWorkHoursDay(toDate("14/11/2005"), 1.0)
-				.withWorkHoursDay(toDate("17/12/2005"), 2.0)
-				.withWorkHoursDay(toDate("18/12/2005"), 2.0);
+				.withWorkHoursDay(toDate("18/12/2005"), 2.0)
+				.withWorkHoursDay(toDate("19/12/2005"), 2.0);
 		
 		final TaskView task2 = 
 			new FakeTask("task2")
@@ -95,8 +88,7 @@ public class TaskSummarizerTest {
 		final List<SummaryItem> items = taskSummarizer.summarizePerWeek(Arrays.asList(task2,task1));
 		
 		assertEquals(
-				"Task: task1 Date: 2005/12/18 hours: 2.0\n" + 
-				"Task: task1 Date: 2005/12/17 hours: 2.0\n" + 
+				"Task: task1 Date: 2005/12/18 hours: 4.0\n" + 
 				"Task: task2 Date: 2005/11/14 hours: 3.0\n" + 
 				"Task: task1 Date: 2005/11/14 hours: 1.0", StringUtils.join(items, "\n"));
 	}
