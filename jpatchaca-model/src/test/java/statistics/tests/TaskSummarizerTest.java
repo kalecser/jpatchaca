@@ -5,11 +5,15 @@ import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import statistics.SummaryItem;
@@ -74,6 +78,8 @@ public class TaskSummarizerTest {
 	@Test
 	public void testSummarizeTaskPerWeek() throws ParseException{
 
+		assertEquals(Calendar.SUNDAY, Calendar.getInstance().getFirstDayOfWeek());
+		
 		final TaskView task1 = 
 			new FakeTask("task1")
 				.withWorkHoursDay(toDate("14/11/2005"), 1.0)
