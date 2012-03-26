@@ -76,8 +76,8 @@ public class TaskSummarizerTest {
 		final TaskView task1 = 
 			new FakeTask("task1")
 				.withWorkHoursDay(toDate("14/11/2005"), 1.0)
-				.withWorkHoursDay(toDate("20/12/2005"), 2.0)
-				.withWorkHoursDay(toDate("21/12/2005"), 2.0);
+				.withWorkHoursDay(toDate("18/12/2005"), 2.0)
+				.withWorkHoursDay(toDate("19/12/2005"), 2.0);
 		
 		final TaskView task2 = 
 			new FakeTask("task2")
@@ -88,7 +88,7 @@ public class TaskSummarizerTest {
 		final List<SummaryItem> items = taskSummarizer.summarizePerWeek(Arrays.asList(task2,task1));
 		
 		assertEquals(
-				"Task: task1 Date: 2005/12/20 hours: 4.0\n" + 
+				"Task: task1 Date: 2005/12/18 hours: 4.0\n" + 
 				"Task: task2 Date: 2005/11/14 hours: 3.0\n" + 
 				"Task: task1 Date: 2005/11/14 hours: 1.0", StringUtils.join(items, "\n"));
 	}
