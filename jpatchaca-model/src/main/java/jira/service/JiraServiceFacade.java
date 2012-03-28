@@ -1,7 +1,9 @@
 package jira.service;
 
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.rpc.ServiceException;
 
@@ -22,6 +24,7 @@ import com.dolby.jira.net.soap.jira.RemoteComment;
 import com.dolby.jira.net.soap.jira.RemoteField;
 import com.dolby.jira.net.soap.jira.RemoteFieldValue;
 import com.dolby.jira.net.soap.jira.RemoteIssue;
+import com.dolby.jira.net.soap.jira.RemoteIssueType;
 import com.dolby.jira.net.soap.jira.RemoteNamedObject;
 import com.dolby.jira.net.soap.jira.RemotePermissionException;
 import com.dolby.jira.net.soap.jira.RemoteStatus;
@@ -38,8 +41,10 @@ public class JiraServiceFacade implements TokenFactory {
 
 	private final TokenManager tokenManager;
 
-	public JiraServiceFacade(JiraOptions jiraOptions,
-			JiraServiceFactory serviceFactory, TokenManager tokenManager) {
+	private Map<String, RemoteIssueType> issueTypeMap;
+
+	public JiraServiceFacade(JiraOptions jiraOptions, JiraServiceFactory serviceFactory,
+			TokenManager tokenManager) {
 		this.jiraOptions = jiraOptions;
 		this.serviceFactory = serviceFactory;
 		this.tokenManager = tokenManager;
@@ -48,8 +53,7 @@ public class JiraServiceFacade implements TokenFactory {
 
 	private JiraSoapService getService() {
 		try {
-			return serviceFactory.createJiraSoapService(jiraOptions.getURL()
-					.unbox());
+			return serviceFactory.createJiraSoapService(jiraOptions.getURL().unbox());
 		} catch (ServiceException e) {
 			throw _handleException(e);
 		}
@@ -104,11 +108,10 @@ public class JiraServiceFacade implements TokenFactory {
 		}
 	}
 
-	public void addWorklogAndAutoAdjustRemainingEstimate(String issueId,
-			RemoteWorklog workLog) {
+	public void addWorklogAndAutoAdjustRemainingEstimate(String issueId, RemoteWorklog workLog) {
 		try {
-			getService().addWorklogAndAutoAdjustRemainingEstimate(
-					tokenManager.getToken(), issueId, workLog);
+			getService().addWorklogAndAutoAdjustRemainingEstimate(tokenManager.getToken(), issueId,
+					workLog);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -122,8 +125,7 @@ public class JiraServiceFacade implements TokenFactory {
 
 	public RemoteNamedObject[] getAvailableActions(String key) {
 		try {
-			return getService().getAvailableActions(tokenManager.getToken(),
-					key);
+			return getService().getAvailableActions(tokenManager.getToken(), key);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -137,8 +139,7 @@ public class JiraServiceFacade implements TokenFactory {
 
 	public RemoteField[] getFieldsForAction(String key, String id) {
 		try {
-			return getService().getFieldsForAction(tokenManager.getToken(),
-					key, id);
+			return getService().getFieldsForAction(tokenManager.getToken(), key, id);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -150,11 +151,10 @@ public class JiraServiceFacade implements TokenFactory {
 		}
 	}
 
-	public void progressWorkflowAction(String key, String id,
-			RemoteFieldValue[] remoteFieldValues) {
+	public void progressWorkflowAction(String key, String id, RemoteFieldValue[] remoteFieldValues) {
 		try {
-			getService().progressWorkflowAction(tokenManager.getToken(), key,
-					id, remoteFieldValues);
+			getService()
+					.progressWorkflowAction(tokenManager.getToken(), key, id, remoteFieldValues);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -168,10 +168,9 @@ public class JiraServiceFacade implements TokenFactory {
 
 	public void addComment(String key, String commentText) {
 		try {
-			RemoteComment remoteComment = new RemoteComment(null, commentText,
-					null, null, null, null, null, null);
-			getService()
-					.addComment(tokenManager.getToken(), key, remoteComment);
+			RemoteComment remoteComment = new RemoteComment(null, commentText, null, null, null,
+					null, null, null);
+			getService().addComment(tokenManager.getToken(), key, remoteComment);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -211,15 +210,12 @@ public class JiraServiceFacade implements TokenFactory {
 		}
 	}
 
-	public RemoteIssue[] getIssuesFromCurrentUserWithStatus(
-			List<String> statusList) {
-		String jql = String.format(
-				"assignee = currentUser() AND status in (%s)",
+	public RemoteIssue[] getIssuesFromCurrentUserWithStatus(List<String> statusList) {
+		String jql = String.format("assignee = currentUser() AND status in (%s)",
 				StringUtils.join(statusList, ", "));
 
 		try {
-			return getService().getIssuesFromJqlSearch(tokenManager.getToken(),
-					jql, 30);
+			return getService().getIssuesFromJqlSearch(tokenManager.getToken(), jql, 30);
 		} catch (RemoteValidationException e) {
 			throw _handleException(e);
 		} catch (RemoteAuthenticationException e) {
@@ -233,7 +229,7 @@ public class JiraServiceFacade implements TokenFactory {
 
 	public String getMetaAttribute(String issueKey, String metaAttribute) {
 		try {
-			return internalGetMetaAttribute(issueKey, metaAttribute);			
+			return internalGetMetaAttribute(issueKey, metaAttribute);
 		} catch (ServiceException e) {
 			throw _handleException(e);
 		} catch (RemoteException e) {
@@ -241,17 +237,19 @@ public class JiraServiceFacade implements TokenFactory {
 		}
 	}
 
-    private String internalGetMetaAttribute(String issueKey, String metaAttribute) throws ServiceException, RemoteException{
-        JPatchacaSoapService jpatchacaService = serviceFactory
-        		.createJPatchacaService(jiraOptions.getURL().unbox());
-        String[] issues = new String[]{ issueKey };
-        String[] values = jpatchacaService.getMetaAttributeForIssues(tokenManager.getToken(), issues, metaAttribute);
-        
-        if(values.length == 0)
-            throw new MetaAttributeNotFound();
-        
-        return values[0];
-    }
+	private String internalGetMetaAttribute(String issueKey, String metaAttribute)
+			throws ServiceException, RemoteException {
+		JPatchacaSoapService jpatchacaService = serviceFactory.createJPatchacaService(jiraOptions
+				.getURL().unbox());
+		String[] issues = new String[] { issueKey };
+		String[] values = jpatchacaService.getMetaAttributeForIssues(tokenManager.getToken(),
+				issues, metaAttribute);
+
+		if (values.length == 0)
+			throw new MetaAttributeNotFound();
+
+		return values[0];
+	}
 
 	public String getJiraUsername() {
 		String username = jiraOptions.getUserName().unbox();
@@ -280,7 +278,31 @@ public class JiraServiceFacade implements TokenFactory {
 	}
 
 	private RuntimeException _handleException(ServiceException e) {
-	    tokenManager.resetTokenTimeout();
+		tokenManager.resetTokenTimeout();
 		return new RuntimeException(e);
+	}
+
+	public Map<String, RemoteIssueType> getIssueTypes() {
+		try {
+			return internalGetIssuetypes();
+		} catch (RemoteValidationException e) {
+			throw _handleException(e);
+		} catch (RemoteAuthenticationException e) {
+			throw _handleException(e);
+		} catch (RemotePermissionException e) {
+			throw _handleException(e);
+		} catch (RemoteException e) {
+			throw _handleException(e);
+		}
+	}
+
+	private Map<String, RemoteIssueType> internalGetIssuetypes() throws RemoteException,
+			RemotePermissionException, RemoteAuthenticationException {
+		if (issueTypeMap == null) {
+			issueTypeMap = new HashMap<String, RemoteIssueType>();
+			for (RemoteIssueType type : getService().getIssueTypes(tokenManager.getToken()))
+				issueTypeMap.put(type.getName(), type);
+		}
+		return issueTypeMap;
 	}
 }
