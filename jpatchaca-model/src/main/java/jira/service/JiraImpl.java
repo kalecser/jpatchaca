@@ -3,8 +3,10 @@ package jira.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import jira.exception.JiraUserNotFound;
 import jira.exception.JiraValidationException;
@@ -20,6 +22,7 @@ import org.apache.log4j.Logger;
 import com.dolby.jira.net.soap.jira.RemoteField;
 import com.dolby.jira.net.soap.jira.RemoteFieldValue;
 import com.dolby.jira.net.soap.jira.RemoteIssue;
+import com.dolby.jira.net.soap.jira.RemoteIssueType;
 import com.dolby.jira.net.soap.jira.RemoteNamedObject;
 import com.dolby.jira.net.soap.jira.RemoteStatus;
 import com.dolby.jira.net.soap.jira.RemoteWorklog;
@@ -176,12 +179,28 @@ public class JiraImpl implements Jira {
 	}
 	
 	@Override
-	public boolean isWorkable(JiraIssue issue) {
+	public boolean isWorkable(JiraIssue jiraIssue) {
 	    try{
-	        String metaAttribute = jiraService.getMetaAttribute(issue.getKey(), WORKABLE_META_ATTRIBUTE);
-	        return !"false".equals(metaAttribute);
+	        RemoteIssue remoteIssue = jiraService.getIssueByKey(jiraIssue.getKey());
+	        return !notWorkableTypes().contains(remoteIssue.getType());
+	        
+//	        String metaAttribute = jiraService.getMetaAttribute(jiraIssue.getKey(), WORKABLE_META_ATTRIBUTE);
+//	        return !"false".equals(metaAttribute);
 	    }catch(MetaAttributeNotFound e){
 	        return true;
 	    }
 	}
+
+	//EMERGENCIAL 28/03/2012
+    private Set<String> notWorkableTypes() {
+        Set<String> notWorkableTypes = new HashSet<String>();
+        notWorkableTypes.add(getIssueTypeByName("Bug").getId());
+        notWorkableTypes.add(getIssueTypeByName("OS de Suporte").getId());
+        notWorkableTypes.add(getIssueTypeByName("OS").getId());
+        return notWorkableTypes;
+    }
+
+    private RemoteIssueType getIssueTypeByName(String string) {
+        return jiraService.getIssueTypes().get(string);
+    }
 }
