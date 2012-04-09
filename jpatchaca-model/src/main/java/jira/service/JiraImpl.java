@@ -180,15 +180,21 @@ public class JiraImpl implements Jira {
 	
 	@Override
 	public boolean isWorkable(JiraIssue jiraIssue) {
+		
+		//temporary fix
+		if (isBrundleIssue(jiraIssue))
+			return true;
+		
 	    try{
 	        RemoteIssue remoteIssue = jiraService.getIssueByKey(jiraIssue.getKey());
-	        return !notWorkableTypes().contains(remoteIssue.getType());
-	        
-//	        String metaAttribute = jiraService.getMetaAttribute(jiraIssue.getKey(), WORKABLE_META_ATTRIBUTE);
-//	        return !"false".equals(metaAttribute);
+	        return !notWorkableTypes().contains(remoteIssue.getType());	        
 	    }catch(MetaAttributeNotFound e){
 	        return true;
 	    }
+	}
+
+	private boolean isBrundleIssue(JiraIssue jiraIssue) {
+		return jiraIssue.getKey().toLowerCase().contains("brundle");
 	}
 
 	//EMERGENCIAL 28/03/2012
