@@ -9,6 +9,7 @@ import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
 import ui.commandLine.CommandLineInterfaceImpl;
+import ui.commandLine.HttpFilterCommandLineInterface;
 import ui.commandLine.PatchacaSocketServer;
 import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.events.EventsListPane;
@@ -172,6 +173,7 @@ final class UIStuffBuilder {
 		container.addComponent(WorklogFactory.class);
 
 		container.addComponent(CommandLineInterfaceImpl.class);
+		
 		container.addComponent(WorkLoggerUsingSwing.class);
 		container.addComponent(PatchacaSocketServer.class);
 

@@ -21,7 +21,7 @@ public class PatchacaSocketServer implements Startable{
 	private ServerSocket serverSocket;
 
 	public PatchacaSocketServer(CommandLineInterface cli){
-		this.cli = cli;
+		this.cli = new HttpFilterCommandLineInterface(cli);
 	}
 	
 	@Override
