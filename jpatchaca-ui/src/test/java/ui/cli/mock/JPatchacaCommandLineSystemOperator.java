@@ -11,11 +11,13 @@ public class JPatchacaCommandLineSystemOperator {
 	private WorkLoggerMock mockWorkLogger;
 	private String commandResponse;
 	private ActiveTaskNameCopierMock mockCopier;
+	private StartTaskMock mockStartTask;
 
 	public JPatchacaCommandLineSystemOperator() {
 		mockWorkLogger = new WorkLoggerMock();
 		mockCopier = new ActiveTaskNameCopierMock();
-		cli = new CommandLineInterfaceImpl(mockWorkLogger, mockCopier);		
+		mockStartTask = new StartTaskMock();
+		cli = new CommandLineInterfaceImpl(mockWorkLogger, mockCopier, mockStartTask);		
 	}
 	
 	public void sendCommandLine(String command) {
@@ -40,6 +42,10 @@ public class JPatchacaCommandLineSystemOperator {
 
 	public void assertTaskNameCopied() {
 		Assert.assertTrue(mockCopier.hasCopiedTasknameToClipboard());
+	}
+
+	public void assertTaskStarted(String task) {
+		Assert.assertEquals(task, mockStartTask.getStartedTask());
 	}
 
 }

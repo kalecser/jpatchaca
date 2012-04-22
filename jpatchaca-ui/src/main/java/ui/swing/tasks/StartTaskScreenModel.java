@@ -2,10 +2,9 @@ package ui.swing.tasks;
 
 import java.util.List;
 
-public interface StartTaskScreenModel {
+public interface StartTaskScreenModel extends StartTask {
 
 	List<String> taskNames();
-	void startTask(String taskName);
 
 
 }

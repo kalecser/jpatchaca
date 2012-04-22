@@ -181,7 +181,6 @@ public class JiraImpl implements Jira {
 	@Override
 	public boolean isWorkable(JiraIssue jiraIssue) {
 		
-		//temporary fix
 		if (isBrundleIssue(jiraIssue))
 			return true;
 		

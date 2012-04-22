@@ -34,4 +34,11 @@ public class CommandLineTest {
 		operator.assertCommandResponse("Active task name copied to clipboard");
 		operator.assertTaskNameCopied();
 	}
+	
+	@Test
+	public void onStartTask_ShouldStartTask(){
+		operator.sendCommandLine("startTask foo");
+		operator.assertCommandResponse("Task foo started");
+		operator.assertTaskStarted("foo");
+	}
 }
