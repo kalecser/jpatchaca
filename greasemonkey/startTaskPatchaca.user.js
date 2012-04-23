@@ -9,7 +9,10 @@
 
 $("[class^='iKey']").after(function(){
 	issueKey = this.title.replace(/.*JIRA -/,"");
-    return "<br/><input type='button' value='&gt;' title='Time tracker on "+issueKey+"'>"
+	cp = $("<br/><input type='button' value='&gt;' title='Time tracker on "+issueKey+"'>").click(function(){
+		$.get("http://127.0.0.1:48625/startTask ["+issueKey+ "]");
+	})
+    return cp;
 })
 function getAssignee(key)
 {
@@ -27,9 +30,11 @@ unsafeWindow.Issue.prototype.updatingStatus = function(A) {
 	if (A == 'gh.boards.inprog_orphan') {
 		var assignee = getAssignee(this.key);
 		if (getCurrentUser() == assignee) {
-			alert("Issue " + this.key + " set in progress. Assignee: " + getAssignee(this.key) + '. Will start activity on time tracker');
+//			alert("Issue " + this.key + " set in progress. Assignee: " + getAssignee(this.key) + '. Will start activity on time tracker');
+
+			$.get("http://127.0.0.1:48625/startTask ["+this.key+ "]");
 		}
 	}
-//	this.updatingStatus_old(A);
+	this.updatingStatus_old(A);
 }
 
