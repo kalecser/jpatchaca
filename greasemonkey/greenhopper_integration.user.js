@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           InterceptUpdate
+// @name           JiraJPatchacaIntegration
 // @namespace      taksan
 // @description    Intercept issue update
 // @include        https://jira.objective.com.br/secure/TaskBoard.jspa*
