@@ -12,7 +12,7 @@ function main (){
         issueId = $('[id^=issue_key]').text();
 
         $('body').prepend(
-                $('<input type="button" value="Start task">').click(function() {
+                $('<input type="button" value="Start task" style="position:fixed;top:5px;left:5px;">').click(function() {
 			$.get("http://127.0.0.1:48625/startTask ["+issueId+ "]");
         }))
 }
