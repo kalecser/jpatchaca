@@ -19,7 +19,7 @@ function addStartButtonsToIssueCards() {
 	$("[class^='iKey']").after(function(){
 		var issueKey = this.title.replace(/.*JIRA -/,"");
 		var nl='<br/>';
-		if ($(this).parent().attr('class') != 'list-subheader'){
+		if (isCardIssue(this)) {
 			nl = '';
 		}
 
@@ -29,6 +29,10 @@ function addStartButtonsToIssueCards() {
 		})
 		return cp;
 	})
+}
+
+function isCardIssue(obj) {
+	return $(obj).parent().attr('class') != 'list-subheader'
 }
 
 function interceptIssueTransitionToStartTask() {
