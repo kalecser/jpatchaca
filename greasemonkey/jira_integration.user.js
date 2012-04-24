@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           start task
+// @name           StartTaskFromIssuePage
 // @namespace      org.jpatchaca
 // @description    Start Task
 // @include        https://jira.objective.com.br/browse/*
@@ -12,10 +12,8 @@ main();
 function main (){
         issueId = $('[id^=issue_key]').text();
 
-//        $('body').prepend(
 			addToToolbar(        
                 $('<input type="button" value="Start task" style="position:fixed;top:5px;left:5px;">').click(function() {
 					$.get("http://127.0.0.1:48625/startTask ["+issueId+ "]")
 	        }))
-//        )
 }
