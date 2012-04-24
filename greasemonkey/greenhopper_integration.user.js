@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           JiraJPatchacaIntegration
+// @name           InterceptUpdate
 // @namespace      taksan
 // @description    Intercept issue update
 // @include        https://jira.objective.com.br/secure/TaskBoard.jspa*
@@ -8,11 +8,14 @@
 // ==/UserScript==
 
 $("[class^='iKey']").after(function(){
-	issueKey = this.title.replace(/.*JIRA -/,"");
-	cp = $("<br/><input type='button' value='&gt;' title='Time tracker on "+issueKey+"'>");
-	cp.attr("issueKey", issueKey);
+	var issueKey = this.title.replace(/.*JIRA -/,"");
+	var nl='<br/>';
+	if ($(this).parent().attr('class') != 'list-subheader'){
+		nl = '';
+	}
+
+	cp = $(nl+"<input type='button' value='&gt;' title='Time tracker on "+issueKey+"'>");
 	cp.click(function(){
-		issueKey = $(this).attr("issueKey")
 		$.get("http://127.0.0.1:48625/startTask ["+issueKey+ "]");
 	})
     return cp;
@@ -33,9 +36,7 @@ unsafeWindow.Issue.prototype.updatingStatus = function(A) {
 	if (A == 'gh.boards.inprog_orphan') {
 		var assignee = getAssignee(this.key);
 		if (getCurrentUser() == assignee) {
-//			alert("Issue " + this.key + " set in progress. Assignee: " + getAssignee(this.key) + '. Will start activity on time tracker');
-
-			$.get("http://127.0.0.1:48625/startTask ["+this.key+ "]");
+			$.get("http://127.0.0.1:48625/startTask ["+this.key+"]");
 		}
 	}
 	this.updatingStatus_old(A);
