@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           StartTaskFromIssuePage
+// @name           Start JPatchaca Task from issue page
 // @namespace      org.jpatchaca
 // @description    Start Task
 // @include        https://jira.objective.com.br/browse/*

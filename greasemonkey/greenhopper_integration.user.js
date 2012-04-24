@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           JPatchacaGreenhopperIntegration
+// @name           Greenhopper Integration with JPatchaca
 // @namespace      taksan
 // @description    Intercept issue update
 // @include        https://jira.objective.com.br/secure/TaskBoard.jspa*
