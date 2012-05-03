@@ -125,8 +125,8 @@ public class Worklog implements Comparable<Worklog> {
     }
 
     public void editPeriodEnd(final String value) {
-        Date dateParsed = editDate(period.endTime(), value);
-        if (dateParsed != null)
+        Date dateParsed = editDate(period.startTime(), value);
+        if (dateParsed != null)	
             tasksSystem.setPeriodEnding(task, periodIndex(), dateParsed);
     }
 
