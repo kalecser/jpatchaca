@@ -88,17 +88,5 @@ public abstract class PeriodsTest extends TestCase{
 		periodsOperator.assertPeriodCount(taskName, 0);
 		
 	}
-	
-	@Ignore//intermittent
-	public void testActivePeriodEditionMightStopTask(){
-		tasksOperator.startTask(taskName);
-		periodsOperator.editPeriod(taskName, 0, "02:00 pm");
-		
-		tasksOperator.assertActiveTask(taskName);
-		
-		periodsOperator.editPeriod(taskName, 0, "02:00 pm", "06:00 pm");
-		tasksOperator.assertActiveTask(null);
-		tasksOperator.assertTimeSpent(taskName, 0, 4 * 60);
-	}
 
 }
