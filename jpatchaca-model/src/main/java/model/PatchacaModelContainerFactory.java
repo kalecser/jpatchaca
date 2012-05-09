@@ -16,6 +16,7 @@ import jira.service.JiraServiceFacade;
 import jira.service.JiraSoapServiceFactory;
 import jira.service.TokenManager;
 import keyboardRotation.KeyboardRotationOptions;
+import keyboardRotation.SetKeyboardRotationOptions2Processor;
 import keyboardRotation.SetKeyboardRotationOptionsProcessor;
 import labels.LabelsSystem;
 import labels.LabelsSystemImpl;
@@ -117,6 +118,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(KeyboardRotationOptions.class);
 		container.addComponent(SetTwitterConfigProcessor.class);
 		container.addComponent(SetKeyboardRotationOptionsProcessor.class);
+		container.addComponent(SetKeyboardRotationOptions2Processor.class);
 
 		container.addComponent(JiraOptions.class);
 		container.addComponent(SetJiraConfigProcessor.class);
