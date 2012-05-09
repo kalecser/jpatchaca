@@ -33,7 +33,8 @@ public class PatchacaTrayTest {
 		tray = new PatchacaTray(
 				modelMock, 
 				presenter, 
-				keyboardRotationPreferences);
+				keyboardRotationPreferences,
+				null);
 
 		tray.start();
 	}

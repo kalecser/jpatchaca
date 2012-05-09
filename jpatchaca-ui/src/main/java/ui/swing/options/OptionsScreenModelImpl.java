@@ -4,7 +4,7 @@ import jira.JiraOptions;
 import jira.events.SetJiraConfig;
 import keyboardRotation.KeyboardRotationOptions;
 import events.EventsSystem;
-import events.SetKeyboardRotationOptions;
+import events.SetKeyboardRotationOptions2;
 
 public class OptionsScreenModelImpl implements OptionsScreenModel {
 
@@ -39,9 +39,7 @@ public class OptionsScreenModelImpl implements OptionsScreenModel {
 		eventsSystem.writeEvent(new SetJiraConfig(data.jiraUrl.unbox(),
 				data.jiraUserName.unbox(), data.jiraPassword.unbox(),
 				data.issueStatusManagementEnabled));
-		eventsSystem.writeEvent(new SetKeyboardRotationOptions(
-				data.supressShakingDialog));
-		eventsSystem.writeEvent(new SetKeyboardRotationOptions(
+		eventsSystem.writeEvent(new SetKeyboardRotationOptions2(data.supressShakingDialog, 
 				data.isRemoteSystemIntegrationActive));
 	}
 

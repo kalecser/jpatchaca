@@ -1,6 +1,7 @@
 package main;
 
 import jira.JiraIssueStatusManagement;
+import keyboardRotation.PairProgrammingRemoteIntegration;
 
 import org.picocontainer.MutablePicoContainer;
 
@@ -15,6 +16,7 @@ import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
 import ui.swing.jira.JiraIssueStatusActionPane;
+import ui.swing.kayboardRotation.PairProgrammingRemoteIntegrationGuiSwing;
 import ui.swing.mainScreen.JiraBrowserIntegrationImpl;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
@@ -78,7 +80,6 @@ import ui.swing.users.SwinglabelsUser;
 import ui.swing.utils.PatchacaUncaughtExceptionHandler;
 import ui.swing.utils.UIEventsExecutor;
 import ui.swing.utils.UIEventsExecutorImpl;
-import ui.swing.utils.Whiteboard;
 import wheel.io.ui.impl.DeferredDirectoryBoundPersistence;
 import wheel.io.ui.impl.JFrameBoundsKeeperImpl;
 import basic.FormatterImpl;
@@ -104,7 +105,6 @@ final class UIStuffBuilder {
 		container.addComponent(JFrameBoundsKeeperImpl.class);
 
 		container.addComponent(WindowManager.class);
-		container.addComponent(Whiteboard.class);
 
 		container.addComponent(SwingTasksUserImpl.class);
 
@@ -142,6 +142,9 @@ final class UIStuffBuilder {
 		container.addComponent(StartTaskScreen.class);
 		container.addComponent(StartTaskPresenter.class);
 		container.addComponent(TrayIconStartTaskMessage.class);
+		
+		container.addComponent(PairProgrammingRemoteIntegrationGuiSwing.class);
+		container.addComponent(PairProgrammingRemoteIntegration.class);
 
 		container.addComponent(TaskListSystemMediator.class);
 		container.addComponent(SummaryHoursFormat.class);

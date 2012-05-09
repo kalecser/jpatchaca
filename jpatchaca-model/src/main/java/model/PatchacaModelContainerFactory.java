@@ -119,6 +119,7 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(SetTwitterConfigProcessor.class);
 		container.addComponent(SetKeyboardRotationOptionsProcessor.class);
 		container.addComponent(SetKeyboardRotationOptions2Processor.class);
+		container.addComponent(keyboardRotation.TurnOnKeyboardRotationAlert.class);
 
 		container.addComponent(JiraOptions.class);
 		container.addComponent(SetJiraConfigProcessor.class);

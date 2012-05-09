@@ -6,9 +6,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import net.PatchacaConstants;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.picocontainer.Startable;
+
 
 
 import basic.SocketUtils;
@@ -16,7 +19,6 @@ import basic.SocketUtils;
 public class PatchacaSocketServer implements Startable{
 
 
-	private static final int SERVER_PORT = 48625;
 	private final CommandLineInterface cli;
 	private ServerSocket serverSocket;
 
@@ -32,7 +34,7 @@ public class PatchacaSocketServer implements Startable{
 			@Override
 			public void run() {
 				try {
-					int port = SERVER_PORT;
+					int port = PatchacaConstants.SERVER_PORT;
 					serverSocket = new ServerSocket(port);
 					acceptConnectionsWhileUniverseExists();
 				} catch (IOException e) {

@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import keyboardRotation.KeyboardRotationOptions;
+import keyboardRotation.TurnOnKeyboardRotationAlert;
 import lang.Maybe;
 
 import org.apache.commons.lang.SystemUtils;
@@ -74,13 +75,16 @@ public class PatchacaTray implements Startable {
 	public boolean test_mode = false;
 	private final Presenter presenter;
 	private final KeyboardRotationOptions preferences;
+	private final TurnOnKeyboardRotationAlert turnOnKeyboardRotationAlert;
 
 	public PatchacaTray(final PatchacaTrayModel model, 
 			Presenter presenter, 
-			KeyboardRotationOptions preferences) {
+			KeyboardRotationOptions preferences,
+			TurnOnKeyboardRotationAlert turnOnKeyboardRotationAlert) {
 		this.model = model;
 		this.presenter = presenter;
 		this.preferences = preferences;
+		this.turnOnKeyboardRotationAlert = turnOnKeyboardRotationAlert;
 		this.stopTaskAlert = new AlertImpl();
 	}
 
@@ -222,6 +226,7 @@ public class PatchacaTray implements Startable {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				startTimer();
+				turnOnKeyboardRotationAlert.fire();
 			}
 		};
 

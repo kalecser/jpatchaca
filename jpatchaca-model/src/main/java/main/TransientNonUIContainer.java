@@ -28,6 +28,7 @@ public class TransientNonUIContainer {
 		container.addComponent(new TransientDirectory());
 		container.addComponent(new MockIdProvider());
 		container.addComponent("JiraImpl", JiraMock.class);		
+		container.addComponent(new PairProgrammingRemoteIntegrationGuiMock());
 		
 		container.removeComponent(AssureSingleInstance.class);		
 	}
