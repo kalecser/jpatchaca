@@ -20,6 +20,7 @@ class NetworkImpl implements Network {
 			OutputStream outputStream = socket.getOutputStream();
 			outputStream.write((command.trim() + "\n").getBytes());
 			outputStream.flush();
+			socket.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
