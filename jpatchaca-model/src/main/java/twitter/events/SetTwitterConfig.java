@@ -11,7 +11,7 @@ public class SetTwitterConfig implements Serializable {
 	private final String userName;
 	private final String password;
 
-	@Deprecated
+	@Deprecated//Twitter integration is discontinued
 	public SetTwitterConfig(boolean enabled, String userName, String password) {
 		
 		Validate.notNull(userName);

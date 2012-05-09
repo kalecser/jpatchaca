@@ -8,7 +8,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import lang.Maybe;
-
 import net.miginfocom.swing.MigLayout;
 import ui.swing.options.OptionsScreenModel.Data;
 import ui.swing.presenter.ActionPane;
@@ -23,7 +22,9 @@ public class OptionsScreen implements ActionPane {
 	private JTextField jiraUrl;
 	private JCheckBox issueStatusManagementEnabled;
 	private JCheckBox supressShakingDialog;
+	private JCheckBox remoteSystemIntegration;
 	private final OptionsScreenModel optionsScreenModel;
+
 
 	public OptionsScreen(OptionsScreenModel optionsScreenModel) {
 		this.optionsScreenModel = optionsScreenModel;
@@ -49,7 +50,7 @@ public class OptionsScreen implements ActionPane {
 		Data data = optionsScreenModel.readDataFromSystem();
 
 		supressShakingDialog.setSelected(data.supressShakingDialog);
-
+		remoteSystemIntegration.setSelected(data.isRemoteSystemIntegrationActive);
 		issueStatusManagementEnabled
 				.setSelected(data.issueStatusManagementEnabled);
 		if (data.jiraUrl != null) {
@@ -68,7 +69,13 @@ public class OptionsScreen implements ActionPane {
 		optionsPanel.setLayout(new MigLayout("wrap 1,fillx"));
 		supressShakingDialog = new JCheckBox("Supress shaking dialog");
 		optionsPanel.add(supressShakingDialog);
+		optionsPanel.add(createRemoteIntegrationCheckbox());
 		tab.add("Keyboard Rotation", optionsPanel);
+	}
+
+	private JCheckBox createRemoteIntegrationCheckbox() {
+		remoteSystemIntegration = new JCheckBox("Sync with remote Jpatchaca when pair-programming");
+		return remoteSystemIntegration;
 	}
 
 	private void addJiraPreferences(JTabbedPane tab) {
@@ -116,6 +123,7 @@ public class OptionsScreen implements ActionPane {
 		data.issueStatusManagementEnabled = issueStatusManagementEnabled
 				.isSelected();
 		data.supressShakingDialog = supressShakingDialog.isSelected();
+		data.isRemoteSystemIntegrationActive = remoteSystemIntegration.isSelected(); 
 		optionsScreenModel.writeDataIntoSystem(data);
 	}
 

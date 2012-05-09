@@ -14,16 +14,16 @@ public interface OptionsScreenModel {
 		public Maybe<String> jiraUrl;
 		public Maybe<String> jiraUserName;
 		public Maybe<String> jiraPassword;
-		public boolean isToUseOldIcons;
-
+		public boolean isRemoteSystemIntegrationActive;
 		@Override
 		public String toString() {
 			return "Data [supressShakingDialog=" + supressShakingDialog
 					+ ", issueStatusManagementEnabled="
 					+ issueStatusManagementEnabled + ", jiraUrl=" + jiraUrl
 					+ ", jiraUserName=" + jiraUserName + ", jiraPassword="
-					+ jiraPassword + ", isToUseOldIcons=" + isToUseOldIcons
-					+ "]";
+					+ jiraPassword + " +" +
+					", isRemoteSystemIntegrationActive="
+					+ isRemoteSystemIntegrationActive + "]";
 		}
 	}
 }

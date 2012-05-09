@@ -9,7 +9,6 @@ import statistics.ProjectVelocityCalculatorImpl;
 import statistics.TaskSummarizer;
 import statistics.TaskSummarizerImpl;
 import ui.commandLine.CommandLineInterfaceImpl;
-import ui.commandLine.HttpFilterCommandLineInterface;
 import ui.commandLine.PatchacaSocketServer;
 import ui.swing.errorLog.ErrorLogScreen;
 import ui.swing.events.EventsListPane;

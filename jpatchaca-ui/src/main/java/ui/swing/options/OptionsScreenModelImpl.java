@@ -30,6 +30,7 @@ public class OptionsScreenModelImpl implements OptionsScreenModel {
 				.isIssueStatusManagementEnabled();
 		data.supressShakingDialog = keyboardRotationOptions
 				.supressShakingDialog();
+		data.isRemoteSystemIntegrationActive = keyboardRotationOptions.isRemoteIntegrationActive();
 		return data;
 	}
 
@@ -40,6 +41,8 @@ public class OptionsScreenModelImpl implements OptionsScreenModel {
 				data.issueStatusManagementEnabled));
 		eventsSystem.writeEvent(new SetKeyboardRotationOptions(
 				data.supressShakingDialog));
+		eventsSystem.writeEvent(new SetKeyboardRotationOptions(
+				data.isRemoteSystemIntegrationActive));
 	}
 
 }
