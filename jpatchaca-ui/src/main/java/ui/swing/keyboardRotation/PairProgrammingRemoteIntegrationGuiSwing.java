@@ -1,4 +1,4 @@
-package ui.swing.kayboardRotation;
+package ui.swing.keyboardRotation;
 
 import java.io.IOException;
 

@@ -16,7 +16,7 @@ import ui.swing.events.EventsListPane;
 import ui.swing.events.EventsListPaneModel;
 import ui.swing.events.EventsListPanePresenter;
 import ui.swing.jira.JiraIssueStatusActionPane;
-import ui.swing.kayboardRotation.PairProgrammingRemoteIntegrationGuiSwing;
+import ui.swing.keyboardRotation.PairProgrammingRemoteIntegrationGuiSwing;
 import ui.swing.mainScreen.JiraBrowserIntegrationImpl;
 import ui.swing.mainScreen.LabelTooltipProvider;
 import ui.swing.mainScreen.LabelTooltipProviderImpl;
