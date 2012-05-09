@@ -54,7 +54,7 @@ public class PairProgrammingRemoteIntegration implements Startable{
 	private void startTaskOnRemotePeer(Maybe<TaskName> activeTask) {
 		if (activeTask == null) return;
 		if (remotePeer == null) return;
-		net.sendTo("starttask " +activeTask.unbox().toNonEmptyString().toString(), remotePeer.unbox());
+		net.sendTo("startTask " +activeTask.unbox().toNonEmptyString().toString(), remotePeer.unbox());
 	}
 
 	@Override

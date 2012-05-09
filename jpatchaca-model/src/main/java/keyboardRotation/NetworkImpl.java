@@ -18,7 +18,7 @@ class NetworkImpl implements Network {
 		try {
 			Socket socket = new Socket(peer, PatchacaConstants.SERVER_PORT);
 			OutputStream outputStream = socket.getOutputStream();
-			outputStream.write(command.getBytes());
+			outputStream.write((command.trim() + "\n").getBytes());
 			outputStream.flush();
 		} catch (Exception ex) {
 			ex.printStackTrace();

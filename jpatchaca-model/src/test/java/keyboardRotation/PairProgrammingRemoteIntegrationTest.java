@@ -21,7 +21,7 @@ public class PairProgrammingRemoteIntegrationTest {
 		setRemotePeer("Sol");
 		changeActiveTaskTo("active task");
 		turnKeyboardRotationOn();
-		Assert.assertEquals("starttask active task to Sol", sentCommands());
+		Assert.assertEquals("startTask active task to Sol", sentCommands());
 	}
 	
 	@Test
@@ -32,8 +32,8 @@ public class PairProgrammingRemoteIntegrationTest {
 		turnKeyboardRotationOn();
 		changeActiveTaskTo("new task");
 		String expected = 
-				"starttask active task to Sol\n" +
-				"starttask new task to Sol";
+				"startTask active task to Sol\n" +
+				"startTask new task to Sol";
 		Assert.assertEquals(expected, sentCommands());
 	}
 	
