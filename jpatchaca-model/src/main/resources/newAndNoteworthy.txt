@@ -1,3 +1,21 @@
+2012/05/09 - Version 1.6
+New worklog month view, 
+Jira greasemonkey scripts and 
+Pair programming remote integration 
+
+(Task>Options>Keyboard Rotation>Sync with remote...)
+Every time keyboard rotation is turned on a dialog will appear asking for the remote
+host/ip, if provided remote time-tracker will be kept in sync with local, IE. both will 
+have the same active task.
+
+To install Greasemonkey scripts open the following links in your Google-Chrome or Firefox browser:
+https://github.com/kalecser/jpatchaca/raw/master/greasemonkey/jira_integration.user.js
+https://github.com/kalecser/jpatchaca/blob/master/greasemonkey/greenhopper_integration.user.js
+
+Don't forget to check out the new Worklog month view so you can send all your months worklogs at once ;)
+
+Very special thanks to Laercio Pereira , Gabriel Takeuchi and Lucas Santos   
+
 2012/01/18 - Version 1.5
 - Blocking task creation for non-workable issues 
 

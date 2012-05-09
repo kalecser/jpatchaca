@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import wheel.io.files.Directory;
+
 import basic.PatchacaDirectory;
 
 import keyboardRotation.PairProgrammingRemoteIntegrationGui;
@@ -13,9 +15,9 @@ public class PairProgrammingRemoteIntegrationGuiSwing implements PairProgramming
 
 	protected static final String FILE = "peer.txt";
 	private String lastPeer;
-	private final PatchacaDirectory dir;
+	private final Directory dir;
 	
-	public PairProgrammingRemoteIntegrationGuiSwing(PatchacaDirectory dir){
+	public PairProgrammingRemoteIntegrationGuiSwing(Directory dir){
 		this.dir = dir;
 		lastPeer = readLastValue();
 	}
