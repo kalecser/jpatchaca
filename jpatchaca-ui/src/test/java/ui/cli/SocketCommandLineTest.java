@@ -28,12 +28,9 @@ public class SocketCommandLineTest {
 	}
 	
 	@Test(timeout=1000)
-	public void testSendCommands() throws UnknownHostException, IOException{
+	public void testSendCommand() throws UnknownHostException, IOException{
 		String commandResult = op.sendCommand("anyCommandWillDo");
 		Assert.assertEquals("Command anyCommandWillDo received", commandResult);
-		
-		String secondCommandResult = op.sendCommand("anotherCommand");
-		Assert.assertEquals("Command anotherCommand received", secondCommandResult);
 	}
 	
 	@Test(timeout=1000)

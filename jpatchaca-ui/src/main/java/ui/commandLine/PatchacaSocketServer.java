@@ -54,7 +54,7 @@ public class PatchacaSocketServer implements Startable{
 			try {
 				Socket socket = serverSocket.accept();
 				greet(socket);
-				readCommandsWhileUniverseExists(socket);
+				readCommand(socket);
 			} catch (SocketException se){
 				Logger.getLogger(PatchacaSocketServer.class).error(se);
 				return;
@@ -69,18 +69,17 @@ public class PatchacaSocketServer implements Startable{
 		output.flush();
 	}
 
-	private void readCommandsWhileUniverseExists(Socket socket) throws IOException {
-		final boolean universeExists = true;
-		while(universeExists){
+	private void readCommand(Socket socket) throws IOException {
 			try {
 				final String command = SocketUtils.readLine(socket);
 				if (command == null)
 					return;
-				SocketUtils.writeLine(cli.command(command), socket);				
+				SocketUtils.writeLine(cli.command(command), socket);
 			} catch (SocketException ex){
 				//do nothing
+			} finally {
+				socket.close();				
 			}
-		}
 	}
 
 	@Override
