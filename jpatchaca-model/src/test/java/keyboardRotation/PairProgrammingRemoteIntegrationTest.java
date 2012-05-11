@@ -31,6 +31,7 @@ public class PairProgrammingRemoteIntegrationTest {
 		changeActiveTaskTo("active task");
 		turnKeyboardRotationOn();
 		changeActiveTaskTo("new task");
+		changeActiveTaskTo("new task");
 		String expected = 
 				"startTask active task to Sol\n" +
 				"startTask new task to Sol";
