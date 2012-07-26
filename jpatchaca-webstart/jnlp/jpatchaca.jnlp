@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
     spec="6.0+"
-    codebase=" http://raw.github.com/kalecser/jpatchaca/master/jpatchaca-webstart/jnlp/"
+    codebase=" https://raw.github.com/kalecser/jpatchaca/master/jpatchaca-webstart/jnlp/"
     href="jpatchaca.jnlp">
   <information>
     <title>JPatchaca Webstart</title>
