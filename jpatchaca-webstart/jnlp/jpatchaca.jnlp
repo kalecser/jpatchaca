@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
     spec="6.0+"
-    codebase="https://github.com/kalecser/jpatchaca/raw/master/jpatchaca-webstart/"
+    codebase=" http://raw.github.com/kalecser/jpatchaca/master/jpatchaca-webstart/jnlp/"
     href="jpatchaca.jnlp">
   <information>
     <title>JPatchaca Webstart</title>
     <vendor>JPatchaca</vendor>
-    <homepage href="https://github.com/kalecser/jpatchaca/"/>
+    <homepage href="http://jpatchaca.googlecode.com/"/>
     <offline-allowed/>
   </information>
   <security>
@@ -15,8 +15,8 @@
   <resources>
     <j2se version="1.6+"/>
      
-<jar href="jpatchaca-webstart-1.0-SNAPSHOT.jar"/>
-<jar href="jpatchaca-system-1.0-SNAPSHOT.jar" main="true"/>
+
+<jar href="target/jnlp/jpatchaca-system-1.0-SNAPSHOT.jar" main="true"/>
 
   </resources>
   <application-desc main-class="main.Main"/>
