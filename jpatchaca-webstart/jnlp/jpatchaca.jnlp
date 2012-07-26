@@ -16,7 +16,7 @@
     <j2se version="1.6+"/>
      
 
-<jar href="target/jnlp/jpatchaca-system-1.0-SNAPSHOT.jar" main="true"/>
+<jar href="jpatchaca-system-1.0-SNAPSHOT.jar" main="true"/>
 
   </resources>
   <application-desc main-class="main.Main"/>
