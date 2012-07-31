@@ -54,6 +54,7 @@ public class PairProgrammingRemoteIntegrationTest {
 	private void turnKeyboardRotationOn() {
 		turnOn.fire();
 	}
+
 	private void changeActiveTaskTo(String task) {
 		activeTask.supply(Maybe.wrap((Task)new MockTask(task)));
 	}
