@@ -1,7 +1,5 @@
 package periods;
 
-import org.junit.Ignore;
-
 import junit.framework.TestCase;
 import tasks.PatchacaTasksOperator;
 

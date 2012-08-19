@@ -4,12 +4,9 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import wheel.io.files.Directory;
-
-import basic.PatchacaDirectory;
-
 import keyboardRotation.PairProgrammingRemoteIntegrationGui;
 import keyboardRotation.PairProgrammingRemoteIntegrationGuiCallback;
+import wheel.io.files.Directory;
 
 public class PairProgrammingRemoteIntegrationGuiSwing implements PairProgrammingRemoteIntegrationGui{
 
