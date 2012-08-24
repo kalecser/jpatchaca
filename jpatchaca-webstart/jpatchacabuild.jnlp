@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
     spec="6.0+"
-    codebase="http://autotelebuild/hudson/job/JPatchaca/lastSuccessfulBuild/artifact/jpatchaca-webstart/"
+    codebase="http://objective/jpatchaca/target/jnlp/"
     href="jpatchacabuild.jnlp">
   <information>
     <title>JPatchaca Webstart</title>
     <vendor>JPatchaca</vendor>
-    <homepage href="http://jpatchaca.googlecode.com/"/>
+    <homepage href="https://github.com/kalecser/jpatchaca"/>
     <offline-allowed/>
   </information>
   <security>
