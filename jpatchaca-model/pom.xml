@@ -41,5 +41,13 @@
 			<groupId>org.jpatchaca</groupId>
 			<artifactId>jpatchaca-jira-plugin-ws-stub</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>net.objectlab.kit</groupId>
+            <artifactId>datecalc-joda</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.jollyday</groupId>
+            <artifactId>jollyday</artifactId>
+        </dependency>
 	</dependencies>
 </project>

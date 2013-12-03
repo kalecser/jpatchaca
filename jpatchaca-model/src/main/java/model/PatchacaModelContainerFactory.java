@@ -29,7 +29,9 @@ import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 import org.picocontainer.parameters.ComponentParameter;
 
+import periods.WorkingDayManager;
 import periods.impl.PeriodsFactoryImpl;
+import periods.impl.WorkingDayManagerImpl;
 import periodsInTasks.impl.PeriodsInTasksSystemImpl;
 import tasks.ActiveTask;
 import tasks.TasksSystemImpl;
@@ -137,6 +139,8 @@ public class PatchacaModelContainerFactory {
 		container.addComponent(PeriodsInTasksSystemImpl.class);
 		container.addComponent(LabelsSystem.class, LabelsSystemImpl.class);
 		container.addComponent(SelectedLabel.class);
+
+		container.addComponent(WorkingDayManager.class, WorkingDayManagerImpl.class);
 
 		return container;
 	}

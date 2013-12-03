@@ -3,7 +3,6 @@ package ui.swing.mainScreen.tasks.worklog;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 
 import jira.JiraSystem;
@@ -12,6 +11,7 @@ import jira.issue.JiraIssue;
 import jira.service.Jira;
 import lang.Maybe;
 import periods.Period;
+import periods.WorkingDayManager;
 import tasks.TaskView;
 import tasks.TasksSystem;
 import basic.Formatter;
@@ -25,10 +25,12 @@ public class Worklog implements Comparable<Worklog> {
     private final Jira jira;
     private final JiraSystem jiraSystem;
     private WorklogStatusLoader statusLoader;
+    private final WorkingDayManager workingDayManager;
 
     public Worklog(final TaskView task, final Period period, final Formatter formatter,
-            JiraWorklogOverride worklogOverride, TasksSystem tasksSystem, Jira jira,
-            JiraSystem jiraSystem, WorklogListModel dayTasksListModel) {
+                   JiraWorklogOverride worklogOverride, TasksSystem tasksSystem, Jira jira,
+                   JiraSystem jiraSystem, WorklogListModel dayTasksListModel,
+                   WorkingDayManager workingDayManager) {
         this.task = task;
         this.period = period;
         this.formatter = formatter;
@@ -36,6 +38,7 @@ public class Worklog implements Comparable<Worklog> {
         this.tasksSystem = tasksSystem;
         this.jira = jira;
         this.jiraSystem = jiraSystem;
+        this.workingDayManager = workingDayManager;
         statusLoader = new WorklogStatusLoader(this, dayTasksListModel);
     }
 
@@ -82,11 +85,10 @@ public class Worklog implements Comparable<Worklog> {
 
     //EMERGENCIAL 27/02/2012
     private boolean dentroDoPeriodoDeEnvio() {
-        Calendar closeDate = Calendar.getInstance();
-        closeDate.setTime(period.getDay());
-        closeDate.add(Calendar.MONTH, 1);
-        closeDate.set(Calendar.DAY_OF_MONTH, 3);
-        return Calendar.getInstance().before(closeDate);
+        final int NUM_OF_DAYS_ALLOWED_TO_SEND_WORKLOG = 3;
+        final Date endDate = workingDayManager.nextWorkingDay(NUM_OF_DAYS_ALLOWED_TO_SEND_WORKLOG, period.getDay());
+
+        return new Date().before(endDate);
     }
 
     public String formatedTotalTime() {

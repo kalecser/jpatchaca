@@ -5,3 +5,5 @@ target
 *.seq
 velocity.log
 .metadata
+*.iml
+.idea
