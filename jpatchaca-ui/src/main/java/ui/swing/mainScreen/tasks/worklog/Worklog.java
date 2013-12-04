@@ -3,6 +3,7 @@ package ui.swing.mainScreen.tasks.worklog;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import jira.JiraSystem;
@@ -86,9 +87,20 @@ public class Worklog implements Comparable<Worklog> {
     //EMERGENCIAL 27/02/2012
     private boolean dentroDoPeriodoDeEnvio() {
         final int NUM_OF_DAYS_ALLOWED_TO_SEND_WORKLOG = 3;
-        final Date endDate = workingDayManager.nextWorkingDay(NUM_OF_DAYS_ALLOWED_TO_SEND_WORKLOG, period.getDay());
+
+        Calendar closeDate = nextMonth();
+
+        final Date endDate = workingDayManager.nextWorkingDay(NUM_OF_DAYS_ALLOWED_TO_SEND_WORKLOG, closeDate.getTime());
 
         return new Date().before(endDate);
+    }
+
+    private Calendar nextMonth() {
+        Calendar closeDate = Calendar.getInstance();
+        closeDate.setTime(period.getDay());
+        closeDate.add(Calendar.MONTH, 1);
+        closeDate.set(Calendar.DAY_OF_MONTH, 1);
+        return closeDate;
     }
 
     public String formatedTotalTime() {

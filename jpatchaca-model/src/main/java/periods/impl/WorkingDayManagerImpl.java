@@ -58,8 +58,10 @@ public class WorkingDayManagerImpl implements WorkingDayManager {
         int realCount = 0;
 
         while (realCount < delta) {
-            if (isWorkingDay(calculated)) realCount++;
-            calculated = addDays(1, calculated);
+            if (isWorkingDay(calculated))
+                realCount++;
+            if (realCount < delta)
+                calculated = addDays(1, calculated);
         }
 
         return lastSecondOf(calculated);
