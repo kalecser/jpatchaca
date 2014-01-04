@@ -69,7 +69,7 @@ public class PatchacaTray implements Startable {
 
 	private PopupMenu timerMenu;
 	TrayIcon trayIcon;
-	
+
 	protected AtomicLong lastClicktime = new AtomicLong();
 	protected AtomicBoolean isprocessingClick = new AtomicBoolean(false);
 	public boolean test_mode = false;
@@ -77,10 +77,7 @@ public class PatchacaTray implements Startable {
 	private final KeyboardRotationOptions preferences;
 	private final TurnOnKeyboardRotationAlert turnOnKeyboardRotationAlert;
 
-	public PatchacaTray(final PatchacaTrayModel model, 
-			Presenter presenter, 
-			KeyboardRotationOptions preferences,
-			TurnOnKeyboardRotationAlert turnOnKeyboardRotationAlert) {
+	public PatchacaTray(final PatchacaTrayModel model, Presenter presenter, KeyboardRotationOptions preferences, TurnOnKeyboardRotationAlert turnOnKeyboardRotationAlert) {
 		this.model = model;
 		this.presenter = presenter;
 		this.preferences = preferences;
@@ -89,14 +86,15 @@ public class PatchacaTray implements Startable {
 	}
 
 	public void initialize() {
+		showMainScreen();
+
 		final TrayIcon icon;
 		try {
 			icon = createTrayIcon();
 		} catch (final SystemTrayNotSupported e) {
-			showMainScreen();
 			return;
 		}
-		
+
 		showNotifications();
 		bindToOrangeBlueTurn();
 
@@ -108,7 +106,6 @@ public class PatchacaTray implements Startable {
 		bindTrayicon();
 
 		icon.setPopupMenu(timerMenu);
-
 	}
 
 	private void showNotifications() {
@@ -116,7 +113,7 @@ public class PatchacaTray implements Startable {
 			@Override
 			public void receive(String notification) {
 				if (notification.equals(""))
-						return;
+					return;
 				statusMessage(notification);
 			}
 		});
@@ -126,7 +123,7 @@ public class PatchacaTray implements Startable {
 		presenter.isBlueTurn().addReceiver(new Receiver<Boolean>() {
 			@Override
 			public void receive(Boolean isBlueTurn) {
-				if (isBlueTurn.booleanValue()){
+				if (isBlueTurn.booleanValue()) {
 					setBlueTurnIcon();
 				} else {
 					setOrangeTurnIcon();
@@ -163,8 +160,7 @@ public class PatchacaTray implements Startable {
 	}
 
 	void startTimer() {
-		final String tempoDigitado = JOptionPane.showInputDialog(
-				"Numero de Minutos para o Alerta?", "15");
+		final String tempoDigitado = JOptionPane.showInputDialog("Numero de Minutos para o Alerta?", "15");
 
 		if (tempoDigitado != null) {
 			int intTempoDigitado = 0;
@@ -172,26 +168,22 @@ public class PatchacaTray implements Startable {
 			try {
 				intTempoDigitado = new Integer(tempoDigitado).intValue();
 			} catch (final NumberFormatException e) {
-				JOptionPane.showMessageDialog(null,
-						"Valor deve ser um inteiro!");
+				JOptionPane.showMessageDialog(null, "Valor deve ser um inteiro!");
 				this.startTimer();
 			}
-			
+
 			if (model.hasActiveTask()) {
 				setOrangeTurnIcon();
 			} else {
 				trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);
 			}
-			
-			
+
 			timer = new KeyboardRotationTimer(intTempoDigitado, presenter, preferences);
 			timer.start();
 
 			KeyboardRotationTimer.setStatus(TimerStatus.ON);
-			getMenuItemByText(this.timerMenu, "Turn On - Keyboard Rotation Alert").setEnabled(
-					false);
-			getMenuItemByText(this.timerMenu, "Turn Off - Keyboard Rotation Alert").setEnabled(
-					true);
+			getMenuItemByText(this.timerMenu, "Turn On - Keyboard Rotation Alert").setEnabled(false);
+			getMenuItemByText(this.timerMenu, "Turn Off - Keyboard Rotation Alert").setEnabled(true);
 		}
 
 	}
@@ -200,27 +192,24 @@ public class PatchacaTray implements Startable {
 		KeyboardRotationTimer.setStatus(TimerStatus.OFF);
 
 		timer.interrupt();
-		
+
 		if (model.hasActiveTask()) {
 			trayIcon.setImage(ACTIVE_ICON);
 		} else {
 			trayIcon.setImage(INACTIVE_ICON);
 		}
-		
+
 		statusMessage("Timer has been stopped!");
 		KeyboardRotationTimer.setStatus(TimerStatus.OFF);
 		getMenuItemByText(this.timerMenu, "Turn On - Keyboard Rotation Alert").setEnabled(true);
-		getMenuItemByText(this.timerMenu, "Turn Off - Keyboard Rotation Alert").setEnabled(
-				false);
+		getMenuItemByText(this.timerMenu, "Turn Off - Keyboard Rotation Alert").setEnabled(false);
 		timer = null;
 	}
 
 	private void createTimerMenu(PopupMenu owner) {
 
-		final MenuItem menuItemStart = new MenuItem(
-				"Turn On - Keyboard Rotation Alert");
-		final MenuItem menuItemStop = new MenuItem(
-				"Turn Off - Keyboard Rotation Alert");
+		final MenuItem menuItemStart = new MenuItem("Turn On - Keyboard Rotation Alert");
+		final MenuItem menuItemStop = new MenuItem("Turn Off - Keyboard Rotation Alert");
 
 		final ActionListener actionStart = new ActionListener() {
 			@Override
@@ -247,8 +236,7 @@ public class PatchacaTray implements Startable {
 
 	private PopupMenu createPopupMenu() {
 		final PopupMenu menu = new PopupMenu("Patchaca");
-		final MenuItem menuitemStartTask = new StartTaskMenu(model.selectedTaskSignal(), model
-				.selectedTaskName(), model).getMenu();
+		final MenuItem menuitemStartTask = new StartTaskMenu(model.selectedTaskSignal(), model.selectedTaskName(), model).getMenu();
 		menu.add(menuitemStartTask);
 		menu.add(STOP_TASK);
 		menu.addSeparator();
@@ -268,8 +256,7 @@ public class PatchacaTray implements Startable {
 		return menu;
 	}
 
-	final class ActiveTaskNameReceiver implements
-			Receiver<Maybe<TaskName>> {
+	final class ActiveTaskNameReceiver implements Receiver<Maybe<TaskName>> {
 		@Override
 		public void receive(final Maybe<TaskName> taskName) {
 			if (taskName == null) {
@@ -287,7 +274,7 @@ public class PatchacaTray implements Startable {
 		if (timer == null)
 			trayIcon.setImage(INACTIVE_ICON);
 		else
-			trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);	
+			trayIcon.setImage(INACTIVE_ROTATION_ON_ICON);
 		stopTaskItem.setLabel(STOP_TASK);
 		stopTaskItem.setEnabled(false);
 		stopTaskSpecialItem.setEnabled(false);
@@ -299,9 +286,8 @@ public class PatchacaTray implements Startable {
 		if (timer == null)
 			trayIcon.setImage(ACTIVE_ICON);
 		else
-			setOrangeTurnIcon();	
-		stopTaskItem.setLabel(STOP_TASK + " ("
-				+ taskName.unbox() + ")");
+			setOrangeTurnIcon();
+		stopTaskItem.setLabel(STOP_TASK + " (" + taskName.unbox() + ")");
 		stopTaskItem.setEnabled(true);
 		stopTaskSpecialItem.setEnabled(true);
 	}
@@ -319,23 +305,21 @@ public class PatchacaTray implements Startable {
 				PatchacaTray.this.stopTaskAlert.fire();
 			} else if (actionCommand.equals(COPY_ACTIVE_TASK_NAME)) {
 				model.copyActiveTaskNameToClipboard();
-			} else if (actionCommand.equals(OPEN_ACTIVE_TASK_ON_ISSUE_TRACKER)){
+			} else if (actionCommand.equals(OPEN_ACTIVE_TASK_ON_ISSUE_TRACKER)) {
 				model.openActiveTaskOnBrowser();
 			}
 
 		}
 	}
-	
-	private MenuItem buildSpecialStopTaskMenu() {
-		final IntervalMenu specialStopTaskMenu = new IntervalMenu(
-				PatchacaTray.STOP_TASK_SCPECIAL,
-				new IntervalMenu.IntervalSelectedListener() {
-					@Override
-					public void intervalClicked(final long millis) {
-						model.stopTaskIn(millis);
 
-					}
-				});
+	private MenuItem buildSpecialStopTaskMenu() {
+		final IntervalMenu specialStopTaskMenu = new IntervalMenu(PatchacaTray.STOP_TASK_SCPECIAL, new IntervalMenu.IntervalSelectedListener() {
+			@Override
+			public void intervalClicked(final long millis) {
+				model.stopTaskIn(millis);
+
+			}
+		});
 
 		return specialStopTaskMenu;
 	}
@@ -384,13 +368,11 @@ public class PatchacaTray implements Startable {
 		return trayIcon;
 	}
 
-	private static Image iconImage(String resource) {		
+	private static Image iconImage(String resource) {
 		final URL iconURL = PatchacaTray.class.getResource(resource);
 
 		if (iconURL == null) {
-			throw new IllegalStateException("Resource " + resource
-					+ " for class " + PatchacaTray.class.getCanonicalName()
-					+ " not found");
+			throw new IllegalStateException("Resource " + resource + " for class " + PatchacaTray.class.getCanonicalName() + " not found");
 		}
 
 		final ImageIcon imageIcon = new ImageIcon(iconURL);
@@ -400,25 +382,25 @@ public class PatchacaTray implements Startable {
 	}
 
 	private static Image makeImageTransparent(ImageIcon scaledImage) {
-		if (SystemUtils.IS_OS_LINUX){
-			return ImageUtils.replaceImageTrasparentByColor(scaledImage, ImageUtils.getTrayColor());			
+		if (SystemUtils.IS_OS_LINUX) {
+			return ImageUtils.replaceImageTrasparentByColor(scaledImage, ImageUtils.getTrayColor());
 		}
-		
+
 		return scaledImage.getImage();
 	}
 
 	private static Image scaleImage(final Image image) {
-		
-		if (SystemUtils.IS_OS_LINUX){
+
+		if (SystemUtils.IS_OS_LINUX) {
 			Image scaledImage = image.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
-			return scaledImage;			
+			return scaledImage;
 		}
-		
-		if (SystemUtils.IS_OS_WINDOWS){
+
+		if (SystemUtils.IS_OS_WINDOWS) {
 			Image scaledImage = image.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-			return scaledImage;			
+			return scaledImage;
 		}
-		
+
 		return image;
 	}
 
@@ -469,8 +451,7 @@ public class PatchacaTray implements Startable {
 		try {
 
 			Threads.sleepWithoutInterruptions(300);
-			final boolean somebodyClickedWhileIWasSleeping = this.lastClicktime
-					.get() != lastClickTime;
+			final boolean somebodyClickedWhileIWasSleeping = this.lastClicktime.get() != lastClickTime;
 			if (somebodyClickedWhileIWasSleeping) {
 				return;
 			}
@@ -504,17 +485,15 @@ public class PatchacaTray implements Startable {
 	}
 
 	void displayMessageInSwingThread(final String message) {
-		trayIcon.displayMessage("Message", message,
-				TrayIcon.MessageType.INFO);
+		trayIcon.displayMessage("Message", message, TrayIcon.MessageType.INFO);
 	}
-	
-	
+
 	public void ensureTrayIconIsVisibleDueToWindowsBug() {
 		tray().remove(trayIcon);
 		addTrayIconOrCry();
-		
+
 	}
-	
+
 	private void addTrayIconOrCry() {
 		try {
 			tray().add(trayIcon);
@@ -526,9 +505,9 @@ public class PatchacaTray implements Startable {
 	void setOrangeTurnIcon() {
 		trayIcon.setImage(ACTIVE_ROTATION_ON_ICON);
 	}
-	
+
 	void setBlueTurnIcon() {
 		trayIcon.setImage(ACTIVE_ROTATION_ON_ICON_BLUE);
 	}
-	
+
 }
